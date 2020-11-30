@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.DynamicLinks;
 using Helpers;
 using UGUI;
 using UnityEngine;
@@ -67,21 +68,48 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
         ////}
     }
 
-    // private void OnGUI()
-    // {
-    //     if (GUI.Button(new Rect(400, 100f, 200f, 200f), "测试"))
-    //     {
-    //         // OnKeyBoardBack("");
-    //         
-    //         // XLuaManager.Instance.GetLuaEnv().DoString(@"GameHelper.Test()");
-    //
-    //         // GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd_Activity();
-    //
-    //         // PlayerPrefs.DeleteAll();
-    //
-    //        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIDressUpForm);");
-    //     }
-    // }
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(400, 100f, 200f, 200f), "测试"))
+        {
+            DynamicLinkComponents components = new Firebase.DynamicLinks.DynamicLinkComponents(
+                // The base Link.
+                new System.Uri("https://www.example.com/"),
+                // The dynamic link URI prefix.
+                "https://scriptsuntoldsecrets.page.link/invite") {
+                IOSParameters = new Firebase.DynamicLinks.IOSParameters("com.igg.android.scriptsuntoldsecrets"),
+                AndroidParameters = new Firebase.DynamicLinks.AndroidParameters(
+                    "com.igg.android.scriptsuntoldsecrets"),
+            };
+
+            Uri componentsLongDynamicLink = components.LongDynamicLink;
+            // do something with: components.LongDynamicLink
+            
+            var options = new Firebase.DynamicLinks.DynamicLinkOptions {
+                PathLength = DynamicLinkPathLength.Unguessable
+            };
+
+            Firebase.DynamicLinks.DynamicLinks.GetShortLinkAsync(components, options).ContinueWith(task => {
+                if (task.IsCanceled) {
+                    Debug.LogError("GetShortLinkAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted) {
+                    Debug.LogError("GetShortLinkAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                // Short Link has been created.
+                Firebase.DynamicLinks.ShortDynamicLink link = task.Result;
+                Debug.LogFormat("Generated short link {0}", link.Url);
+
+                var warnings = new System.Collections.Generic.List<string>(link.Warnings);
+                if (warnings.Count > 0) {
+                    // Debug logging for warnings generating the short link.
+                }
+            });
+        }
+    }
 
     public void OnQueryPurchase(string json)
     {

@@ -2,7 +2,7 @@ fileFormatVersion: 2
 guid: 3ebb289656f1477fa263e62d36c6e329
 labels:
 - gvh
-- gvh_version-6.14.0
+- gvh_version-6.16.1
 - gvhp_exportpath-Firebase/Plugins/Google.MiniJson.dll
 PluginImporter:
   externalObjects: {}
@@ -13,6 +13,7 @@ PluginImporter:
   isPreloaded: 0
   isOverridable: 0
   isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
   - first:
       '': OSXIntel
