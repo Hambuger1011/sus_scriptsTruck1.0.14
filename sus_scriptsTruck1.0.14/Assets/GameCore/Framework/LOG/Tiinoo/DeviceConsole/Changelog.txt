@@ -1,0 +1,13 @@
+Current Version: 2.0.0
+
+---------------------------------
+2.0.0
+- NEW: Redesign UI and implemented with UGUI. 
+- NEW: Filter the logs.
+- NEW: Optimized for scrolling logs. 
+- NEW: The logs you care about can be viewed separately.
+- NEW: Get notified when an exception occurs.
+- NEW: Automatically removes itself from your final builds.
+
+1.0.0
+- Initial Release

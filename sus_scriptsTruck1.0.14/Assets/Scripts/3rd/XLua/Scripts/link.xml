@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+  <assembly fullname="UnityEngine.CoreModule">
+    <type fullname="*" preserve="all" />
+  </assembly>
+    
+  <assembly fullname="UnityEngine.CoreModule">
+    <type fullname="UnityEngine.Time" preserve="all" />
+  </assembly>
+    
+  <assembly fullname="UnityEngine.*">
+    <type fullname="*" preserve="all" />
+  </assembly>
+
+
+  <assembly fullname="UnityEngine">
+    <type fullname="*" preserve="all" />
+  </assembly>
+    
+</linker>

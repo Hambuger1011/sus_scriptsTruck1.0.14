@@ -1,0 +1,81 @@
+
+eggs.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+FX_Glow_06112
+  rotate: true
+  xy: 2, 780
+  size: 67, 128
+  orig: 128, 128
+  offset: 8, 0
+  index: -1
+FX_baodian_01
+  rotate: false
+  xy: 237, 719
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+egg
+  rotate: true
+  xy: 2, 381
+  size: 331, 388
+  orig: 331, 388
+  offset: 0, 0
+  index: -1
+egggg
+  rotate: false
+  xy: 564, 606
+  size: 300, 241
+  orig: 300, 241
+  offset: 0, 0
+  index: -1
+light
+  rotate: false
+  xy: 2, 2
+  size: 658, 377
+  orig: 658, 377
+  offset: 0, 0
+  index: -1
+line1
+  rotate: true
+  xy: 132, 779
+  size: 68, 103
+  orig: 68, 103
+  offset: 0, 0
+  index: -1
+line2
+  rotate: true
+  xy: 367, 714
+  size: 133, 195
+  orig: 133, 195
+  offset: 0, 0
+  index: -1
+
+eggs2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+webp4
+  rotate: true
+  xy: 2, 2
+  size: 515, 884
+  orig: 610, 915
+  offset: 33, 31
+  index: -1
+
+eggs3.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+666
+  rotate: false
+  xy: 2, 2
+  size: 658, 975
+  orig: 658, 975
+  offset: 0, 0
+  index: -1

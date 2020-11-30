@@ -1,0 +1,15 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:6702d17b23b31e2f08cd907797c6258c:1575bb297f11ae2a4157bcb4f6010b37:d7afc75a4430acdb04510724ecc1737f$
+#
+:format=40300
+:texture=TEMP.png
+:size=512x512
+:pivotpoints=disabled
+:borders=disabled
+
+bg_touxkuang201;3;221;288;288; 0.5;0.5; 0;0;0;0

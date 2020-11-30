@@ -1,0 +1,26 @@
+{
+  "EventCollection": {
+    "events": [
+      {
+        "name": "account.init",
+        "importance": "basic"
+      },
+      {
+        "name": "account.login",
+        "importance": "important"
+      },
+      {
+        "name": "account.logout",
+        "importance": "crucial"
+      },
+      {
+        "name": "setting.more",
+        "importance": "important"
+      },
+      {
+        "name": "setting.clean",
+        "importance": "crucial"
+      }
+    ]
+  }
+}

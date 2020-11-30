@@ -1,0 +1,44 @@
+{
+    "title": "Cards Response",
+    "type": "object",
+    "properties": {
+        "data": {
+            "type": "object",
+            "properties": {
+                "card_data": {
+                    "type": "array",
+                    "items": {
+                        "title": "Cards",
+                        "type": "object",
+                        "properties": {
+                            "pc_id":          { "type": "string"  },
+                            "pc_name":        { "type": "string"  },
+                            "pc_point":       { "type": "string"  },
+                            "pc_type":        { "type": "string"  },
+                            "pc_flag":        { "type": "string"  },
+                            "pc_selected":    { "type": "string"  },
+                            "pc_credit_rate": { "type": "string"  },
+                            "pcc_price_usd":  { "type": "string"  },
+                            "pcc_price_cfg":  { "type": "string"  },
+                            "pc_free_point":  { "type": "integer" },
+                            "pcc_memo":       { "type": "string"  },
+                        },
+                        "minProperties": 11
+                    }
+                },
+                "user_limit":   { "type": "boolean" },
+                "device_limit": { "type": "boolean" },
+            },
+            "minProperties": 3
+        },
+        "error": {
+            "type": "object",
+            "properties": {
+                "code":    { "type": "integer" },
+                "message": { "type": "string"  }
+            },
+            "minProperties": 2
+        }
+    },
+    "minProperties": 2
+}

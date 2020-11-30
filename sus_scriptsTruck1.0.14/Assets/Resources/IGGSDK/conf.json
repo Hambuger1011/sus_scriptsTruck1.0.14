@@ -1,0 +1,22 @@
+{
+    "games": [
+        {
+            "id": "11050102021",
+            "key": "09e665311c7529c0f9fa0edf2420df39",
+            "regional_data_center": "SND"
+        },
+        {
+            "id": "11050103031",
+            "key": "fd684b9b91fb91a2f84a511949cff9bd",
+            "regional_data_center": "SND"
+        }
+    ],
+    "family": "IGG",
+    "payment_service": "Default",
+    "remote_notification_service_plan": "Default",
+    "use_payment_legacy_version": true,
+    "licence_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAibd23dFdusYRFcq7pOPvdiYLvmmumRfCM1uiWKsBbXfFAovd5YJ0zRs70IgjFAOBfwZpZ6EDUlnaKucHBILdT251n3VJcK3p3OOyhVQt5dFTRPzPNt+/fiaaAYP3mRhXvwReCPkSMw/5dRM7nDr40nfJYO0N3xxfSkf3IS27DaB9gDhVmsS+0Wrr/uYFE2hDk1Nu0NIVLQITtzmjkBjLnWea3esgLmvxyjF1x6OySE+UFWG7U5LNqJsHDFqo/8mBLsLZoW7wMGFcuG2fYVB8P8wXrL3LMY5WTexcaF250xJ3bCz1PcvqzW/ialeqLqSezPbY+qZmUzNG0mrSwIZ+lwIDAQAB",
+    "in_mainland_china": false,
+    "use_uuid_forcefully": false,
+    "wallet_id":""
+}

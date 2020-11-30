@@ -1,0 +1,6 @@
+framework module IGGTSHybrid {
+  umbrella header "IGGTSHybrid.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,90 @@
+
+DLloading.png
+size: 1195,331
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+02
+  rotate: false
+  xy: 994, 6
+  size: 197, 142
+  orig: 197, 142
+  offset: 0, 0
+  index: -1
+Flower01
+  rotate: false
+  xy: 835, 36
+  size: 21, 26
+  orig: 21, 26
+  offset: 0, 0
+  index: -1
+Flower02
+  rotate: false
+  xy: 627, 2
+  size: 33, 19
+  orig: 33, 19
+  offset: 0, 0
+  index: -1
+Flower03
+  rotate: true
+  xy: 676, 6
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: -1
+Flower04
+  rotate: true
+  xy: 662, 3
+  size: 18, 12
+  orig: 18, 12
+  offset: 0, 0
+  index: -1
+Flower05
+  rotate: false
+  xy: 835, 64
+  size: 25, 40
+  orig: 25, 40
+  offset: 0, 0
+  index: -1
+Flower06
+  rotate: false
+  xy: 753, 9
+  size: 80, 95
+  orig: 80, 95
+  offset: 0, 0
+  index: -1
+Guang01
+  rotate: true
+  xy: 994, 150
+  size: 179, 199
+  orig: 179, 199
+  offset: 0, 0
+  index: -1
+flowertree02
+  rotate: false
+  xy: 2, 11
+  size: 623, 318
+  orig: 623, 318
+  offset: 0, 0
+  index: -1
+guang02
+  rotate: true
+  xy: 627, 23
+  size: 81, 124
+  orig: 81, 124
+  offset: 0, 0
+  index: -1
+guang03
+  rotate: false
+  xy: 692, 7
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+guang04
+  rotate: true
+  xy: 627, 106
+  size: 223, 365
+  orig: 223, 365
+  offset: 0, 0
+  index: -1

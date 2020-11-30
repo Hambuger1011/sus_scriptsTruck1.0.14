@@ -1,0 +1,121 @@
+{
+    "description": "EventCollection module Appconfig schema",
+    "title": "EventCollection config v1",
+    "type": "object",
+    "properties": {
+        "ec": {
+            "type": "object",
+            "properties": {
+                "v1": {
+                    "type": "object",
+                    "patternProperties": {
+                        "(^sdk$)|(^sdk-[A-Za-z0-9-._]{1,}$)": {
+                            "type": "object",
+                            "properties": {
+                                "edges": {
+                                    "$ref": "#/definitions/v1_edges"
+                                },
+                                "discarded": {
+                                    "$ref": "#/definitions/v1_discarded"
+                                },
+                                "levels": {
+                                    "$ref": "#/definitions/v1_levels"
+                                }
+                            }
+                        },
+                        "(^game$)|(^game-[A-Za-z0-9-._]{1,}$)": {
+                            "type": "object",
+                            "properties": {
+                                "edges": {
+                                    "$ref": "#/definitions/v1_edges"
+                                },
+                                "discarded": {
+                                    "$ref": "#/definitions/v1_discarded"
+                                },
+                                "levels": {
+                                    "$ref": "#/definitions/v1_levels"
+                                }
+                            }
+                        }
+                    },
+                    "properties": {
+                        "user": {
+                            "type": "object",
+                            "properties": {
+                                "edges": {
+                                    "$ref": "#/definitions/v1_edges"
+                                },
+                                "discarded": {
+                                    "$ref": "#/definitions/v1_discarded"
+                                },
+                                "levels": {
+                                    "$ref": "#/definitions/v1_levels"
+                                }
+                            }
+                        },
+                        "vips": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "global": {
+                            "type": "object",
+                            "properties": {
+                                "edges": {
+                                    "$ref": "#/definitions/v1_edges"
+                                },
+                                "discarded": {
+                                    "$ref": "#/definitions/v1_discarded"
+                                },
+                                "levels": {
+                                    "$ref": "#/definitions/v1_levels"
+                                }
+                            },
+                            "required": [
+                                "edges"
+                            ]
+                        },
+                        "streams": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 4
+                        }
+                    },
+                    "required": [
+                        "streams",
+                        "global"
+                    ]
+                }
+            },
+            "required": [
+                "v1"
+            ]
+        }
+    },
+    "required": [
+        "ec"
+    ],
+    "definitions": {
+        "v1_edges": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 3
+        },
+        "v1_discarded": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "v1_levels": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 511
+        }
+    }
+}

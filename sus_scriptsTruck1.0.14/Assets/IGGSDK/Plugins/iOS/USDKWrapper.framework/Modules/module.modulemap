@@ -1,0 +1,6 @@
+framework module USDKWrapper {
+  umbrella header "USDKWrapper.h"
+
+  export *
+  module * { export * }
+}
