@@ -1,42 +1,43 @@
 {
   "project_info": {
-    "project_number": "824433075435",
-    "firebase_url": "https://scripts-627d7.firebaseio.com",
-    "project_id": "scripts-627d7",
-    "storage_bucket": "scripts-627d7.appspot.com"
+    "project_number": "291277698332",
+    "firebase_url": "https://scripts-untold-secrets.firebaseio.com",
+    "project_id": "scripts-untold-secrets",
+    "storage_bucket": "scripts-untold-secrets.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:824433075435:android:db05cfa03645a32a054aae",
+        "mobilesdk_app_id": "1:291277698332:android:0c2c3ca11718eef9b276d9",
         "android_client_info": {
           "package_name": "com.igg.android.scriptsuntoldsecrets"
         }
       },
       "oauth_client": [
         {
-          "client_id": "824433075435-v49534ofd83ku8v4cdiqcsudtevgicsm.apps.googleusercontent.com",
+          "client_id": "291277698332-3dt9gv413t489fm702aooig9u4b5m50f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.igg.android.scriptsuntoldsecrets",
+            "certificate_hash": "71a98c9b2903b3ec5fcb71a8e691980176f1d459"
+          }
+        },
+        {
+          "client_id": "291277698332-35tdr947o10m2jhedk8g83jcq7tu06uq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6u2aXQTQg-6acDTjz5ieWnluCnArezfY"
+          "current_key": "AIzaSyDe1UAfWJaZL2Nbw0xylj3H481lvn_1xU8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "824433075435-v49534ofd83ku8v4cdiqcsudtevgicsm.apps.googleusercontent.com",
+              "client_id": "291277698332-35tdr947o10m2jhedk8g83jcq7tu06uq.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "824433075435-ga2ti3k0stg9jjqbfqhbg6aqmf4aplni.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.igg.android.scriptsuntoldsecrets"
-              }
             }
           ]
         }
