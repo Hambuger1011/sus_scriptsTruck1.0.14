@@ -71,6 +71,20 @@ function LimitedTimePanel:__init(gameObject)
     logic.cs.UIEventListener.AddOnClickListener(self.CLAIMButton,function(data) self:CLAIMButtonOnClick() end)
     --endregion
 
+    --region【邀请奖励】
+    --self.mInviteWindow =CS.DisplayUtil.GetChild(self.gameObject, "InviteWindow");
+    --self.InviteWindow = require('Logic/UI/UI_Activity/Panel/LimitedTime/FollowWindow').New(self.mInviteWindow);
+    
+    self.InviteBG = CS.DisplayUtil.GetChild(self.ScrollRect, "InviteBG");
+    self.InviteButton = CS.DisplayUtil.GetChild(self.InviteBG, "InviteButton");
+    self.InviteDetailText = CS.DisplayUtil.GetChild(self.InviteBG, "InviteDetailText"):GetComponent("Text");
+
+    self.InviteDetailText.text = "You can get up to 300 Diamonds when you invite your friends to register for an account.";
+
+    logic.cs.UIEventListener.AddOnClickListener(self.InviteButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
+    
+    --endregion
+
     --region 【全书免费】
     self.FreeBG =CS.DisplayUtil.GetChild(self.gameObject, "FreeBG")
     self.GoBtn =CS.DisplayUtil.GetChild(self.FreeBG, "GoBtn")

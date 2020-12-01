@@ -15,6 +15,7 @@ local UIConfig = {
 	require "Logic/UI/UI_BookReading/UI_Reply",
 	require "Logic/UI/UI_Email/UI_Email",
 	require "Logic/UI/UI_Account/UI_AccountInfo",
+	require "Logic/UI/UI_Activity/Panel/Activity/InvitePanel",
 	require "Logic/UI/UI_Account/UI_MoveWait",
 	require "Logic/UI/UI_Account/UI_PlatformQuickLogin",
 	require "Logic/UI/UI_Email/UI_EmailInfo",

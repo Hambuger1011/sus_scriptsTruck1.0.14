@@ -14,6 +14,7 @@ local UIID = {
 	Comment = 'Comment',
 	Reply = 'Reply',
 	AccountInfo = 'AccountInfo',
+	InvitePanel = 'InvitePanel',
 	MoveWait = 'MoveWait',
 	PlatformQuickLogin = 'PlatformQuickLogin',
 	Email = 'Email',
