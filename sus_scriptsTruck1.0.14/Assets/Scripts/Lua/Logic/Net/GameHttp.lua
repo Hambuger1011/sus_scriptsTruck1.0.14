@@ -344,6 +344,12 @@ function GameHttp:GetActivityReceiveStatus(callback)
     self:Get(self, "api_getActivityReceiveStatus", param, callback, nil, nil, true)
 end
 
+function GameHttp:GetInviteList(callback)
+    local param = {
+    }
+    self:Get(self, "api_getInviteList", param, callback, nil, nil, true)
+end
+
 --获取任务列表
 function GameHttp:GetMyTaskList(callback)
     local param = {
@@ -431,6 +437,15 @@ function GameHttp:ReceiveEggActivityAward(egg_id, book_id, dialog_id, callback)
         phoneimei = logic.cs.GameHttpNet.UUID,
     }
     self:Post(self, "api_receiveEggActivityAward", param, callback, nil, nil, true)
+end
+
+--获取邀请奖励
+function GameHttp:ReceiveInvitePrize(number, callback)
+    local param = {
+        number = number,
+        phoneimei = logic.cs.GameHttpNet.UUID,
+    }
+    self:Post(self, "api_receiveInvitePrize", param, callback, nil, nil, true)
 end
 
 --领取第三方登录绑定的奖励

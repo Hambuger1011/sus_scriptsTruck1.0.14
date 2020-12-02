@@ -45,6 +45,7 @@ public class SdkMgr : CSingleton<SdkMgr>
 
     //public JPushSdk jpushSDK { get; private set; }
     public ShareSdk shareSDK { get; private set; }
+    public FirebaseSdk firebaseSdk { get; private set; }
     public FacebookSdk facebook { get; private set; }
 
 #if CHANNEL_SPAIN
@@ -134,6 +135,11 @@ public class SdkMgr : CSingleton<SdkMgr>
     public void SetShareSDK(ShareSdk vShareSdk)
     {
         shareSDK = vShareSdk;
+    }
+
+    public void SetFirebaseSdk(FirebaseSdk vFirebaseSdk)
+    {
+        firebaseSdk = vFirebaseSdk;
     }
 
 

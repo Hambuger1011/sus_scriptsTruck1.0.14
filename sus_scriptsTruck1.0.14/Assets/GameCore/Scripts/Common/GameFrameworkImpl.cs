@@ -164,6 +164,7 @@ namespace Framework
 #endif
             //SdkMgr.Instance.SetJPushSDK(this.gameObject.GetComponent<JPushSdk>());
             SdkMgr.Instance.SetShareSDK(this.gameObject.GetComponent<ShareSdk>());
+            // SdkMgr.Instance.SetFirebaseSdk(this.gameObject.GetComponent<FirebaseSdk>());
             //SdkMgr.Instance.SetWebView(WebView);
 
 #if CHANNEL_HUAWEI
