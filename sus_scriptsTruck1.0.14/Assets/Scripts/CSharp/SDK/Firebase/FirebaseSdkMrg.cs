@@ -59,34 +59,34 @@ public class FirebaseSdkMrg : MonoBehaviour
     private DynamicLinkComponents components;
     private Uri uri;
 
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(400, 100f, 100f, 100f), "测试1"))
-        {
-            uri = CreateAndDisplayLongLink();
-            SdkMgr.Instance.shareSDK.ShareMsg(uri.ToString());
-        }
-
-        if (GUI.Button(new Rect(400, 200f, 100f, 100f), "测试2"))
-        {
-            CreateAndDisplayShortLinkAsync();
-
-            // if (null != uri &&!string.IsNullOrEmpty(uri.ToString())) 
-            //   Application.OpenURL(uri.ToString());
-
-            // SdkMgr.Instance.shareSDK.ShareScreenShot();
-        }
-
-        if (GUI.Button(new Rect(400, 300f, 100f, 100f), "测试3"))
-        {
-            CreateAndDisplayUnguessableShortLinkAsync();
-
-            // if (null != uri &&!string.IsNullOrEmpty(uri.ToString()))
-            //   SdkMgr.Instance.facebook.FBShareLink(uri.ToString(), "Secrets of game choices", "Welcome to Secrets", "", FBShareLinkSucced, FBShareLinkFaild);
-
-            // SdkMgr.Instance.shareSDK.CopyToClipboard("==========CopyToClipboard========");
-        }
-    }
+    // private void OnGUI()
+    // {
+    //     if (GUI.Button(new Rect(400, 100f, 100f, 100f), "测试1"))
+    //     {
+    //         uri = CreateAndDisplayLongLink();
+    //         SdkMgr.Instance.shareSDK.ShareMsg(uri.ToString());
+    //     }
+    //
+    //     if (GUI.Button(new Rect(400, 200f, 100f, 100f), "测试2"))
+    //     {
+    //         CreateAndDisplayShortLinkAsync();
+    //
+    //         // if (null != uri &&!string.IsNullOrEmpty(uri.ToString())) 
+    //         //   Application.OpenURL(uri.ToString());
+    //
+    //         // SdkMgr.Instance.shareSDK.ShareScreenShot();
+    //     }
+    //
+    //     if (GUI.Button(new Rect(400, 300f, 100f, 100f), "测试3"))
+    //     {
+    //         CreateAndDisplayUnguessableShortLinkAsync();
+    //
+    //         // if (null != uri &&!string.IsNullOrEmpty(uri.ToString()))
+    //         //   SdkMgr.Instance.facebook.FBShareLink(uri.ToString(), "Secrets of game choices", "Welcome to Secrets", "", FBShareLinkSucced, FBShareLinkFaild);
+    //
+    //         // SdkMgr.Instance.shareSDK.CopyToClipboard("==========CopyToClipboard========");
+    //     }
+    // }
 
     // Update is called once per frame
     void Update()

@@ -48,7 +48,8 @@ function InvitePanel:SetUI()
                     InviteButton.gameObject:SetActiveEx(true)
                     InviteButton.onClick:RemoveAllListeners()
                     InviteButton.onClick:AddListener(function()
-                        logic.cs.UITipsMgr:ShowTips("coming soon");
+                        --logic.cs.UITipsMgr:ShowTips("coming soon");
+                        logic.cs.SdkMgr.shareSDK:ShareMsg("https://scriptsuntoldsecrets.page.link/invite?TestId=10086");
                     end)
                 elseif v.status == 1 then
                     CollectedButton.gameObject:SetActiveEx(true)

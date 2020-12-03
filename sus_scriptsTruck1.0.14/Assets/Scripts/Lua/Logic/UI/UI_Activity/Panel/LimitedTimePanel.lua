@@ -79,7 +79,7 @@ function LimitedTimePanel:__init(gameObject)
     self.InviteButton = CS.DisplayUtil.GetChild(self.InviteBG, "InviteButton");
     self.InviteDetailText = CS.DisplayUtil.GetChild(self.InviteBG, "InviteDetailText"):GetComponent("Text");
 
-    self.InviteDetailText.text = "You can get up to 300 Diamonds when you invite your friends to register for an account.";
+    self.InviteDetailText.text = "You can get up to 350 Diamonds when you invite your friends to register for an account.";
 
     logic.cs.UIEventListener.AddOnClickListener(self.InviteButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
     
