@@ -56,8 +56,8 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
 
             self.goDiamond:SetActiveEx(true)
             self.fxSelect:SetActiveEx(true)
-            --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice2",true)
-            self.imgBg.sprite = CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
+            self.imgBg.sprite = logic.bookReadingMgr.Res:GetCommonSprite("bg_chat_choice2")
+            --self.imgBg.sprite = CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
             
             self.txtCost.text = tostring(cost)
 
@@ -68,29 +68,29 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
                     self.isHadBuy = true
                     self.goDiamond:SetActiveEx(false)
                     self.fxSelect:SetActiveEx(false)
-                    --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice",true)
-                    self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
+                    self.imgBg.sprite = logic.bookReadingMgr.Res:GetCommonSprite("bg_chat_choice")
+                    --self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
                 end              
             end          
         else
             --不需要花钱购买的
             self.goDiamond:SetActiveEx(false)
             self.fxSelect:SetActiveEx(false)
-            --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice",true)
-            self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
+            self.imgBg.sprite = logic.bookReadingMgr.Res:GetCommonSprite("bg_chat_choice")
+            --self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
         end
     else
         if cost > 0 then
             self.goDiamond:SetActiveEx(true)
             self.fxSelect:SetActiveEx(true)
-            --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice2",true)
-            self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
+            self.imgBg.sprite = logic.bookReadingMgr.Res:GetCommonSprite("bg_chat_choice2")
+            --self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
             self.txtCost.text = tostring(cost)
         else
             self.goDiamond:SetActiveEx(false)
             self.fxSelect:SetActiveEx(false)
-            --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice",true)
-            self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
+            self.imgBg.sprite = logic.bookReadingMgr.Res:GetCommonSprite("bg_chat_choice")
+            --self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
         end
     end
 

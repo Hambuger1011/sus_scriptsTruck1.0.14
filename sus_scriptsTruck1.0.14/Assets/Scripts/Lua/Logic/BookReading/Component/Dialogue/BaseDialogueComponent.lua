@@ -8,8 +8,8 @@ function BaseDialogueComponent:CollectRes(resTable)
     local bookData = logic.bookReadingMgr.bookData
     local bookContext = logic.bookReadingMgr.context
     if self.cfg.trigger == 1 then
-        resTable[logic.bookReadingMgr.Res.bookCommonPath.."Atlas/Choice/bg_chat_choice.png"] = BookResType.BookRes
-        resTable[logic.bookReadingMgr.Res.bookCommonPath.."Atlas/Choice/bg_chat_choice2.png"] = BookResType.BookRes
+        resTable[logic.bookReadingMgr.Res.uiCommonPath.."bg_chat_choice.png"] = BookResType.BookRes
+        resTable[logic.bookReadingMgr.Res.uiCommonPath.."bg_chat_choice2.png"] = BookResType.BookRes
     end
 
 
