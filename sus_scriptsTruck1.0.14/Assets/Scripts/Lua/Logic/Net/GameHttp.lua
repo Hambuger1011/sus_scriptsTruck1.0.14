@@ -448,6 +448,14 @@ function GameHttp:ReceiveInvitePrize(number, callback)
     self:Post(self, "api_receiveInvitePrize", param, callback, nil, nil, true)
 end
 
+--获取邀请奖励
+function GameHttp:ReceiveFirstRechargeAward(callback)
+    local param = {
+        phoneimei = logic.cs.GameHttpNet.UUID,
+    }
+    self:Post(self, "api_receiveFirstRechargeAward", param, callback, nil, nil, true)
+end
+
 --领取第三方登录绑定的奖励
 function GameHttp:ReceiveThirdPartyAward(callback)
     local param = {

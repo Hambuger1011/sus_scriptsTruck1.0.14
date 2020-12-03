@@ -47,8 +47,17 @@ function ActivityCache:__init()
     --头像框id
     self.user_move.user_frame_id=0;
 
-
-
+    
+    --【用户首充奖励】
+    self.first_recharge={};
+    --奖励类型 1钥匙 2钻石 4组合包
+    self.first_recharge.award_type=0;
+    --钥匙数量
+    self.first_recharge.key_count=0;
+    --钻石数量
+    self.first_recharge.diamond_count=0;
+    --奖品列表
+    self.first_recharge.item_list={};
 
 
 end
@@ -140,6 +149,8 @@ function ActivityCache:UpdatedRewardConfig(datas)
     self.user_move.key_count=datas.user_move.key_count;
     self.user_move.diamond_count=datas.user_move.diamond_count;
     self.user_move.user_frame_id=datas.user_move.user_frame_id;
+    
+    self.first_recharge=datas.first_recharge;
 end
 
 

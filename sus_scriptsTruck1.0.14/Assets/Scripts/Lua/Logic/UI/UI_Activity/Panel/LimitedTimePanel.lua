@@ -98,8 +98,18 @@ function LimitedTimePanel:__init(gameObject)
 
     self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
 
-    logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data)  end)
-    logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data)  end)
+    logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
+    logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data)
+        logic.gameHttp:ReceiveFirstRechargeAward(function(result)
+            local json = core.json.Derialize(result)
+            local code = tonumber(json.code)
+            if code == 200 then
+                self.FirstchargeBG.gameObject:SetActiveEx(false)
+                logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
+                logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
+            end
+        end)
+    end)
     
     --endregion
 
@@ -190,6 +200,17 @@ function LimitedTimePanel:GetRewardConfig_Response()
             self.PictureNum.text = ""
         end
     end
+    
+    local firstRecharge = Cache.ActivityCache.first_recharge;
+    for k, v in pairs(firstRecharge.item_list) do
+        if v.id == 10101 then
+            self.NumText1.text = "x"..v.num;
+        elseif v.id == 10102 then
+            self.NumText2.text = "x"..v.num;
+        end
+    end
+    self.NumText3.text = "x".. firstRecharge.diamond_count;
+    self.NumText4.text = "x".. firstRecharge.key_count;
 
 end
 --endregion
