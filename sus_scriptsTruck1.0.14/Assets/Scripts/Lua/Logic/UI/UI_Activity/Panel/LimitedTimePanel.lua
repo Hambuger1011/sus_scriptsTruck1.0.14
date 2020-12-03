@@ -85,6 +85,24 @@ function LimitedTimePanel:__init(gameObject)
     
     --endregion
 
+    --region【首充奖励】
+    
+    self.FirstchargeBG = CS.DisplayUtil.GetChild(self.ScrollRect, "FirstchargeBG");
+    self.ChargeButton = CS.DisplayUtil.GetChild(self.FirstchargeBG, "ChargeButton");
+    self.ClaimFirstcharge = CS.DisplayUtil.GetChild(self.FirstchargeBG, "ClaimFirstcharge");
+    self.FirstchargeDetailText = CS.DisplayUtil.GetChild(self.FirstchargeBG, "FirstchargeDetailText"):GetComponent("Text");
+    self.NumText1 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText1"):GetComponent("Text");
+    self.NumText2 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText2"):GetComponent("Text");
+    self.NumText3 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText3"):GetComponent("Text");
+    self.NumText4 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText4"):GetComponent("Text");
+
+    self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
+
+    logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data)  end)
+    logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data)  end)
+    
+    --endregion
+
     --region 【全书免费】
     self.FreeBG =CS.DisplayUtil.GetChild(self.gameObject, "FreeBG")
     self.GoBtn =CS.DisplayUtil.GetChild(self.FreeBG, "GoBtn")

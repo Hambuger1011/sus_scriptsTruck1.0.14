@@ -37,6 +37,7 @@ local UIID = {
 	Story_Chapter = 'UI/StoryEditorRes/UI/Canvas_StoryChapter',
 	Story_Guide = 'UI/Resident/UI/Canvas_Story_Guide',
 	UISignTipForm = 'UI/Resident/UI/UISignTipForm',
+	UIFirstChargeForm = 'UI/Resident/UI/UIFirstChargeForm',
 	UIMainForm = 'UIMainForm',
 	UIMainDownForm = 'UIMainDownForm',
 	UISearchForm = 'UISearchForm',
