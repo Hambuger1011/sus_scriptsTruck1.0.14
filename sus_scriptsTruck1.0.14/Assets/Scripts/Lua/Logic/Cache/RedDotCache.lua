@@ -46,6 +46,8 @@ function RedDotCache:__init()
     self.FreeRedPoint=false;
     --红点标识 【活动页面里】【限时活动页】【用户迁移红点】【开关】
     self.MoveRedPoint=false;
+    --红点标识 【活动页面里】【限时活动页】【首充奖励红点】【开关】
+    self.FirstRechargePoint=false;
 end
 
 function RedDotCache:UpdateData(data)

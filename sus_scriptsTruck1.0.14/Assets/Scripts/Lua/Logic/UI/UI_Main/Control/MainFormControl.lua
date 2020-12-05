@@ -353,6 +353,8 @@ function MainFormControl:GetRedDot(result)
         local attention_media = Cache.RedDotCache.attention_media;
         --【用户迁移奖励未领取: 1.有未领取 0.没有】
         local se_move_finish = Cache.RedDotCache.se_move_finish;
+        --【首冲奖励未领取: 1.有未领取 0.没有】
+        local first_recharge = Cache.RedDotCache.first_recharge;
 
         local ui_downform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
 
@@ -411,6 +413,15 @@ function MainFormControl:GetRedDot(result)
             Cache.RedDotCache.MoveRedPoint=false;
         end
 
+        --【首冲奖励未领取: 1.有未领取 0.没有】
+        if(first_recharge==1)then
+            --红点标识 【活动页面里】【限时活动页】【首冲奖励红点】【开关】
+            Cache.RedDotCache.FirstRechargePoint=true;
+        else
+            --红点标识 【活动页面里】【限时活动页】【首冲奖励红点】【开关】
+            Cache.RedDotCache.FirstRechargePoint=false;
+        end
+
         --【第三方登录绑定奖励未领取 1已领取，0未领取】
         if(third_party_award==0)then
             local bindStatus = GameHelper.GetBindStatus();--获取绑定状态
@@ -464,7 +475,7 @@ function MainFormControl:GetRedDot(result)
         end
 
 
-        if(Cache.RedDotCache.MoveRedPoint==true or Cache.RedDotCache.FreeRedPoint==true or Cache.RedDotCache.FollowRedPoint==true or Cache.RedDotCache.BindRedPoint==true)then
+        if(Cache.RedDotCache.MoveRedPoint==true or Cache.RedDotCache.FreeRedPoint==true or Cache.RedDotCache.FollowRedPoint==true or Cache.RedDotCache.BindRedPoint==true or Cache.RedDotCache.FirstRechargePoint==true)then
             --显示主界面底栏 活动中心红点
             if(ui_downform)then
                 ui_downform:Rward_RedImg_show(true);

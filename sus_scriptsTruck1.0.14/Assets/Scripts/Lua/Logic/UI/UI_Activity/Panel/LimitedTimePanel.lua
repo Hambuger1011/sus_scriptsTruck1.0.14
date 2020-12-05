@@ -95,6 +95,7 @@ function LimitedTimePanel:__init(gameObject)
     self.NumText2 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText2"):GetComponent("Text");
     self.NumText3 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText3"):GetComponent("Text");
     self.NumText4 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText4"):GetComponent("Text");
+    self.FirstRechargePoint = CS.DisplayUtil.GetChild(self.FirstchargeBG, "RedPoint");
 
     self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
 
@@ -405,6 +406,18 @@ function LimitedTimePanel:RedPointShow()
         self.MoveRedPoint:SetActiveEx(true);
     else
         self.MoveRedPoint:SetActiveEx(false);
+    end
+    ------【红点功能】
+
+    ------【红点功能】【账号迁移】
+    if(Cache.RedDotCache.FirstRechargePoint==true)then
+        self.FirstRechargePoint:SetActiveEx(true);
+        self.ChargeButton:SetActiveEx(false);
+        self.ClaimFirstcharge:SetActiveEx(true);
+    else
+        self.FirstRechargePoint:SetActiveEx(false);
+        self.ChargeButton:SetActiveEx(true);
+        self.ClaimFirstcharge:SetActiveEx(false);
     end
     ------【红点功能】
 end
