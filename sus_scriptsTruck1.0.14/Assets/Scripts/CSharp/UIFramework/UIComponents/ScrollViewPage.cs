@@ -5,6 +5,31 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public class ScrollViewPageCell:MonoBehaviour
+{
+    public bool hasCell = false;
+    public MonoBehaviour item = null;
+
+    public void MountItem(Transform parent, MonoBehaviour item)
+    {
+        hasCell = true;
+        this.item = item;
+
+        item.transform.SetParent(parent);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localScale = Vector3.one;
+        item.gameObject.SetActive(true);
+    }
+    public void Reset()
+    {
+        hasCell = false;
+        if (item)
+        {
+            item.gameObject.SetActive(false);
+        }
+        item = null;
+    }
+}
 public class ScrollViewPage : ScrollRect
 {
     [System.NonSerialized]
@@ -13,8 +38,21 @@ public class ScrollViewPage : ScrollRect
     public bool canAbsorb = true;
     private float closestHorizontalNormalPosition = 0;
     private int m_index;
-
     public event Action<int> onPageIndexChange;
+
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <param name="initDataIndex"></param>
+    public void Init(Action<int,int> onRefreshItemDataHandler, int initDataIndex=0)
+    {
+        OnRefreshItemDataHandler = onRefreshItemDataHandler;
+        ToRefreshItemData(initDataIndex, GetCount());
+    }
+
+
+
     private int Index
     {
         get
@@ -90,7 +128,8 @@ public class ScrollViewPage : ScrollRect
                 }
                 float perNormalPositionLength = CalcPerNormalPositionLength();
                 closestHorizontalNormalPosition = Mathf.Clamp01(Index * perNormalPositionLength);
-            }else
+            }
+            else
             {
                 //Debug.LogError(scrollDelta.magnitude + " " + Time.deltaTime);
                 moveGridChildToMiddle();
@@ -106,11 +145,23 @@ public class ScrollViewPage : ScrollRect
 
     public int GetCount()
     {
-        if(hasPrefabChild)
+        //if(hasPrefabChild)
+        //{
+        //    return content.childCount - 1;
+        //}
+        //return content.childCount;
+
+        int count = 0;
+        for (int i = 0; i < content.childCount; i++)
         {
-            return content.childCount - 1;
+            if (content.GetChild(i).gameObject.activeSelf)
+            {
+                count++;
+            }
         }
-        return content.childCount;
+        //Debug.LogError($"lzh ===> count = {count}");
+        return count;
+
     }
 
     private void moveGridChildToMiddle()
@@ -146,14 +197,19 @@ public class ScrollViewPage : ScrollRect
         {
             perNormalPositionLength = 1;
         }
+        int index = Mathf.RoundToInt(horizontalNormalizedPosition / perNormalPositionLength);
+        index = Mathf.Clamp(index, 0, contentChildCount);
+        //Debug.LogError($"lzh ===> contentChildCount={contentChildCount} {index} perNormalPositionLength = {perNormalPositionLength} {horizontalNormalizedPosition / perNormalPositionLength}");
         return perNormalPositionLength;
     }
 
+
+    float lastHorizontalNormalizedPosition = -1;
     protected override void LateUpdate()
     {
         base.LateUpdate();
-
-        if (GetCount() > 1 && canAbsorb && Mathf.Abs(horizontalNormalizedPosition - closestHorizontalNormalPosition) > 0.01f)
+        int childCount = GetCount();
+        if (childCount > 1 && canAbsorb && Mathf.Abs(horizontalNormalizedPosition - closestHorizontalNormalPosition) > 0.01f)
         {
             horizontalNormalizedPosition = Mathf.Lerp(horizontalNormalizedPosition, closestHorizontalNormalPosition, 0.35f);
             if (Mathf.Abs(horizontalNormalizedPosition - closestHorizontalNormalPosition) <= 0.01f)
@@ -161,6 +217,54 @@ public class ScrollViewPage : ScrollRect
                 horizontalNormalizedPosition = closestHorizontalNormalPosition;
             }
         }
+
+        // 计算刷新item数据的临界点
+        if (childCount > 3 && lastHorizontalNormalizedPosition != horizontalNormalizedPosition)
+        {
+            int curMainPageIndex = ClacCurrentMainPage(childCount);
+            if (curMainPageIndex != lastMainPageIndex)
+            {
+                ToRefreshItemData(curMainPageIndex,childCount);
+            }
+            lastHorizontalNormalizedPosition = horizontalNormalizedPosition;
+        }
+
+    }
+
+    int lastMainPageIndex =-1;
+    int ClacCurrentMainPage(int childCount)
+    {
+        if (childCount == 0) return 0;
+        float perNormalPositionLength = 0;
+        if (childCount > 1)
+        {
+            perNormalPositionLength = 1f / (childCount - 1);
+        }
+        else
+        {
+            perNormalPositionLength = 1;
+        }
+        int index = Mathf.RoundToInt(horizontalNormalizedPosition / perNormalPositionLength);
+        index = Mathf.Clamp(index, 0, childCount);
+        //Debug.LogError($"lzh===> index={index}");
+        return index;
+    }
+
+    Action<int,int> OnRefreshItemDataHandler = null;
+
+    void ToRefreshItemData(int curMainPageIndex, int itemCount)
+    {
+        if (curMainPageIndex == lastMainPageIndex)
+        {
+            return;
+        }
+
+        if (OnRefreshItemDataHandler != null)
+        {
+            OnRefreshItemDataHandler.Invoke(curMainPageIndex, lastMainPageIndex);
+        }
+        lastMainPageIndex = curMainPageIndex;
+
     }
 
     public void MoveToNext()

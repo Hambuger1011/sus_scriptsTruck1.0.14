@@ -1529,7 +1529,7 @@ namespace SuperScrollView
 
         public float GetContentPanelSize()
         {
-            float tTotalSize = mItemPosMgr.TotalSize > 0 ? (mItemPosMgr.TotalSize - mLastItemPadding) : 0;
+            float tTotalSize = mItemPosMgr.mTotalSize > 0 ? (mItemPosMgr.mTotalSize - mLastItemPadding) : 0;
             if (tTotalSize < 0)
             {
                 tTotalSize = 0;

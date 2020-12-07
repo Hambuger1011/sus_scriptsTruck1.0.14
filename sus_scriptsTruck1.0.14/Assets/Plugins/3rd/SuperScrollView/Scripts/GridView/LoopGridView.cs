@@ -169,10 +169,6 @@ namespace SuperScrollView
         {
             get
             {
-                if(mScrollRect == null)
-                {
-                    mScrollRect = gameObject.GetComponent<ScrollRect>();
-                }
                 return mScrollRect;
             }
         }
@@ -285,8 +281,8 @@ namespace SuperScrollView
                 mSnapFinishThreshold = initParam.mSnapFinishThreshold;
                 mSnapVecThreshold = initParam.mSnapVecThreshold;
             }
-            
-            if (ScrollRect == null)
+            mScrollRect = gameObject.GetComponent<ScrollRect>();
+            if (mScrollRect == null)
             {
                 Debug.LogError("ListView Init Failed! ScrollRect component not found!");
                 return;
@@ -324,7 +320,7 @@ namespace SuperScrollView
         this parameter must be set a value >=0 , and the ItemIndex can be from 0 to itemCount -1.  
         If resetPos is set false, then the ScrollRect’s content position will not changed after this method finished.
         */
-        public void SetListItemCount(int itemCount, bool resetPos = false)
+        public void SetListItemCount(int itemCount, bool resetPos = true)
         {
             if(itemCount < 0)
             {

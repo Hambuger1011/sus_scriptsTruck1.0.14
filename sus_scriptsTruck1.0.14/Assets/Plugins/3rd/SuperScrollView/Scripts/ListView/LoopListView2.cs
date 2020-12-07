@@ -60,7 +60,7 @@ namespace SuperScrollView
 
         Dictionary<string, ItemPool> mItemPoolDict = new Dictionary<string, ItemPool>();
         List<ItemPool> mItemPoolList = new List<ItemPool>();
-        [SerializeField,Header("item prefab")]
+        [SerializeField]
         List<ItemPrefabConfData> mItemPrefabDataList = new List<ItemPrefabConfData>();
 
         [SerializeField]
@@ -2706,7 +2706,7 @@ namespace SuperScrollView
         {
             if (mSupportScrollBar)
             {
-                float tTotalSize = mItemPosMgr.TotalSize > 0 ? (mItemPosMgr.TotalSize - mLastItemPadding) : 0;
+                float tTotalSize = mItemPosMgr.mTotalSize > 0 ? (mItemPosMgr.mTotalSize - mLastItemPadding) : 0;
                 if(tTotalSize < 0)
                 {
                     tTotalSize = 0;

@@ -42,6 +42,10 @@ function BookTypeItem:SetInfo(Info)
     self.IntroductionText.text=ChapterDiscription;
 
     local GetChapterCount = GameHelper.GetChapterCount(Info.book_id);
+	if(GetChapterCount==nil)then
+	return;
+	end
+	logic.debug.LogError("BookTypeItem:SetInfo"..Info.book_id); 
     self.ChapterProgress.text = "Chapter:"..GetChapterCount;
     --if(bookDetails and ((CS.XLuaHelper.is_Null(bookDetails)==false)) and bookDetails.ChapterDiscriptionArray.Length >= chapterId)then
     --    if (chapterId == 0)then  chapterId = 1; end

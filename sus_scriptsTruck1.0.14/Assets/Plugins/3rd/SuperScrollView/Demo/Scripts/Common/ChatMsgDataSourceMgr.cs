@@ -140,26 +140,6 @@ namespace SuperScrollView
             mChatMsgList.Add(tMsg);
         }
 
-        public void InsertOneMsg(int index)
-        {
-            int count = mChatDemoStrList.Length;
-            int count1 = mChatDemoPicList.Length;
-            ChatMsg tMsg = new ChatMsg();
-            tMsg.mMsgType = (MsgTypeEnum)(Random.Range(0, 99) % 2);
-            tMsg.mPersonId = Random.Range(0, 99) % 2;
-            tMsg.mSrtMsg = mChatDemoStrList[Random.Range(0, 99) % count];
-            tMsg.mPicMsgSpriteName = mChatDemoPicList[Random.Range(0, 99) % count1];
-            mChatMsgList.Insert(index, tMsg);
-        }
-
-
-        public void ChangeItem(int index)
-        {
-            ChatMsg tMsg = mChatMsgList[index];
-            tMsg.mMsgType = MsgTypeEnum.Str;
-            tMsg.mPersonId = Random.Range(0, 99) % 2;
-            tMsg.mSrtMsg = "test:" + index;
-        }
     }
 
 }

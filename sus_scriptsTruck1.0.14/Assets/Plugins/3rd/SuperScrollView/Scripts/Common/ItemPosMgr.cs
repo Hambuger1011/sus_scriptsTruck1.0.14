@@ -7,198 +7,183 @@ using UnityEngine.EventSystems;
 namespace SuperScrollView
 {
 
-    public class ItemPosMgr
+    public class ItemSizeGroup
     {
-        public class ItemSizeGroup
+
+        public float[] mItemSizeArray = null;
+        public float[] mItemStartPosArray = null;
+        public int mItemCount = 0;
+        int mDirtyBeginIndex = ItemPosMgr.mItemMaxCountPerGroup;
+        public float mGroupSize = 0;
+        public float mGroupStartPos = 0;
+        public float mGroupEndPos = 0;
+        public int mGroupIndex = 0;
+        float mItemDefaultSize = 0;
+        int mMaxNoZeroIndex = 0;
+        public ItemSizeGroup(int index,float itemDefaultSize)
         {
-            int mDirtyBeginIndex = ItemPosMgr.mItemMaxCountPerGroup;
-            float mItemDefaultSize = 0;
-            int mMaxNoZeroIndex = 0;
+            mGroupIndex = index;
+            mItemDefaultSize = itemDefaultSize;
+            Init();
+        }
 
-            public float[] mItemSizeArray = null;
-            public float[] mItemStartPosArray = null;
-            public int mItemCount = 0;
-            public float mGroupSize = 0;
-            public float mGroupStartPos = 0;
-            public float mGroupEndPos = 0;
-            public int mGroupIndex = 0;
-
-            public ItemSizeGroup(int index, float itemDefaultSize)
+        public void Init()
+        {
+            mItemSizeArray = new float[ItemPosMgr.mItemMaxCountPerGroup];
+            if (mItemDefaultSize != 0)
             {
-                mGroupIndex = index;
-                mItemDefaultSize = itemDefaultSize;
-                Init();
-            }
-
-            public void Init()
-            {
-                mItemSizeArray = new float[ItemPosMgr.mItemMaxCountPerGroup];
-                if (mItemDefaultSize != 0)
+                for (int i = 0; i < mItemSizeArray.Length; ++i)
                 {
-                    for (int i = 0; i < mItemSizeArray.Length; ++i)
-                    {
-                        mItemSizeArray[i] = mItemDefaultSize;
-                    }
-                }
-                mItemStartPosArray = new float[ItemPosMgr.mItemMaxCountPerGroup];
-                mItemStartPosArray[0] = 0;
-                mItemCount = ItemPosMgr.mItemMaxCountPerGroup;
-                mGroupSize = mItemDefaultSize * mItemSizeArray.Length;
-                if (mItemDefaultSize != 0)
-                {
-                    mDirtyBeginIndex = 0;
-                }
-                else
-                {
-                    mDirtyBeginIndex = ItemPosMgr.mItemMaxCountPerGroup;
+                    mItemSizeArray[i] = mItemDefaultSize;
                 }
             }
-
-            public float GetItemStartPos(int index)
+            mItemStartPosArray = new float[ItemPosMgr.mItemMaxCountPerGroup];
+            mItemStartPosArray[0] = 0;
+            mItemCount = ItemPosMgr.mItemMaxCountPerGroup;
+            mGroupSize = mItemDefaultSize * mItemSizeArray.Length;
+            if (mItemDefaultSize != 0)
             {
-                return mGroupStartPos + mItemStartPosArray[index];
+                mDirtyBeginIndex = 0;
             }
-
-            public bool IsDirty
+            else
             {
-                get
-                {
-                    return (mDirtyBeginIndex < mItemCount);
-                }
-            }
-            public float SetItemSize(int index, float size)
-            {
-                if (index > mMaxNoZeroIndex && size > 0)
-                {
-                    mMaxNoZeroIndex = index;
-                }
-                float old = mItemSizeArray[index];
-                if (old == size)
-                {
-                    return 0;
-                }
-                mItemSizeArray[index] = size;
-                if (index < mDirtyBeginIndex)
-                {
-                    mDirtyBeginIndex = index;
-                }
-                float ds = size - old;
-                mGroupSize = mGroupSize + ds;
-                return ds;
-            }
-
-            public void SetItemCount(int count)
-            {
-                if (count < mMaxNoZeroIndex)
-                {
-                    mMaxNoZeroIndex = count;
-                }
-                if (mItemCount == count)
-                {
-                    return;
-                }
-                mItemCount = count;
-                RecalcGroupSize();
-            }
-
-            public void RecalcGroupSize()
-            {
-                mGroupSize = 0;
-                for (int i = 0; i < mItemCount; ++i)
-                {
-                    mGroupSize += mItemSizeArray[i];
-                }
-            }
-
-            public int GetItemIndexByPos(float pos)
-            {
-                if (mItemCount == 0)
-                {
-                    return -1;
-                }
-
-                int low = 0;
-                int high = mItemCount - 1;
-                if (mItemDefaultSize == 0f)
-                {
-                    if (mMaxNoZeroIndex < 0)
-                    {
-                        mMaxNoZeroIndex = 0;
-                    }
-                    high = mMaxNoZeroIndex;
-                }
-                while (low <= high)
-                {
-                    int mid = (low + high) / 2;
-                    float startPos = mItemStartPosArray[mid];
-                    float endPos = startPos + mItemSizeArray[mid];
-                    if (startPos <= pos && endPos >= pos)
-                    {
-                        return mid;
-                    }
-                    else if (pos > endPos)
-                    {
-                        low = mid + 1;
-                    }
-                    else
-                    {
-                        high = mid - 1;
-                    }
-                }
-                return -1;
-            }
-
-            public void UpdateAllItemStartPos()
-            {
-                if (mDirtyBeginIndex >= mItemCount)
-                {
-                    return;
-                }
-                int startIndex = (mDirtyBeginIndex < 1) ? 1 : mDirtyBeginIndex;
-                for (int i = startIndex; i < mItemCount; ++i)
-                {
-                    mItemStartPosArray[i] = mItemStartPosArray[i - 1] + mItemSizeArray[i - 1];
-                }
-                mDirtyBeginIndex = mItemCount;
-            }
-
-            public void ClearOldData()
-            {
-                for (int i = mItemCount; i < ItemPosMgr.mItemMaxCountPerGroup; ++i)
-                {
-                    mItemSizeArray[i] = 0;
-                }
+                mDirtyBeginIndex = ItemPosMgr.mItemMaxCountPerGroup;
             }
         }
 
-        private const int mItemMaxCountPerGroup = 100;
-        private List<ItemSizeGroup> mItemSizeGroupList = new List<ItemSizeGroup>();
-        private int mDirtyBeginIndex = int.MaxValue;
-        private float mTotalSize = 0;
-        private float mItemDefaultSize = 20;
-        private int mMaxNotEmptyGroupIndex = 0;
-        private RectOffset padding;
+        public float GetItemStartPos(int index)
+        {
+            return mGroupStartPos + mItemStartPosArray[index];
+        }
 
-        public float TotalSize
+        public bool IsDirty
         {
             get
             {
-                return mTotalSize;
+                return (mDirtyBeginIndex < mItemCount);
             }
         }
+        public float SetItemSize(int index, float size)
+        {
+            if(index > mMaxNoZeroIndex && size > 0)
+            {
+                mMaxNoZeroIndex = index;
+            }
+            float old = mItemSizeArray[index];
+            if (old == size)
+            {
+                return 0;
+            }
+            mItemSizeArray[index] = size;
+            if (index < mDirtyBeginIndex)
+            {
+                mDirtyBeginIndex = index;
+            }
+            float ds = size - old;
+            mGroupSize = mGroupSize + ds;
+            return ds;
+        }
+
+        public void SetItemCount(int count)
+        {
+            if(count < mMaxNoZeroIndex)
+            {
+                mMaxNoZeroIndex = count;
+            }
+            if (mItemCount == count)
+            {
+                return;
+            }
+            mItemCount = count;
+            RecalcGroupSize();
+        }
+
+        public void RecalcGroupSize()
+        {
+            mGroupSize = 0;
+            for (int i = 0; i < mItemCount; ++i)
+            {
+                mGroupSize += mItemSizeArray[i];
+            }
+        }
+
+        public int GetItemIndexByPos(float pos)
+        {
+            if (mItemCount == 0)
+            {
+                return -1;
+            }
+            
+            int low = 0;
+            int high = mItemCount - 1;
+            if (mItemDefaultSize == 0f)
+            {
+                if(mMaxNoZeroIndex < 0)
+                {
+                    mMaxNoZeroIndex = 0;
+                }
+                high = mMaxNoZeroIndex;
+            }
+            while (low <= high)
+            {
+                int mid = (low + high) / 2;
+                float startPos = mItemStartPosArray[mid];
+                float endPos = startPos + mItemSizeArray[mid];
+                if (startPos <= pos && endPos >= pos)
+                {
+                    return mid;
+                }
+                else if (pos > endPos)
+                {
+                    low = mid + 1;
+                }
+                else
+                {
+                    high = mid - 1;
+                }
+            }
+            return -1;
+        }
+
+        public void UpdateAllItemStartPos()
+        {
+            if (mDirtyBeginIndex >= mItemCount)
+            {
+                return;
+            }
+            int startIndex = (mDirtyBeginIndex < 1) ? 1 : mDirtyBeginIndex;
+            for (int i = startIndex; i < mItemCount; ++i)
+            {
+                mItemStartPosArray[i] = mItemStartPosArray[i - 1] + mItemSizeArray[i - 1];
+            }
+            mDirtyBeginIndex = mItemCount;
+        }
+
+        public void ClearOldData()
+        {
+            for (int i = mItemCount; i < ItemPosMgr.mItemMaxCountPerGroup; ++i)
+            {
+                mItemSizeArray[i] = 0;
+            }
+        }
+    }
+
+    public class ItemPosMgr
+    {
+        public const int mItemMaxCountPerGroup = 100;
+        List<ItemSizeGroup> mItemSizeGroupList = new List<ItemSizeGroup>();
+        int mDirtyBeginIndex = int.MaxValue;
+        public float mTotalSize = 0;
+        public float mItemDefaultSize = 20;
+        int mMaxNotEmptyGroupIndex = 0;
 
         public ItemPosMgr(float itemDefaultSize)
         {
             mItemDefaultSize = itemDefaultSize;
         }
 
-        public void SetItemMaxCount(int maxCount, RectOffset padding = null)
+        public void SetItemMaxCount(int maxCount)
         {
-            this.padding = padding;
-            if (this.padding == null)
-            {
-                this.padding = new RectOffset();
-            }
             mDirtyBeginIndex = 0;
             mTotalSize = 0;
             int st = maxCount % mItemMaxCountPerGroup;
@@ -260,7 +245,6 @@ namespace SuperScrollView
             {
                 mTotalSize = mTotalSize + mItemSizeGroupList[i].mGroupSize;
             }
-            mTotalSize += this.padding.vertical;
 
         }
 
@@ -371,7 +355,7 @@ namespace SuperScrollView
                 tGroup.UpdateAllItemStartPos();
                 if (i == 0)
                 {
-                    tGroup.mGroupStartPos = this.padding.top;
+                    tGroup.mGroupStartPos = 0;
                     tGroup.mGroupEndPos = tGroup.mGroupSize;
                 }
                 else

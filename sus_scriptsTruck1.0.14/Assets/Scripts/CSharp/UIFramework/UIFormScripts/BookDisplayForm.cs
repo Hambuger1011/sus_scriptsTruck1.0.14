@@ -17,9 +17,9 @@ public class BookDisplayForm : BaseUIForm
     public Image UIMask;
     public RectTransform BookDisplayGridChildContent;
     public GameObject BookDisplayGridChildTpl;
+    public GameObject ItemCellPrefab;
     public ScrollViewPage SVPage;
-   
-
+    
 
     bool m_switchNext = false;
 
@@ -27,18 +27,22 @@ public class BookDisplayForm : BaseUIForm
     private int mChapterId;
     private int mCurBookId;
     private GameObject PlayShowNeedKeyGame;
-    private List<BookDisplayGridChild> mDisplayItemList;
+    private List<ScrollViewPageCell> mCellList;
+    private Stack<BookDisplayGridChild> mDisplayItemList;
 
     private int mLastBookId = 0;
     private int continueCost;
 
 
+    int bookID;
+    int openChapterCount;//开放的章节总数
+    int allChapterCount;//所有的章节总数
+    t_BookDetails bookDetails;
 
     private void Awake()
     {
         SVPage.hasPrefabChild = true;
-        BookDisplayGridChildTpl.SetActiveEx(false);
- 
+        BookDisplayGridChildTpl.SetActiveEx(false); 
     }
 
     public override void OnOpen()
@@ -68,7 +72,9 @@ public class BookDisplayForm : BaseUIForm
     {
         mCurBookId = bookID;
         this.m_switchNext = switchNext;
-        mDisplayItemList = new List<BookDisplayGridChild>();
+
+        mDisplayItemList = new Stack<BookDisplayGridChild>();
+        mCellList = new List<ScrollViewPageCell>();
 
         //UINetLoadingMgr.Instance.Show();
         GameHttpNet.Instance.GetBookDetailInfo(bookID, GetBookDetailInfoCallBack);  //获得书本信息
@@ -177,68 +183,197 @@ public class BookDisplayForm : BaseUIForm
         }
      }
 
-    private void initBookDisplayGridChild(int bookID,bool checkTween = false)
+    BookDisplayGridChild GetPageItem()
     {
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
-        int len = 0;
-        if (mDisplayItemList != null)
-            len = mDisplayItemList.Count;
-        int chapterCount = mChapterId; //得到开放的章节
-        int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
-        if (chapterOpenIndex == -1)
-            chapterOpenIndex = bookDetails.ChapterOpen;
-        //chapterCount = chapterOpenIndex;//
-        if (len < chapterOpenIndex)
-            len = chapterOpenIndex;
+        BookDisplayGridChild item = null;
+        if (mDisplayItemList.Count>0)
+        {
+            item = mDisplayItemList.Pop();
+        }
+        else
+        {
+            // 生成
+            GameObject go = Instantiate(BookDisplayGridChildTpl, BookDisplayGridChildContent);
+            item = go.GetComponent<BookDisplayGridChild>();
+            item.gameObject.SetActive(false);
+        }
+        return item;
+    }
+
+    void initBookDisplayGridChild(int bookID, bool checkTween = false)
+    {
+        // 获取数据
+        this.bookID = bookID;
+        bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
+        openChapterCount = bookDetails.ChapterOpen; //得到开放的章节
+        allChapterCount = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;//章节总数
+        if (allChapterCount == -1)
+            allChapterCount = openChapterCount;
+        int len = openChapterCount;
+
+        Debug.LogError($"lzh ===> {openChapterCount} {allChapterCount} {len} {mChapterId}");
+        // 生成cell
         for (int i = 0; i < len; i++)
         {
-            BookDisplayGridChild displayItem;
-            int chapterId = i + 1;
-            if (mDisplayItemList.Count > i)
-            {
-                displayItem = mDisplayItemList[i];
-            }
-            else
-            {
-                GameObject go = Instantiate(BookDisplayGridChildTpl, BookDisplayGridChildContent);
-                displayItem = go.GetComponent<BookDisplayGridChild>();
-                mDisplayItemList.Add(displayItem);
-            }
+            GameObject go = Instantiate(ItemCellPrefab, BookDisplayGridChildContent);
+            ScrollViewPageCell cell = go.AddComponent<ScrollViewPageCell>();
+            go.SetActive(true);
+            mCellList.Add(cell);
+        }       
 
-            if (displayItem == null)
-                return;
-            displayItem.Init(bookDetails,
-                bookID,
-                bookDetails.BookName,
-                chapterId,
-                string.Format("Chapter {0} / {1}", chapterId, chapterOpenIndex),
-                bookDetails.ChapterDiscriptionArray[i],
-                i <= (mChapterId-1),
-                i < (mChapterId -1),
-                (i > (mChapterId - 1) && i < chapterOpenIndex),
-                bookDetails.ChapterRelease,
-                UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
-                "bg_book"+ bookID,
-                share,
-                startReading,
-                commingSoonButtonEvent,
-                readCompleteEvent,
-                back,
-                LockHandler,
-                ResetBookHandler,
-                ResetChapterHandler);
-
-            displayItem.gameObject.SetActive(true);
-        }
+        // init scroll viwe page
+        SVPage.Init(OnRefreshItemData, mChapterId - 1);
 
         SVPage.MoveToIndexNoTween(mChapterId - 1);
-        if(checkTween && mChapterId == 1)
+        if (checkTween && mChapterId == 1)
         {
             float posY = SVPage.transform.localPosition.y;
             SVPage.transform.localPosition = new Vector2(800, posY);
             SVPage.transform.DOLocalMoveX(0, 0.2f).SetEase(Ease.OutFlash).Play();
         }
     }
+    //int curMainPageIndex, int itemCount
+    void OnRefreshItemData(int curMainPageIndex, int lastMainPageIndex)
+    {
+        int needItemCount = 3;
+        int len = openChapterCount;
+        int firstIndex = 0;
+        if (curMainPageIndex == 0)
+        {
+            firstIndex = 0;
+        }
+        else if(curMainPageIndex == len-1)
+        {
+            firstIndex = curMainPageIndex - 2;
+        }
+        else
+        {
+            firstIndex = curMainPageIndex - 1;
+        }
+        Debug.LogError($"lzh =======> len={len} curMainPageIndex={curMainPageIndex} lastMainPageIndex={lastMainPageIndex} {firstIndex} {mDisplayItemList.Count}");
+        for (int i = 0; i < len; i++)
+        {
+            ScrollViewPageCell cell = mCellList[i];
+            if (i < firstIndex || i > firstIndex + needItemCount-1)
+            {
+                if (cell.hasCell)
+                {
+                    mDisplayItemList.Push(cell.item as BookDisplayGridChild);
+                    cell.Reset();
+                }
+            }
+        }
+        for (int i = firstIndex; i < firstIndex + needItemCount; i++)
+        {
+            if (i >= len) break;
+            BookDisplayGridChild displayItem;
+            ScrollViewPageCell cell = mCellList[i];
+            bool needRefresh = true;
+            if(cell.hasCell && cell.item.gameObject.activeSelf)
+            {
+                needRefresh = false;
+            }
+            if (cell.hasCell)
+            {
+                displayItem = cell.item as BookDisplayGridChild;
+            }
+            else
+            {
+                //Debug.LogError($"lzh =========> i={i} mDisplayItemList.Count = {mDisplayItemList.Count} {bookDetails.ChapterDiscriptionArray.Length}");
+                displayItem = GetPageItem();
+            }
+            cell.MountItem(cell.transform, displayItem);
+
+            int chapterId = i+1;
+            if (needRefresh)
+            {
+                displayItem.Init(bookDetails,
+                    bookID,
+                    bookDetails.BookName,
+                    chapterId,
+                    string.Format("Chapter {0} / {1}", chapterId, allChapterCount),
+                    bookDetails.ChapterDiscriptionArray[i],
+                    i <= (mChapterId - 1),
+                    i < (mChapterId - 1),
+                    (i > (mChapterId - 1) && i < allChapterCount),
+                    bookDetails.ChapterRelease,
+                    UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
+                    "bg_book" + bookID,
+                    share,
+                    startReading,
+                    commingSoonButtonEvent,
+                    readCompleteEvent,
+                    back,
+                    LockHandler,
+                    ResetBookHandler,
+                    ResetChapterHandler);
+            }
+        }
+    }
+
+    //private void initBookDisplayGridChild_old(int bookID, bool checkTween = false)
+    //{
+    //    t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
+    //    int len = 0;
+    //    if (mDisplayItemList != null)
+    //        len = mDisplayItemList.Count;
+    //    int chapterCount = mChapterId; //得到开放的章节
+    //    int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
+    //    Debug.LogError($"lzh ===>  chapterCount:{chapterCount} chapterOpenIndex:{chapterOpenIndex} ChapterOpen:{bookDetails.ChapterOpen} ");
+    //    if (chapterOpenIndex == -1)
+    //        chapterOpenIndex = bookDetails.ChapterOpen;
+    //    //chapterCount = chapterOpenIndex;//
+    //    if (len < chapterOpenIndex)
+    //        len = chapterOpenIndex;
+    //    for (int i = 0; i < len; i++)
+    //    {
+    //        BookDisplayGridChild displayItem;
+    //        int chapterId = i + 1;
+    //        if (mDisplayItemList.Count > i)
+    //        {
+    //            displayItem = mDisplayItemList[i] as BookDisplayGridChild;
+    //        }
+    //        else
+    //        {
+    //            GameObject go = Instantiate(BookDisplayGridChildTpl, BookDisplayGridChildContent);
+    //            displayItem = go.GetComponent<BookDisplayGridChild>();
+    //            mDisplayItemList.Add(displayItem);
+    //        }
+
+    //        if (displayItem == null)
+    //            return;
+    //        displayItem.Init(bookDetails,
+    //            bookID,
+    //            bookDetails.BookName,
+    //            chapterId,
+    //            string.Format("Chapter {0} / {1}", chapterId, chapterOpenIndex),
+    //            bookDetails.ChapterDiscriptionArray[i],
+    //            i <= (mChapterId - 1),
+    //            i < (mChapterId - 1),
+    //            (i > (mChapterId - 1) && i < chapterOpenIndex),
+    //            bookDetails.ChapterRelease,
+    //            UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
+    //            "bg_book" + bookID,
+    //            share,
+    //            startReading,
+    //            commingSoonButtonEvent,
+    //            readCompleteEvent,
+    //            back,
+    //            LockHandler,
+    //            ResetBookHandler,
+    //            ResetChapterHandler);
+
+    //        displayItem.gameObject.SetActive(true);
+    //    }
+
+    //    SVPage.MoveToIndexNoTween(mChapterId - 1);
+    //    if (checkTween && mChapterId == 1)
+    //    {
+    //        float posY = SVPage.transform.localPosition.y;
+    //        SVPage.transform.localPosition = new Vector2(800, posY);
+    //        SVPage.transform.DOLocalMoveX(0, 0.2f).SetEase(Ease.OutFlash).Play();
+    //    }
+    //}
 
     private void ResetBookHandler(UnityEngine.EventSystems.PointerEventData data)
     {
@@ -277,9 +412,9 @@ public class BookDisplayForm : BaseUIForm
         {
             if (mDisplayItemList.Count > 0)
             {
-                for (int i = 0; i < mDisplayItemList.Count; i++)
+                foreach(var item in mDisplayItemList)
                 {
-                    mDisplayItemList[i].Limit_time_Free();
+                    (item as BookDisplayGridChild).Limit_time_Free();
                 }
             }
         }
@@ -565,6 +700,7 @@ public class BookDisplayForm : BaseUIForm
     }
     private void startReading(int vChapterId)
     {
+        Debug.LogError($"lzh ===========> startReading({vChapterId})");
         EventDispatcher.Dispatch(EventEnum.NavigationClose);
         EventDispatcher.Dispatch(EventEnum.NoticeClose);
         initDialogDisplaySystemData(vChapterId);
@@ -856,9 +992,9 @@ public class BookDisplayForm : BaseUIForm
         bool boo = false;
         if (mDisplayItemList != null)
         {
-            for (int i = 0; i < mDisplayItemList.Count; i++)
+            foreach (var item in mDisplayItemList)
             {
-                BookDisplayGridChild  displayItem = mDisplayItemList[i];
+                BookDisplayGridChild displayItem = item as BookDisplayGridChild;
                 if (displayItem != null && displayItem.isShow == true)
                 {
                     boo = true;
@@ -874,9 +1010,9 @@ public class BookDisplayForm : BaseUIForm
     {
         if (mDisplayItemList != null)
         {
-            for (int i = 0; i < mDisplayItemList.Count; i++)
+            foreach (var item in mDisplayItemList)
             {
-                BookDisplayGridChild  displayItem = mDisplayItemList[i];
+                BookDisplayGridChild  displayItem = item as BookDisplayGridChild;
                 if (displayItem != null)
                     displayItem.ReseMaskClose(null);
             }
@@ -888,13 +1024,11 @@ public class BookDisplayForm : BaseUIForm
     /// </summary>
     private void PlayShowNeedKey()
     {
-        int len = 0;
         if (mDisplayItemList != null)
         {
-            len = mDisplayItemList.Count;
-            for (int i = 0; i < len; i++)
+            foreach (var item in mDisplayItemList)
             {
-                  BookDisplayGridChild  displayItem = mDisplayItemList[i];
+                  BookDisplayGridChild displayItem = item as BookDisplayGridChild;
                   if (displayItem != null)
                       displayItem.CheckChapterNeedPay();
             }
@@ -906,13 +1040,11 @@ public class BookDisplayForm : BaseUIForm
     /// </summary>
     private void UpdateBookReadNum()
     {
-        int len = 0;
         if (mDisplayItemList != null)
         {
-            len = mDisplayItemList.Count;
-            for (int i = 0; i < len; i++)
+            foreach (var item in mDisplayItemList)
             {
-                BookDisplayGridChild displayItem = mDisplayItemList[i];
+                BookDisplayGridChild displayItem = item as BookDisplayGridChild;
                 if (displayItem != null)
                     displayItem.UpdateReadNum();
             }
@@ -944,8 +1076,7 @@ string linkUrl = "";
         var Localization = GameDataMgr.Instance.table.GetLocalizationById(142);
         UITipsMgr.Instance.PopupTips(Localization, false);
         
-    }
-    
+    }    
 
     private void GetShareAwardHandler(object arg)
     {

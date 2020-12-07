@@ -347,6 +347,33 @@ end
 --endregion
 
 
+--region【领取首充奖励】---【限时活动】【账号迁移奖励】
+function ActivityControl:ReceiveFirstRechargeAwardRequest()
+    logic.gameHttp:ReceiveUserMoveAward(function(result) self:ReceiveFirstRechargeAward(result); end)
+end
+--endregion
+
+
+--region【领取用户迁移的奖励*响应】---【限时活动】【限时活动*账号迁移奖励】
+function ActivityControl:ReceiveFirstRechargeAward(result)
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if code == 200 then
+        logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
+        logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
+
+        --刷新红点状态
+        GameController.MainFormControl:RedPointRequest();
+
+        --如果在活动页面 刷新数据
+        if(UIActivityForm)then
+            UIActivityForm:ReceiveFirstRechargeAward_Response();
+        end
+    end
+end
+--endregion
+
+
 --region【领取用户迁移的奖励*响应】---【限时活动】【限时活动*账号迁移奖励】
 function ActivityControl:ReceiveUserMoveAward(result)
     if(string.IsNullOrEmpty(result))then return; end

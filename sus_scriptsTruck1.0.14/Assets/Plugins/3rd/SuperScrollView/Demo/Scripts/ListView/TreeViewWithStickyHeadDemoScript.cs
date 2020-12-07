@@ -15,6 +15,10 @@ namespace SuperScrollView
         InputField mScrollToInputItem;
         InputField mScrollToInputChild;
         Button mBackButton;
+
+        Button mAddNewButton;
+        InputField mAddNewInputItem;
+        InputField mAddNewInputChild;
         // an helper class for TreeView item showing.
         TreeViewItemCountMgr mTreeItemCountMgr = new TreeViewItemCountMgr();
         //the sticky head item
@@ -47,6 +51,11 @@ namespace SuperScrollView
             mBackButton.onClick.AddListener(OnBackBtnClicked);
             mExpandAllButton.onClick.AddListener(OnExpandAllBtnClicked);
             mCollapseAllButton.onClick.AddListener(OnCollapseAllBtnClicked);
+
+            mAddNewButton = GameObject.Find("ButtonPanel/buttonGroup4/AddNewButton").GetComponent<Button>();
+            mAddNewInputItem = GameObject.Find("ButtonPanel/buttonGroup4/AddNewInputFieldItem").GetComponent<InputField>();
+            mAddNewInputChild = GameObject.Find("ButtonPanel/buttonGroup4/AddNewInputFieldChild").GetComponent<InputField>();
+            mAddNewButton.onClick.AddListener(OnAddNewBtnClicked);
 
             mStickeyHeadItemHeight = mStickeyHeadItem.GetComponent<RectTransform>().rect.height;
 
@@ -142,6 +151,8 @@ namespace SuperScrollView
                 item.UserIntData1 = treeItemIndex;
                 item.UserIntData2 = childIndex;
                 itemScript.SetItemData(itemData, treeItemIndex, childIndex);
+                float height = Random.Range(200, 400);//random the item's height, just for demo show
+                item.CachedRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
                 return item;
             }
 
@@ -192,6 +203,36 @@ namespace SuperScrollView
                 finalIndex = itemCountData.mBeginIndex + childIndex;
             }
             mLoopListView.MovePanelToItemIndex(finalIndex, mStickeyHeadItemHeight);
+        }
+
+
+
+        void OnAddNewBtnClicked()
+        {
+            int itemIndex = 0;
+            int childIndex = 0;
+            if (int.TryParse(mAddNewInputItem.text, out itemIndex) == false)
+            {
+                return;
+            }
+            if (int.TryParse(mAddNewInputChild.text, out childIndex) == false)
+            {
+                childIndex = 0;
+            }
+            if (childIndex < 0)
+            {
+                childIndex = 0;
+            }
+            TreeViewItemCountData itemCountData = mTreeItemCountMgr.GetTreeItem(itemIndex);
+            if (itemCountData == null)
+            {
+                return;
+            }
+            TreeViewDataSourceMgr.Get.AddNewItemChildForTest(itemIndex, childIndex);
+            int childCount = itemCountData.mChildCount;
+            mTreeItemCountMgr.SetItemChildCount(itemIndex, childCount + 1);
+            mLoopListView.SetListItemCount(mTreeItemCountMgr.GetTotalItemAndChildCount(), false);
+            mLoopListView.RefreshAllShownItem();
         }
 
         void OnExpandAllBtnClicked()

@@ -99,17 +99,22 @@ function LimitedTimePanel:__init(gameObject)
 
     self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
 
-    logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
+    logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) self:ChargeButtonOnClick() end)
     logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data)
-        logic.gameHttp:ReceiveFirstRechargeAward(function(result)
-            local json = core.json.Derialize(result)
-            local code = tonumber(json.code)
-            if code == 200 then
-                self.FirstchargeBG.gameObject:SetActiveEx(false)
-                logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
-                logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
-            end
-        end)
+        local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
+        if(uicollect)then
+            uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,false,function()
+                logic.gameHttp:ReceiveFirstRechargeAward(function(result)
+                    local json = core.json.Derialize(result)
+                    local code = tonumber(json.code)
+                    if code == 200 then
+                        self.FirstchargeBG.gameObject:SetActiveEx(false)
+                        logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
+                        logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
+                    end
+                end)
+            end);
+        end
     end)
     
     --endregion
@@ -323,8 +328,9 @@ end
 --region 【领取关注社媒奖励】
 function LimitedTimePanel:ReceiveRewards()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then                                                                                                                     --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
-        uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,false,function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end);
+    if(uicollect)then                                            --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
+        uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,false,
+                function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end);
     end
 end
 --endregion
@@ -333,14 +339,45 @@ end
 --region【领取迁移奖励】
 function LimitedTimePanel:CLAIMButtonOnClick()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then                                                                                                                    --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
-        uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,false,function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end);
+    if(uicollect)then                                            --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
+        uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,false,
+                function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end);
+    end
+end
+--endregion
+
+
+--region【前往充值】
+function LimitedTimePanel:ChargeButtonOnClick()
+    local uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.ChargeMoneyForm)
+    local tapForm = uiform:GetComponent(typeof(CS.ChargeMoneyForm))
+    tapForm:SetFormStyle(2);
+    uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainFormTop)
+    tapForm = uiform:GetComponent(typeof(CS.MainTopSprite))
+    tapForm:GamePlayTopOpen("LimitedTimePanel");
+end
+--endregion
+
+
+--region【前往充值】
+function LimitedTimePanel:ClaimFirstchargeOnClick()
+    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
+    if(uicollect)then
+        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end);
     end
 end
 --endregion
 
 
 --region【领取用户迁移的奖励*响应】---【限时活动】【限时活动*账号迁移奖励】
+function LimitedTimePanel:ReceiveFirstRechargeAward_Response()
+    self.FirstchargeBG.gameObject:SetActiveEx(false)
+end
+--endregion
+
+
+--region【领取首充奖励*响应】---【限时活动】【限时活动*账号迁移奖励】
 function LimitedTimePanel:ReceiveUserMoveAward_Response()
     self.MoveRewardBG.gameObject:SetActiveEx(false);
 end

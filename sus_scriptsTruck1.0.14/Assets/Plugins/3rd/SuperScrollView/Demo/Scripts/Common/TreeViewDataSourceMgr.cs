@@ -9,7 +9,7 @@ namespace SuperScrollView
     {
         public string mName;
         public string mIcon;
-        List<ItemData> mChildItemDataList = new List<ItemData>();
+        public List<ItemData> mChildItemDataList = new List<ItemData>();
 
         public int ChildCount
         {
@@ -102,6 +102,35 @@ namespace SuperScrollView
                 }
                 return totalCount;
             }
+        }
+
+        public void AddNewItemChildForTest(int itemIndex,int AddToBeforeChildIndex)
+        {
+            if (itemIndex < 0 || itemIndex >= mItemDataList.Count)
+            {
+                return;
+            }
+            TreeViewItemData tData = mItemDataList[itemIndex];
+            List<ItemData> childItemDataList = tData.mChildItemDataList;
+            ItemData childItemData = new ItemData();
+            childItemData.mName = "New Added Item" + itemIndex + ":"+ AddToBeforeChildIndex;
+            childItemData.mDesc = "Item Desc For " + childItemData.mName;
+            childItemData.mIcon = ResManager.Get.GetSpriteNameByIndex(Random.Range(0, 24));
+            childItemData.mStarCount = Random.Range(0, 6);
+            childItemData.mFileSize = Random.Range(20, 999);
+            if (AddToBeforeChildIndex < 0)
+            {
+                childItemDataList.Insert(0, childItemData);
+            }
+            else if(AddToBeforeChildIndex >= childItemDataList.Count)
+            {
+                childItemDataList.Add(childItemData);
+            }
+            else
+            {
+                childItemDataList.Insert(AddToBeforeChildIndex, childItemData);
+            }
+
         }
 
 

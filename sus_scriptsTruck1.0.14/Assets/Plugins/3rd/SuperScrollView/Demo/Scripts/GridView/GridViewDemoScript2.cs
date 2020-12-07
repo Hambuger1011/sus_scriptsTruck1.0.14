@@ -112,7 +112,7 @@ namespace SuperScrollView
             {
                 count = 0;
             }
-            mLoopGridView.SetListItemCount(count, true);
+            mLoopGridView.SetListItemCount(count);
         }
 
     }

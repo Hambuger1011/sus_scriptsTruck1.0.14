@@ -146,6 +146,13 @@ public class MainTopSprite : BaseUIForm
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRewardForm);");
 
         }
+        else if (CurUI == "LimitedTimePanel")
+        {
+            CtrlIconShow(false);
+            CUIManager.Instance.CloseForm(UIFormName.ChargeMoneyForm);
+            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRewardForm);");
+
+        }
         else if (CurUI == "UIDressUpForm")
         {
             CtrlIconShow(false);

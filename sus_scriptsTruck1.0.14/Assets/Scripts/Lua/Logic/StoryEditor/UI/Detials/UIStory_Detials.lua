@@ -85,7 +85,8 @@ function UIStory_Detials:OnInitView()
                 newDetials.favorite_count,
                 newDetials.word_count,
                 newDetials.cover_image
-            )
+            )            
+            self:InitCatagoryList()
         end)
     end)
 
@@ -111,9 +112,6 @@ function UIStory_Detials:OnInitView()
         end
     end)
 
-    
-
-    
     self.lbLectoresCount = self.uiBinding:Get('lbLectoresCount', typeof(logic.cs.Text))
     self.lbFavoritosCount = self.uiBinding:Get('lbFavoritosCount', typeof(logic.cs.Text))
     self.lbPalabrasCount = self.uiBinding:Get('lbPalabrasCount', typeof(logic.cs.Text))
@@ -237,7 +235,6 @@ local setBookChapters = function(self,chapterDetialList)
     self.btnMore.transform.parent:SetAsLastSibling() 
     --self.btnMore.gameObject:SetActiveEx(not self.isReadonly)
 end
-                                                                               
 
 ---@param storyDetial StoryEditor_BookDetials
 function UIStory_Detials:SetData(storyDetial, isReadonly)
@@ -287,7 +284,6 @@ function UIStory_Detials:InitCatagoryList()
             table.insert(self.uiCatagorys, uiItem)
         end
     end
-
     for i = 1, #self.uiCatagorys do
         local uiItem = self.uiCatagorys[i]
         local kv = self.storyDetial.tagArray:GetKVByIndex(i)
@@ -453,7 +449,6 @@ local uploadImage = function(self,filemd5)
                 logic.StoryEditorMgr.data:AddImageUrlByMd5(filemd5, imgUrl)
                 logic.StoryEditorMgr.data:SaveData()
                 complete(imgUrl)
-
             else
                 logic.cs.UIAlertMgr:Show("TIPS",'upload image failed')
             end

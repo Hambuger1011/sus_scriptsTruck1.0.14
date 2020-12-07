@@ -314,11 +314,12 @@ namespace StoryEditor
             }
             if (mSupportScrollBar)
             {
-                mItemPosMgr.SetItemMaxCount(mItemTotalCount, this.padding);
+                mItemPosMgr.SetItemMaxCount(mItemTotalCount);
+
             }
             else
             {
-                mItemPosMgr.SetItemMaxCount(0, this.padding);
+                mItemPosMgr.SetItemMaxCount(0);
             }
             mCurReadyMaxItemIndex = 0;
             mCurReadyMinItemIndex = 0;
@@ -393,11 +394,11 @@ namespace StoryEditor
             }
             if (mSupportScrollBar)
             {
-                mItemPosMgr.SetItemMaxCount(mItemTotalCount, this.padding);
+                mItemPosMgr.SetItemMaxCount(mItemTotalCount);
             }
             else
             {
-                mItemPosMgr.SetItemMaxCount(0, this.padding);
+                mItemPosMgr.SetItemMaxCount(0);
             }
             if (mItemTotalCount == 0)
             {
@@ -1908,7 +1909,7 @@ namespace StoryEditor
         {
             if (mSupportScrollBar)
             {
-                float tTotalSize = mItemPosMgr.TotalSize > 0 ? (mItemPosMgr.TotalSize - mLastItemPadding) : 0;
+                float tTotalSize = mItemPosMgr.mTotalSize > 0 ? (mItemPosMgr.mTotalSize - mLastItemPadding) : 0;
                 if (tTotalSize < 0)
                 {
                     tTotalSize = 0;

@@ -32,8 +32,10 @@ function UIStory_NewBook:OnInitView()
     
     self.step1_penName = self.uiBinding:Get('step1_penName',typeof(logic.cs.InputField))
     self.step1_bookName = self.uiBinding:Get('step1_bookName',typeof(logic.cs.InputField))
+    
     self.step1_bookDesc = self.uiBinding:Get('step1_bookDesc',typeof(logic.cs.InputField))
     self.btnClose = self.uiBinding:Get('btnClose',typeof(logic.cs.UITweenButton))
+    
 
     self.step1_penName.onValueChanged:AddListener(function(text)
         local value = string.trim(text)
@@ -43,7 +45,7 @@ function UIStory_NewBook:OnInitView()
     self.step1_bookName.onValueChanged:AddListener(function(text)
         local value = string.trim(text)
         local len = string.GetUtf8Len(value)
-        self.lbBookNameNumber.text = string.format("%d/20",len)
+        -- self.lbBookNameNumber.text = string.format("%d/20",len)
     end)
     self.step1_bookDesc.onValueChanged:AddListener(function(text)
         local value = string.trim(text)
@@ -242,7 +244,7 @@ end
 
 function UIStory_NewBook:InitCatagoryList()
     self.selectCatagorys = self.selectCatagorys or {}
-    ---@type UICatagoryItem[]
+    -------@type UICatagoryItem[]
     self.uiCatagorys = self.uiCatagorys or {}
 
     local DataDefine = logic.StoryEditorMgr.DataDefine
