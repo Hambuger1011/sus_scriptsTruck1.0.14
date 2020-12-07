@@ -98,24 +98,14 @@ function LimitedTimePanel:__init(gameObject)
     self.FirstRechargePoint = CS.DisplayUtil.GetChild(self.FirstchargeBG, "RedPoint");
 
     self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1 then
+        self.FirstchargeBG:SetActiveEx(true)
+    else
+        self.FirstchargeBG:SetActiveEx(false)
+    end
 
     logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) self:ChargeButtonOnClick() end)
-    logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data)
-        local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-        if(uicollect)then
-            uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,false,function()
-                logic.gameHttp:ReceiveFirstRechargeAward(function(result)
-                    local json = core.json.Derialize(result)
-                    local code = tonumber(json.code)
-                    if code == 200 then
-                        self.FirstchargeBG.gameObject:SetActiveEx(false)
-                        logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
-                        logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
-                    end
-                end)
-            end);
-        end
-    end)
+    logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data) self:ClaimFirstchargeOnClick() end)
     
     --endregion
 
@@ -361,10 +351,20 @@ end
 
 --region【前往充值】
 function LimitedTimePanel:ClaimFirstchargeOnClick()
+    local clothesCouponNum = 0 
+    local optionCouponNum = 0
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then
+        local firstRecharge = Cache.ActivityCache.first_recharge;
+        for k, v in pairs(firstRecharge.item_list) do
+            if v.id == 10101 then
+                optionCouponNum = v.num;
+            elseif v.id == 10102 then
+                clothesCouponNum = v.num;
+            end
+        end
         uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end);
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,clothesCouponNum,optionCouponNum);
     end
 end
 --endregion

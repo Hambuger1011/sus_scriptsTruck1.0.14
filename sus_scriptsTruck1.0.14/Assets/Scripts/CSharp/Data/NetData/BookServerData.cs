@@ -60,6 +60,7 @@ public class SelfBookInfo
     public int activity_box_switch; //宝箱是否开启
     public FinalBookInfo final_book_info;////最后阅读数本的节点
     public List<SelfBookShelfItemInfo> favorite_book;//mybook 里面的书（即自己阅读过的书）
+    public int first_recharge_switch; //首冲礼包的开关 1：开，0：关
 }
 
 public class FinalBookInfo
