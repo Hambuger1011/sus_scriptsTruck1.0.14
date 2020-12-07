@@ -38,7 +38,6 @@ function BookReadingRes:SetData(bookID,chapterID)
 	self.bookID = bookID
 	self.chapterID = chapterID
 	self.bookFolderPath = string.format("Assets/Bundle/Book/%d/",self.bookID)
-	self.uiCommonPath = string.format("Assets/Bundle/UI/Common/")
 	self.bookCommonPath = string.format("Assets/Bundle/Book/%d/%s/",self.bookID,self:GetChapterFolderId(true))
 end
 
@@ -380,20 +379,6 @@ function BookReadingRes:GetPrefab(key)
 		return
 	end
 	return asset.resPrefab
-end
-
-
-function BookReadingRes:GetCommonSprite(name)
-	local asset = nil
-	asset = self.AbBookSystem:LoadImme(logic.ResMgr.tag.DialogDisplay,logic.ResMgr.type.Sprite,self.uiCommonPath..name..'.png')
-	if not asset then
-		return
-	end
-	if not asset.resSprite then
-		logic.debug.LogError('获取sprite失败:'..name)
-		return
-	end
-	return asset.resSprite
 end
 
 
