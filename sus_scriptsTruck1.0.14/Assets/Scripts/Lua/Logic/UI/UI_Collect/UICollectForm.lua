@@ -6,6 +6,13 @@ local uiid = logic.uiid
 local diamondsNum,keysNum
 local needX2 = false
 local CLAIMCallback
+local PosList = {
+    {core.Vector2.New(0,50)},
+    {core.Vector2.New(-150,50),core.Vector2.New(150,50)},
+    {core.Vector2.New(-150,50),core.Vector2.New(150,50),core.Vector2.New(0,200)},
+    {core.Vector2.New(-150,50),core.Vector2.New(150,50),core.Vector2.New(0,200),core.Vector2.New(0,-100)},
+}
+local RewardTrans = {}
 
 
 UICollectForm.config = {
@@ -26,30 +33,35 @@ function UICollectForm:OnInitView()
     self.OptionCouponNum =CS.DisplayUtil.GetChild(this.gameObject, "OptionCouponNum"):GetComponent(typeof(logic.cs.Text))
     self.CLAIM =CS.DisplayUtil.GetChild(this.gameObject, "CLAIM")
     self.CLAIMx2 =CS.DisplayUtil.GetChild(this.gameObject, "CLAIMx2")
-    logic.cs.UIEventListener.AddOnClickListener(self.CLAIM,function(data) self:CLAIMOnClick() end)
+    self.Title =CS.DisplayUtil.GetChild(this.gameObject, "Title")
 end
 
 local CLAIMCallback=nil;
 function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,_clothesCouponNum,_optionCouponNum)
+    RewardTrans = {}
     if(_diamondsNum and tonumber(_diamondsNum) > 0)then
+        table.insert(RewardTrans,self.Diamonds)
         self.DiamondsNum.text = "x".._diamondsNum;
         self.Diamonds.gameObject:SetActiveEx(true);
     else
         self.Diamonds.gameObject:SetActiveEx(false);
     end
     if(_keysNum and tonumber(_keysNum) > 0)then
+        table.insert(RewardTrans,self.Keys)
         self.KeysNum.text = "x".._keysNum;
         self.Keys.gameObject:SetActiveEx(true);
     else
         self.Keys.gameObject:SetActiveEx(false);
     end
     if(_clothesCouponNum and tonumber(_clothesCouponNum) > 0)then
+        table.insert(RewardTrans,self.ClothesCoupon)
         self.ClothesCouponNum.text = "x".._clothesCouponNum;
         self.ClothesCoupon.gameObject:SetActiveEx(true);
     else
         self.ClothesCoupon.gameObject:SetActiveEx(false);
     end
     if(_optionCouponNum and tonumber(_optionCouponNum) > 0)then
+        table.insert(RewardTrans,self.OptionCoupon)
         self.OptionCouponNum.text = "x".._optionCouponNum;
         self.OptionCoupon.gameObject:SetActiveEx(true);
     else
@@ -57,6 +69,18 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,_clo
     end
     self.CLAIMx2.gameObject:SetActiveEx(_needX2);
     CLAIMCallback = _CLAIMCallback
+    self:PlayAnim()
+end
+
+function UICollectForm:PlayAnim()
+    for i = 1, #RewardTrans do
+        RewardTrans[i].transform:DOAnchorPos(PosList[#RewardTrans][i],1):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
+    end
+    coroutine.start(function()
+        coroutine.wait(0.5) 
+        self.Title.transform:DORotate( core.Vector3(0,0,0),1)
+        logic.cs.UIEventListener.AddOnClickListener(self.CLAIM,function(data) self:CLAIMOnClick() end)
+    end)
 end
 
 function UICollectForm:CLAIMOnClick()

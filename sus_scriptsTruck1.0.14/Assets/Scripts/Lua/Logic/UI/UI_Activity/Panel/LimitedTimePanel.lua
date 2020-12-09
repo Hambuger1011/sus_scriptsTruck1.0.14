@@ -349,7 +349,7 @@ end
 --endregion
 
 
---region【前往充值】
+--region【领取首充奖励】
 function LimitedTimePanel:ClaimFirstchargeOnClick()
     local clothesCouponNum = 0 
     local optionCouponNum = 0
