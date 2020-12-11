@@ -18,53 +18,32 @@ function UIFirstChargeForm:OnInitView()
     local get = logic.cs.LuaHelper.GetComponent
     local root = self.uiform.transform
 
-    self.RewardImg= get(root,'Canvas/Bg/RewardImg',typeof(logic.cs.Image))
-    self.SignInBtn = get(root,'Canvas/Bg/SignInBtn',typeof(logic.cs.Button))
-    self.Type1=root:Find('Canvas/Bg/Type1').gameObject
-    self.Type2=root:Find('Canvas/Bg/Type2').gameObject
-    self.Type3=root:Find('Canvas/Bg/Type3').gameObject
-    self.Close = get(root,'Canvas/Bg/Close',typeof(logic.cs.Button))
-    self.Tile = get(root,'Canvas/Bg/Tile',typeof(logic.cs.Text))
-    self.SignInBtnText = get(root,'Canvas/Bg/SignInBtn/SignInBtnText',typeof(logic.cs.Text))
-    self.UIMask = root:Find('Canvas/UIMask').gameObject
-    self.SignInBtn.onClick:RemoveAllListeners()
-    self.SignInBtn.onClick:AddListener(function()
-        self:OnSignBtn()
+    self.GoBtn = get(root,'Bg/GoBtn',typeof(logic.cs.Button))
+    self.Close = get(root,'Bg/Close',typeof(logic.cs.Button))
+    self.Tile = get(root,'Bg/Tile',typeof(logic.cs.Text))
+    self.GoBtn.onClick:RemoveAllListeners()
+    self.GoBtn.onClick:AddListener(function()
+        self:OnGoBtn()
     end)
 
+    self.Close.onClick:RemoveAllListeners()
     self.Close.onClick:AddListener(function()
         self:OnExitClick()
     end)
-    logic.cs.UIEventListener.AddOnClickListener(self.UIMask,function(data) self:OnExitClick() end)
 
     --刷新展示
-    self:UpdateShow(get,root);
+    --self:UpdateShow(get,root);
 end
 
 function UIFirstChargeForm:OnOpen()
     UIView.OnOpen(self)
-
-    --【每日一次】
-    --【AF事件记录*发送 每日登录事件】
-    --CS.AppsFlyerManager.Instance:DailyLogin();
-
 end
 
 function UIFirstChargeForm:OnClose()
     UIView.OnClose(self)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.UIMask,function(data) self:OnExitClick() end)
-    self.SignInBtn.onClick:RemoveAllListeners()
+    self.GoBtn.onClick:RemoveAllListeners()
     self.Close.onClick:RemoveAllListeners()
 
-    self.RewardImg = nil;
-    self.Type1 = nil;
-    self.Type2 = nil;
-    self.Type3 = nil;
-    self.Close = nil;
-    self.Tile = nil;
-    self.SignInBtnText = nil;
-    self.UIMask = nil;
-    self.SignInBtn = nil;
 end
 
 --刷新展示
@@ -109,32 +88,14 @@ function UIFirstChargeForm:UpdateShow(get,root)
 end
 
 
-function UIFirstChargeForm:OnSignBtn()
-
-    if(Cache.SignInCache.activity_login.is_receive==1)then
-    return;
-    end
-
-
-    logic.gameHttp:ReceiveDailyLoginAward(function(result)
-        logic.debug.Log("----ReceiveDailyLoginAward---->" .. result)
-        local json = core.json.Derialize(result)
-        local code = tonumber(json.code)
-        if code ==200 then
-            logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
-            logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
-            self.SignInBtn.gameObject:SetActiveEx(false)
-            Cache.SignInCache.activity_login.is_receive=1;
-            --CS.Dispatcher.dispatchEvent(CS.EventEnum.RequestRedPoint);
-            GameController.MainFormControl:RedPointRequest();
-
-            --【AF事件记录*发送 签到1次】
-            CS.AppsFlyerManager.Instance:SIGN();
-           --关闭界面
-            self:OnExitClick();
-        end
-    end)
-
+function UIFirstChargeForm:OnGoBtn()
+    self:OnExitClick()
+    local uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.ChargeMoneyForm)
+    local tapForm = uiform:GetComponent(typeof(CS.ChargeMoneyForm))
+    tapForm:SetFormStyle(2);
+    uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainFormTop)
+    tapForm = uiform:GetComponent(typeof(CS.MainTopSprite))
+    tapForm:GamePlayTopOpen("UIChargeMoneyForm1");
 end
 
 

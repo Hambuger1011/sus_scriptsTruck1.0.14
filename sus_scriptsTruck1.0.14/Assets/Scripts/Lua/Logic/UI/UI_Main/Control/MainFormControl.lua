@@ -198,6 +198,11 @@ function MainFormControl:GetSelfBookInfo(result)
                 TopBook = UIMainForm.TopBookView:ShowTopBook(bookinfo);
             end
         end
+        if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
+        and not logic.cs.UserDataManager.FirstChargeHaveShown then
+            logic.cs.UserDataManager.FirstChargeHaveShown = true
+            logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
+        end
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
     end

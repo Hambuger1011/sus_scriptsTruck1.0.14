@@ -27,4 +27,4 @@ sus_scriptsTruck1.0.14/Z_Work/
 sus_scriptsTruck1.0.14/ProjectSettings/
 sus_scriptsTruck1.0.14/Packages/
 *.meta
-sus_scriptsTruck1.0.14/Assets/Firebase/Plugins/x86_64/FirebaseCppApp-6_16_1.so
+*.so

@@ -386,6 +386,8 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public bool SigningIn = false;
 
+    public bool FirstChargeHaveShown = false;
+
     public UserDataManager() { }
 
     public int GetBroadcastId()
