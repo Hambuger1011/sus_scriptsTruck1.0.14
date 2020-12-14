@@ -21,7 +21,7 @@ public static class GameUtility
 
 #else
     public static string version = "1.1.0";
-    public static int buildNum = 28;
+    public static int buildNum = 1;
     public static int resVersion = 1;
 #endif
 

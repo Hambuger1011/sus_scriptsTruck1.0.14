@@ -559,9 +559,9 @@ namespace AB
         {
             string outPath = String.Empty;
             if (SystemName.Equals("COMMON"))
-                outPath = $"E:/Program Files/nginx-1.16.1/html/resources/{SystemName.ToLower()}/{GameUtility.Platform}/{GameUtility.version}/{GameUtility.resVersion}/";
+                outPath = $"{GameUtility.WritablePath}ab/{SystemName.ToLower()}/{GameUtility.Platform}/{GameUtility.version}/{GameUtility.resVersion}/";
             else
-                outPath = $"E:/Program Files/nginx-1.16.1/html/resources/book/{GameUtility.Platform}/{SystemName.ToLower()}/";
+                outPath = $"{GameUtility.WritablePath}ab/book/{GameUtility.Platform}/{SystemName.ToLower()}/";
 
             if (GameUtility.isEditorMode) GameUtility.GetPath(outPath);
             return outPath;
