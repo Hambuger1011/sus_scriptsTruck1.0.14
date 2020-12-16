@@ -7,8 +7,9 @@ local base = UIView
 local uiid = logic.uiid
 
 local PosList = {
-    core.Vector2.New(232,150),core.Vector2.New(83,280),
-    core.Vector2.New(-220,150),core.Vector2.New(-83,280),
+    core.Vector2.New(241,132),core.Vector2.New(142,259),
+    core.Vector2.New(-239,130),core.Vector2.New(-134,259),
+    core.Vector2.New(3,317),
 }
 local RewardTrans = {}
 
@@ -31,7 +32,8 @@ function UIFirstChargeForm:OnInitView()
     self.Diamonds =CS.DisplayUtil.GetChild(root.gameObject, "Diamonds")
     self.ClothesCoupon =CS.DisplayUtil.GetChild(root.gameObject, "ClothesCoupon")
     self.OptionCoupon =CS.DisplayUtil.GetChild(root.gameObject, "OptionCoupon")
-    RewardTrans = {self.Keys,self.Diamonds,self.ClothesCoupon,self.OptionCoupon}
+    self.CommentsIcon =CS.DisplayUtil.GetChild(root.gameObject, "CommentsIcon")
+    RewardTrans = {self.Keys,self.Diamonds,self.ClothesCoupon,self.OptionCoupon,self.CommentsIcon}
     
     self.GoBtn = get(root,'Bg/GoBtn',typeof(logic.cs.Button))
     self.Close = get(root,'Bg/Close',typeof(logic.cs.Button))

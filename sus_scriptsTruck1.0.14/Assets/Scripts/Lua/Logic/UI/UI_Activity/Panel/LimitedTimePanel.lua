@@ -95,6 +95,7 @@ function LimitedTimePanel:__init(gameObject)
     self.NumText2 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText2"):GetComponent("Text");
     self.NumText3 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText3"):GetComponent("Text");
     self.NumText4 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText4"):GetComponent("Text");
+    self.NumText5 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText5"):GetComponent("Text");
     self.FirstRechargePoint = CS.DisplayUtil.GetChild(self.FirstchargeBG, "RedPoint");
 
     self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
@@ -207,6 +208,7 @@ function LimitedTimePanel:GetRewardConfig_Response()
     end
     self.NumText3.text = "x".. firstRecharge.diamond_count;
     self.NumText4.text = "x".. firstRecharge.key_count;
+    self.NumText5.text = "x1";
 
 end
 --endregion
@@ -364,7 +366,7 @@ function LimitedTimePanel:ClaimFirstchargeOnClick()
             end
         end
         uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,clothesCouponNum,optionCouponNum);
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,clothesCouponNum,optionCouponNum,1);
     end
 end
 --endregion
