@@ -176,8 +176,8 @@ public class Demo : MonoBehaviour {
 		if (1 == boxId) {
 			message = "请先获取mobId";
 		} else if (2 == boxId) {
-			url = "http://192.168.0.33" + PATH [selectedPath] + "?mobid=" + mobId;
-			// url = "http://192.168.0.33" + "?mobid=" + mobId;
+			// url = "http://192.168.0.33" + PATH [selectedPath] + "?mobid=" + mobId;
+			url = "http://192.168.0.33/InvitationPage" + "?mobid=" + mobId;
 			message = "请分享下面的链接地址: \r\n" + url + "\r\n然后就可以通过这个链接打开app, 并进行还原";
 		}
 		Rect winRect = windowRect;
