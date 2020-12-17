@@ -955,6 +955,27 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         });
     }
 
+    /// <summary>
+    /// 非正式服通知服务端下发某个商品货币
+    /// </summary>
+    /// <param name="vToken"></param>
+    public void DevFinishOrder(string sn, string product_id, string iggid, EventHandler vCallBackHandler)
+    {
+        string url = "api_devFinishOrder";
+        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        parameters.Add("sn", sn);
+        parameters.Add("product_id", product_id);
+        parameters.Add("iggid", iggid);
+        this.Post(url, parameters, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+
 
     /// <summary>
     /// 获取7天登陆奖励

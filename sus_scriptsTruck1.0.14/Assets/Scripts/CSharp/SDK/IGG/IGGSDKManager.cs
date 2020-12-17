@@ -405,6 +405,9 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
         // Debug.LogError("购买成功。");
         Debug.LogError("购买成功。订单号：" + purchase.orderId + "    ItemID:" + result.GetItem().GetId());
 
+#if ENABLE_DEBUG
+        GameHttpNet.Instance.DevFinishOrder(purchase.orderId, result.GetItem().GetId(), "", DevFinishOrderCallBack);
+#endif
 
         //SdkMgr.Instance.google.CallPayEvent(false, purchase.GetOrderId());
         //UIAlertMgr.Instance.Show("Tips","购买成功。"+ result.GetItem().GetId());
@@ -414,6 +417,25 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
 
         //AF事件记录*首次充值 
         AppsFlyerManager.Instance.FIRST_PRUCHASE();
+    }
+    
+    private void DevFinishOrderCallBack(object arg)
+    {
+        string result = arg.ToString();
+        Debug.Log("----DevFinishOrder---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+        if (jo != null)
+        {
+            LoomUtil.QueueOnMainThread((param) => 
+            {
+                if (jo.code == 200)
+                {
+                    UserDataManager.Instance.adsRewardResultInfo = JsonHelper.JsonToObject<HttpInfoReturn<GetAdsRewardResultInfo>>(result);
+                    UserDataManager.Instance.ResetMoney(1, UserDataManager.Instance.adsRewardResultInfo.data.bkey);
+                    UserDataManager.Instance.ResetMoney(2, UserDataManager.Instance.adsRewardResultInfo.data.diamond);
+                }
+            }, null);
+        }
     }
 
     /// <summary>
