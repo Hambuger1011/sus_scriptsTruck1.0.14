@@ -73,7 +73,7 @@ function UIFavoritosForm:RefreshBookList()
         end
     end)
 
-    
+
     logic.gameHttp:StoryEditor_GetMyReadBookList(function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
@@ -141,7 +141,6 @@ function UIFavoritosForm:InitMyReadBookList()
         uiItem.onClick = function()
             --logic.StoryEditorMgr:EnterBookDetials(uiItem.storyDetial.book_id, false)
             logic.StoryEditorMgr:ReadingOtherChapter(uiItem.storyDetial.book_id, uiItem.storyDetial.chapter_number,function()
-                
                 logic.StoryEditorMgr:BackToMainClick()
             end)
         end

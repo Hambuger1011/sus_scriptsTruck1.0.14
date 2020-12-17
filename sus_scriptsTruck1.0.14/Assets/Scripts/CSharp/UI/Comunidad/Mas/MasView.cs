@@ -31,8 +31,8 @@ public class MasView
     {
         ScrollView = DisplayUtil.GetChildComponent<ScrollRect>(transform.gameObject, "ScrollView");
         mLoopGridView = DisplayUtil.GetChildComponent<LoopGridView>(transform.gameObject, "ScrollView");
-        mLoopGridView.ScrollRect.onValueChanged.AddListener(OnBookScrollChanged);
         mLoopGridView.InitGridView(0, OnGetItemByRowColumn);
+        mLoopGridView.ScrollRect.onValueChanged.AddListener(OnBookScrollChanged);
     }
 
     public void Close()
@@ -81,7 +81,7 @@ public class MasView
         }
 
         var count = MasCtrl.MasDB.WriterBookList().Count;
-        mLoopGridView.SetListItemCount(count);// UserDataManager.Instance.GetWriterHotBookList.data.total);
+        mLoopGridView.SetListItemCount(count, false);// UserDataManager.Instance.GetWriterHotBookList.data.total);
         
     }
     

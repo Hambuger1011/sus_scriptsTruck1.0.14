@@ -105,14 +105,14 @@ function UIBubbleBox_Text:SetData(bubbleData)
     else
         box.txtName.text = "???"
     end
-    if roleInfo.icon ~= 0 then
+    if roleInfo and roleInfo.icon ~= 0 then
         local headName = roleInfo:GetIconName()
         box.headIcon.sprite = self.roleHeadAtlas:GetSprite(headName)
     end
 
     --获取Text大小
     local txtPreferredSize = core.Vector2.New(
-        Mathf.Min(box.lbMsg.preferredWidth, box.lableMiniWidth), 
+        Mathf.Min(box.lbMsg.preferredWidth, box.lableMiniWidth),
         box.lbMsg:GetPreferredHeight(box.lbMsgOriginSize.x)
         )
     local w = txtPreferredSize.x + box.extends.x

@@ -42,7 +42,7 @@ public class MainTopSprite : BaseUIForm
     private int types = 0, uiNumber=0, uiNumberS=0;
     private SkeletonAnimation SkeletonAnimation;
     private bool AniPlayEnd = false;
-    private bool KeyAddButtonAddOn = false, DiamondAddButtonOn = false, MasISOpen = false;
+    private bool KeyAddButtonAddOn = false, DiamondAddButtonOn = false;
     private RectTransform TopBar;
     public override void OnOpen()
     {
@@ -50,7 +50,6 @@ public class MainTopSprite : BaseUIForm
 
         CtrlIconShow(false);
         Log.SetActive(true);
-        MasISOpen = false;
         UIEventListener.AddOnClickListener(KeyAddButton, OpenChargeMoney_Keys);
         UIEventListener.AddOnClickListener(DiamondAddButton, OpenChargeMoney_Diamonds);
         KeyDetailBtn.onClick.AddListener(ShowKeyDetail);
@@ -69,7 +68,6 @@ public class MainTopSprite : BaseUIForm
         addMessageListener(EventEnum.ShowMoneyTicketForm, ShowMoneyTicketForm);
         addMessageListener(EventEnum.EmailAwartShowClose, EmailAwartShowClose);
         addMessageListener(EventEnum.AddOpenFormType, AddOpenFormTypeHandler);
-        addMessageListener(EventEnum.MasOpen, MasOpen);
 
 
         KeyNumText.text = UserDataManager.Instance.UserData.KeyNum.ToString();
@@ -120,11 +118,39 @@ public class MainTopSprite : BaseUIForm
       
     }
 
-    public void MasOpen(Notification notification)
+    //当前界面
+    private string CurUI = "";
+
+    /// <summary>
+    /// 这个是游戏过程之中，点击了顶部的钻石按钮，调用
+    /// </summary>
+    public void GamePlayTopOpen(string _CurUI)
     {
         CtrlIconShow(true);
-        CurUI = "Canvas_Mas";
+        CurUI = _CurUI;
+        gameOpenDim = true;
+        //AddNowOpenUIList(1);
     }
+    private string OldCurUI = "";
+    public void CtrlIconShow(bool value)
+    {
+        if (value == true && CurUI != "")
+        {
+            OldCurUI = CurUI;
+        }
+        CurUI = "";
+        CloseIcon.SetActiveEx(value);
+        LogoIcon.gameObject.SetActiveEx(!value);
+        //LogoIcon.gameObject.SetActiveEx(false);
+        if (!value)
+        {
+            LogoIcon.DOKill();
+
+            LogoIcon.DOFade(0, 0).SetEase(Ease.Flash).Play();
+            LogoIcon.DOFade(1, 0.3f).SetEase(Ease.Flash).Play();
+        }
+    }
+
 
     public void CloseIconOnclicke(PointerEventData data)
     {
@@ -158,15 +184,15 @@ public class MainTopSprite : BaseUIForm
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIDressUpForm);");
         }
-        else if(CurUI == "Canvas_Mas")
+        else if(CurUI == "UIMasForm")
         {
             CtrlIconShow(false);
-            EventDispatcher.Dispatch(EventEnum.MasClose);
+            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIMasForm);");
         }
         else if (CurUI == "UIChargeMoneyForm1")
         {
-            if (!MasISOpen)
-                CtrlIconShow(false);
+    
+            CtrlIconShow(false);
             CUIManager.Instance.CloseForm(UIFormName.ChargeMoneyForm);
 
             if (OldCurUI != "")
@@ -721,38 +747,7 @@ public class MainTopSprite : BaseUIForm
         GameOpenKeyInit();
     }
 
-    //当前界面
-    private string CurUI = "";
-
-    /// <summary>
-    /// 这个是游戏过程之中，点击了顶部的钻石按钮，调用
-    /// </summary>
-    public void GamePlayTopOpen(string _CurUI)
-    {
-        CtrlIconShow(true);
-        CurUI = _CurUI;
-        gameOpenDim = true;
-        //AddNowOpenUIList(1);
-    }
-    private string OldCurUI="";
-    public void CtrlIconShow(bool value)
-    {
-        if (value == true && CurUI != "")
-        {
-            OldCurUI = CurUI;
-        }
-        CurUI = "";
-        CloseIcon.SetActiveEx(value);
-         LogoIcon.gameObject.SetActiveEx(!value);
-        //LogoIcon.gameObject.SetActiveEx(false);
-        if (!value)
-        {
-            LogoIcon.DOKill();
-            
-            LogoIcon.DOFade(0, 0).SetEase(Ease.Flash).Play();
-            LogoIcon.DOFade(1, 0.3f).SetEase(Ease.Flash).Play();
-        }
-    }
+ 
 
     //这个是游戏打开Key充值界面，对Top条框的初始化
     private void GameOpenKeyInit()

@@ -15,6 +15,8 @@ function Cache.Init()
     Cache.DressUpCache=require("Logic/Cache/DressUpCache");
     Cache.LimitTimeActivityCache=require("Logic/Cache/LimitTimeActivityCache");
     Cache.ActivityCache=require("Logic/Cache/ActivityCache");
+    Cache.ComuniadaCache=require("Logic/Cache/ComuniadaCache");
+    Cache.BusquedaCache=require("Logic/Cache/BusquedaCache");
 
     isInit = true
 end

@@ -730,11 +730,10 @@ public static class XLuaHelper
 
     //是否弹出 热更新弹窗
     public static bool isHotfixPanel = false;
-
+ 
 
     //预设对象
     public static Object book_prefab = null;
-
     public static Object GetBookItem()
     {
         if (book_prefab==null)
@@ -743,6 +742,20 @@ public static class XLuaHelper
         }
         return book_prefab;
     }
+
+    //预设对象
+    public static Object story_prefab = null;
+    public static Object GetStoryItem()
+    {
+        if (story_prefab == null)
+        {
+            story_prefab = Resources.Load("UI/BookItem/StoryItem");
+        }
+        return story_prefab;
+    }
+
+
+
     //限时活动开关
     public static int LimitTimeActivity = 0;
 

@@ -88,9 +88,9 @@ function UIMainDownForm:OnClose()
         logic.UIMgr:Close(logic.uiid.UISearchForm);
     end
 
-    local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.Comuniada)
-    if(uiform or CS.XLuaHelper.is_Null(uiform)==false)then
-        logic.cs.CUIManager:CloseForm(logic.cs.UIFormName.Comuniada)
+    local uicomuniada = logic.UIMgr:GetView2(logic.uiid.UIComuniadaForm);
+    if(uicomuniada)then
+        logic.UIMgr:Close(logic.uiid.UIComuniadaForm);
     end
 
     local uiactivity = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);
@@ -178,13 +178,12 @@ function UIMainDownForm:CommunityToggleClick(data)
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UgcPage);
 
     --创作界面
-    local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.Comuniada)
-    if(uiform==nil or CS.XLuaHelper.is_Null(uiform)==true)then
-        logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.Comuniada);
-    end
-    if(uiform and CS.XLuaHelper.is_Null(uiform)==false)then
-        --展示界面
-        uiform:Appear();
+    local uiform = logic.UIMgr:GetView2(logic.uiid.UIComuniadaForm);
+    if(uiform==nil)then
+        --打开创作界面
+        uiform = logic.UIMgr:Open(logic.uiid.UIComuniadaForm);
+    else
+        uiform.uiform:Appear();
     end
 end
 
@@ -267,9 +266,9 @@ function UIMainDownForm:HideOld(name)
             uisearch.uiform:Hide();
         end
     elseif(name=="CommunityToggle")then
-        local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.Comuniada)
-        if(uiform or CS.XLuaHelper.is_Null(uiform)==false)then
-            uiform:Hide();
+        local uicomuniada = logic.UIMgr:GetView2(logic.uiid.UIComuniadaForm);
+        if(uicomuniada)then
+            uicomuniada.uiform:Hide();
         end
     elseif(name=="RwardToggle")then
         local uiactivity = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);

@@ -88,6 +88,19 @@ function table.indexof(array, value, begin)
 	return -1
 end
 
+-- 从哈希表查找指定键，返回其值，没找到返回nil
+function table.trygetvalue(hashtable,key)
+	if(hashtable==nil)then return nil end
+	for k, v in pairs(hashtable) do
+		if k == key then
+			return v;
+		end
+	end
+	return nil;
+end
+
+
+
 -- 从哈希表查找指定值，返回其键，没找到返回nil
 -- 注意：
 -- 1、containskey用hashtable[key] ~= nil快速判断

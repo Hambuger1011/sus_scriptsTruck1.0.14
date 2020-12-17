@@ -105,7 +105,7 @@ function UIBubbleBox_Text:SetData(bubbleData)
     else
         box.txtName.text = "???"
     end
-    if roleInfo.icon ~= 0 then
+    if roleInfo and roleInfo.icon ~= 0 then
         local headName = roleInfo:GetIconName()
         box.headIcon.sprite = self.roleHeadAtlas:GetSprite(headName)
     end

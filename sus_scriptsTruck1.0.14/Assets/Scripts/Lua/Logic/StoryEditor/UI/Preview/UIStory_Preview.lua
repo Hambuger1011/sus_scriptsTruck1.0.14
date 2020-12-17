@@ -338,7 +338,7 @@ function UIStory_Preview:ShowNextDialog(force)
         self:PopDialogData()
         --当前是选项
         local subStoryNode = self.curStoryNodeRoot.children[self.dialogIndex]
-        local isSelection = subStoryNode and subStoryNode.IsSelectionNode()
+        local isSelection = subStoryNode and subStoryNode:IsSelectionNode()
         if isSelection and table.length(self.curStoryNodeRoot.children) > self.dialogIndex then
             self:ShowNextDialog(true)   --selection
         end

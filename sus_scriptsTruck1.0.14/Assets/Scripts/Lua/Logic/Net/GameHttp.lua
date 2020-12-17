@@ -656,14 +656,7 @@ end
 
 
 --region StoryEditor
-function GameHttp:StoryEditor_GetMyBookList(page, callback)
-    local param = {
-        page = page
-    }
-    self:Get(self, "api_getMyWriterBookList", param, function(result)
-        callback(result)
-    end, nil, nil, true)
-end
+
 function GameHttp:StoryEditor_GetMyChapterList(bookID, callback)
     local param = {
         book_id = bookID
@@ -823,13 +816,7 @@ function GameHttp:StoryEditor_SaveRoleList(book_id, json, callback)
     end, nil, nil, true)
 end
 
-function GameHttp:StoryEditor_GetMyReadBookList(callback)
-    local param = {
-    }
-    self:Get(self, "api_getReadingHistory", param, function(result)
-        callback(result)
-    end, nil, nil, true)
-end
+
 
 ---@param pay_type --支付类型: 0只是保存进度 1钥匙支付 2观看广告 3倒计时
 function GameHttp:StoryEditor_SaveReadingRecord(book_id, chapter_id, pay_type, callback)
@@ -1205,5 +1192,63 @@ function GameHttp:GetActivityInfo(_activity,callback)
     end, nil, nil,true)
 end
 
+--【获得的创作综合书本的信息】
+function GameHttp:GetwriterIndex(callback)
+    local param = {
+    }
+    self:Get(self, "api_writerIndex", param, function(result)
+        callback(result)
+    end, nil, nil,true)
+end
+
+--【获得创作更多界面里面的热门书本】
+function GameHttp:GetWriterHotBookList(_page,callback)
+    local param = {
+        page=_page;
+    }
+    self:Get(self, "api_getWriterHotBookList", param, function(result)
+        callback(result)
+    end, nil, nil,true)
+end
+
+--【获得创作更多界面里面的热门书本】
+function GameHttp:GetWriterNewBookList(_page,callback)
+    local param = {
+        page=_page;
+    }
+    self:Get(self, "api_getWriterNewBookList", param, function(result)
+        callback(result)
+    end, nil, nil,true)
+end
+
+--【我的写作书本列表】
+function GameHttp:GetMyWriterBookList( callback)
+    local param = {
+    }
+    self:Get(self, "api_getMyWriterBookList", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取创作已读过的书本】
+function GameHttp:GetReadingHistory(callback)
+    local param = {
+    }
+    self:Get(self, "api_getReadingHistory", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【默认书本搜索列表(浏览量排序)】
+function GameHttp:GetWriterBookList(_page,booktypeArr,title,callback)
+    local param = {
+        page=_page;
+        tag=booktypeArr;
+        title=title;
+    }
+    self:Get(self, "api_getWriterBookList", param, function(result)
+        callback(result)
+    end, nil, nil,true)
+end
 
 return GameHttp.New()

@@ -19,18 +19,15 @@ local UIConfig = {
 	require "Logic/UI/UI_Account/UI_MoveWait",
 	require "Logic/UI/UI_Account/UI_PlatformQuickLogin",
 	require "Logic/UI/UI_Email/UI_EmailInfo",
-	require "Logic/UI/UI_Activity/UIActivityForm",
-	require "Logic/UI/UI_ActivityBanner/UIActivityBannerForm",
-	require "Logic/UI/UI_Collect/UICollectForm",
 
-	require "Logic/UI/UI_Main/UIMainForm",
-	require "Logic/UI/UI_Main/UIMainDownForm",
-	require "Logic/UI/UI_Search/UISearchForm",
+	require "Logic/UI/UI_Collect/UICollectForm",
 	require "Logic/UI/UI_Rank/UIRankForm",
 	require "Logic/UI/UI_Ratinglevel/UIRatinglevelForm",
 	require "Logic/UI/UI_SignIn/UISignTipForm",
 	require "Logic/UI/UI_FirstCharge/UIFirstChargeForm",
 	require "Logic/UI/UI_DressUp/UIDressUpForm",
+	require "Logic/UI/UI_Comuniada/UIMasForm",
+	require "Logic/UI/UI_Busqueda/UIBusquedaForm",
 
 	-- require "Logic/StoryEditor/UI/Editor/UIStoryListView",
 	-- require "Logic/StoryEditor/UI/Editor/UIStoryCreateNewView",
@@ -48,6 +45,14 @@ local UIConfig = {
 	require "Logic/StoryEditor/UI/Keyboard/UIStory_Keyboard",
 	require "Logic/StoryEditor/UI/Reading/UIStory_Chapter",
 	require "Logic/StoryEditor/UI/Guide/UIStory_Guide",
+
+
+	require "Logic/UI/UI_Main/UIMainForm",
+	require "Logic/UI/UI_Main/UIMainDownForm",
+	require "Logic/UI/UI_Search/UISearchForm",
+	require "Logic/UI/UI_Activity/UIActivityForm",
+	require "Logic/UI/UI_ActivityBanner/UIActivityBannerForm",
+	require "Logic/UI/UI_Comuniada/UIComuniadaForm",
 }
 return UIConfig
 --return ConstClass("UIConfig", UIConfig)

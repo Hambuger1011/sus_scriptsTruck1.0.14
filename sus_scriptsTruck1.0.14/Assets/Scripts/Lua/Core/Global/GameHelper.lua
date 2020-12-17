@@ -697,8 +697,9 @@ end
 
 --endregion
 
-GameHelper.BN_Timer=nil;
+
 --region【活动首页Banner图轮播】【倒计时】
+GameHelper.BN_Timer=nil;
 
 function GameHelper.MainBannerTimer(callback)
     --销毁

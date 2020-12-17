@@ -45,6 +45,10 @@ local UIID = {
 	UIActivityBannerForm = 'UIActivityBannerForm',
 	UIRankForm = 'UI/Resident/UI/UIRankForm',
 	UIDressUpForm = 'UI/Resident/UI/UIDressUpForm',
+	UIComuniadaForm = 'UI/Resident/UI/UIComuniadaForm',
+	UIMasForm = 'UI/Resident/UI/UIMasForm',
+	UIBusquedaForm = 'UI/Resident/UI/UIBusquedaForm',
+
 }
 
 return UIID

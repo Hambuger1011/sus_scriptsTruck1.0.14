@@ -14,6 +14,8 @@ function GameController.Init()
     GameController.ActivityControl=require("Logic/UI/UI_Activity/Control/ActivityControl");
     GameController.DressUpControl=require("Logic/UI/UI_DressUp/Control/DressUpControl");
     GameController.ActivityBannerControl=require("Logic/UI/UI_ActivityBanner/Control/ActivityBannerControl");
+    GameController.ComuniadaControl=require("Logic/UI/UI_Comuniada/Control/ComuniadaControl");
+    GameController.BusquedaControl=require("Logic/UI/UI_Busqueda/Control/BusquedaControl");
 
     isInit = true
 end
