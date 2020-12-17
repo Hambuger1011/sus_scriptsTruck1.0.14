@@ -1,105 +1,138 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:installLocation="auto" android:theme="@android:style/Theme.NoTitleBar" package="com.igg.android.scriptsuntoldsecrets">
-  <!-- package="com.txjy.s47" -->
-  <supports-screens android:anyDensity="true" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" />
-  <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="29" />
-  <uses-feature android:name="android.hardware.camera" android:required="false" />
-  <!-- 保持唤醒状态-->
-  <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-  <!-- 访问网络-->
-  <uses-permission android:name="android.permission.INTERNET" />
-  <!-- 唤醒锁定 允许程序在手机屏幕关闭后后台进程仍然运行-->
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <!-- 写入外部存储 允许程序写入外部存储，如SD卡上写文件-->
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <!-- 读外部存储的权限，如读外部存储SD卡上文件-->
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <!-- 使用振动-->
-  <uses-permission android:name="android.permission.VIBRATE" />
-  <!-- 获取网络状态 获取网络信息状态，如当前的网络连接是否有效-->
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <!-- 获取WiFi状态 获取当前WiFi接入的状态以及WLAN热点的信息-->
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-  <!-- 改变网络状态 改变网络状态如是否能联网-->
-  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-  <!-- 读取系统日志  权限配置 -->
-  <uses-permission android:name="android.permission.READ_LOGS" />
-  <!--
-  <!- 挂载文件系统 挂载、反挂载外部文件系统->
-  <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-  <!- 读取电话状态->
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-  <!- 读写系统设置->
-  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-  -->
-  <!-- 访问定位额外命令 允许程序访问额外的定位提供者指令-->
-  <!--uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /-->
-  <!--uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /-->
-  <!-- 权限 END-->
-  <application tools:replace="android:allowBackup,android:theme,android:appComponentFactory,android:hardwareAccelerated" 
-               android:appComponentFactory="appComponentFactory" 
-               android:theme="@style/UnityThemeSelector" 
-               android:name="com.igg.sdk.unity.GlobalApplication" 
-               android:hardwareAccelerated="false" android:icon="@drawable/app_icon" 
-               android:label="@string/app_name" android:allowBackup="false" 
-               android:debuggable="true" android:isGame="true" android:networkSecurityConfig="@xml/network_security_config">
-    <activity tools:replace="android:launchMode" android:name="com.igg.sdk.unity.SeSUDKActivity" android:label="@string/app_name" 
-              android:launchMode="singleTask" 
-              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-        <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-      </intent-filter>
-      <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
-      <!-- Unity视图嵌入Android视图时曾经碰到过Android视图无法取得焦点的问题 -->
-      <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
-    </activity>
-    <!-- receiver should be inside the <application> tag -->
-    <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
-      <intent-filter>
-        <action android:name="com.android.vending.INSTALL_REFERRER" />
-      </intent-filter>
-    </receiver>--&gt;
-    <!-- Mandatory permission: -->
+	<!-- package="com.txjy.s47" -->
+	<supports-screens android:anyDensity="true" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" />
+	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="29" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
+	<!-- 保持唤醒状态-->
+	<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+	<!-- 访问网络-->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- 唤醒锁定 允许程序在手机屏幕关闭后后台进程仍然运行-->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<!-- 写入外部存储 允许程序写入外部存储，如SD卡上写文件-->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<!-- 读外部存储的权限，如读外部存储SD卡上文件-->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<!-- 使用振动-->
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<!-- 获取网络状态 获取网络信息状态，如当前的网络连接是否有效-->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<!-- 获取WiFi状态 获取当前WiFi接入的状态以及WLAN热点的信息-->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<!-- 改变网络状态 改变网络状态如是否能联网-->
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+	<!-- 读取系统日志  权限配置 -->
+	<uses-permission android:name="android.permission.READ_LOGS" />
 
-    <!-- FCM -->
-    <service android:name="com.igg.sdk.unity.MyFirebaseMessagingService">
-      <intent-filter>
-        <action android:name="com.google.firebase.MESSAGING_EVENT" />
-      </intent-filter>
-    </service>
-    <service android:name="com.igg.sdk.push.IGGFCMInstanceIDService">
-      <intent-filter>
-        <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-      </intent-filter>
-    </service>
-    <!--  FCM end -->
-    
-    <activity android:name="com.appsflyer.GetDeepLinkingActivity" android:exported="true">
-      <intent-filter><action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        data android:scheme="your_scheme" /></intent-filter></activity>
-    <!-- 屏蔽权限弹窗
-    <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
-     -->
-    <activity android:name="com.facebook.unity.FBUnityLoginActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-    <activity android:name="com.facebook.unity.FBUnityDialogsActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-    <activity android:name="com.facebook.unity.FBUnityGamingServicesFriendFinderActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-    <activity android:name="com.facebook.unity.FBUnityAppLinkActivity" android:exported="true" />
-    <activity android:name="com.facebook.unity.FBUnityDeepLinkingActivity" android:exported="true" />
-    <activity android:name="com.facebook.unity.FBUnityGameRequestActivity" />
-    <activity android:name="com.facebook.unity.FBUnityCreateGameGroupActivity" />
-    <activity android:name="com.facebook.unity.FBUnityJoinGameGroupActivity" />
-    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb2417998011827767" />
-    <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="true" />
-    <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="true" />
-    <provider android:name="com.facebook.FacebookContentProvider" android:authorities="com.facebook.app.FacebookContentProvider2417998011827767" android:exported="true" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <!--这个设置主要是为了适配9.0以上的机器（必须使用）-->
-    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+	<!--
+    <!- 挂载文件系统 挂载、反挂载外部文件系统->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!- 读取电话状态->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!- 读写系统设置->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    -->
+	<!-- 访问定位额外命令 允许程序访问额外的定位提供者指令-->
+	<!--uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /-->
+	<!--uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /-->
+	<!-- 权限 END-->
+	<!--  android:name="com.igg.sdk.unity.GlobalApplication"-->
+	<application tools:replace="android:allowBackup,android:theme,android:appComponentFactory,android:hardwareAccelerated"
+				 android:appComponentFactory="appComponentFactory"
+				 android:theme="@style/UnityThemeSelector"
+				 android:name="com.mob.moblink.unity.MobLinkUnityApplication"
+				 android:hardwareAccelerated="false" android:icon="@drawable/app_icon"
+				 android:label="@string/app_name" android:allowBackup="false"
+				 android:debuggable="true" android:isGame="true" android:networkSecurityConfig="@xml/network_security_config">
 
-  </application>
+		<meta-data android:name="Mob-AppKey" android:value="31c0505717a48"/>
+		<meta-data android:name="Mob-AppSecret" android:value="034a7f8df49928d424ab589fdb856079"/>
+		<activity
+				android:name="com.mob.moblink.unity.MobUnityPlayerActivity"
+				android:label="@string/app_name"
+				android:clearTaskOnLaunch="false"
+				android:launchMode="singleInstance" >
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity
+				android:name="com.mob.moblink.MobLinkActivity"
+				android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+				android:launchMode="singleTask">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+				<data android:host="com.igg.android.scriptsuntoldsecrets" android:scheme="mlink"/>
+			</intent-filter>
+			<intent-filter android:autoVerify="true">
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+				<data android:host="bo09.t4m.cn" android:scheme="http"/>
+				<data android:host="bo09.t4m.cn" android:scheme="https"/>
+			</intent-filter>
+		</activity>
+		<activity tools:replace="android:launchMode" android:name="com.igg.sdk.unity.SeSUDKActivity" android:label="@string/app_name"
+				  android:launchMode="singleTask"
+				  android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale">
+			<meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+			<!-- Unity视图嵌入Android视图时曾经碰到过Android视图无法取得焦点的问题 -->
+			<meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
+		</activity>
+		<!-- receiver should be inside the <application> tag -->
+		<receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+			<intent-filter>
+				<action android:name="com.android.vending.INSTALL_REFERRER" />
+			</intent-filter>
+		</receiver>--&gt;
+		<!-- Mandatory permission: -->
+
+		<!-- FCM -->
+		<service android:name="com.igg.sdk.unity.MyFirebaseMessagingService">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT" />
+			</intent-filter>
+		</service>
+		<service android:name="com.igg.sdk.push.IGGFCMInstanceIDService">
+			<intent-filter>
+				<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+			</intent-filter>
+		</service>
+		<!--  FCM end -->
+
+		<activity android:name="com.appsflyer.GetDeepLinkingActivity" android:exported="true">
+			<intent-filter><action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				data android:scheme="your_scheme" /></intent-filter></activity>
+		<!-- 屏蔽权限弹窗
+        <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
+         -->
+		<activity android:name="com.facebook.unity.FBUnityLoginActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+		<activity android:name="com.facebook.unity.FBUnityDialogsActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+		<activity android:name="com.facebook.unity.FBUnityGamingServicesFriendFinderActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+		<activity android:name="com.facebook.unity.FBUnityAppLinkActivity" android:exported="true" />
+		<activity android:name="com.facebook.unity.FBUnityDeepLinkingActivity" android:exported="true" />
+		<activity android:name="com.facebook.unity.FBUnityGameRequestActivity" />
+		<activity android:name="com.facebook.unity.FBUnityCreateGameGroupActivity" />
+		<activity android:name="com.facebook.unity.FBUnityJoinGameGroupActivity" />
+		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb2417998011827767" />
+		<meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="true" />
+		<meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="true" />
+		<provider android:name="com.facebook.FacebookContentProvider" android:authorities="com.facebook.app.FacebookContentProvider2417998011827767" android:exported="true" />
+
+		<!--这个设置主要是为了适配9.0以上的机器（必须使用）-->
+		<uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+	</application>
 </manifest>
