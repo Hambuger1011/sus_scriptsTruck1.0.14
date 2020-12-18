@@ -28,6 +28,7 @@ function UIFirstChargeForm:OnInitView()
 
     self.Reward =CS.DisplayUtil.GetChild(root.gameObject, "Reward"):GetComponent(typeof(logic.cs.CanvasGroup))
     self.TreasureBox =CS.DisplayUtil.GetChild(root.gameObject, "TreasureBox")
+    self.BoxUp =CS.DisplayUtil.GetChild(root.gameObject, "BoxUp")
     self.Keys =CS.DisplayUtil.GetChild(root.gameObject, "Keys")
     self.Diamonds =CS.DisplayUtil.GetChild(root.gameObject, "Diamonds")
     self.ClothesCoupon =CS.DisplayUtil.GetChild(root.gameObject, "ClothesCoupon")
@@ -68,11 +69,13 @@ function UIFirstChargeForm:PlayAnim()
     self.Reward.alpha = 0
     self.Reward:DOFade(1,duration)
 
+    self.BoxUp.transform:DORotate( core.Vector3(0,0,0),duration)
+
     for i = 1, #RewardTrans do
         RewardTrans[i].transform:DOAnchorPos(PosList[i],duration):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
     end
 
-    self.TreasureBox.transform.localScale = core.Vector3.New(0.5,0.5,1)
+    self.TreasureBox.transform.localScale = core.Vector3.New(0.5,0.5,duration)
     self.TreasureBox.transform:DOScale(core.Vector3.New(1,1,1),duration):SetEase(core.tween.Ease.OutBack)
 end
 
