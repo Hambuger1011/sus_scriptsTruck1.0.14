@@ -388,6 +388,8 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public bool FirstChargeHaveShown = false;
 
+    public string InviteCode = "";
+
     public UserDataManager() { }
 
     public int GetBroadcastId()

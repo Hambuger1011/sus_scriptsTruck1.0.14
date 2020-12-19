@@ -317,6 +317,16 @@ function GameHttp:Login(iggid, access_token, is_switch, callback)
         access_token = access_token,
         is_switch = is_switch,
     }
+    if #logic.cs.UserDataManager.InviteCode > 0 then
+        param = {
+            system_type = logic.cs.GameHttpNet.SYSTEMTYPE,
+            iggid = iggid,
+            access_token = access_token,
+            is_switch = is_switch,
+            invite_code = logic.cs.UserDataManager.InviteCode,
+        }
+        logic.cs.UserDataManager.InviteCode = "";
+    end
     self:Post(self, "api_login", param, callback, 10, nil, true)
 end
 

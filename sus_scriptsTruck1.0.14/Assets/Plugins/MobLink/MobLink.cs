@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace com.moblink.unity3d
 {
@@ -17,6 +18,7 @@ namespace com.moblink.unity3d
 		private static bool isInit;
 		private static MobLink _instance;
 		private static MobLinkImpl moblinkUtils;
+		private String mobId;
 
 		void Awake()
 		{
@@ -37,6 +39,43 @@ namespace com.moblink.unity3d
 			_instance = this;
 
 			DontDestroyOnLoad(this.gameObject);
+		}
+		
+		void Start () {
+			setRestoreSceneListener (OnRestoreScene);
+			Hashtable custom = new Hashtable ();
+			String pathString = "LaunchScene";
+			custom.Add("TestKey","TailTest");
+			// MobLinkScene scene = new MobLinkScene (pathString, source, custom);
+			MobLinkScene scene = new MobLinkScene(pathString, custom);
+			MobLink.getMobId (scene, mobIdHandler);
+		}
+		
+		// 创造符合委托格式的函数
+		void mobIdHandler (string mobid, string errorInfo)
+		{
+			mobId = mobid;
+			Debug.Log("[moblink-unity]Received MobId: " + mobid + ", errorInfo: " + errorInfo);
+		}
+		
+
+		/*
+		 * 全局的场景还原监听函数 
+		 */
+		protected static void OnRestoreScene(MobLinkScene scene)
+		{
+			Hashtable customParams = scene.customParams;
+
+			if (customParams != null)
+			{
+				Debug.Log("[moblink-unity]OnRestoreScene(). path: " + scene.path +
+				          ", params: " + customParams.toJson());
+			} else
+			{
+				Debug.Log("[moblink-unity]OnRestoreScene(). path: " + scene.path +
+				          ", params: " + null);
+			}
+        
 		}
 
 		public static void setRestoreSceneListener (com.moblink.unity3d.MobLink.RestoreSceneHandler sceneHander) {
@@ -88,11 +127,6 @@ namespace com.moblink.unity3d
 
 			MobLinkScene scene = new MobLinkScene (path, customParams);
 			onRestoreScene (scene);
-		}
-		
-		public void ReceiveSharingInfo(string msg)
-		{
-			Debug.LogError("ReceiveSharingInfo:" + msg);
 		}
 	}
 

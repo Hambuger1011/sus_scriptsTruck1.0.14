@@ -12,8 +12,8 @@ namespace com.moblink.unity3d
 
 		public MobLinkConfig()
 		{
-			this.appKey = "1b8898cb51ccb";
-			this.appSecret = "fa16fc57a2a639c7b4980085a3e7e0b2";
+			this.appKey = "31c0505717a48";
+			this.appSecret = "034a7f8df49928d424ab589fdb856079";
 		}
 	}		
 

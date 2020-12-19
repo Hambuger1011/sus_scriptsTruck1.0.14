@@ -218,6 +218,7 @@ public class UserInfo
     public string reg_area;
     public string email;
     public string nickname;
+    public string invite_code;
 
     [JsonProperty("is_old")]
     public int firstplay;//是否新用户 0是  1不是

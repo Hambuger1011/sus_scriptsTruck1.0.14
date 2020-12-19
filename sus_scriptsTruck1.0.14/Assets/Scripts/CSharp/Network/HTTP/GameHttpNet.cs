@@ -704,6 +704,12 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         parameters.Add("iggid", vId);
         parameters.Add("access_token", vToken);
         parameters.Add("is_switch", vIsSwitch.ToString());
+
+        if (UserDataManager.Instance.InviteCode.Length > 0)
+        {
+            parameters.Add("invite_code", UserDataManager.Instance.InviteCode);
+            UserDataManager.Instance.InviteCode = "";
+        }
         this.Post("api_login", parameters, (responseCode, result) =>
         {
             if (responseCode != 200)
