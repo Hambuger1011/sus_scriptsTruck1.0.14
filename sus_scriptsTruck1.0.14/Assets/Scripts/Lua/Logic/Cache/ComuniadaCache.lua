@@ -11,7 +11,7 @@ function ComuniadaCache:__init()
     self.latestReleaseList= {};
 
 
-    ---------------------【更多书本】
+    ------------------------------------------【更多书本】
     --书本总数
     self.total=0;
     --总页数
@@ -22,13 +22,25 @@ function ComuniadaCache:__init()
     self.allHotList= {};
     --最新更新
     self.allNewList= {};
-    ---------------------【更多书本】
-
-
+    ------------------------------------------【更多书本】
     --自己创作故事列表
     self.myWriterList={};
     --历史看过的故事列表
     self.historyList={};
+    ---------------------------------------------------
+    --【火爆作者排名】
+    self.HotWriterList={};
+    ---------------------------------------------------
+    --【作者详情】
+    self.WriterInfo={};
+    --【动态列表】
+    self.DynamicList={};
+
+    --作者创作故事列表
+    self.WriterList={};
+    --作者历史看过的故事列表
+    self.WriterhistoryList={};
+    ----------------------------------------------------
 
 end
 
@@ -172,6 +184,59 @@ function ComuniadaCache:UpdateHistoryList(datas)
         end
     end
 end
+
+
+--最受欢迎作者
+function ComuniadaCache:UpdateHotWriter(datas)
+    if(GameHelper.islistHave(self.HotWriterList)==true)then
+        Cache.ClearList(self.HotWriterList);
+    end
+    local List=datas.data;
+    local len=table.length(List);
+    if(List and len>0)then
+        for i = 1,len do
+            local info =require("Logic/Cache/ComuniadaInfo/AuthorInfo").New();
+            info:UpdateData(List[i]);
+            table.insert(self.HotWriterList,info);
+        end
+    end
+end
+
+
+
+--作者创作故事列表
+function ComuniadaCache:UpdateWriterList(datas)
+    if(GameHelper.islistHave(self.WriterList)==true)then
+        Cache.ClearList(self.WriterList);
+    end
+    local List=datas.new_list;
+    local len=table.length(List);
+    if(List and len>0)then
+        for i = 1,len do
+            local info =require("Logic/Cache/ComuniadaInfo/StoryInfo").New();
+            info:UpdateData(List[i]);
+            table.insert(self.WriterList,info);
+        end
+    end
+end
+
+--作者历史看过的故事列表
+function ComuniadaCache:UpdateWriterhistoryList(datas)
+    if(GameHelper.islistHave(self.WriterhistoryList)==true)then
+        Cache.ClearList(self.WriterhistoryList);
+    end
+    local List=datas.reading_list;
+    local len=table.length(List);
+    if(List and len>0)then
+        for i = 1,len do
+            local info =require("Logic/Cache/ComuniadaInfo/StoryInfo").New();
+            info:UpdateData(List[i]);
+            table.insert(self.WriterhistoryList,info);
+        end
+    end
+end
+
+
 
 
 -- 析构函数

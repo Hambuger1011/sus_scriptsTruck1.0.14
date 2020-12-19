@@ -387,7 +387,7 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
         UINetLoadingMgr.Instance.Close2();
 
         //SdkMgr.Instance.google.CallPayEvent(false, error.GetCode());
-        UIAlertMgr.Instance.Show("Tips", "购买失败。errorCode=" + error.GetCode());
+        UIAlertMgr.Instance.Show("Tips", "Purchase failed。errorCode=" + error.GetCode());
     }
 
     /// <summary>

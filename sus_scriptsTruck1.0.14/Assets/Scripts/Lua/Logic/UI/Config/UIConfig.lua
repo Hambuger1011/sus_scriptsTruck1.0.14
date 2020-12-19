@@ -13,12 +13,12 @@ local UIConfig = {
 	require "Logic/UI/UI_Guide/UIGuide",
 	require "Logic/UI/UI_BookReading/UI_Comment",
 	require "Logic/UI/UI_BookReading/UI_Reply",
-	require "Logic/UI/UI_Email/UI_Email",
+
 	require "Logic/UI/UI_Account/UI_AccountInfo",
 	require "Logic/UI/UI_Activity/Panel/Activity/InvitePanel",
 	require "Logic/UI/UI_Account/UI_MoveWait",
 	require "Logic/UI/UI_Account/UI_PlatformQuickLogin",
-	require "Logic/UI/UI_Email/UI_EmailInfo",
+
 
 	require "Logic/UI/UI_Collect/UICollectForm",
 	require "Logic/UI/UI_Rank/UIRankForm",
@@ -43,8 +43,9 @@ local UIConfig = {
 	require "Logic/StoryEditor/UI/Editor/UIStory_Editor",
 	require "Logic/StoryEditor/UI/Preview/UIStory_Preview",
 	require "Logic/StoryEditor/UI/Keyboard/UIStory_Keyboard",
-	require "Logic/StoryEditor/UI/Reading/UIStory_Chapter",
+	require "Logic/StoryEditor/UI/Reading/UIStoryChapterForm",
 	require "Logic/StoryEditor/UI/Guide/UIStory_Guide",
+
 
 
 	require "Logic/UI/UI_Main/UIMainForm",
@@ -53,6 +54,10 @@ local UIConfig = {
 	require "Logic/UI/UI_Activity/UIActivityForm",
 	require "Logic/UI/UI_ActivityBanner/UIActivityBannerForm",
 	require "Logic/UI/UI_Comuniada/UIComuniadaForm",
+	require "Logic/UI/UI_Community/UICommunityForm",
+	require "Logic/UI/UI_Email/UIEmailForm",
+	require "Logic/UI/UI_Email/UIEmailInfoForm",
+	require "Logic/UI/UI_Chat/UIChatForm",
 }
 return UIConfig
 --return ConstClass("UIConfig", UIConfig)

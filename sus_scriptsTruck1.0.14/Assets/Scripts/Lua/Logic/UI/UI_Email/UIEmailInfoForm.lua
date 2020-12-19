@@ -1,14 +1,14 @@
 local BaseClass = core.Class
 local UIView = core.UIView
----@class UI_EmailInfo
-local UI_EmailInfo = BaseClass("UI_EmailInfo", UIView)
+---@class UIEmailInfoForm
+local UIEmailInfoForm = BaseClass("UIEmailInfoForm", UIView)
 local base = UIView
 
 local uiid = logic.uiid
 
-UI_EmailInfo.config = {
-    ID = uiid.EmailInfo,
-    AssetName = 'UI/Resident/UI/Canvas_NewEmailInfo'
+UIEmailInfoForm.config = {
+    ID = uiid.UIEmailInfoForm,
+    AssetName = 'UI/Resident/UI/UIEmailInfoForm'
 }
 local hit = nil;
 
@@ -24,7 +24,7 @@ local function SetSafeAreaHeight(Center, safeAreaHeight)
     Center.anchoredPosition = pos1
 end
 
-function UI_EmailInfo:OnInitView()
+function UIEmailInfoForm:OnInitView()
     self.bookId = logic.bookReadingMgr.selectBookId
     UIView.OnInitView(self)
     local root = self.uiform.transform
@@ -287,25 +287,25 @@ function UI_EmailInfo:OnInitView()
     end
 end
 
-function UI_EmailInfo:OnOpen()
+function UIEmailInfoForm:OnOpen()
     UIView.OnOpen(self)
 end
 
-function UI_EmailInfo:OnClose()
+function UIEmailInfoForm:OnClose()
     UIView.OnClose(self)
 end
 
-function UI_EmailInfo:OnExitClick()
+function UIEmailInfoForm:OnExitClick()
     UIView.__Close(self)
     if self.onClose then
         self.onClose()
     end
 end
 
-function UI_EmailInfo:SetEmailData(Data, _Hit,item)
+function UIEmailInfoForm:SetEmailData(Data, _Hit,item)
     self.emailData = Data
     hit = _Hit;
     self.emailItem=item;
 end
 
-return UI_EmailInfo
+return UIEmailInfoForm

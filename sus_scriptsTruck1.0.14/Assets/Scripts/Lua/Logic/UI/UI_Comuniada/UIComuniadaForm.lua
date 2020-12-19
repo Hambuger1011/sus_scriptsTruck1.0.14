@@ -44,6 +44,9 @@ function UIComuniadaForm:OnOpen()
 
     --请求列表
     GameController.ComuniadaControl:GetwriterIndexRequest();
+
+    --请求首页作者列表
+    GameController.ComuniadaControl:GetHotWriterRequest();
 end
 
 --endregion
@@ -152,6 +155,14 @@ function UIComuniadaForm:ChangeFavoritesPanel()
 end
 --endregion
 
+
+--region【刷新列表】【首页作者列表】
+function UIComuniadaForm:UpdateHotWriter()
+    if(self.CommunityPanel)then
+        self.CommunityPanel:UpdateHotWriter();
+    end
+end
+--endregion
 
 
 --region 【界面关闭】

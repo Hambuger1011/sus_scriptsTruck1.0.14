@@ -2035,17 +2035,7 @@ public class ProfileForm : BaseUIForm
 
     private void EmailButton(PointerEventData data)
     {
-        // CUIManager.Instance.OpenForm(UIFormName.EmailAndNew);
-        var luaenv = XLuaManager.Instance.GetLuaEnv();
-        var res = luaenv.DoString(@"
-return function()
-     logic.UIMgr:Open(logic.uiid.Email)
-end");
-        using (var func = (LuaFunction) res[0])
-        {
-            var f = (Action) func.Cast(typeof(Action));
-            f();
-        }
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIEmailForm);");
 
         //埋点*邮件
         GamePointManager.Instance.BuriedPoint(EventEnum.MailBox);

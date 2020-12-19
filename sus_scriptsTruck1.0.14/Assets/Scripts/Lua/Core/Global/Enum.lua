@@ -131,5 +131,5 @@ EStoryList.LatestRelease=2;
 EStoryList.MyWriterList=3;
 --【历史看过的故事】
 EStoryList.HistoryList=4;
-
-
+--【别的作者写的书】
+EStoryList.WriterList=5;

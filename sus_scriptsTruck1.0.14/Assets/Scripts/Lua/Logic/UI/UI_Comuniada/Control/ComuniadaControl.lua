@@ -30,7 +30,6 @@ end
 --endregion
 
 
-
 --region 【获得的创作综合书本的信息】
 function ComuniadaControl:GetwriterIndexRequest()
     logic.gameHttp:GetwriterIndex(function(result) self:GetwriterIndex(result); end)
@@ -137,6 +136,7 @@ function ComuniadaControl:GetMyWriterBookList(result)
 end
 --endregion
 
+
 --region 【创作】【获取已读过的书本】
 function ComuniadaControl:GetReadingHistoryRequest()
     logic.gameHttp:GetReadingHistory(function(result) self:GetReadingHistory(result); end)
@@ -174,7 +174,31 @@ end
 
 
 
+--region 【首页作者列表】
+function ComuniadaControl:GetHotWriterRequest()
+    logic.gameHttp:GetHotWriter(function(result) self:GetHotWriter(result); end)
+end
+--endregion
 
+
+--region 【首页作者列表*响应】
+function ComuniadaControl:GetHotWriter(result)
+    logic.debug.Log("----GetHotWriter---->" .. result);
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if(code == 200)then
+        --存入缓存数据；
+        --【首页作者列表】
+        Cache.ComuniadaCache:UpdateHotWriter(json);
+
+        --刷新界面
+        if(UIComuniadaForm)then
+            UIComuniadaForm:UpdateHotWriter();
+        end
+
+    end
+end
+--endregion
 
 
 --析构函数

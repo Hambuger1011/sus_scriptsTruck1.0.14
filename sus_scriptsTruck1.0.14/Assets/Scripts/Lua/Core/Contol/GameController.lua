@@ -16,6 +16,8 @@ function GameController.Init()
     GameController.ActivityBannerControl=require("Logic/UI/UI_ActivityBanner/Control/ActivityBannerControl");
     GameController.ComuniadaControl=require("Logic/UI/UI_Comuniada/Control/ComuniadaControl");
     GameController.BusquedaControl=require("Logic/UI/UI_Busqueda/Control/BusquedaControl");
+    GameController.CommunityControl=require("Logic/UI/UI_Community/Control/CommunityControl");
+    GameController.EmailControl=require("Logic/UI/UI_Email/Control/EmailControl");
 
     isInit = true
 end

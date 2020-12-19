@@ -4,6 +4,11 @@ local CommunityPanel = BaseClass("CommunityPanel")
 function CommunityPanel:__init(gameObject)
     self.gameObject=gameObject;
 
+    -- 【最受欢迎的】【作者列表】
+    self.mAuthorList =CS.DisplayUtil.GetChild(gameObject, "AuthorList");
+    self.AuthorList = require('Logic/UI/UI_Comuniada/List/AuthorList').New(self.mAuthorList);
+
+
     -- 【最受欢迎的】 作品
     self.mMostPopularList =CS.DisplayUtil.GetChild(gameObject, "MostPopularList");
     self.MostPopularList = require('Logic/UI/UI_Comuniada/List/StoryList').New(self.mMostPopularList);
@@ -58,6 +63,13 @@ function CommunityPanel:BusquedaBtnClick(data)
 
     --埋点*点击搜索
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UgcSearch);
+end
+
+
+function CommunityPanel:UpdateHotWriter()
+    if(self.AuthorList)then
+        self.AuthorList:UpdateList(Cache.ComuniadaCache.HotWriterList);
+    end
 end
 
 

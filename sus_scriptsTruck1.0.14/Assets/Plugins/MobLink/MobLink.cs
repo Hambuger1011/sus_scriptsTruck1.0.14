@@ -89,6 +89,11 @@ namespace com.moblink.unity3d
 			MobLinkScene scene = new MobLinkScene (path, customParams);
 			onRestoreScene (scene);
 		}
+		
+		public void ReceiveSharingInfo(string msg)
+		{
+			Debug.LogError("ReceiveSharingInfo:" + msg);
+		}
 	}
 
 }

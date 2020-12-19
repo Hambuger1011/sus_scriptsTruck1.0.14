@@ -410,7 +410,7 @@ function UIStoryEditorMgr:UploadImage(bookId,chapterId,filename,callback)
 end
 
 
----@param storyDetial StoryEditor_BookDetials
+---@param storyInfo StoryEditor_BookDetials
 ---@param chapterData StoryEditor_ChapterDetial
 function UIStoryEditorMgr:ReadingOtherBook(bookID)
     logic.gameHttp:StoryEditor_GetBookDetail(bookID,function(result)
@@ -419,14 +419,14 @@ function UIStoryEditorMgr:ReadingOtherBook(bookID)
         if code == 200 then
 
             ---@type StoryEditor_BookDetials
-            local storyDetial = json.data
-            storyDetial.roleTable = DataDefine.t_RoleTable.New()
-            storyDetial.roleTable:FromTable(core.json.Derialize(storyDetial.role_list))
-            storyDetial.role_list = nil
-            -- local roleJson = storyDetial.roleTable:ToJson()
-            -- storyDetial.roleTable.md5 = string.getMd5(roleJson)
+            local storyInfo = json.data
+            storyInfo.roleTable = DataDefine.t_RoleTable.New()
+            storyInfo.roleTable:FromTable(core.json.Derialize(storyInfo.role_list))
+            storyInfo.role_list = nil
+            -- local roleJson = storyInfo.roleTable:ToJson()
+            -- storyInfo.roleTable.md5 = string.getMd5(roleJson)
 
-            storyDetial.UpdateTags = function(self)
+            storyInfo.UpdateTags = function(self)
                 self.tagArray = System.Collections.SortedDictionary.New()
                 local array = string.split(self.tag,',')
                 for i,v in pairs(array) do
@@ -434,10 +434,10 @@ function UIStoryEditorMgr:ReadingOtherBook(bookID)
                     self.tagArray:Set(val,true)
                 end
             end
-            storyDetial:UpdateTags()
+            storyInfo:UpdateTags()
             
-            local uiView = logic.UIMgr:Open(logic.uiid.Story_Chapter)
-            uiView:SetData(storyDetial)
+            local uiView = logic.UIMgr:Open(logic.uiid.UIStoryChapterForm)
+            uiView:SetData(storyInfo)
         else
             logic.cs.UIAlertMgr:Show("TIPS",json.msg)
             --logic.cs.UINetLoadingMgr:Close()

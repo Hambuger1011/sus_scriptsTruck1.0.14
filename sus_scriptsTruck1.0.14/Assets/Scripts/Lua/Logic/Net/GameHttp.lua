@@ -1222,7 +1222,7 @@ function GameHttp:GetWriterNewBookList(_page,callback)
 end
 
 --【我的写作书本列表】
-function GameHttp:GetMyWriterBookList( callback)
+function GameHttp:GetMyWriterBookList(callback)
     local param = {
     }
     self:Get(self, "api_getMyWriterBookList", param, function(result)
@@ -1249,6 +1249,48 @@ function GameHttp:GetWriterBookList(_page,booktypeArr,title,callback)
     self:Get(self, "api_getWriterBookList", param, function(result)
         callback(result)
     end, nil, nil,true)
+end
+
+
+--【首页作者列表】
+function GameHttp:GetHotWriter(callback)
+    local param = {
+    }
+    self:Get(self, "api_getHotWriter", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
+--【获取作者详情】
+function GameHttp:GetWriterInfo(_uid,callback)
+    local param = {
+        uid=_uid;
+    }
+    self:Get(self, "api_getWriterInfo", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取动态列表(分页)】
+function GameHttp:GetActionLogPage(_uid,_page,callback)
+    local param = {
+        uid=_uid;
+        page=_page;
+    }
+    self:Get(self, "api_getActionLogPage", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取作者首页书本列表】
+function GameHttp:GetWriterHomeBookList(_uid,callback)
+    local param = {
+        uid=_uid;
+    }
+    self:Get(self, "api_getWriterHomeBookList", param, function(result)
+        callback(result)
+    end, nil, nil, true)
 end
 
 return GameHttp.New()

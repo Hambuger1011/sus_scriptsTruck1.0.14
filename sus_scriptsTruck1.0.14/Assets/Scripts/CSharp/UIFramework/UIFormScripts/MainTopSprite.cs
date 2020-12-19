@@ -118,6 +118,7 @@ public class MainTopSprite : BaseUIForm
       
     }
 
+
     //当前界面
     private string CurUI = "";
 
@@ -131,13 +132,8 @@ public class MainTopSprite : BaseUIForm
         gameOpenDim = true;
         //AddNowOpenUIList(1);
     }
-    private string OldCurUI = "";
     public void CtrlIconShow(bool value)
     {
-        if (value == true && CurUI != "")
-        {
-            OldCurUI = CurUI;
-        }
         CurUI = "";
         CloseIcon.SetActiveEx(value);
         LogoIcon.gameObject.SetActiveEx(!value);
@@ -154,6 +150,7 @@ public class MainTopSprite : BaseUIForm
 
     public void CloseIconOnclicke(PointerEventData data)
     {
+
         if (CurUI == "UIChargeMoneyForm")
         {
             CtrlIconShow(false);
@@ -164,47 +161,40 @@ public class MainTopSprite : BaseUIForm
         {
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRankForm);");
-
-        }
-        else if (CurUI == "UIRewardForm")
-        {
-            CtrlIconShow(false);
-            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRewardForm);");
-
-        }
-        else if (CurUI == "LimitedTimePanel")
-        {
-            CtrlIconShow(false);
-            CUIManager.Instance.CloseForm(UIFormName.ChargeMoneyForm);
-            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRewardForm);");
-
         }
         else if (CurUI == "UIDressUpForm")
         {
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIDressUpForm);");
         }
-        else if(CurUI == "UIMasForm")
+        else if (CurUI == "UIMasForm")
         {
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIMasForm);");
         }
+        else if (CurUI == "UICommunityForm")
+        {
+            CtrlIconShow(false);
+            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UICommunityForm);");
+        }
         else if (CurUI == "UIChargeMoneyForm1")
         {
-    
             CtrlIconShow(false);
             CUIManager.Instance.CloseForm(UIFormName.ChargeMoneyForm);
-
-            if (OldCurUI != "")
-            {
-                this.GamePlayTopOpen(OldCurUI);
-                OldCurUI = "";
-            }
         }
         else
         {
             CtrlIconShow(false);
         }
+    }
+
+
+    private void CloseAllUI()
+    {
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIMasForm);");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRankForm);");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIDressUpForm);");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UICommunityForm);");
     }
 
     /// <summary>
@@ -501,13 +491,16 @@ public class MainTopSprite : BaseUIForm
 
         CUIManager.Instance.GetForm<ChargeMoneyForm>(UIFormName.ChargeMoneyForm).SetFormStyle(1);
 
-        // CtrlIconShow(true);
         Log.SetActive(false);
 
-        GamePlayTopOpen("UIChargeMoneyForm1");
+        if (CurUI != "UIChargeMoneyForm")
+        {
+            GamePlayTopOpen("UIChargeMoneyForm1");
+        }
 
         CheckFreeKeyState();
-        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIReward);");
+        //关闭之前界面（禁止套娃）
+        this.CloseAllUI();
     }
 
 
@@ -527,9 +520,13 @@ public class MainTopSprite : BaseUIForm
 
         CUIManager.Instance.GetForm<ChargeMoneyForm>(UIFormName.ChargeMoneyForm).SetFormStyle(2);
 
-        GamePlayTopOpen("UIChargeMoneyForm1");
         Log.SetActive(false);
-        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIReward);");
+        if (CurUI != "UIChargeMoneyForm")
+        {
+            GamePlayTopOpen("UIChargeMoneyForm1");
+        }
+        //关闭之前界面（禁止套娃）
+        this.CloseAllUI();
     }
 
     private void FXkeyAndDiondFalse()

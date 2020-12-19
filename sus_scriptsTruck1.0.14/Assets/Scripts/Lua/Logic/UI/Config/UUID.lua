@@ -17,8 +17,7 @@ local UIID = {
 	InvitePanel = 'InvitePanel',
 	MoveWait = 'MoveWait',
 	PlatformQuickLogin = 'PlatformQuickLogin',
-	Email = 'Email',
-	EmailInfo = 'EmailInfo',
+
 	UICollectForm = 'UI/Resident/UI/UICollectForm',
 	UIRatinglevelForm='UI/Resident/UI/UIRatinglevelForm',
 
@@ -34,7 +33,8 @@ local UIID = {
 	Story_Preview = 'UI/StoryEditorRes/UI/Canvas_Story_Preview',
 	Story_Keyboard = 'UI/StoryEditorRes/UI/Canvas_Keyboard',
 	Texture2DClipper = 'UI/StoryEditorRes/UI/Canvas_ImageCut',
-	Story_Chapter = 'UI/StoryEditorRes/UI/Canvas_StoryChapter',
+	UIStoryChapterForm = 'UI/StoryEditorRes/UI/UIStoryChapterForm',
+	UICommunityForm = 'UI/StoryEditorRes/UI/UICommunityForm',
 	Story_Guide = 'UI/Resident/UI/Canvas_Story_Guide',
 	UISignTipForm = 'UI/Resident/UI/UISignTipForm',
 	UIFirstChargeForm = 'UI/Resident/UI/UIFirstChargeForm',
@@ -48,6 +48,10 @@ local UIID = {
 	UIComuniadaForm = 'UI/Resident/UI/UIComuniadaForm',
 	UIMasForm = 'UI/Resident/UI/UIMasForm',
 	UIBusquedaForm = 'UI/Resident/UI/UIBusquedaForm',
+	UIBusquedaForm = 'UI/Resident/UI/UIBusquedaForm',
+	UIEmailForm = 'UI/Resident/UI/UIEmailForm',
+	UIEmailInfoForm = 'UI/Resident/UI/UIEmailInfoForm',
+	UIChatForm = 'UI/Resident/UI/UIChatForm',
 
 }
 

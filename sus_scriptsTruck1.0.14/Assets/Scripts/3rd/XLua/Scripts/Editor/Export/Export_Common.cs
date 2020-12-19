@@ -8,6 +8,7 @@ using GameCore.UI;
 using UGUI;
 using UnityEngine;
 using UnityEngine.Events;
+
 using XLua;
 
 public static class Export_Cmmon
@@ -55,6 +56,7 @@ public static class Export_Cmmon
         typeof(SuperScrollView.LoopListView2),
         typeof(SuperScrollView.LoopListViewItem2),
         typeof(UIVirtualList),
+        typeof(ContentImmediate),
 
     };
 

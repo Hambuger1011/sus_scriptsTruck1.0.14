@@ -54,7 +54,7 @@ function UIBubbleBox.Create(uiItem,msgBoxType)
     elseif msgBoxType == UIBubbleBox.BoxType.ReplyItem then
         clazz = require('Logic/UI/UI_BookReading/ReplyItem')
     elseif msgBoxType == UIBubbleBox.BoxType.EmailItem then
-        clazz = require('Logic/UI/UI_Email/EmailItem')
+        clazz = require('Logic/UI/UI_Email/Item/EmailItem')
     end
     if clazz == nil then
         logic.debug.LogError(string.format('Not found:%d',msgBoxType))
