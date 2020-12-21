@@ -40,6 +40,8 @@ function InvitePanel:SetUI()
                 local InviteButton =CS.DisplayUtil.GetChild(Item, "InviteButton"):GetComponent(typeof(logic.cs.Button));
                 local CollectedButton =CS.DisplayUtil.GetChild(Item, "CollectedButton"):GetComponent(typeof(logic.cs.Button));
                 local Collected =CS.DisplayUtil.GetChild(Item, "Collected"):GetComponent(typeof(logic.cs.Button));
+                local headImage =CS.DisplayUtil.GetChild(Item, "HeadImage"):GetComponent(typeof(logic.cs.Image));
+                local HeadFrame =CS.DisplayUtil.GetChild(Item, "HeadFrame"):GetComponent(typeof(logic.cs.Image));
 
                 InviteButton.gameObject:SetActiveEx(false)
                 CollectedButton.gameObject:SetActiveEx(false)
@@ -69,6 +71,8 @@ function InvitePanel:SetUI()
                 elseif v.status == 2 then
                     Collected.gameObject:SetActiveEx(true)
                 end
+                GameHelper.luaShowDressUpForm(v.user_info.avatar, headImage, DressUp.Avatar, 1001);
+                --GameHelper.luaShowDressUpForm(v.user_info.avatar_frame, HeadFrame, DressUp.AvatarFrame, 2001);
                 NumText.text = v.number
                 Name.text = v.user_info.nickname
                 DiamondNum.text = "x"..v.diamond_count
