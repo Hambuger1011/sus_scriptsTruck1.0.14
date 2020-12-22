@@ -72,7 +72,7 @@ function InvitePanel:SetUI()
                     Collected.gameObject:SetActiveEx(true)
                 end
                 GameHelper.luaShowDressUpForm(v.user_info.avatar, headImage, DressUp.Avatar, 1001);
-                --GameHelper.luaShowDressUpForm(v.user_info.avatar_frame, HeadFrame, DressUp.AvatarFrame, 2001);
+                GameHelper.luaShowDressUpForm(v.user_info.avatar_frame, HeadFrame, DressUp.AvatarFrame, 2001);
                 NumText.text = v.number
                 Name.text = v.user_info.nickname
                 DiamondNum.text = "x"..v.diamond_count
