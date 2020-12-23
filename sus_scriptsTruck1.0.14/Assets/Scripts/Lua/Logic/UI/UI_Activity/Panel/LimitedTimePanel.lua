@@ -346,7 +346,7 @@ function LimitedTimePanel:ChargeButtonOnClick()
     tapForm:SetFormStyle(2);
     uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainFormTop)
     tapForm = uiform:GetComponent(typeof(CS.MainTopSprite))
-    tapForm:GamePlayTopOpen("LimitedTimePanel");
+    tapForm:GamePlayTopOpen("UIChargeMoneyForm1");
 end
 --endregion
 
