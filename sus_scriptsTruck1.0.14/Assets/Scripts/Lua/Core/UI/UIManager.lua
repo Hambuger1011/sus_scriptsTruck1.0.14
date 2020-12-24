@@ -23,7 +23,7 @@ function UIManager:Startup(UIConfig)
         local _cfg = _view.config
         local uiid = _cfg.ID
         assert(uiid ~= nil, "no exsits Config.ID: ".._view.__cname)
-        --assert(cfg.AssetName ~= nil, "AssetName is null : "..uuid)       
+        --assert(cfg.AssetName ~= nil, "AssetName is null : "..uuid)
         uiClass[uiid] = _view      -- 按key保存这种模块 require "Logic/UI/UI_BookLoading/UIBookLoadingView",
         views[uiid] = nil
     end

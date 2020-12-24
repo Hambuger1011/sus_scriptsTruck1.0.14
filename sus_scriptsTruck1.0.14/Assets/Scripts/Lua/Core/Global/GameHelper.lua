@@ -529,7 +529,6 @@ end
 --type 类型
 --defaultID 默认 id
 function GameHelper.luaShowDressUpForm(DressUpId,image,_type,defaultID)
-
     local curDressUpForm;
     if(_type==DressUp.Avatar)then
         curDressUpForm=Cache.DressUpCache.avatar;

@@ -139,13 +139,25 @@ function LimitedTimePanel:OnOpen()
     self:SetFreeBG()
     --刷新红点
     self:RedPointShow();
+
+    self.MsgListener = function() self:PaySuccessMsgListener() end
+    logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.PaySuccess, self.MsgListener)
 end
 --endregion
 
 
 --region【OnClose】
 function LimitedTimePanel:OnClose()
+    logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.PaySuccess, self.MsgListener)
+end
+--endregion
 
+
+--region【PaySuccessMsgListener】
+function LimitedTimePanel:PaySuccessMsgListener()
+    self.FirstRechargePoint:SetActiveEx(true);
+    self.ChargeButton:SetActiveEx(false);
+    self.ClaimFirstcharge:SetActiveEx(true);
 end
 --endregion
 

@@ -86,6 +86,7 @@ public class ProfileForm : BaseUIForm
     private GameObject MusicaButton, SonidosButton;
     private Image MusicaImage, SonidosImage;
     private GameObject Preguntas, Politica, Terminos, Contactanos, Email, Hit, Community;
+    private GameObject Pakage, PakageHit;
 
     private GameObject CommunityWindow, Facebook, Twitter, Instagram, Google, Youtube, Back, AjustesBg;
 
@@ -130,6 +131,9 @@ public class ProfileForm : BaseUIForm
         Contactanos = transform.Find("Frame/ScrollView/Viewport/Content/AjustesBg/Contactanos").gameObject;
         Email = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/Email").gameObject;
         Hit = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/Email/Hit").gameObject;
+
+        Pakage = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/Pakage").gameObject;
+        PakageHit = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/Pakage/Hit").gameObject;
 
         CommunityWindow = transform.Find("CommunityWindow").gameObject;
         Facebook = transform.Find("CommunityWindow/BG/Facebook/Image").gameObject;
@@ -259,6 +263,7 @@ public class ProfileForm : BaseUIForm
         UIEventListener.AddOnClickListener(Community, CommunityButton);
         UIEventListener.AddOnClickListener(Contactanos, ContactanosButton);
         UIEventListener.AddOnClickListener(Email, EmailButton);
+        UIEventListener.AddOnClickListener(Pakage, PakageButton);
 
         UIEventListener.AddOnClickListener(Facebook, FacebookButton);
         UIEventListener.AddOnClickListener(Twitter, TwitterButton);
@@ -2041,5 +2046,12 @@ public class ProfileForm : BaseUIForm
         GamePointManager.Instance.BuriedPoint(EventEnum.MailBox);
     }
 
+    void PakageButton(PointerEventData data)
+    {
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIPakageForm);");
+
+        //埋点*背包
+        GamePointManager.Instance.BuriedPoint(EventEnum.PakageBox);
+    }
     #endregion
 }

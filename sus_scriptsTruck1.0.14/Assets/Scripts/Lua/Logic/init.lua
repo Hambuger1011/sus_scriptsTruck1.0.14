@@ -71,6 +71,7 @@ logic.cs.Material = CS.UnityEngine.Material
 logic.cs.Shader = CS.UnityEngine.Shader
 logic.cs.PlayerPrefs = CS.UnityEngine.PlayerPrefs
 logic.cs.Camera = CS.UnityEngine.Camera
+logic.cs.Transform = CS.UnityEngine.Transform
 logic.cs.RectTransform = CS.UnityEngine.RectTransform
 logic.cs.AudioSource = CS.UnityEngine.AudioSource
 logic.cs.SkeletonGraphic = CS.Spine.Unity.SkeletonGraphic

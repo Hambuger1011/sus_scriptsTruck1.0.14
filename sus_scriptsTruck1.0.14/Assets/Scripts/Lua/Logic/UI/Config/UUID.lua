@@ -53,6 +53,7 @@ local UIID = {
 	UIEmailInfoForm = 'UI/Resident/UI/UIEmailInfoForm',
 	UIChatForm = 'UI/Resident/UI/UIChatForm',
 
+	UIPakageForm = 'UI/Resident/UI/UIPakageForm',
 }
 
 return UIID

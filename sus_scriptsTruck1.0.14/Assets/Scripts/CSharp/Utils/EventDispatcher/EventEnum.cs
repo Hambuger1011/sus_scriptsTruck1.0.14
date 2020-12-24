@@ -74,6 +74,7 @@ public class EventEnum
     public static readonly string BindAccount = "bind_account";  //绑定帐号
     public static readonly string ChangeAccount = "change_account";  //切换帐号
     public static readonly string MailBox = "mail_box";  //邮件
+    public static readonly string PakageBox = "pakage_box";  //背包
     public static readonly string MyFavoriteBook = "my_favorite_book";  //我的书本
     public static readonly string SettingMusic = "setting_music";  //音乐
     public static readonly string SettingSound = "setting_sound";  //声音
@@ -179,6 +180,7 @@ public class EventEnum
     public static readonly string FaceBookLoginSucc = "FaceBookLoginSucc";
     public static readonly string GoogleLoginSucc = "GoogleLoginSucc";
     public static readonly string HideWebView = "HideWebView";
+    public static readonly string PaySuccess = "PaySuccess";
     public static readonly string ThirdPartyLoginSucc = "ThirdPartyLoginSucc";
     public static readonly string SwitchLoginFailed = "SwitchLoginFailed";
     public static readonly string DeviceLoginSucc = "DeviceLoginSucc";

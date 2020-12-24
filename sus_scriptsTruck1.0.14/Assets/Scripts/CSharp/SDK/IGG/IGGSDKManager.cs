@@ -407,6 +407,8 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
 
 #if ENABLE_DEBUG
         GameHttpNet.Instance.DevFinishOrder(purchase.orderId, result.GetItem().GetId(), "", DevFinishOrderCallBack);
+#else
+        EventDispatcher.Dispatch(EventEnum.PaySuccess);
 #endif
 
         //SdkMgr.Instance.google.CallPayEvent(false, purchase.GetOrderId());
@@ -433,6 +435,7 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
                     UserDataManager.Instance.adsRewardResultInfo = JsonHelper.JsonToObject<HttpInfoReturn<GetAdsRewardResultInfo>>(result);
                     UserDataManager.Instance.ResetMoney(1, UserDataManager.Instance.adsRewardResultInfo.data.bkey);
                     UserDataManager.Instance.ResetMoney(2, UserDataManager.Instance.adsRewardResultInfo.data.diamond);
+                    EventDispatcher.Dispatch(EventEnum.PaySuccess);
                 }
             }, null);
         }

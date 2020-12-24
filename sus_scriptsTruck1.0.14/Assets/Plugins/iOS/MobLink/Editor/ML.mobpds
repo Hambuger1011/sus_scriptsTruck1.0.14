@@ -4,6 +4,6 @@
         "OTHER_LDFLAGS" : ["-lz"]
     }
     "URLSchemes" : {
-    	"CFBundleURLSchemes" : ["scheme1","scheme2"]
+    	"CFBundleURLSchemes" : ["moblink"]
     }
 }
