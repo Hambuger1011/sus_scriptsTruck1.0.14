@@ -254,6 +254,7 @@ public class EventEnum
 
     public static readonly string ContenPostRest = "ContenPostRest";
     public static readonly string EmailNumberShow = "EmailNumberShow";
+    public static readonly string PakageNumberShow = "PakageNumberShow";
     public static readonly string MasClose = "MasClose";
     public static readonly string MasOpen = "MasOpen";
     public static readonly string SwitchComuniada = "SwitchComuniada";

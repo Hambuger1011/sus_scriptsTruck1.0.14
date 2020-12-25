@@ -537,6 +537,8 @@ function BookReadingMgr:SaveProgress(callback)
                 if callback then
                     callback(result)
                 end
+
+                logic.cs.UserDataManager:ResetPropInfo();
             end);
     end
 end

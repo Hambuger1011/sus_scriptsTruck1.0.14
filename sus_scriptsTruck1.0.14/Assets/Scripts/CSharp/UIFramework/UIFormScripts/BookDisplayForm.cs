@@ -34,6 +34,7 @@ public class BookDisplayForm : BaseUIForm
     private int continueCost;
 
 
+
     int bookID;
     int openChapterCount;//开放的章节总数
     int allChapterCount;//所有的章节总数
@@ -48,6 +49,7 @@ public class BookDisplayForm : BaseUIForm
     public override void OnOpen()
     {
         base.OnOpen();
+        ItemCellPrefab.gameObject.SetActive(false);
         UIEventListener.AddOnClickListener(UIMask.gameObject, back);
        
         if (GameUtility.IpadAspectRatio() && frameTrans != null)
@@ -79,6 +81,10 @@ public class BookDisplayForm : BaseUIForm
         //UINetLoadingMgr.Instance.Show();
         GameHttpNet.Instance.GetBookDetailInfo(bookID, GetBookDetailInfoCallBack);  //获得书本信息
 
+        GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Key }, GetPropByTypeCallBack_Key);
+        GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Outfit_Discount, (int)PropType.Outfit_Coupon }, GetPropByTypeCallBack_Outfit);
+        GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Choice_Discount, (int)PropType.Choice_Coupon }, GetPropByTypeCallBack_Choice);
+
         //if (mLastBookId == 0 || mLastBookId != bookID)
         //{
         //    mLastBookId = bookID;
@@ -100,7 +106,7 @@ public class BookDisplayForm : BaseUIForm
             UserDataManager.Instance.bookChapterOptionCostList = JsonHelper.JsonToObject<HttpInfoReturn<BookOptionCostCont<BookOptionCostItemInfo>>>(result);
         }
     }
-
+    
     public void GetBookDetailInfoCallBack(object arg)
     {
         string result = arg.ToString();
@@ -124,6 +130,66 @@ public class BookDisplayForm : BaseUIForm
                     initBookDisplayGridChild(mCurBookId,true);   //实例化物体
 
                     UpdateBookReadNum();
+                }
+            }, null);
+        }
+    }
+    public void GetPropByTypeCallBack_Outfit(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetPropByTypeCallBack_Outfit---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+
+        if (jo != null)
+        {
+            LoomUtil.QueueOnMainThread((param) =>
+            {
+                //UINetLoadingMgr.Instance.Close();
+                if (jo.code == 200)
+                {
+                    HttpInfoReturn<PropInfo> info = JsonHelper.JsonToObject<HttpInfoReturn<PropInfo>>(result);
+                    UserDataManager.Instance.userPropInfo_Outfit = info.data;
+
+                }
+            }, null);
+        }
+    }
+    public void GetPropByTypeCallBack_Choice(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetPropByTypeCallBack_Choice---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+
+        if (jo != null)
+        {
+            LoomUtil.QueueOnMainThread((param) =>
+            {
+                //UINetLoadingMgr.Instance.Close();
+                if (jo.code == 200)
+                {
+                    HttpInfoReturn<PropInfo> info = JsonHelper.JsonToObject<HttpInfoReturn<PropInfo>>(result);
+                    UserDataManager.Instance.userPropInfo_Choice = info.data;
+
+                }
+            }, null);
+        }
+    }
+    public void GetPropByTypeCallBack_Key(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetPropByTypeCallBack_Key---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+
+        if (jo != null)
+        {
+            LoomUtil.QueueOnMainThread((param) =>
+            {
+                //UINetLoadingMgr.Instance.Close();
+                if (jo.code == 200)
+                {
+                    HttpInfoReturn<PropInfo> info= JsonHelper.JsonToObject<HttpInfoReturn<PropInfo>>(result);
+                    UserDataManager.Instance.userPropInfo_Key = info.data;
+
                 }
             }, null);
         }
@@ -211,7 +277,7 @@ public class BookDisplayForm : BaseUIForm
             allChapterCount = openChapterCount;
         int len = openChapterCount;
 
-        Debug.LogError($"lzh ===> {openChapterCount} {allChapterCount} {len} {mChapterId}");
+        //Debug.LogError($"lzh ===> {openChapterCount} {allChapterCount} {len} {mChapterId}");
         // 生成cell
         for (int i = 0; i < len; i++)
         {
@@ -219,7 +285,7 @@ public class BookDisplayForm : BaseUIForm
             ScrollViewPageCell cell = go.AddComponent<ScrollViewPageCell>();
             go.SetActive(true);
             mCellList.Add(cell);
-        }       
+        }
 
         // init scroll viwe page
         SVPage.Init(OnRefreshItemData, mChapterId - 1);
@@ -483,6 +549,7 @@ public class BookDisplayForm : BaseUIForm
     {
         mChapterId = 1;
         DialogDisplaySystem.Instance.UpdatePayChapterRecordByReset(mCurBookId, mChapterId);
+
         initBookDisplayGridChild(mCurBookId);
         BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == mCurBookId);
         if(bookData  != null)

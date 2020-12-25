@@ -909,10 +909,19 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         if (npc_sex != 0)
             parameters.Add("npc_sex", npc_sex.ToString());
 
+        int is_use_prop = UserDataManager.Instance.is_use_prop;//是否使用道具: 1.使用道具 0.不使用（非必传，默认不使用）
+        parameters.Add("is_use_prop", is_use_prop.ToString());
+        if (is_use_prop == 1)
+        {
+            parameters.Add("discount", UserDataManager.Instance.propInfoItem.discount.ToString());
+        }
+
         this.Post("api_saveStep", parameters, (responseCode, result) =>
         {
             ProgressCallBackHandler(result);
             vCallBackHandler(result);
+
+            UserDataManager.Instance.ResetPropInfo();
         });
     }
 
@@ -1022,6 +1031,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         //parameters.Add("phoneimei", UUID);
         parameters.Add("bookid", vBookId.ToString());
         parameters.Add("chapterid", vChapterId.ToString());
+        parameters.Add("is_use_prop", UserDataManager.Instance.is_use_prop.ToString());
         this.Post(url, parameters, (responseCode, result) =>
         {
             var buyData = JsonHelper.JsonToObject<HttpInfoReturn<BuyChapterResultInfo>>(result);
@@ -1089,6 +1099,9 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             }
 
             vCallBackHandler(buyData);
+
+
+            UserDataManager.Instance.ResetPropInfo();
         });
     }
 
@@ -1240,6 +1253,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         //parameters.Add("phoneimei", UUID);
         parameters.Add("bookid", vBookId.ToString());
         parameters.Add("chapterid", vChapterId.ToString());
+        parameters.Add("is_use_prop", UserDataManager.Instance.is_use_prop.ToString());
         this.Post(url, parameters, (responseCode, result) =>
         {
             if (responseCode != 200)
@@ -1248,6 +1262,8 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             }
 
             vCallBackHandler(result);
+
+            UserDataManager.Instance.ResetPropInfo();
         });
     }
 
@@ -3570,6 +3586,34 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         });
     }
 
+    /// <summary>
+    /// 通过类型获取可用道具(折扣列表)
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vChapterId"></param>
+    /// <param name="vDialogId"></param>
+    /// <param name="vOptionId">选项</param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetPropByType(int[] types, EventHandler vCallBackHandler)
+    {
+        string type = "";
+        for (int i = 0;i< types.Length; i++) {
+            type += types[i].ToString();
+            if(i< types.Length - 1)
+            {
+                type += ",";
+            }
+        }
+        string url = "api_getPropByType?type=" + type;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
 
 
 }

@@ -317,6 +317,18 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<BookBarrageCountList> BookBarrageCountList;
     public HttpInfoReturn<BookBarrageInfoList> BookBarrageInfoList;
 
+    public int is_use_prop = 0; //是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
+    public PropInfoItem propInfoItem; //当前使用的道具信息
+    public PropInfo userPropInfo_Outfit;//装扮类型道具信息
+    public PropInfo userPropInfo_Choice;//选项类型道具信息
+    public PropInfo userPropInfo_Key;   //钥匙类型道具信息
+
+    public void ResetPropInfo()
+    {
+        is_use_prop = 0;
+        propInfoItem = null;
+    }
+
     public AppconfInfo appconfinfo;
 
     public UserData UserData { get { return m_userData; } }
@@ -2193,7 +2205,6 @@ public class UserDataManager : Singleton<UserDataManager> {
         choicesClothResultInfo = JsonHelper.JsonToObject<HttpInfoReturn<ChoicesClothResultInfo>>(result);
     }
 
-   
 
     public void SetHiddenEggInfo(string result)
     {
@@ -2214,4 +2225,6 @@ public class UserDataManager : Singleton<UserDataManager> {
     {
         SaveStepInfo = JsonHelper.JsonToObject<HttpInfoReturn<SaveStep>>(result);
     }
+
+
 }

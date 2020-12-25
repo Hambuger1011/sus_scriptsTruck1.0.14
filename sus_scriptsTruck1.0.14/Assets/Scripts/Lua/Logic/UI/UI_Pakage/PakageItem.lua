@@ -1,21 +1,7 @@
 ---@class PakageItem
-local UIBubbleBox = require('Logic/StoryEditor/UI/Editor/BubbleItem/UIBubbleBox')
-local PakageItem  = core.Class('PakageItem',UIBubbleBox)
-local UIEmailInfoForm = require('Logic/UI/UI_Email/UIEmailInfoForm')
+local PakageItem  = core.Class('PakageItem')
 
----@class PakageItem_Item
-local Item = core.Class("PakageItem.Item")
 
-function Item:__init(uiItem)
-    self.transform = uiItem
-    self.gameObject = uiItem.gameObject
-
-    self.SetActive = function(self,isOn)
-        self.gameObject:SetActiveEx(isOn)
-    end
-end
-
---region-------PakageItem
 
 function PakageItem:__init(gameObject,parentUI)
     self.gameObject = gameObject
@@ -23,61 +9,92 @@ function PakageItem:__init(gameObject,parentUI)
     self.parentUI = parentUI
     self.button = logic.cs.LuaHelper.GetComponent(self.transform, "BGButton",typeof(logic.cs.Button))
     self.imgIcon = logic.cs.LuaHelper.GetComponent(self.transform, "icon",typeof(logic.cs.Image))
-    self.hit = CS.DisplayUtil.FindChild(self.transform, "Hit")
-    self.txtNum = logic.cs.LuaHelper.GetComponent(self.transform, "BGButton",typeof(logic.cs.Text))
+    self.objHit = CS.DisplayUtil.FindChild(self.gameObject, "Hit")
+    self.txtNum = logic.cs.LuaHelper.GetComponent(self.transform, "txtNum",typeof(logic.cs.Text))
     self.txtCountDown = logic.cs.LuaHelper.GetComponent(self.transform, "countDowd/text",typeof(logic.cs.Text))
-    self.txtNum = logic.cs.LuaHelper.GetComponent(self.transform, "txtName",typeof(logic.cs.Text))
+    self.txtName = logic.cs.LuaHelper.GetComponent(self.transform, "txtName",typeof(logic.cs.Text))
 
+    self.itemData = nil
+    self.deltaTime = -1
+    self.button.onClick:AddListener(function()
+        self:OnClickItem()
+    end)
 end
 
 
-function PakageItem:SetData(Data)
-
-end
-
---endregion
-function PakageItem:OnItemClick(Data)
-    logic.debug.PrintTable(Data)
-
-    if Data.status == 1 then
-        UI_EmailInfo:SetEmailData(Data,self.hit,self);
-        logic.UIMgr:Open(logic.uiid.EmailInfo)
+function PakageItem:SetData(itemData)
+    self.itemData = itemData
+    self.deltaTime = itemData.expire_time
+    self:SetUnReadFlag(itemData.is_read~=1) --道具是否已读 1：已读 0未读
+    self.imgIcon.sprite = self.parentUI:GetIconSprite(itemData.resources)
+    self.txtNum.text = itemData.prop_num or "0"
+    self.txtName.text = itemData.name or ""
+    if itemData.expire_time~=-1 then -- 道具过期时间：秒数，-1为永久
+        self.txtCountDown.transform.parent.gameObject:SetActive(true)
+        self:StartCoundown(itemData.expire_time)
     else
-        logic.gameHttp:ReadSystemMsg(Data.msgid,function(result)
-            local json = core.json.Derialize(result)
-            local code = tonumber(json.code)
-            if code == 200 then
-                logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount = logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount - 1
+        self.txtCountDown.transform.parent.gameObject:SetActive(false)
+        self:StopTimer()
+    end
+end
 
-                Data.status = 1
-                self:updateRedPoint(Data)
-                UIEmailInfoForm:SetEmailData(json.data.sysarr,self.hit,self);
-                if(Data.msg_type~=2)then
-                    self.openImage:SetActiveEx(true)
-                end
-
-                GameController.MainFormControl:RedPointRequest();
-                logic.UIMgr:Open(logic.uiid.EmailInfo)
-            else
-                logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-            end
+function PakageItem:OnClickItem()
+    if self.itemData.is_read==0 then
+        self.parentUI:SetPropReadRequest(self.itemData.id, function()
+            self.itemData.is_read=1 --道具是否已读 1：已读 0未读
+            self:SetUnReadFlag(false)--设置成已读
         end)
     end
+    self.parentUI:ShowItemDetail(self.itemData, self.deltaTime)
+
 end
 
-function PakageItem:updateRedPoint(_Data)
-    if(_Data.msg_type==2)then
-        if(_Data.price_status==0)then
-            self.hit:SetActiveEx(true)
-        else
-            self.hit:SetActiveEx(false)
-        end
+function PakageItem:SetUnReadFlag(bUnReadFlag)
+    self.objHit:SetActive(bUnReadFlag)
+end
+
+function PakageItem:ShowDeltaTime(delta)
+    local hourSeconds = 3600 --一个小时的秒数
+    local minuteSeconds = 60
+    if delta<0 then delta = 0 end
+    if delta >= hourSeconds then
+        local hour = math.floor(delta/hourSeconds)
+        self.txtCountDown.text = string.format("Expiress in %d hours",hour)
+    elseif delta >= minuteSeconds then
+        local minute = math.floor(delta/minuteSeconds)
+        self.txtCountDown.text = string.format("Expiress in %d mins",minute)
     else
-        if _Data.status == 1 then
-            self.hit:SetActiveEx(false)
-        else
-            self.hit:SetActiveEx(true)
-        end
+        self.txtCountDown.text = string.format("Expiress in %d sec",delta)
     end
 end
+
+function PakageItem:StartCoundown(expire_time)
+    self:StopTimer()
+    self.deltaTime = expire_time or 0
+    self:ShowDeltaTime(self.deltaTime)
+    self.timer = core.Timer.New(function()
+        self:ShowDeltaTime(self.deltaTime)
+        if self.deltaTime <= 0 then	--时间到
+            self.parentUI:RemoveItem(self.itemData)
+            self:StopTimer()
+        end
+        if self.deltaTime> 0 then
+            self.deltaTime = self.deltaTime - 1
+        end
+    end,1,-1)
+    self.timer:Start()
+end
+
+function PakageItem:StopTimer()
+	if self.timer then
+		self.timer:Stop()
+		self.timer = nil
+    end
+end
+
+function PakageItem:Dispose()
+    self:StopTimer()
+    logic.cs.GameObject.Destroy(self.gameObject)
+end
+
 return PakageItem

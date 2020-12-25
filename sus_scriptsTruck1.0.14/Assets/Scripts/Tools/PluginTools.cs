@@ -165,19 +165,34 @@ public class PluginTools : Singleton<PluginTools>
         if (BanWords == null)
             BanWords = GameDataMgr.Instance.table.GetBannedWordsList();
 
+        List<int> indexList = new List<int>();
         // str = Regex.Replace(str, word, "x",RegexOptions.IgnoreCase);
         foreach (t_Banned_Words banWord in BanWords)
         {
-            string word = banWord.BannedWord;
-            if (str.Contains(word))
+            string word = banWord.BannedWord.ToLower();
+            string strLower = str.ToLower();
+            while (true)
             {
-                if (!string.IsNullOrEmpty(word))
+                int index = strLower.LastIndexOf(word, StringComparison.Ordinal);
+                if (index >= 0)
                 {
-                    str = str.Replace(word, "");
-                    if (str.Trim() == string.Empty)
-                    {
-                        str = "Good";
-                    }
+                    indexList.Add(index);
+                    strLower = strLower.Remove(index, word.Length);
+                }
+                else
+                    break;
+            }
+            if (indexList.Count>0)
+            {
+                foreach (var index in indexList)
+                {
+                    str = str.Remove(index, word.Length);
+                }
+                indexList.Clear();
+                if (str.Trim() == string.Empty)
+                {
+                    str = "Good";
+                    break;
                 }
             }
         }

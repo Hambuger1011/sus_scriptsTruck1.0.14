@@ -60,6 +60,7 @@ local InstallUI = function()
         uiView.uiBinding = uiView.gameObject:GetComponent(typeof(logic.cs.UIBinding))
 		uiView.fxSelectClothes = uiView.uiBinding:Get('fxSelectClothes')
 		uiView.ClothesTF = uiView.uiBinding:Get('spineRoot').transform
+		uiView.ClothesTF.localPosition = {x=0;y=0};
         uiView.roleSpine = logic.SpineCharacter.New(uiView.uiBinding:Get('spine'))
         uiView.imgLeftArrow = uiView.uiBinding:Get('btnPre',  typeof(logic.cs.Image))
         uiView.imgRightArrow = uiView.uiBinding:Get('btnNext', typeof(logic.cs.Image))

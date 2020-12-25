@@ -60,6 +60,7 @@ function RedDotCache:UpdateData(data)
     self.third_party_award=data.third_party_award;
     self.attention_media=data.attention_media;
     self.se_move_finish=data.se_move_finish;
+    self.first_recharge=data.first_recharge;
 end
 
 

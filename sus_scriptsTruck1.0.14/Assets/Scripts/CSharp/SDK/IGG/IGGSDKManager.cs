@@ -410,6 +410,10 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
 #else
         EventDispatcher.Dispatch(EventEnum.PaySuccess);
 #endif
+        
+        NewChargeTips tipForm = CUIManager.Instance.GetForm<NewChargeTips>(UIFormName.NewChargeTips);
+
+        if (tipForm != null) CUIManager.Instance.CloseForm(UIFormName.NewChargeTips);
 
         //SdkMgr.Instance.google.CallPayEvent(false, purchase.GetOrderId());
         //UIAlertMgr.Instance.Show("Tips","购买成功。"+ result.GetItem().GetId());

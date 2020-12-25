@@ -237,6 +237,7 @@ public class ProfileForm : BaseUIForm
         addMessageListener(EventEnum.GoogleLoginSucc, GoogleLoginSuccHandler);
         addMessageListener(EventEnum.ThirdPartyLoginSucc, ThirdPartyLoginSuccHandler);
         addMessageListener(EventEnum.EmailNumberShow, EmailRedshow);
+        addMessageListener(EventEnum.PakageNumberShow, PakageRedshow);
 
 
         BtnOk.onClick.AddListener(BtnOkOnclick);
@@ -293,6 +294,18 @@ public class ProfileForm : BaseUIForm
         }
     }
 
+    private void PakageRedshow(Notification obj)
+    {
+        int isShow = System.Convert.ToInt32(obj.Data);
+        if (isShow == 1)
+        {
+            PakageHit.SetActive(true);
+        }
+        else if (isShow == 2)
+        {
+            PakageHit.SetActive(false);
+        }
+    }
 
     private void NameChanged(string arg0)
     {

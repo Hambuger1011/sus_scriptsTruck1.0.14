@@ -1303,4 +1303,36 @@ function GameHttp:GetWriterHomeBookList(_uid,callback)
     end, nil, nil, true)
 end
 
+--获取用户可用的背包道具
+function GameHttp:GetBackpackProp( callback)
+    local param = {
+        iggid = logic.cs.UserDataManager.IGGid,
+        access_token = logic.cs.UserDataManager.Accesskey,
+        system_type = logic.cs.GameHttpNet.SYSTEMTYPE,
+    }
+    self:Get(self, "api_getBackpackProp", param, callback, 100, nil, true)
+end
+-- 设置背包道具为已读状态
+---@param id 背包记录id 可单个，多个（英文逗号隔开），默认全部标记为已读
+function GameHttp:SetPropRead(id, callback)
+    local param = {
+        iggid = logic.cs.UserDataManager.IGGid,
+        access_token = logic.cs.UserDataManager.Accesskey,
+        system_type = logic.cs.GameHttpNet.SYSTEMTYPE,
+        id = id,
+    }
+    self:Post(self, "api_setPropRead", param, callback, 20, nil, true)
+end
+--通过类型获取可用道具(折扣列表)
+---@param _type 道具类型 多个用英文逗号隔开，1.装扮(折扣券) 2.选项(折扣券) 3.选项[抵扣券] 4.装扮[抵扣券]  5.钥匙[抵扣券] 6.信鸽
+function GameHttp:SetPropByType(_type,callback)
+    local param = {
+        iggid = logic.cs.UserDataManager.IGGid,
+        access_token = logic.cs.UserDataManager.Accesskey,
+        system_type = logic.cs.GameHttpNet.SYSTEMTYPE,
+        type = _type,
+    }
+    self:Get(self, "api_getPropByType", param, callback, nil, nil, true)
+end
+
 return GameHttp.New()

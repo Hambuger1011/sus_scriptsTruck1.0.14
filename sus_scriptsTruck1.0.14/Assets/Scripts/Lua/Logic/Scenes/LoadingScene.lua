@@ -120,11 +120,11 @@ function LoadingScene:LoadResFinishAndGetInfo()
             errorText = CS.CTextManager.Instance:GetText(327)
         end
         logic.cs.UIAlertMgr:Show("TIPS", errorText,logic.cs.AlertType.Sure,
-                function(isOK)
-                    local LoginForm=logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.LoginForm)
-                    local go=LoginForm.transform:GetComponent(typeof(CS.LoginForm))
-                    go:IsTimeOutOpenFanc()
-                end)
+            function(isOK)
+                local LoginForm=logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.LoginForm)
+                local go=LoginForm.transform:GetComponent(typeof(CS.LoginForm))
+                go:IsTimeOutOpenFanc()
+            end)
     end
 end
 function LoadingScene:Getserverdata(IGGId,accessToken)

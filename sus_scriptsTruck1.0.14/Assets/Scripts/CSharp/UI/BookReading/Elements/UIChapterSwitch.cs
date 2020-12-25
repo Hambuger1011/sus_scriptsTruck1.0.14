@@ -37,6 +37,11 @@ UIBookReadingElement
     public GameObject BookFree1;
     public GameObject BookFree2;
 
+    //道具相关
+    bool isCheckedKeyPropBtn = true;
+    Button btnKeyProp = null;
+    GameObject objKeyPropDeleteLine = null;
+
     private int m_curBookID;
     private int m_curDialogID;
     private int m_curChapterID;
@@ -77,6 +82,13 @@ UIBookReadingElement
         btnContinue.onClick.RemoveListener(OnContinue);
         BtFeedback.onClick.RemoveListener(FeedbackOnclick);
         CloseBtn.onClick.RemoveListener(ReturnToSelectChapterView);
+
+        btnKeyProp = transform.Find("Frame/BtnNextChapter/IconImage/btnKeyProp").GetComponent<Button>();
+        objKeyPropDeleteLine = transform.Find("Frame/BtnNextChapter/IconImage/btnKeyProp/line_delete").gameObject;
+        btnKeyProp.gameObject.SetActive(false);
+        objKeyPropDeleteLine.SetActive(false);
+        btnKeyProp.onClick.AddListener(OnClickKeyPropBtn);
+        RefreshKeyPropBtnState();
 
         UIEventListener.RemoveOnClickListener(KeyButton, KeyButtonOnclicke);
         EventDispatcher.RemoveMessageListener(EventEnum.OnKeyNumChange.ToString(), OnKeyNumChange);
@@ -225,6 +237,8 @@ UIBookReadingElement
 
                         ContinueTitle.gameObject.SetActive(false);
                         txtContinueTip.gameObject.SetActive(true);
+
+                        RefreshKeyPropBtnState();
                     }
                     else
                     {
@@ -855,5 +869,24 @@ UIBookReadingElement
                 }
             }
         }, null);
+    }
+
+    private void OnClickKeyPropBtn()
+    {
+        isCheckedKeyPropBtn = !isCheckedKeyPropBtn;
+        RefreshKeyPropBtnState();
+    }
+    void RefreshKeyPropBtnState()
+    {
+        PropInfo info = UserDataManager.Instance.userPropInfo_Key;
+        if (info == null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0)
+        {
+            btnKeyProp.gameObject.SetActive(false);
+            return;
+        }
+        btnKeyProp.gameObject.SetActive(true);
+        UserDataManager.Instance.is_use_prop = isCheckedKeyPropBtn ? 1 : 0;
+        UserDataManager.Instance.propInfoItem = info.discount_list[0];
+        objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
     }
 }

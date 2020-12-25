@@ -58,8 +58,6 @@ function UIBookReadingView:OnInitView()
     end)
 
 
-
-    
     self.adsTicker = AdsTicker.New(root:Find('Frame/Layer/AdsTicker'))
     self.btnBackMain = get(root,'Frame/Layer/TopBar/TopBarButton/TopGB/TopRect/LeftBar/BackButton',typeof(logic.cs.Image))
     self.BarrageOpenClosegame = get(root,'Frame/Layer/BottomBar/GameObject/Bg/Broadcast',typeof(logic.cs.Image))

@@ -668,3 +668,46 @@ public class GameFunStateInfo
     public int id;  //功能id
     public int state;//状态 1开放 0关闭
 }
+
+public class PakageItemData
+{
+    public int id;              // 背包记录id
+    public string name;         // 道具名称
+    public string resources;    // 道具资源名称
+    public int prop_id;         // 道具id
+    public int prop_num;        // 道具数量
+    public int is_read;         // 道具是否已读 1：已读 0未读
+    public int expire_time;     // 道具过期时间：秒数，-1为永久
+    public string describe;     // 物品描述
+    public string prop_type;    // 道具类型
+    public string discount;	    // 折扣率，0.90代表九折
+}
+
+/// <summary>
+/// 道具信息
+/// </summary>
+public class PropInfo
+{
+    [JsonProperty("discount_list")]
+    public List<PropInfoItem> discount_list; //折扣列表
+}
+public class PropInfoItem
+{
+    [JsonProperty("prop_num")]
+    public int prop_num;        //道具数量
+
+    [JsonProperty("discount")]
+    public string discount;     // 折扣比例
+
+    [JsonProperty("discount_string")]
+    public string discount_string; // 折扣比例百分比字符
+}
+public enum PropType
+{
+    Outfit_Discount = 1, //装扮(折扣券)
+    Choice_Discount = 2, //选项(折扣券)
+    Choice_Coupon = 3, //选项[抵扣券]
+    Outfit_Coupon = 4, //装扮[抵扣券]
+    Key = 5,    //钥匙[抵扣券]
+    MessageBird = 6, //信鸽
+}
