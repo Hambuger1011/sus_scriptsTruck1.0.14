@@ -9,6 +9,7 @@ function PakageItemDetailPanel:__init(gameObject, parentUI)
     self.parentUI = parentUI
     self.btnMask = logic.cs.LuaHelper.GetComponent(self.transform, "bntMask",typeof(logic.cs.Button))
     self.imgIcon = logic.cs.LuaHelper.GetComponent(self.transform, "frame/icon",typeof(logic.cs.Image))
+    self.objImgIconMark = CS.DisplayUtil.FindChild(self.gameObject, "frame/icon/mark")
     self.txtTitle = logic.cs.LuaHelper.GetComponent(self.transform, "frame/txtTitle",typeof(logic.cs.Text))
     self.txtCountDown = logic.cs.LuaHelper.GetComponent(self.transform, "frame/countDowd/text",typeof(logic.cs.Text))
     self.txtDescript = logic.cs.LuaHelper.GetComponent(self.transform, "frame/txtDesceription",typeof(logic.cs.Text))
@@ -16,8 +17,6 @@ function PakageItemDetailPanel:__init(gameObject, parentUI)
         self:OnClose()
     end)
 end
-
-
 
 function PakageItemDetailPanel:SetData(itemData, deltaTime)
     self.itemData = itemData
@@ -27,6 +26,7 @@ function PakageItemDetailPanel:SetData(itemData, deltaTime)
     if sprite~=nil then
         self.imgIcon.sprite = sprite
     end
+    self.objImgIconMark:SetActive(itemData.expire_time==-1)
     if itemData.expire_time~=-1 then -- 道具过期时间：秒数，-1为永久
         self.txtCountDown.transform.parent.gameObject:SetActive(true)
         self:StartCoundown(deltaTime)

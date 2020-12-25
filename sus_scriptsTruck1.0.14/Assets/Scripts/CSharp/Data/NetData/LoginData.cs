@@ -669,6 +669,11 @@ public class GameFunStateInfo
     public int state;//状态 1开放 0关闭
 }
 
+//背包列表
+public class PakageInfo
+{
+    public List<PakageItemData> prop_list; //背包列表
+}
 public class PakageItemData
 {
     public int id;              // 背包记录id
@@ -679,7 +684,7 @@ public class PakageItemData
     public int is_read;         // 道具是否已读 1：已读 0未读
     public int expire_time;     // 道具过期时间：秒数，-1为永久
     public string describe;     // 物品描述
-    public string prop_type;    // 道具类型
+    public int prop_type;    // 道具类型
     public string discount;	    // 折扣率，0.90代表九折
 }
 

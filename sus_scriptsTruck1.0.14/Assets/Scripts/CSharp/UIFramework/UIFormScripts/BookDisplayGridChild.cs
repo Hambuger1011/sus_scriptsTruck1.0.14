@@ -543,6 +543,7 @@ return function()
         {
             //显示钥匙
             NeedKey.SetActive(true);
+            RefreshKeyPropBtnState2();
             //【限时活动免费读书 显示标签】
             this.Limit_time_Free();
         }
@@ -717,9 +718,15 @@ return function()
             return;
         }
         btnKeyProp.gameObject.SetActive(true);
-        UserDataManager.Instance.is_use_prop = isCheckedKeyPropBtn? 1:0;
-        UserDataManager.Instance.propInfoItem = info.discount_list[0];
         objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
+        if (isCheckedKeyPropBtn)
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
+        }
+        else
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, null);
+        }
 
         //PropInfoItem propInfoItem = null;
         //float max_discount = float.MinValue;
@@ -764,9 +771,15 @@ return function()
             return;
         }
         btnKeyProp2.gameObject.SetActive(true);
-        UserDataManager.Instance.is_use_prop = isCheckedKeyPropBtn2 ? 1 : 0;
-        UserDataManager.Instance.propInfoItem = info.discount_list[0];
         objKeyPropDeleteLine2.SetActive(isCheckedKeyPropBtn2);
 
+        if (isCheckedKeyPropBtn2)
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn2, info.discount_list[0]);
+        }
+        else
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn2, null);
+        }
     }
 }

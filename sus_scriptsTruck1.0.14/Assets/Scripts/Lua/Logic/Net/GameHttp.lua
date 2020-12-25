@@ -599,6 +599,8 @@ function GameHttp:SendPlayerProgress(
         outfit_id,
         hair_id,
         optionList,
+        is_use_prop,--是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
+        discount,--折扣率
         callback
 )
     local param = {
@@ -614,6 +616,8 @@ function GameHttp:SendPlayerProgress(
         outfit_id = outfit_id,
         hair_id = hair_id,
         option_list = optionList,
+        is_use_prop = is_use_prop, --是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
+        discount = discount, --折扣率
     }
     self:Post(self, "api_saveStep", param, callback)
 end

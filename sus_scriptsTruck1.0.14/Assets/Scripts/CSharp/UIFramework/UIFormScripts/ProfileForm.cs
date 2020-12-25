@@ -276,6 +276,37 @@ public class ProfileForm : BaseUIForm
         //请求红点
         XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.MainFormControl:RedPointRequest()");
 
+        GameHttpNet.Instance.GetBackpackProp((arg) =>
+        {
+            string result = arg.ToString();
+            LoomUtil.QueueOnMainThread((param) =>
+            {
+                JsonObject jo = JsonHelper.JsonToJObject(result);
+                if (jo != null)
+                {
+                    if (jo.code == 200)
+                    {
+                        HttpInfoReturn<PakageInfo> _result = JsonHelper.JsonToObject<HttpInfoReturn<PakageInfo>>(result);
+                        if(_result==null || _result.data.prop_list==null || _result.data.prop_list.Count == 0)
+                        {
+                            return;
+                        }
+                        bool isShow = false;
+                        //Debug.LogError("lzh ===> GetBackpackProp " + _result.data.prop_list.Count);
+                        foreach(var i in _result.data.prop_list)
+                        {
+                            if (i.is_read == 0)//道具是否已读 1：已读 0未读
+                            {
+                                isShow = true;
+                                break;
+                            }
+                        }
+                        PakageHit.SetActive(isShow);
+                    }
+                }
+            }, null);
+        });
+
         OnAppear();
         RefreshUI();
     }
@@ -297,14 +328,7 @@ public class ProfileForm : BaseUIForm
     private void PakageRedshow(Notification obj)
     {
         int isShow = System.Convert.ToInt32(obj.Data);
-        if (isShow == 1)
-        {
-            PakageHit.SetActive(true);
-        }
-        else if (isShow == 2)
-        {
-            PakageHit.SetActive(false);
-        }
+        PakageHit.SetActive(isShow!=0);
     }
 
     private void NameChanged(string arg0)

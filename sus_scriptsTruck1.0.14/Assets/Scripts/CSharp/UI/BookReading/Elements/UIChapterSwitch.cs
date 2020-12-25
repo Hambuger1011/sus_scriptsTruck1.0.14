@@ -885,8 +885,14 @@ UIBookReadingElement
             return;
         }
         btnKeyProp.gameObject.SetActive(true);
-        UserDataManager.Instance.is_use_prop = isCheckedKeyPropBtn ? 1 : 0;
-        UserDataManager.Instance.propInfoItem = info.discount_list[0];
         objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
+        if (isCheckedKeyPropBtn)
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
+        }
+        else
+        {
+            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, null);
+        }
     }
 }

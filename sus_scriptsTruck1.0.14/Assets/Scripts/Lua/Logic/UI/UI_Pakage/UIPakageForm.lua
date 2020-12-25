@@ -13,16 +13,16 @@ UIPakageForm.config = {
 local PakageItem = require('Logic/UI/UI_Pakage/PakageItem')
 local PakageItemDetailPanel = require('Logic/UI/UI_Pakage/PakageItemDetailPanel')
 
-local ServerIcon_LocalIcon_Map={
-    Outfit_Discount_10 = "PakageForm/props_icon_10_outfit_discount",
-    Outfit_Discount_25 = "PakageForm/props_icon_25_outfit_discount",
-    Choice_Discount_10 = "PakageForm/props_icon_10_choice_discount",
-    Choice_Discount_25 = "PakageForm/props_icon_25_choice_iscount",
-    Outfit_Coupon = "PakageForm/props_icon_outfit_coupon",
-    Choice_Coupon = "PakageForm/props_icon_choice_coupon",
-    Key_Coupon = "PakageForm/props_icon_key_oupon",
-    Messenger_Dove = "PakageForm/com_icon_messenger_dove",
-}
+-- local ServerIcon_LocalIcon_Map={
+--     Outfit_Discount_10 = "PakageForm/props_icon_10_outfit_discount",
+--     Outfit_Discount_25 = "PakageForm/props_icon_25_outfit_discount",
+--     Choice_Discount_10 = "PakageForm/props_icon_10_choice_discount",
+--     Choice_Discount_25 = "PakageForm/props_icon_25_choice_discount",
+--     Outfit_Coupon = "pakageForm/props_icon_outfit_coupon",
+--     Choice_Coupon = "PakageForm/props_icon_choice_coupon",
+--     Key_Coupon = "PakageForm/props_icon_key_oupon",
+--     Messenger_Dove = "PakageForm/com_icon_messenger_dove",
+-- }
 
 function UIPakageForm:OnInitView()
 
@@ -56,15 +56,16 @@ end
 function UIPakageForm:InitIconCaches()
     local go = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/iconcaches/")
     local trans = go.transform
+    local get = logic.cs.LuaHelper.GetComponent
     local map={}
-    map.Outfit_Discount_10 = logic.cs.LuaHelper.GetComponent(trans,"10_outfit_discount",typeof(logic.cs.Image)).sprite
-    map.Outfit_Discount_25 = logic.cs.LuaHelper.GetComponent(trans,"25_outfit_discount",typeof(logic.cs.Image)).sprite
-    map.Choice_Discount_10 = logic.cs.LuaHelper.GetComponent(trans,"10_choice_discount",typeof(logic.cs.Image)).sprite
-    map.Choice_Discount_25 = logic.cs.LuaHelper.GetComponent(trans,"25_choice_iscount",typeof(logic.cs.Image)).sprite
-    map.Outfit_Coupon = logic.cs.LuaHelper.GetComponent(trans,"outfit_coupon",typeof(logic.cs.Image)).sprite
-    map.Choice_Coupon = logic.cs.LuaHelper.GetComponent(trans,"choice_coupon",typeof(logic.cs.Image)).sprite
-    map.Key_Coupon = logic.cs.LuaHelper.GetComponent(trans,"key_oupon",typeof(logic.cs.Image)).sprite
-    map.Messenger_Dove = logic.cs.LuaHelper.GetComponent(trans,"messenger_dove",typeof(logic.cs.Image)).sprite
+    map.Outfit_Discount_10 = get(trans,"10_outfit_discount",typeof(logic.cs.Image)).sprite
+    map.Outfit_Discount_25 = get(trans,"25_outfit_discount",typeof(logic.cs.Image)).sprite
+    map.Choice_Discount_10 = get(trans,"10_choice_discount",typeof(logic.cs.Image)).sprite
+    map.Choice_Discount_25 = get(trans,"25_choice_discount",typeof(logic.cs.Image)).sprite
+    map.Outfit_Coupon = get(trans,"outfit_coupon",typeof(logic.cs.Image)).sprite
+    map.Choice_Coupon = get(trans,"choice_coupon",typeof(logic.cs.Image)).sprite
+    map.Key_Coupon = get(trans,"key_oupon",typeof(logic.cs.Image)).sprite
+    map.Messenger_Dove = get(trans,"messenger_dove",typeof(logic.cs.Image)).sprite
     go:SetActive(false)
     return map
 end
@@ -93,6 +94,7 @@ end
 function UIPakageForm:SetData(proplist)
     self.propListData = proplist or {}
     self:RefreshUI()
+    self:RefreshEnterRead()
 end
 
 function UIPakageForm:RefreshUI()
@@ -115,13 +117,11 @@ function UIPakageForm:RefreshUI()
 end
 
 function UIPakageForm:GetIconSprite(serverIconName)
-    local spriteName = ServerIcon_LocalIcon_Map[serverIconName]
-    logic.debug.LogError(tostring(spriteName))
-    if not spriteName then
+    local sprite = self.iconCaches[serverIconName]
+    if not sprite then
         logic.debug.LogError("lzh ===> 未配置的资源名:" .. tostring(serverIconName))
         return nil
     end
-    local sprite = self.iconCaches[serverIconName]
     return sprite
 end
 
@@ -187,6 +187,18 @@ function UIPakageForm:SetPropByTypeRequest()
         function(result)
             -- logic.debug.LogError(result)
         end)
+end
+
+--刷新入口红点
+function UIPakageForm:RefreshEnterRead()
+    local isShow = 0
+    for i,v in ipairs(self.propListData or {}) do
+        if v.is_read == 0 then--道具是否已读 1：已读 0未读
+            isShow = 1
+            break
+        end
+    end
+    logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.PakageNumberShow, isShow);
 end
 
 return UIPakageForm

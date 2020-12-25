@@ -323,11 +323,27 @@ public class UserDataManager : Singleton<UserDataManager> {
     public PropInfo userPropInfo_Choice;//选项类型道具信息
     public PropInfo userPropInfo_Key;   //钥匙类型道具信息
 
-    public void ResetPropInfo()
+
+    public void SetLuckyPropItem(bool isUse,PropInfoItem item=null)
     {
+        if (item == null)
+        {
+            is_use_prop = isUse ? 1:0;
+        }
+        propInfoItem = item;
+    }
+    //public void UpdatePropItem()
+    public void UpdatePropItemWhenServerCallback()
+    {
+        if (is_use_prop == 1)
+        {
+            propInfoItem.prop_num--;
+        }
         is_use_prop = 0;
         propInfoItem = null;
     }
+
+
 
     public AppconfInfo appconfinfo;
 

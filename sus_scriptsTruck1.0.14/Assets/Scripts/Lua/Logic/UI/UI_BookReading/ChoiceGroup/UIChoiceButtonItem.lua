@@ -15,6 +15,22 @@ function UIChoiceButtonItem:__init(gameObject)
     self.txtInfo = get(self.transform,'InfoTxt',typeof(logic.cs.Text))
     self.fxSelect = self.transform:Find('SelectEffect').gameObject
 
+    --道具相关
+    self.btnKeyProp = get(self.transform,'DiamondIcon/btnKeyProp',typeof(logic.cs.Button))
+    self.objBtnKeyProp = self.btnKeyProp.gameObject
+    self.textKeyProp = get(self.transform,'DiamondIcon/btnKeyProp/Text',typeof(logic.cs.Text))
+    self.transItemParentProp = self.transform:Find('DiamondIcon/btnKeyProp/list')
+    self.objItemParentProp = self.transItemParentProp.gameObject
+    self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/list/item').gameObject
+    self.btnKeyProp.onClick:AddListener(function()
+        self:ShowPropList()
+    end)
+    self.objBtnKeyProp:SetActive(false)
+    self.itemPrefabProp:SetActive(false)    
+	self.textKeyProp.gameObject:SetActive(false)
+    self.itemPropList = {}
+    self.luckItemProp = nil
+
 end
 
 function UIChoiceButtonItem:__delete()
@@ -41,14 +57,14 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
     end
     self.index = index
     self.selection = selection
-    self.cost = cost
+    self.cost = 20 or cost
     self.hiddenEgg = hiddenEgg
     self.txtInfo.text = logic.bookReadingMgr:ReplaceChar(selection)
     self.isHadBuy = false
 
     local GetHadBuySelectId=logic.cs.UserDataManager:GetHadBuySelectId(dialogID);
     print("lua====dialogID:"..dialogID)  
-    
+
     if GetHadBuySelectId~=nil then
 
         if cost > 0 then
@@ -58,7 +74,7 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
             self.fxSelect:SetActiveEx(true)
             --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice2",true)
             self.imgBg.sprite = CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
-            
+
             self.txtCost.text = tostring(cost)
 
             for k,v in pairs(GetHadBuySelectId) do
@@ -70,8 +86,12 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
                     self.fxSelect:SetActiveEx(false)
                     --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice",true)
                     self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice")
-                end              
-            end          
+                end
+            end
+
+            if not self.isHadBuy then
+                self:ShowPropBtn()
+            end
         else
             --不需要花钱购买的
             self.goDiamond:SetActiveEx(false)
@@ -86,6 +106,7 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
             --self.imgBg.sprite = logic.bookReadingMgr.Res:GetSprite("Atlas/Choice/bg_chat_choice2",true)
             self.imgBg.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_chat_choice2")
             self.txtCost.text = tostring(cost)
+            self:ShowPropBtn()
         else
             self.goDiamond:SetActiveEx(false)
             self.fxSelect:SetActiveEx(false)
@@ -95,7 +116,6 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
     end
 
 
-   
 
     --[[
  for i = 1,#GetHadBuySelectId do
@@ -128,6 +148,81 @@ if cost > 0 then
     end
 --]]
     
+end
+
+function UIChoiceButtonItem:ShowPropBtn()
+    local userPropInfo = logic.cs.UserDataManager.userPropInfo_Choice
+    if not userPropInfo or not userPropInfo.discount_list or userPropInfo.discount_list.Count<=0 then
+        self.objBtnKeyProp:SetActive(false)
+        return
+    end
+    self.objBtnKeyProp:SetActive(true)
+    local discount_list = userPropInfo.discount_list
+    for i=0,discount_list.Count-1,1 do
+        self:AddItemProp(discount_list[i])
+    end
+    local lastItem = self:AddItemProp(nil)
+    lastItem:fucOnClick()
+end
+function UIChoiceButtonItem:ShowPropList()
+    local isShow = not uiView.objItemParentProp.activeSelf
+    self.objItemParentProp.gameObject:SetActive(isShow)
+    uiView.textKeyProp.gameObject:SetActive(isShow)
+end
+function UIChoiceButtonItem:AddItemProp(data)
+    local go = logic.cs.GameObject.Instantiate(self.itemPrefabProp,self.transItemParentProp,false)
+    go:SetActive(true)
+    local trans = go.transform
+    local button = logic.cs.LuaHelper.GetComponent(trans,'Button',typeof(logic.cs.Button))
+    local objCheck = trans:Find('checked').gameObject
+    local txtNum = logic.cs.LuaHelper.GetComponent(trans,'Text',typeof(logic.cs.Text))
+    if data~= nil then
+        txtNum.text = data.discount_string or "No Discount"
+    else
+        txtNum.text = "No Discount"
+    end
+    local fucShowCheck = function(_self,isShow)
+        _self.objCheck:SetActive(isShow)
+    end
+    local fucOnClick = function(_self)
+		if self.luckItemProp ~= _self then
+			self:OnClcikPropItem(_self)
+		end
+    end
+    local item ={
+        data = data,
+        gameObject = go,
+        transform = trans,
+		button = button,
+        objCheck = objCheck,
+        txtNum = txtNum,
+        fucShowCheck = fucShowCheck,
+        fucOnClick = fucOnClick
+    }
+    table.insert(self.itemPropList, item)
+    return item
+end
+function UIChoiceButtonItem:OnClcikPropItem(propItem)
+	for i,v in ipairs(self.itemPropList) do
+		v:fucShowCheck(v==propItem)
+	end
+	self.luckItemProp = propItem
+	local isUser = true
+	if propItem.data==nil then
+		isUser = false
+	end
+    logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
+
+    --refresh ui
+    self.textKeyProp.gameObject:SetActive(isUser)
+    if isUser then
+        self.textKeyProp.text = tostring(self.cost)
+        local newCost = tonumber(self.cost)*tonumber(propItem.data.discount)
+        newCost = math.floor(newCost)
+        self.txtCost.text = tostring(newCost)
+    else
+        self.txtCost.text = tostring(self.cost)
+    end
 end
 
 return UIChoiceButtonItem

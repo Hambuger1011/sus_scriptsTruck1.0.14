@@ -84,12 +84,27 @@ local InstallUI = function()
 		uiView.lbCost = uiView.uiBinding:Get('lbCost', typeof(logic.cs.Text))
 		uiView.DetailText = uiView.uiBinding:Get('DetailText', typeof(logic.cs.Text))
 
-		
 		uiView.btnPayConfirm = uiView.uiBinding:Get('btnPayConfirm')
 		uiView.btnFreeConfirm = uiView.uiBinding:Get('btnFreeConfirm')
-		
+
 		uiView.Flash = uiView.uiBinding:Get('Flash',typeof(logic.cs.Image))
-		
+
+		-- 道具相关
+		uiView.btnKeyProp = uiView.uiBinding:Get("btnKeyProp",typeof(logic.cs.Button))
+		uiView.objBtnKeyProp = uiView.btnKeyProp.gameObject
+		uiView.textKeyProp = uiView.uiBinding:Get('textKeyProp',typeof(logic.cs.Text))
+		uiView.objItemParentProp = uiView.uiBinding:Get('transItemParentProp')
+		uiView.transItemParentProp = uiView.objItemParentProp.transform
+		uiView.itemPrefabProp = uiView.uiBinding:Get('itemPrefabProp')
+		-- uiView.btnKeyProp.onClick:AddListener(function()
+		-- 	self:ShowPropList()
+		-- end)
+		uiView.objBtnKeyProp:SetActive(false)
+		uiView.itemPrefabProp:SetActive(false)
+		uiView.textKeyProp.gameObject:SetActive(false)
+		uiView.itemPropList = {}
+		uiView.luckItemProp = nil
+
 		-- uiView.imgLeftArrow:SetNativeSize()
 		-- uiView.imgRightArrow:SetNativeSize()
 		-- uiView.imgDown:SetNativeSize()
@@ -214,6 +229,9 @@ function ChoiceModel:Play()
 	InstallUI()
 	uiView.Reset()
 	self.cost = 0
+	uiView.btnKeyProp.onClick:AddListener(function()
+		self:ShowPropList()
+	end)
 
 	logic.bookReadingMgr.view:SetBottomActive(false)
 
@@ -260,16 +278,16 @@ function ChoiceModel:Play()
 		--region 添加事件
 
 		local onScreenFlashClick = function(data)
-		self:OnScreenFlashClick()
+			self:OnScreenFlashClick()
 		end
 		local onLeftArrowClick = function(data)
-		self:ChangeClothesMove(true)
+			self:ChangeClothesMove(true)
 		end
 		local onRightArrowClick = function(data)
-		self:ChangeClothesMove(false)
+			self:ChangeClothesMove(false)
 		end
 		local onConfirmClick = function(data)
-		self:OnComfirmClick()
+			self:OnComfirmClick()
 		end
 
 		logic.cs.UIEventListener.AddOnClickListener(uiView.imgScreenFlashImage.gameObject,onScreenFlashClick)
@@ -605,7 +623,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 		if bookData.hair_id and bookData.hair_id ~= 0 then
 			hairID = bookData.hair_id
 		end
-		
+
 		choiceCost = clothesCfg.price
 		descriptionText = clothesCfg.description
 		if choiceCost <= 0 or logic.cs.UserDataManager:GetOutfitHadBuy(clothesID) then
@@ -622,12 +640,16 @@ function ChoiceModel:UpdateDetialsView(isInit)
 			isFree = false
 		end
 	end
+	self.choiceCost = choiceCost
 	uiView.DetailText.text = tostring(descriptionText)
 	uiView.lbCost.text = tostring(choiceCost)
 	uiView.freePanel:SetActiveEx(isFree)
 	uiView.payPanel:SetActiveEx(not isFree)
 	uiView.fxSelectClothes:SetActiveEx(not isFree)
-	
+
+	if not isFree then
+		self:ShowPropBtn()
+	end
 
 	uiView.ClothNumber.text= string.format("CHOICE[%d/%d]",self.selectIdx[self.modelType],self.numOfChoice[self.modelType]);
     --self:ShowPiontType(self.selectIdx[self.modelType])
@@ -636,10 +658,10 @@ function ChoiceModel:UpdateDetialsView(isInit)
 	if not delayMove then
 		self:MovePeople();
 	end
-	
+
 	--local id = 
 	--local roleModelData = logic.bookReadingMgr.Res:GetRoleModelData(roleModel.book_id,nType,)
-	
+
 	local skinName = 'skin'..skinID
 	local clothesName = "clothes" .. clothesID
 	local expressionName = "expression1"
@@ -649,7 +671,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 		hair1Name	= "hair"..hairID
 		hair2Name	= "hair"..hairID.."_1"
 	end
-	
+
 	--local clothGroupId = math.ceil( clothesID/4 )
 	--if clothGroupId == 0 then
 	--	clothGroupId = 1
@@ -672,7 +694,6 @@ function ChoiceModel:OnComfirmClick()
 	local skinCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Skin,skinID)
 	local clothesCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Clothes,clothesID)
 	local hairCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Hair,hairID)
-	
 
 	if self.modelType == ChoiceType.Skin then
 		if logic.cs.UserDataManager.UserData.DiamondNum < skinCfg.price and not isFree then
@@ -799,6 +820,85 @@ function ChoiceModel:OnChoicesModelNotify(result,skinID,clothesID,hairID)
 			bookData.hair_id = hairID
 		end
 	end
+end
+
+
+function ChoiceModel:ShowPropBtn()
+    local userPropInfo = logic.cs.UserDataManager.userPropInfo_Outfit
+    if not userPropInfo or not userPropInfo.discount_list or userPropInfo.discount_list.Count<=0 then
+        uiView.objBtnKeyProp:SetActive(false)
+        return
+    end
+    uiView.objBtnKeyProp:SetActive(true)
+    local discount_list = userPropInfo.discount_list
+    for i=0,discount_list.Count-1,1 do
+        self:AddItemProp(discount_list[i])
+	end
+	local lastItem = self:AddItemProp(nil)
+	lastItem:fucOnClick()
+end
+function ChoiceModel:ShowPropList()
+	local isShow = not uiView.objItemParentProp.activeSelf
+	uiView.objItemParentProp.gameObject:SetActive(isShow)
+    uiView.textKeyProp.gameObject:SetActive(isShow)
+end
+function ChoiceModel:AddItemProp(data)
+    local go = logic.cs.GameObject.Instantiate(uiView.itemPrefabProp,uiView.transItemParentProp,false)
+    go:SetActive(true)
+    local trans = go.transform
+    local button = logic.cs.LuaHelper.GetComponent(trans,'Button',typeof(logic.cs.Button))
+    local objCheck = trans:Find('checked').gameObject
+	local txtNum = logic.cs.LuaHelper.GetComponent(trans,'Text',typeof(logic.cs.Text))
+	if data~= nil then
+        txtNum.text = data.discount_string or "No Discount"
+    else
+        txtNum.text = "No Discount"
+    end
+    local fucShowCheck = function(_self,isShow)
+        _self.objCheck:SetActive(isShow)
+    end
+	local fucOnClick = function(_self)
+		if uiView.luckItemProp ~= _self then
+			self:OnClcikPropItem(_self)
+		end
+    end
+    local item ={
+        data = data,
+        gameObject = go,
+		transform = trans,
+		button = button,
+        objCheck = objCheck,
+        txtNum = txtNum,
+        fucShowCheck = fucShowCheck,
+		fucOnClick = fucOnClick,
+	}
+	item.button.onClick:AddListener(function()
+        item:fucOnClick()
+    end)
+    table.insert(uiView.itemPropList, item)
+    return item
+end
+function ChoiceModel:OnClcikPropItem(propItem)
+	for i,v in ipairs(uiView.itemPropList) do
+		v:fucShowCheck(v==propItem)
+	end
+	uiView.luckItemProp = propItem
+	local isUser = true
+	if propItem.data==nil then
+		isUser = false
+	end
+	logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
+
+	--refresh ui
+    uiView.textKeyProp.gameObject:SetActive(isUser)
+    if isUser then
+        uiView.textKeyProp.text = tostring(self.choiceCost)
+		local newCost = tonumber(self.choiceCost)*tonumber(propItem.data.discount)
+        newCost = math.floor(newCost)
+        uiView.lbCost.text = tostring(newCost)
+    else
+        uiView.lbCost.text = tostring(self.choiceCost)
+    end
 end
 
 return ChoiceModel

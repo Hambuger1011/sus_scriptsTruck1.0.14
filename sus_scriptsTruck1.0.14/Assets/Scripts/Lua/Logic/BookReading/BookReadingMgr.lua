@@ -506,12 +506,17 @@ function BookReadingMgr:SaveProgress(callback)
     
     if self.playingComponent then
         logic.debug.Log(string.format( "[+]保存进度:%d",self.playingComponent.cfg.dialogID))
+        local is_use_prop = logic.cs.UserDataManager.is_use_prop
+        local discount = "0"
+        if is_use_prop==1 then
+            discount = logic.cs.UserDataManager.propInfoItem.discount_string
+        end
         logic.gameHttp:SendPlayerProgress(
             self.bookID,
             self.chapterID,
             self.playingComponent.cfg.dialogID,
-            params.option, --选项index         
-            params.PlayerName, --角色名         
+            params.option, --选项index
+            params.PlayerName, --角色名
             params.NpcId, --npcId
             params.NpcName, --npc名字
             params.NpcDetailId, --性别0默认 1男 2女
@@ -519,6 +524,8 @@ function BookReadingMgr:SaveProgress(callback)
             params.outfit_id, --model clothesID
             params.hair_id, --model hairID
             params.optionList, --选项list
+            is_use_prop,--是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
+            discount,--折扣率
             function(result)
                 --logic.debug.Log("----SendPlayerProgress---->" .. result)
                 local jsonData = core.json.Derialize(result)
@@ -533,12 +540,11 @@ function BookReadingMgr:SaveProgress(callback)
                             logic.cs.UserDataManager:ResetMoney(2, jsonData.data.user_diamond)
                         end
                     end
+                    logic.cs.UserDataManager:UpdatePropItemWhenServerCallback()
                 end
                 if callback then
                     callback(result)
                 end
-
-                logic.cs.UserDataManager:ResetPropInfo();
             end);
     end
 end

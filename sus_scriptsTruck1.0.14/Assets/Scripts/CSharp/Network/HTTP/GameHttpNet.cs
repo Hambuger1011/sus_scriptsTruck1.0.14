@@ -921,7 +921,6 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             ProgressCallBackHandler(result);
             vCallBackHandler(result);
 
-            UserDataManager.Instance.ResetPropInfo();
         });
     }
 
@@ -940,6 +939,10 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 {
                     UserDataManager.Instance.ResetMoney(1, UserDataManager.Instance.setProgressResultInfo.data.bkey);
                     UserDataManager.Instance.ResetMoney(2, UserDataManager.Instance.setProgressResultInfo.data.diamond);
+                }
+                if (UserDataManager.Instance.setProgressResultInfo.code == 200)
+                {
+                    UserDataManager.Instance.UpdatePropItemWhenServerCallback();
                 }
             }, null);
         }
@@ -1096,12 +1099,13 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 {
                     UserDataManager.Instance.SaveOutfitHadBuy(buyData.data.pay_outfit);
                 }
+                UserDataManager.Instance.UpdatePropItemWhenServerCallback();
             }
 
             vCallBackHandler(buyData);
 
 
-            UserDataManager.Instance.ResetPropInfo();
+            
         });
     }
 
@@ -1263,7 +1267,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
 
             vCallBackHandler(result);
 
-            UserDataManager.Instance.ResetPropInfo();
+            UserDataManager.Instance.UpdatePropItemWhenServerCallback();
         });
     }
 
@@ -3581,7 +3585,6 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             {
                 return;
             }
-
             vCallBackHandler(result);
         });
     }
@@ -3615,5 +3618,21 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         });
     }
 
-
+    /// <summary>
+    /// 获取用户可用的背包道具
+    /// </summary>
+    /// <param name="types"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetBackpackProp(EventHandler vCallBackHandler)
+    {
+        string url = "api_getBackpackProp";
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
 }

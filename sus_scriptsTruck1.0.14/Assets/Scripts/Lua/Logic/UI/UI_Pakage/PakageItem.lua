@@ -9,6 +9,7 @@ function PakageItem:__init(gameObject,parentUI)
     self.parentUI = parentUI
     self.button = logic.cs.LuaHelper.GetComponent(self.transform, "BGButton",typeof(logic.cs.Button))
     self.imgIcon = logic.cs.LuaHelper.GetComponent(self.transform, "icon",typeof(logic.cs.Image))
+    self.objImgIconMark = CS.DisplayUtil.FindChild(self.gameObject, "icon/mark")
     self.objHit = CS.DisplayUtil.FindChild(self.gameObject, "Hit")
     self.txtNum = logic.cs.LuaHelper.GetComponent(self.transform, "txtNum",typeof(logic.cs.Text))
     self.txtCountDown = logic.cs.LuaHelper.GetComponent(self.transform, "countDowd/text",typeof(logic.cs.Text))
@@ -29,6 +30,7 @@ function PakageItem:SetData(itemData)
     self.imgIcon.sprite = self.parentUI:GetIconSprite(itemData.resources)
     self.txtNum.text = itemData.prop_num or "0"
     self.txtName.text = itemData.name or ""
+    self.objImgIconMark:SetActive(itemData.expire_time==-1)
     if itemData.expire_time~=-1 then -- 道具过期时间：秒数，-1为永久
         self.txtCountDown.transform.parent.gameObject:SetActive(true)
         self:StartCoundown(itemData.expire_time)
@@ -43,6 +45,7 @@ function PakageItem:OnClickItem()
         self.parentUI:SetPropReadRequest(self.itemData.id, function()
             self.itemData.is_read=1 --道具是否已读 1：已读 0未读
             self:SetUnReadFlag(false)--设置成已读
+            self.parentUI:RefreshEnterRead()
         end)
     end
     self.parentUI:ShowItemDetail(self.itemData, self.deltaTime)

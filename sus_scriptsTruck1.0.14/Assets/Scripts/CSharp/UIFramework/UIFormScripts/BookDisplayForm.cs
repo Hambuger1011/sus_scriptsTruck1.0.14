@@ -40,15 +40,17 @@ public class BookDisplayForm : BaseUIForm
     int allChapterCount;//所有的章节总数
     t_BookDetails bookDetails;
 
-    private void Awake()
+    protected override void Awake()
     {
         SVPage.hasPrefabChild = true;
-        BookDisplayGridChildTpl.SetActiveEx(false); 
+        //BookDisplayGridChildTpl.SetActiveEx(false);
+        //ItemCellPrefab.gameObject.SetActive(false);
     }
 
     public override void OnOpen()
     {
         base.OnOpen();
+        BookDisplayGridChildTpl.SetActiveEx(false);
         ItemCellPrefab.gameObject.SetActive(false);
         UIEventListener.AddOnClickListener(UIMask.gameObject, back);
        
@@ -61,8 +63,7 @@ public class BookDisplayForm : BaseUIForm
     }
 
     public override void OnClose()
-    {
-        
+    {        
         base.OnClose();
         UIMask.DOKill();
         UIEventListener.RemoveOnClickListener(UIMask.gameObject, back);
