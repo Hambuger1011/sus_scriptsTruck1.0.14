@@ -217,7 +217,7 @@ function UIChoiceButtonItem:OnClcikPropItem(propItem)
     self.textKeyProp.gameObject:SetActive(isUser)
     if isUser then
         self.textKeyProp.text = tostring(self.cost)
-        local newCost = tonumber(self.cost)*tonumber(propItem.data.discount)
+        local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         self.txtCost.text = tostring(newCost)
     else

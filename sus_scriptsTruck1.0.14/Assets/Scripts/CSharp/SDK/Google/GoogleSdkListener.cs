@@ -138,9 +138,7 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
     public void ReceiveSharingInfo(string url)
     {
         Debug.Log("ReceiveSharingUrl=:" + url);
-        string baseUrl; 
-        NameValueCollection nvc;
-        ParseUrl(url, out baseUrl,out nvc);
+        ParseUrl(url, out _,out var nvc);
         string inviteCode = nvc.Get("invite_code");
         UserDataManager.Instance.InviteCode = inviteCode;
     }

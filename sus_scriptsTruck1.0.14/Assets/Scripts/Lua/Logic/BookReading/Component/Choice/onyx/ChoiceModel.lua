@@ -893,7 +893,7 @@ function ChoiceModel:OnClcikPropItem(propItem)
     uiView.textKeyProp.gameObject:SetActive(isUser)
     if isUser then
         uiView.textKeyProp.text = tostring(self.choiceCost)
-		local newCost = tonumber(self.choiceCost)*tonumber(propItem.data.discount)
+		local newCost = tonumber(self.choiceCost)-tonumber(self.choiceCost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         uiView.lbCost.text = tostring(newCost)
     else

@@ -2083,10 +2083,13 @@ public class ProfileForm : BaseUIForm
         GamePointManager.Instance.BuriedPoint(EventEnum.MailBox);
     }
 
+    /// <summary>
+    /// 背包入口
+    /// </summary>
+    /// <param name="data"></param>
     void PakageButton(PointerEventData data)
     {
         XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIPakageForm);");
-
         //埋点*背包
         GamePointManager.Instance.BuriedPoint(EventEnum.PakageBox);
     }
