@@ -67,6 +67,8 @@ function DressUpCache:ResetLogin()
     GameController.ActivityControl:SetMoveRewardStatus()
     --【限时活动】【刷新】【全书免费】
     GameController.ActivityControl:SetFreeBG()
+    -- 【请求我的书本】
+    GameController.MainFormControl:GetSelfBookInfoRequest();
 end
 
 

@@ -18,7 +18,7 @@ function UIRatinglevelForm:OnInitView()
     local root = self.uiform.transform
 
     self.UIMask= root:Find('UIMask').gameObject
-  --  self.FrameTrans = get(root,'Canvas/Frame',typeof(logic.cs.RectTransform))
+    --  self.FrameTrans = get(root,'Canvas/Frame',typeof(logic.cs.RectTransform))
     self.BtnOK = get(root,'Canvas/Frame/BtnOK',typeof(logic.cs.Button))
     self.BtnOK2 = get(root,'Canvas/Frame/BtnOK2',typeof(logic.cs.Button))
     self.BtnCancel = get(root,'Canvas/Frame/BtnCancel',typeof(logic.cs.Button))
@@ -44,9 +44,9 @@ function UIRatinglevelForm:OnInitView()
     self.BtnOK2Rect=get(root,'Canvas/Frame/BtnOK2',typeof(logic.cs.RectTransform))
 
     --self.Title = get(root,'Canvas/Frame/Title',typeof(logic.cs.Text))
-    
-   -- self.FrameTrans.DOScaleY(1, 0.25).SetEase(Ease.OutBack).Play();
-    
+
+    -- self.FrameTrans.DOScaleY(1, 0.25).SetEase(Ease.OutBack).Play();
+
     self.BtnOK.onClick:AddListener(function() self:OnOKclick() end)
     self.BtnCancel.onClick:AddListener(function() self:OnCancelClick() end)
     self.BtnOK2.onClick:AddListener(function() self:OnOK2Click() end)
@@ -117,13 +117,13 @@ end
 --region 【切换页面】
 function UIRatinglevelForm:SetEnumRatinglevel(_enum)
     Cur_enum=_enum;
-   
+
     if(_enum==EnumRatinglevel.InGame)then  --游戏内评星系统
         self.BtnOK2.gameObject:SetActiveEx(false);
         self.feedbackInput.gameObject:SetActiveEx(false);
 
         local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
-        self.MoneyText.text="x5";
+        self.MoneyText.text="x20";
 
         --self.Diamonbg:SetActiveEx(true);
         --self.Keybg:SetActiveEx(false);
@@ -132,11 +132,12 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         self.BtnOkTxt.text=CS.CTextManager.Instance:GetText(305);
         self.BtnCancelTxt.text=CS.CTextManager.Instance:GetText(304);
 
-         --"亲爱的书友，很高兴您来体验我们的游戏，您喜欢目前所体验到的内容吗？";
-        self.TxtContent.text=CS.CTextManager.Instance:GetText(299);
+        --"亲爱的书友，很高兴您来体验我们的游戏，您喜欢目前所体验到的内容吗？";
+        -- self.TxtContent.text=CS.CTextManager.Instance:GetText(299);
+        self.TxtContent.text="Rate 5 stars to get 20 Diamonds";
 
     elseif(_enum==EnumRatinglevel.IGGPlatform)then  --平台评星系统界面
-        
+
         self.BtnOK.gameObject:SetActiveEx(false);
         self.BtnCancel.gameObject:SetActiveEx(false);
         self.BtnOK2.gameObject:SetActiveEx(true);
@@ -189,14 +190,14 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         --"非常抱歉，没有提供最好的体验给到您，您有什么建议可以提供给我们吗？";
         self.TxtContent.text=CS.CTextManager.Instance:GetText(302);
     elseif(_enum==EnumRatinglevel.FeedbackInput)then  --反馈建议 输入界面
-        
+
 
         self.SettingBG.gameObject:SetActiveEx(false);
         self.SettingBG1.gameObject:SetActiveEx(true);
         self.Star:SetActiveEx(false);
         self.ContentBg.gameObject:SetActiveEx(false);
         self.feedbackInput.gameObject:SetActiveEx(true);
-       -- self.Title.gameObject:SetActiveEx(true);
+        -- self.Title.gameObject:SetActiveEx(true);
         self.MoneyRect.anchoredPosition={x=0,y=-36};
 
         --local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
@@ -209,9 +210,9 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         self.BtnOK2Rect.anchoredPosition = {x=0,y=-118};
         --"提交";
         self.BtnOk2Txt.text=CS.CTextManager.Instance:GetText(308);
-        
+
     elseif(_enum==EnumRatinglevel.FeedbackSend)then   --反馈建议 提交后界面
-        
+
         --self.ContentBg.gameObject:SetActiveEx(true);
         --self.feedbackInput.gameObject:SetActiveEx(false);
         --self.BtnOK2.gameObject:SetActiveEx(false);
@@ -224,7 +225,7 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         --self.TxtContent.text=CS.CTextManager.Instance:GetText(303);
 
     end
-    
+
 end
 
 --endregion
@@ -248,25 +249,25 @@ function UIRatinglevelForm:OnOKclick()
         CS.XLuaHelper.RequestRating(1,"","");
 
         --请求列表 【领取游戏内评分奖励】
-       -- logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward(result); end)
+        -- logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward(result); end)
 
     end
-    
+
 end
 --endregion
 
 
 --region 【点击不喜欢按钮】
 function UIRatinglevelForm:OnCancelClick()
-    
+
     if(Cur_enum==EnumRatinglevel.InGame)then
         --点击不喜欢 前往反馈建议界面
         self:SetEnumRatinglevel(EnumRatinglevel.Feedback);
-
-        --请求列表 【领取游戏内评分奖励】
-        logic.gameHttp:ReceiveGameScoreAward(function(result) self:ReceiveGameScoreAward(result); end)
+        --
+        ----请求列表 【领取游戏内评分奖励】
+        --logic.gameHttp:ReceiveGameScoreAward(function(result) self:ReceiveGameScoreAward(result); end)
     end
-    
+
 end
 --endregion
 
@@ -277,19 +278,19 @@ function UIRatinglevelForm:OnOK2Click()
     if(Cur_enum==EnumRatinglevel.IGGPlatform)then  --点击前往评分按钮  前往平台评星系统界面
 
         logic.debug.Log("跳转到平台评星");
-        
+
         --平台SDK回调发起
         CS.XLuaHelper.RequestRating(1,"","");
 
-        --请求列表 【领取游戏内评分奖励】
-        logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward(result); end)
+        ----请求列表 【领取游戏内评分奖励】
+        --logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward(result); end)
 
     elseif(Cur_enum==EnumRatinglevel.Feedback)then  --反馈建议界面
 
         --点击前往建议 前往反馈建议输入界面
         self:SetEnumRatinglevel(EnumRatinglevel.FeedbackInput);
-        
-      
+
+
     elseif(Cur_enum==EnumRatinglevel.FeedbackInput)then  --反馈建议 输入界面
 
 
@@ -301,7 +302,7 @@ function UIRatinglevelForm:OnOK2Click()
 
         local description = string.trim(self.feedbackInput.text);
         local len = string.GetUtf8Len(description);
-        
+
         if (len< 10)then
             local str=CS.CTextManager.Instance:GetText(431)   --["您的建议字数不足，最少需要10个字符。"]
             logic.cs.UITipsMgr:PopupTips(str, false);
@@ -316,19 +317,18 @@ function UIRatinglevelForm:OnOK2Click()
 
 
         CS.XLuaHelper.RequestRating(2,self.feedbackInput.text,"5");
-            --平台建议发送发起
-            --CS.XLuaHelper.feedBack(self.feedbackInput.text,"5");
+        --平台建议发送发起
+        --CS.XLuaHelper.feedBack(self.feedbackInput.text,"5");
 
+        ----请求列表 【领取游戏内评分奖励】
+        --logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward2(result); end)
 
-
-        --请求列表 【领取游戏内评分奖励】
-        logic.gameHttp:ReceivePlatformAward(function(result) self:ReceivePlatformAward2(result); end)
 
         --请求列表 【评分建议保存】
         logic.gameHttp:ScoreSuggest(self.feedbackInput.text,function(result) self:ScoreSuggest(result); end)
 
     end
-    
+
 end
 --endregion
 
@@ -426,7 +426,9 @@ function UIRatinglevelForm:ScoreSuggest(result)
     local json = core.json.Derialize(result)
     local code = tonumber(json.code)
     if(code == 200)then
-
+        local str=CS.CTextManager.Instance:GetText(303);
+        logic.cs.UITipsMgr:PopupTips(str, false);
+        self:OnExitClick();
     elseif(code == 10305)then
     elseif(code == 10305)then
     else

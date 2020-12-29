@@ -20,7 +20,7 @@ public class PhoneUtil
 
 
     public enum EnumPhoneLevel
-    { 
+    {
         High,
         Medium,
         Low,

@@ -78,6 +78,8 @@ end
 function UIMainForm:OnOpen()
     UIView.OnOpen(self)
 
+    GameController.MainFormControl:SetData(self);
+
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.GiftButton,function(data) self:GiftButtonOnClick() end)
 
@@ -105,7 +107,7 @@ function UIMainForm:OnOpen()
     --打开主界面底部的按钮栏
     logic.UIMgr:Open(logic.uiid.UIMainDownForm)
 
-    GameController.MainFormControl:SetData(self);
+
     --埋点*打开主界面
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.HomePage)
 
@@ -225,7 +227,7 @@ function UIMainForm:ResetMyBookList()
         end
 
         --刷新列表
-        self.MyBookList:UpdateList(mybooks,"My Books",BuriedPoint_bookType.MyBooks);
+        self.MyBookList:UpdateList(mybooks,"Reading",BuriedPoint_bookType.MyBooks);
     end
 end
 
@@ -323,7 +325,7 @@ end
 --region【限时活动顶部栏】
 function UIMainForm:Limit_time_Free()
 
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1 or Cache.LimitTimeActivityCache.SpinDraw.is_open==1 or Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1 or Cache.LimitTimeActivityCache.SpinDraw.is_open==1 or Cache.LimitTimeActivityCache.FreeKey.is_open==1 or Cache.MainCache.migration.migration_web_switch==1)then
         -- 1.图片的Top设置为100（偏移的Max是负数）
         self.MainScrollViewRect.offsetMax ={x=self.MainScrollViewRect.offsetMax.x,y=-200};
     else

@@ -32,36 +32,17 @@ function MainFormControl:RefreshBooks(isRefreshAll)
         isRefreshAll = true;
     end
 
+    --region 【请求我的书本】
+    self:GetSelfBookInfoRequest();
+    --endregion
+
     --region 【请求获取特殊限时活动状态】【彩蛋】【转盘】【全书免费】
     --【获取通用活动列表】
-GameController.ActivityControl:GetActivityListRequest();
+    GameController.ActivityControl:GetActivityListRequest();
     --endregion
 
     if(isRefreshAll)then
         logic.debug.Log("----booksUpdatedWeekly---->");
-
---region 【请求我的书本】
-logic.gameHttp:GetSelfBookInfo(function(result) self:GetSelfBookInfo(result); end)
---endregion
-
-
-
---region【请求刷新周更新列表*刷新推荐列表】
-
---获取周更列表长度
-local weeklyList_Len=table.length(Cache.MainCache.weekly_list);
-if(UIMainForm and weeklyList_Len>0)then
-    --刷新周更新列表
-    UIMainForm:UpdateWeeklyList(Cache.MainCache.weekly_list);
-    --刷新推荐列表
-    UIMainForm:UpdateRecommendList(Cache.MainCache.recommend_list);
-else
-    --请求刷新周更新列表*刷新推荐列表
-    logic.gameHttp:GetbooksUpdatedWeekly(function(result) self:OnGetbooksUpdatedWeekly(result); end)
-end
-
---endregion
-
 
 
 --region 【请求排行榜列表】
@@ -79,40 +60,16 @@ end
         end
 --endregion
 
-
-
---region 【请求Romance、LGBT、Suspense列表】
-
-        --local ishave=false;
-        --if(UIMainForm and Cache.MainCache.code==200)then
-        --    if(GameHelper.islistHave(Cache.MainCache.LGBT_list)==true)then
-        --        --刷新列表
-        --        UIMainForm:UpdateLGBTList(Cache.MainCache.LGBT_list);
-        --        ishave=true;
-        --    end
-        --    if(GameHelper.islistHave(Cache.MainCache.Romance_list)==true)then
-        --        --刷新列表
-        --        UIMainForm:UpdateRomanceList(Cache.MainCache.Romance_list);
-        --        ishave=true;
-        --    end
-        --    if(GameHelper.islistHave(Cache.MainCache.Suspense_list)==true)then
-        --        --刷新列表
-        --        UIMainForm:UpdateSuspenseList(Cache.MainCache.Suspense_list);
-        --        ishave=true;
-        --    end
-        --end
-        --if(ishave==false)then
-        --    --请求LGBT列表
-        --    logic.gameHttp:GetIndexBookList("1,2,11",function(result) self:GetIndexBookList(result); end)
-        --end
-
-
---endregion
-
     end
 end
 
 --endregion【刷新全部书本】
+
+--region 【请求我的书本】
+function MainFormControl:GetSelfBookInfoRequest()
+    logic.gameHttp:GetSelfBookInfo(function(result) self:GetSelfBookInfo(result); end)
+end
+--endregion
 
 
 --region 【周更新列表*推荐列表 响应】
@@ -198,11 +155,37 @@ function MainFormControl:GetSelfBookInfo(result)
                 TopBook = UIMainForm.TopBookView:ShowTopBook(bookinfo);
             end
         end
+
+        --region【请求刷新周更新列表*刷新推荐列表】
+
+        --获取周更列表长度
+        local weeklyList_Len=table.length(Cache.MainCache.weekly_list);
+        if(UIMainForm and weeklyList_Len>0)then
+            --刷新周更新列表
+            UIMainForm:UpdateWeeklyList(Cache.MainCache.weekly_list);
+            --刷新推荐列表
+            UIMainForm:UpdateRecommendList(Cache.MainCache.recommend_list);
+        else
+            --请求刷新周更新列表*刷新推荐列表
+            logic.gameHttp:GetbooksUpdatedWeekly(function(result) self:OnGetbooksUpdatedWeekly(result); end)
+        end
+
+        --endregion
+
+
         if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
         and not logic.cs.UserDataManager.FirstChargeHaveShown then
             logic.cs.UserDataManager.FirstChargeHaveShown = true
             logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
         end
+
+
+        --【临时】【临时】
+        if(Cache.MainCache.migration.migration_web_switch==1)then
+            GameController.ActivityControl:UpdateActivityBanner();
+        end
+        --【临时】【临时】
+
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
     end

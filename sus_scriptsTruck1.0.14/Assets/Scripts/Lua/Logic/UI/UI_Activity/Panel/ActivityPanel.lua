@@ -232,6 +232,16 @@ end
 --endregion
 
 
+--region【UIActivityForm设置ScrollRect】---【常规活动】
+function ActivityPanel:SetVerticalNormalizedPosition()
+    if(self.ScrollRect)then
+        self.ScrollRect.verticalNormalizedPosition=0;
+    end
+end
+--endregion
+
+
+
 --region【销毁】
 
 function ActivityPanel:__delete()

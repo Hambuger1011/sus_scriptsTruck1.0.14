@@ -123,3 +123,9 @@ function string.StrUtf8Sub(str, startChar, numChars)
 	
 	return string.sub(str, startIndex, currentIndex-1)
 end
+
+
+function string.encodeURI(str)
+	str = string.gsub(str, "([^%w%.%- ])", function(code) return string.format("%%%02X", string.byte(code)) end)
+	return string.gsub(str, " ", "+")
+end

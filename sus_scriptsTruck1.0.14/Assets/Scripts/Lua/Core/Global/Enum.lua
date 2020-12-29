@@ -105,7 +105,8 @@ EnumActivity.ColoredEgg=1;
 EnumActivity.SpinDraw=2;
 --全书免费
 EnumActivity.FreeKey=3;
-
+--迁移Banner
+EnumActivity.MoveCode=4;
 
 EActivityPanel={}
 

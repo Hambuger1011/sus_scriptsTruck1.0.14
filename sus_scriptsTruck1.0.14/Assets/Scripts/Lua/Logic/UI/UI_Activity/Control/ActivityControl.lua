@@ -334,7 +334,7 @@ function ActivityControl:SetVerticalNormalizedPosition()
     --如果在活动页面 刷新数据
     if(UIActivityForm)then
         --签到领取奖励
-        UIActivityForm.ScrollRect.verticalNormalizedPosition=0;
+        UIActivityForm:SetVerticalNormalizedPosition();
     end
 end
 --endregion

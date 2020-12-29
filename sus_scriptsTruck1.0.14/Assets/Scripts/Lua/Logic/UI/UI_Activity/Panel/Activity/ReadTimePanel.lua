@@ -43,7 +43,7 @@ function ReadTimePanel:__init(gameObject)
     logic.cs.UIEventListener.AddOnClickListener(self.ReadTimeReward5.gameObject,function(data) self:OnReadTimeRewardClick5() end)
 
     self.TitleText.text="ONLINE REWARDS";
-    self.DescriptionText.text="Collect rewards when you achieve the event goals. Rewards reset every day at 00:00.";
+    self.DescriptionText.text="Collect rewards when you achieve the event goals. Rewards reset every day at (00:00 GMT-5)";
 
     GameHelper.CloseReadTimer();
 

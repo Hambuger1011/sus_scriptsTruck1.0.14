@@ -399,6 +399,16 @@ end
 
 --endregion
 
+--region【UIActivityForm设置ScrollRect】---【常规活动】
+
+function UIActivityForm:SetVerticalNormalizedPosition()
+    if(self.ActivityPanel)then
+        self.ActivityPanel:SetVerticalNormalizedPosition();
+    end
+end
+
+--endregion
+
 
 --region 【界面关闭】
 function UIActivityForm:OnExitClick()

@@ -79,11 +79,14 @@ public class ProfileMyBookItem : MonoBehaviour
                 lastDialogId = m_bookDetailCfg.ChapterDivisionArray[m_bookDetailCfg.ChapterDivisionArray.Length - 1];
             }
 
-            BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == m_bookDetailCfg.id);
-            if (bookData != null)
-                Pross.fillAmount = (float)(bookData.DialogueID / (lastDialogId * 1.0f));
-            else
-                Pross.fillAmount = 0;
+            // BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == m_bookDetailCfg.id);
+            // if (bookData != null)
+            //     Pross.fillAmount = (float)(bookData.DialogueID / (lastDialogId * 1.0f));
+            // else
+            //     Pross.fillAmount = 0;
+
+            //【加载进度】
+            XLuaManager.Instance.CallFunction("GameHelper", "ShowProgress1", m_bookDetailCfg.id, Pross);
         }
     }
 

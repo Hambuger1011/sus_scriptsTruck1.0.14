@@ -163,7 +163,7 @@ function UIAddRoleView:OnOKClick()
     len = string.GetUtf8Len(roleName)
     if len < 1 or len > 20 then
         logic.debug.LogError(roleName)
-        logic.cs.UITipsMgr:PopupTips("Enter a 1-20 words description.", false)
+        logic.cs.UITipsMgr:PopupTips("Type 1-20-character description here.", false)
         return
     end
     self.roleData.name = roleName

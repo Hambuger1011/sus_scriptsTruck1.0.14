@@ -39,8 +39,8 @@ function ChangeSceneByWaveComponent:Play()
     :OnComplete(function()
         lastSceneBG.transform:ClearAllChild()
         logic.cs.GameObject.Destroy(effectCtrl)
-        local width = logic.cs.Screen.width*1334/logic.cs.Screen.height
-        local Vector2 = core.Vector2.New(width / 2 - curSceneBG.transform.rect.width / 2, 0)
+        --local width = logic.cs.Screen.width*1334/logic.cs.Screen.height
+        local Vector2 = core.Vector2.New(375 - curSceneBG.transform.rect.width / 2, 0)
         curSceneBG.transform:DOAnchorPos(Vector2, 1.5)
         :OnComplete(function()
             lastSceneBG:Clear()

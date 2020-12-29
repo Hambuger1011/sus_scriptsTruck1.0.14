@@ -2,7 +2,7 @@
   <androidPackages>
     <androidPackage spec="com.google.android.gms:play-services-ads:19.3.0">
       <repositories>
-        <repository>https://maven.google.com/</repository>
+        <repository>https://dl.google.com/dl/android/maven2/</repository>
       </repositories>
     </androidPackage>
   </androidPackages>

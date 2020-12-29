@@ -8,9 +8,6 @@ using UnityEngine;
 [XLua.LuaCallCSharp]
 public class GamePointManager : Singleton<GamePointManager>
 {
-    public int LogStatus;
-    private bool Init = false;
-
     /// <summary>
     /// 埋点
     /// </summary>
@@ -18,14 +15,18 @@ public class GamePointManager : Singleton<GamePointManager>
     public void BuriedPoint(string event_name, string area_name = "", string area_value = "", string bookid = "",
         string dialogid = "", string option_value = "", EventHandler vCallBackHandler = null)
     {
-        if (!Init)
+        int LogStatus = 0;
+
+        if (UserDataManager.Instance.versionInfo != null && UserDataManager.Instance.versionInfo.data != null)
         {
-            LogStatus = PlayerPrefs.GetInt("LogStatus5");
-            Init = true;
+            if (UserDataManager.Instance.versionInfo.data.log_status==1)
+            {
+                LogStatus = 1;
+            }
         }
 
-        if (LogStatus == -1)
-            return;
+        if (LogStatus == 0) { return; }
+
 
         LOG.Info("******BuriedPoint---->" + event_name);
         string apiName = "api_log";
@@ -93,9 +94,7 @@ public class GamePointManager : Singleton<GamePointManager>
         string sendInfo = string.Format("<color=cyan>[CS][send]POST:[{0}]{1}\n{2}</color>", sendSeq, url, postJson);
         LOG.Info(sendInfo);
 #endif
-        //UniHttp.Instance.Post(url, parameters, null, 10000, 3, false);
-
-
+        UniHttp.Instance.Post(url, parameters, null, 10000, 3, false);
     }
 
 }

@@ -406,26 +406,29 @@ end
 --region 【展示书本进度条】
 
 function GameHelper.ShowProgress(book_id,ProgressBar)
-    local lastDialogId = 2000;
-    local m_bookDetailCfg= CS.BookItemManage.Instance:GetBookDetails(book_id);
-    if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
-        if ((CS.XLuaHelper.is_Null(m_bookDetailCfg.ChapterDivisionArray)==false) and m_bookDetailCfg.ChapterDivisionArray.Length > 0)then
-            lastDialogId = m_bookDetailCfg.ChapterDivisionArray[m_bookDetailCfg.ChapterDivisionArray.Length - 1];
-        end
-        local bookData = CS.XLuaHelper.GetBookData(m_bookDetailCfg);
-
-        if(ProgressBar)then
-            if(CS.XLuaHelper.is_Null(bookData)==true)then
-                ProgressBar.gameObject:SetActive(false);
-                ProgressBar.Value = 0;
-            else
-                ProgressBar.gameObject:SetActive(true);
-                ProgressBar.Value =bookData.DialogueID / (lastDialogId * 1);
-            end
-        end
-    else
-        if(ProgressBar)then
+    local bookInfo=Cache.MainCache:GetMyBookByIndex(book_id);
+    if(ProgressBar)then
+        if(bookInfo==nil)then
             ProgressBar.gameObject:SetActive(false);
+            ProgressBar.Value = 0;
+        else
+            ProgressBar.gameObject:SetActive(true);
+            ProgressBar.Value =bookInfo.dialogid / bookInfo.end_dialogid;
+        end
+    end
+end
+
+function GameHelper.ShowProgress1(obj)
+    local bookid=obj[0];
+    local ProgressBar=obj[1];
+    if(bookid and ProgressBar and  CS.XLuaHelper.is_Null(ProgressBar)==false)then
+        local bookInfo=Cache.MainCache:GetMyBookByIndex(bookid);
+        if(bookInfo==nil)then
+            ProgressBar.gameObject:SetActive(false);
+            ProgressBar.fillAmount = 0;
+        else
+            ProgressBar.gameObject:SetActive(true);
+            ProgressBar.fillAmount =bookInfo.dialogid / bookInfo.end_dialogid;
         end
     end
 end
@@ -716,7 +719,6 @@ end
 
 --region【活动首页Banner图轮播】【倒计时】
 GameHelper.BN_Timer=nil;
-
 function GameHelper.MainBannerTimer(callback)
     --销毁
     GameHelper.ClearBNTimer();
@@ -755,6 +757,51 @@ function GameHelper.ClearBNTimer()
         GameHelper.BN_Timer=nil;
     end
 end
+
+--endregion
+
+
+--region【显示网图】
+
+function GameHelper.ShowNetImage(_url,picture)
+
+    if(_url and picture and CS.XLuaHelper.is_Null(picture)==false)then
+        logic.cs.ABSystem.ui:DownloadImage(_url, function(url, refCount)
+            if _url ~= url then
+                refCount:Release();
+                return;
+            end
+            local sprite = refCount:GetObject();
+            picture.sprite = sprite;
+            --picture:SetNativeSize()
+        end)
+    end
+
+end
+
+
+local oldSprite=nil;
+--【临时】【临时】
+function GameHelper.ShowNetImage2(_url,picture)
+
+    if(_url and picture and CS.XLuaHelper.is_Null(picture)==false)then
+        if(oldSprite)then
+            picture.sprite = oldSprite;
+        else
+            logic.cs.ABSystem.ui:DownloadImage(_url, function(url, refCount)
+                if _url ~= url then
+                    refCount:Release();
+                    return;
+                end
+                local sprite = refCount:GetObject();
+
+                picture.sprite = sprite;
+
+            end)
+        end
+    end
+end
+
 
 --endregion
 

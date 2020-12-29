@@ -12,8 +12,47 @@ function MainCache:__init()
     self.weekly_list={};
     --【首页推荐的书本】
     self.recommend_list={};
-    --【我的书本】（即自己阅读过的书）
+    ---------------------------------------------【我的书本】（即自己阅读过的书）
     self.mybook_list={};
+    self.mybook_list={};
+
+    --用户阅读过的总章节数
+    self.read_chapter_count=0;
+    --用户阅读过的总书本数
+    self.read_book_count=0;
+    --登录活动宝箱开关(1.开 0.关)
+    self.activity_box_switch=0;
+    --迁移活动开关(1.开 0.关)
+    self.activity_move_switch=0;
+    --今天是否提示账号迁移 0:今天未提示 1:今天已提示
+    self.is_today_tips_move=0;
+    --首冲礼包的开关 1：开，0：关
+    self.first_recharge_switch=0;
+    --迁移web入口开关，1: 开 0:关
+    self.migration_web_switch=0;
+
+    self.migration={};
+    self.migration.migration_web_switch=0;
+    self.migration.migration_web_url="";
+    self.migration.migration_img="";
+    self.migration.migration_title="";
+    self.migration.migration_content="";
+    self.migration.migration_btn="";
+    self.migration.migration_banner_img="";
+    self.migration.migration_banner_title="";
+    self.migration.migration_banner_content="";
+
+    ---------------------------------------------
+
+
+
+
+
+
+
+
+
+
     --【LGBT 列表】
     self.LGBT_list={};
     --【Romance 列表】
@@ -114,6 +153,27 @@ function MainCache:UpdatedMyBooks(datas)
 
     self.code=datas.code;
     self.final_book_info=datas.data.final_book_info;
+
+    self.read_chapter_count=datas.data.read_chapter_count;
+    self.read_book_count=datas.data.read_book_count;
+    self.activity_box_switch=datas.data.activity_box_switch;
+    self.activity_move_switch=datas.data.activity_move_switch;
+    self.is_today_tips_move=datas.data.is_today_tips_move;
+    self.first_recharge_switch=datas.data.first_recharge_switch;
+
+    if(datas.data.migration)then
+        self.migration.migration_web_switch=datas.data.migration.migration_web_switch;
+        self.migration.migration_web_url=datas.data.migration.migration_web_url;
+        self.migration.migration_img=datas.data.migration.migration_img;
+        self.migration.migration_title=datas.data.migration.migration_title;
+        self.migration.migration_content=datas.data.migration.migration_content;
+        self.migration.migration_btn=datas.data.migration.migration_btn;
+        self.migration.migration_banner_img=datas.data.migration.migration_banner_img;
+        self.migration.migration_banner_title=datas.data.migration.migration_banner_title;
+        self.migration.migration_banner_content=datas.data.migration.migration_banner_content;
+    end
+
+
     --【我的书本】
     local mybookList=datas.data.favorite_book
     local len=table.length(mybookList);
@@ -200,6 +260,20 @@ function MainCache:GetRankByIndex(list,index)
     for i = 1, len do
         if(list[i].ranking==index)then
             return list[i];
+        end
+    end
+    return nil;
+end
+
+
+--获取我的书本一组数据
+function MainCache:GetMyBookByIndex(bookid)
+    if(GameHelper.islistHave(self.mybook_list)==true)then
+        local len= table.length(self.mybook_list);
+        for i = 1, len do
+            if(self.mybook_list[i].bookid==bookid)then
+                return self.mybook_list[i];
+            end
         end
     end
     return nil;

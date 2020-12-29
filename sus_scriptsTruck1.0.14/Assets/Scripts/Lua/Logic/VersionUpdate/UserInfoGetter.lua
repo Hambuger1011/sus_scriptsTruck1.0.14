@@ -22,7 +22,9 @@ function UserInfoGetter:GetUserInfoRun(IGGId,accessToken)
     end)
 
     --logic.cs.UINetLoadingMgr:Show()
-    logic.cs.UserDataManager:SetInviteCode()
+    if core.config.os == OS.iOS then
+        logic.cs.UserDataManager:SetInviteCode()
+    end
     logic.gameHttp:Login(IGGId,accessToken,0,function(result)
         self:OnLoginCallBack(result)
     end)

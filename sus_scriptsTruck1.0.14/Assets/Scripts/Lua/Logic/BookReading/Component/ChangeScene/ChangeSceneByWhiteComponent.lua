@@ -47,8 +47,8 @@ function ChangeSceneByWhiteComponent:Play()
         maskImage:DOFade(0,0.6):SetEase(core.tween.Ease.Flash):SetDelay(0.3):OnUpdate(function()
             logic.cs.BookReadingWrapper.IsTextTween = true
         end):OnComplete(function()
-            local width = logic.cs.Screen.width*1334/logic.cs.Screen.height
-            local Vector2 = core.Vector2.New(width / 2 - curSceneBG.transform.rect.width / 2, 0)
+            --local width = logic.cs.Screen.width*1334/logic.cs.Screen.height
+            local Vector2 = core.Vector2.New(375 - curSceneBG.transform.rect.width / 2, 0)
             curSceneBG.transform:DOAnchorPos(Vector2, 1.5)
             :OnComplete(function()
                 logic.cs.BookReadingWrapper.IsTextTween = false

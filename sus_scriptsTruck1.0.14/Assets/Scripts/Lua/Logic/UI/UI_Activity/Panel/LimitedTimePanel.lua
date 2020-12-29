@@ -123,6 +123,25 @@ function LimitedTimePanel:__init(gameObject)
 
     logic.cs.UIEventListener.AddOnClickListener(self.GoBtn,function(data) self:GoBtnClick() end);
     --endregion
+
+    --region【迁移Code】
+    if(Cache.MainCache.migration.migration_web_switch==1)then     --迁移web入口开关，1: 开 0:关
+
+        self.MoveCodeBG =CS.DisplayUtil.GetChild(self.gameObject, "MoveCodeBG")
+        self.MoveCodeRedPoint = CS.DisplayUtil.GetChild(self.MoveCodeBG, "RedPoint");
+        self.MoveCodeText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeText"):GetComponent("Text");
+        self.MoveCodeDetailText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeDetailText"):GetComponent("Text");
+        self.MoveCodeBtnText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeBtnText"):GetComponent("Text");
+
+        self.MoveCodeText.text=Cache.MainCache.migration.migration_title;
+        self.MoveCodeDetailText.text=Cache.MainCache.migration.migration_content;
+        self.MoveCodeBtnText.text=Cache.MainCache.migration.migration_btn;
+
+        logic.cs.UIEventListener.AddOnClickListener(self.MoveCodeBG,function(data) self:MoveCodeBtnClick() end);
+    end
+
+    --endregion
+
 end
 
 --endregion
@@ -152,6 +171,20 @@ function LimitedTimePanel:OnClose()
     logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.PaySuccess, self.MsgListener)
 end
 --endregion
+
+
+--region【临时】【临时】
+function LimitedTimePanel:MoveCodeBtnClick()
+
+    --【临时】【临时】
+    if(Cache.MainCache.migration.migration_web_url)then
+        local _url=Cache.MainCache.migration.migration_web_url.."?token="..string.encodeURI(logic.cs.GameHttpNet.TOKEN);
+        logic.cs.Application.OpenURL(_url);
+    end
+
+end
+--endregion
+
 
 
 --region【PaySuccessMsgListener】
@@ -512,6 +545,12 @@ function LimitedTimePanel:__delete()
     if(self.GoBtn)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.GoBtn,function(data) self:GoBtnClick() end);
     end
+
+
+    if(self.MoveCodeBG)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.MoveCodeBG,function(data) self:MoveCodeBtnClick() end);
+    end
+
 
     self.ScrollRect = nil;
     self.BindBG = nil;
