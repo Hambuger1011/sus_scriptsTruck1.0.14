@@ -349,7 +349,7 @@ end
 
 --region【领取首充奖励】---【限时活动】【账号迁移奖励】
 function ActivityControl:ReceiveFirstRechargeAwardRequest()
-    logic.gameHttp:ReceiveUserMoveAward(function(result) self:ReceiveFirstRechargeAward(result); end)
+    logic.gameHttp:ReceiveFirstRechargeAward(function(result) self:ReceiveFirstRechargeAward(result); end)
 end
 --endregion
 

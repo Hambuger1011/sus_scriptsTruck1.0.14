@@ -12,6 +12,7 @@ target 'Unity-iPhone' do
   pod 'Crashlytics', '3.14.0'
   pod 'Firebase/Crashlytics', '6.21.0'
   
+  pod 'mob_linksdk_pro'
   
   pod 'Google-Mobile-Ads-SDK'
   pod 'GoogleMobileAdsMediationUnity'

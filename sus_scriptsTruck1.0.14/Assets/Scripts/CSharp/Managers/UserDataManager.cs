@@ -6,7 +6,7 @@ using UnityEngine;
 using pb;
 using System;
 using AB;
-
+using com.moblink.unity3d;
 
 
 public class ThirdLoginData
@@ -416,7 +416,7 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public bool FirstChargeHaveShown = false;
 
-    public string InviteCode = "";
+    public string InviteCode = MobLink.InviteCode;
 
     public UserDataManager() { }
 

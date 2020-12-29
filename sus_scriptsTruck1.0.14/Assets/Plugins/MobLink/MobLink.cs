@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
 namespace com.moblink.unity3d
@@ -19,6 +21,7 @@ namespace com.moblink.unity3d
 		private static MobLink _instance;
 		private static MobLinkImpl moblinkUtils;
 		private String mobId;
+		public static string InviteCode = string.Empty;
 
 		void Awake()
 		{
@@ -70,12 +73,58 @@ namespace com.moblink.unity3d
 			{
 				Debug.Log("[moblink-unity]OnRestoreScene(). path: " + scene.path +
 				          ", params: " + customParams.toJson());
+				string url = customParams["startPage"].ToString();
+				Debug.Log("[moblink-unity]ReceiveSharingUrl=:" + url);
+				ParseUrl(url, out _,out var nvc);
+				string inviteCode = nvc.Get("invite_code");
+				Debug.Log("[moblink-unity]inviteCode=:" + url);
+				InviteCode = inviteCode;
+				
 			} else
 			{
 				Debug.Log("[moblink-unity]OnRestoreScene(). path: " + scene.path +
 				          ", params: " + null);
 			}
         
+		}
+
+		/// <summary>        
+		/// 分析 url 字符串中的参数信息        
+		/// </summary>        
+		/// <param name="url">输入的 URL</param>        
+		/// <param name="baseUrl">输出 URL 的基础部分</param>        
+		/// <param name="nvc">输出分析后得到的 (参数名,参数值) 的集合</param>        
+		public static void ParseUrl(string url, out string baseUrl, out NameValueCollection nvc)
+		{
+			if (url == null)
+				throw new ArgumentNullException("url");
+ 
+			nvc = new NameValueCollection();
+			baseUrl = "";
+ 
+			if (url == "")
+				return;
+ 
+			int questionMarkIndex = url.IndexOf('?');
+ 
+			if (questionMarkIndex == -1)
+			{
+				baseUrl = url;
+				return;
+			}
+			baseUrl = url.Substring(0, questionMarkIndex);
+			if (questionMarkIndex == url.Length - 1)
+				return;
+			string ps = url.Substring(questionMarkIndex + 1);
+ 
+			// 开始分析参数对
+			Regex re = new Regex(@"(^|&)?(\w+)=([^&]+)(&|$)?", RegexOptions.Compiled);
+			MatchCollection mc = re.Matches(ps);
+ 
+			foreach (Match m in mc)
+			{
+				nvc.Add(m.Result("$2").ToLower(), m.Result("$3"));
+			}
 		}
 
 		public static void setRestoreSceneListener (com.moblink.unity3d.MobLink.RestoreSceneHandler sceneHander) {
