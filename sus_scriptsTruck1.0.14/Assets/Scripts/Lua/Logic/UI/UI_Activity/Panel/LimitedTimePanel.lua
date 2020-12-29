@@ -99,11 +99,11 @@ function LimitedTimePanel:__init(gameObject)
     self.NumText5 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText5"):GetComponent("Text");
     self.FirstRechargePoint = CS.DisplayUtil.GetChild(self.FirstchargeBG, "RedPoint");
 
-    self.FirstchargeDetailText.text = "Top up to get insane rewards. Each account is only entitled to one Pack.";
-    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1 then
-        self.FirstchargeBG:SetActiveEx(true)
-    else
+    self.FirstchargeDetailText.text = "Top up any amount to get insane rewards. Each account is only entitled to one Pack.";
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 0 then
         self.FirstchargeBG:SetActiveEx(false)
+    else
+        self.FirstchargeBG:SetActiveEx(true)
     end
 
     logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) self:ChargeButtonOnClick() end)
