@@ -79,9 +79,9 @@ public class ChpterRewardedAd
 
         return rewardedAd;
     }
-    //重试次数
-    private int trycount = 3;
 
+    //重试次数
+    private int trycount = 0;
     /// <summary>
     /// // Called when an ad request has successfully loaded. 广告加载完成时被调用。
     /// </summary>
@@ -89,7 +89,7 @@ public class ChpterRewardedAd
     {
         Debug.LogError("HandleRewardedAdLoaded event received");
         //重置失败重试次数
-        trycount = 3;
+        trycount = 0;
     }
 
     /// <summary>
@@ -97,19 +97,41 @@ public class ChpterRewardedAd
     /// </summary>
     private void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
-        Debug.LogError("HandleRewardedAdFailedToLoad event received with message: " + args.Message);
+        Debug.LogError("HandleRewardedAdFailedToLoad event received with message: " + args.Message + "  TYPE: " + args.GetType() + "  HASH CODE: " + args.GetHashCode() + "  SENDER - TO STRING: " + sender.ToString());
+        this.chapter_rewardedAd = null;
 
-        if (trycount > 0)
+        if (trycount > 10)
         {
-            trycount--;
-            //【活动页面】激励视频广告  创建并加载
+            //300000  300秒  5分钟
+            CTimerManager.Instance.AddTimer(300000, 1, (_) =>
+            {
+                ReloadFailedAd();
+            });
+        }
+        else
+        {
+            //6000   6秒
+            CTimerManager.Instance.AddTimer(6000, 1, (_) =>
+            {
+                ReloadFailedAd();
+            });
+        }
+    }
+
+    private void ReloadFailedAd()
+    {
+        if (trycount <= 10)
+        {
+            trycount++;
+            //激励视频广告  创建并加载
             this.chapter_rewardedAd = this.CreateAndLoadRewardedAd(chapter_adUnitId);
         }
         else
         {
-            Debug.LogError("广告加载失败超过3次！！ ");
+            Debug.LogError("连着广告加载失败超过10次！！ ");
         }
     }
+
 
     /// <summary>
     /// Called when an ad is shown.  显示广告时调用。
@@ -117,9 +139,6 @@ public class ChpterRewardedAd
     /// </summary>
     private void HandleRewardedAdOpening(object sender, EventArgs args)
     {
-        //【活动页面】激励视频广告  创建并加载
-        this.chapter_rewardedAd = this.CreateAndLoadRewardedAd(chapter_adUnitId);
-
         //AF事件记录*  用户播放广告
         AppsFlyerManager.Instance.ADS_PLAY();
 
@@ -171,6 +190,9 @@ public class ChpterRewardedAd
     /// </summary>
     private void HandleRewardedAdClosed(object sender, EventArgs args)
     {
+        //激励视频广告  创建并加载
+        this.chapter_rewardedAd = this.CreateAndLoadRewardedAd(chapter_adUnitId);
+
         Debug.LogError("HandleRewardedAdClosed  event received");
     }
 
@@ -181,13 +203,21 @@ public class ChpterRewardedAd
     public void ShowRewardedAd_Chapter(Action vCallBack)
     {
         CallBack = vCallBack;
-        if (this.chapter_rewardedAd.IsLoaded())
+
+        if (this.chapter_rewardedAd != null)
         {
-            this.chapter_rewardedAd.Show();
+            if (this.chapter_rewardedAd.IsLoaded())
+            {
+                this.chapter_rewardedAd.Show();
+            }
+            else
+            {
+                Debug.LogError("ShowRewardedAd_Chapter 播放视频广告，视频没有加载完毕");
+            }
         }
         else
         {
-            Debug.LogError("ShowRewardedAd_Chapter 播放视频广告，视频没有加载完毕");
+            UITipsMgr.Instance.PopupTips("There's no video to watch yet.Wait patiently", false);
         }
     }
 }

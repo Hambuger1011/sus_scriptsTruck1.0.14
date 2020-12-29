@@ -291,6 +291,15 @@ end
 --endregion
 
 
+--region【领取首充奖励*响应】---【限时活动】【限时活动*账号迁移奖励】
+function UIActivityForm:ReceiveFirstRechargeAward_Response()
+    if(self.LimitedTimePanel)then
+        self.LimitedTimePanel:ReceiveFirstRechargeAward_Response();
+    end
+end
+--endregion
+
+
 --region【领取第三方登录绑定的奖励*响应】---【限时活动】【账号绑定奖励】
 function UIActivityForm:ReceiveThirdPartyAward_Response()
     if(self.LimitedTimePanel)then
@@ -376,6 +385,15 @@ end
 function UIActivityForm:SetFreeBG()
     if(self.LimitedTimePanel)then
         self.LimitedTimePanel:SetFreeBG();
+    end
+end
+
+--endregion
+
+--region 【刷新常规活动】【广告CD结束】
+function UIActivityForm:EndCD()
+    if(self.ActivityPanel)then
+        self.ActivityPanel:EndCD();
     end
 end
 

@@ -78,6 +78,7 @@ function LimitedTimePanel:__init(gameObject)
     self.InviteBG = CS.DisplayUtil.GetChild(self.ScrollRect, "InviteBG");
     self.InviteButton = CS.DisplayUtil.GetChild(self.InviteBG, "InviteButton");
     self.InviteDetailText = CS.DisplayUtil.GetChild(self.InviteBG, "InviteDetailText"):GetComponent("Text");
+    self.InviteAwardPoint = CS.DisplayUtil.GetChild(self.InviteBG, "RedPoint");
 
     self.InviteDetailText.text = "You can get up to 350 Diamonds when you invite your friends to register for an account.";
 
@@ -283,7 +284,8 @@ end
 
 --endregion
 
---【设置全书免费】
+
+--region【设置全书免费】
 function LimitedTimePanel:SetFreeBG()
     if(self.FreeBG)then
         --限时全书免费
@@ -294,6 +296,8 @@ function LimitedTimePanel:SetFreeBG()
         end
     end
 end
+--endregion
+
 
 --region【GO点击 去读书】
 function LimitedTimePanel:GoBtnClick()
@@ -469,6 +473,14 @@ function LimitedTimePanel:RedPointShow()
         self.FirstRechargePoint:SetActiveEx(false);
         self.ChargeButton:SetActiveEx(true);
         self.ClaimFirstcharge:SetActiveEx(false);
+    end
+    ------【红点功能】
+
+    ------【红点功能】【邀请】
+    if(Cache.RedDotCache.InviteAwardPoint==true)then
+        self.InviteAwardPoint:SetActiveEx(true);
+    else
+        self.InviteAwardPoint:SetActiveEx(false);
     end
     ------【红点功能】
 end

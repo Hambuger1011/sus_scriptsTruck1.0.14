@@ -1,112 +1,137 @@
-local BaseClass = core.Class
-local EmailPanel = BaseClass("EmailPanel")
+local EmailPanel = core.Class("EmailPanel")
 
-local UIBubbleItem = require('Logic/StoryEditor/UI/Preview/BubbleItem/UIBubbleItem')
-local UIDialogList = require('Logic/StoryEditor/UI/Utils/UIDialogList')
-local UIBubbleBox = require('Logic/StoryEditor/UI/Preview/BubbleItem/UIBubbleBox')
+local EmailItem = require('Logic/UI/UI_Email/Item/EmailItem');
 
 local pageNum = 1
+local ItemList={};
+
+local allCount=0;
 function EmailPanel:__init(gameObject)
     self.gameObject=gameObject;
 
-    self.ScrollView =CS.DisplayUtil.GetChild(gameObject, "ScrollView");
-    self.Layout =CS.DisplayUtil.GetChild(self.ScrollView, "Layout");
-    self.itemListView = UIDialogList.New(self.Layout,5)
-    self.EmailItem =CS.DisplayUtil.GetChild(self.ScrollView, "EmailItem");
+    self.ScrollRect =CS.DisplayUtil.GetChild(gameObject, "ScrollRect");
+
+    self.UIVirtualList =CS.DisplayUtil.GetChild(self.ScrollRect, "MainContent"):GetComponent("UIVirtualList");
+    --【Item刷新】
+    self.UIVirtualList.onItemRefresh =EmailPanel.OnGetItemByRowColumn;
+
+
     self.NoEmail =CS.DisplayUtil.GetChild(gameObject, "NoEmail");
-
-    self.paddingBottom = self.itemListView:GetPaddingBottom();
-    self.itemListView.onCreateItem = function(index, data, reset)
-        return self:OnCreateItem(index, data, reset);
-    end
-
     self.bookId = logic.bookReadingMgr.selectBookId
     pageNum = 1;
 
     --请求获取邮箱信息
     GameController.EmailControl:GetSystemMsgRequest(pageNum);
-    self.EmailItem:SetActiveEx(false);
-    self.InfoList=nil;
 end
 
-function EmailPanel:UpdateEmail(_pageNum)
-    if(_pageNum == 1)then
-        --销毁所有Item
-        self:ClearItem();
-
-        self.InfoList=Cache.EmailCache.EmailList;
-
-        if(self.InfoList==nil and #self.InfoList == 0)then
-            self.NoEmail.gameObject:SetActiveEx(true);
-            return;
-        end
 
 
-        for i = 1 , #self.InfoList do
-            if i == #self.InfoList then
-                self.InfoList[i].pageNum = pageNum
-                self.InfoList[i].GetNextPage = function()
-                    pageNum = pageNum + 1
-                    --请求获取邮箱信息
-                    GameController.EmailControl:GetSystemMsgRequest(pageNum);
-                end
-            end
-            self:AddUIItem(false,false,false)
-        end
-        self.itemListView:MoveToIndex(1)
+function EmailPanel:UpdateEmail(page)
+
+    pageNum=page
+
+    allCount=table.length(Cache.EmailCache.EmailList);
+
+    if(allCount and allCount>0)then
+        --【设置列表总数量】
+        self.UIVirtualList:SetItemCount(allCount);
+        self.NoEmail:SetActiveEx(false);
     else
-        local newData = Cache.EmailCache.EmailList;
-        for i = 1 , #newData do
-            if i == #newData then
-                newData[i].pageNum = pageNum
-                newData[i].GetNextPage = function()
-                    pageNum = pageNum + 1
-                    --请求获取邮箱信息
-                    GameController.EmailControl:GetSystemMsgRequest(pageNum);
+        self.NoEmail:SetActiveEx(true);
+    end
+end
+
+
+
+
+function EmailPanel.OnGetItemByRowColumn(row)
+    local index=row.itemIndex+1;
+    local trans = row.rect;
+
+    if(trans)then
+
+        --【获取一组数据】
+        local itemData =Cache.EmailCache.EmailList[index];
+        if(itemData == nil)then return nil; end
+
+        --【GameObect唯一编号】
+        local onlyID=trans.gameObject:GetInstanceID();
+
+        --【书本 脚本】
+        local Item = table.trygetvalue(ItemList,onlyID);
+        if(Item==nil)then
+            Item = EmailItem.New(trans.gameObject);
+            ItemList[onlyID]=Item;
+        end
+
+        --【赋值】
+        if(Item)then
+            Item:SetItemData(itemData,index);
+        end
+    end
+
+end
+
+
+
+function EmailPanel:SelectAll(show,isResetAll)
+
+    if(ItemList)then
+        local len = table.count(ItemList);
+        if(len and len>0)then
+            for k,_value in pairs(ItemList) do
+                if(_value)then
+                    if(isResetAll==true)then
+                        _value.SelectTab.isOn=false;
+                    end
+                    _value.SelectTab.gameObject:SetActiveEx(show);
                 end
             end
-            table.insert(self.InfoList,newData[i])
-            self:AddUIItem(true,false,false)
         end
     end
-
 end
 
-function EmailPanel:AddUIItem(newInstance,useTween,scrollToBottom)
-    local height = self.itemListView:AddVirtualItem(UIBubbleBox.BoxType.EmailItem,newInstance)
-    self.itemListView:SetHeight(height, scrollToBottom, useTween)
-    self:RefreshDialogList()
-end
-
-function EmailPanel:RefreshDialogList()
-    self.itemListView:MarkDirty()
-end
-
-function EmailPanel:OnCreateItem(index, itemData)
-    local go = logic.cs.GameObject.Instantiate(self.EmailItem,self.itemListView.transform)
-    go:SetActiveEx(true)
-
-    local item = UIBubbleItem.New(go,UIBubbleBox.BoxType.EmailItem)
-    item.GetBubbleDataByIndex = function(index)
-
-        if(self.InfoList==nil)then
-            return nil;
+--region【领取奖励】
+function EmailPanel:AchieveMsgPrice(msgid)
+    if(ItemList)then
+        local len = table.count(ItemList);
+        if(len)then
+            for k,_value in pairs(ItemList) do
+                if(_value and _value.Info)then
+                    if(_value.Info.msgid==msgid)then
+                        local info = Cache.EmailCache:GetInfoById(msgid);
+                        _value:SetItemData(info);
+                        return;
+                    end
+                end
+            end
         end
-
-        return self.InfoList[index]
     end
-    return item
 end
+--endregion
 
-function EmailPanel:ClearItem()
-    self.itemListView:ClearItem()
-    self.itemListView:SetPaddingBottom(self.paddingBottom)
-    self.itemDataList = nil;
-end
+
 
 
 --销毁
 function EmailPanel:__delete()
+    self.UIVirtualList.onItemRefresh =nil;
+    --【清除列表所有对象 和 脚本】
+    if(ItemList)then
+        for _key, _value in pairs(ItemList) do
+            if(_value)then
+                _value:Delete();--【销毁】
+            end
+        end
+        ItemList={};
+    end
+
+    self.ScrollRect = nil;
+    self.UIVirtualList = nil;
+    self.NoEmail = nil;
+    self.bookId = nil;
+    self.gameObject = nil;
+    pageNum = 0;
 
 end
 

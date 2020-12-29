@@ -117,9 +117,8 @@ public class ActivityRewardedAd
                 ReloadFailedAd();
             });
         }
-
-
     }
+
 
     private void ReloadFailedAd()
     {
@@ -143,9 +142,6 @@ public class ActivityRewardedAd
     /// </summary>
     private void HandleRewardedAdOpening(object sender, EventArgs args)
     {
-        //【活动页面】激励视频广告  创建并加载
-        this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
-
         //AF事件记录*  用户播放广告
         AppsFlyerManager.Instance.ADS_PLAY();
 
@@ -197,10 +193,13 @@ public class ActivityRewardedAd
     /// </summary>
     private void HandleRewardedAdClosed(object sender, EventArgs args)
     {
+        //【活动页面】激励视频广告  创建并加载  【请求另一个激励广告】【请求另一个激励广告】【请求另一个激励广告】
+        this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
+
         Debug.LogError("HandleRewardedAdClosed  event received");
-      
+        XLuaManager.Instance.GetLuaEnv().DoString(@" ");
     }
- 
+
 
     /// <summary>
     ///【活动页面】显示播放激励视频广告

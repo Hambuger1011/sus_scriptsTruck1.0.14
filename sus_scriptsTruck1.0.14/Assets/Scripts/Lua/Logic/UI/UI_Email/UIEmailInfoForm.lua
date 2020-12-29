@@ -57,216 +57,13 @@ function UIEmailInfoForm:OnInitView()
     self.keyItem = self.uiBinding:Get('KeyItem').gameObject
     self.dimandItem = self.uiBinding:Get('DimandItem').gameObject
 
-    local Data = self.emailData
+    --按钮监听
+    logic.cs.UIEventListener.AddOnClickListener(self.receiveButton.gameObject,function(data) self:ReceiveButtonClick() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.btnClose.gameObject,function(data) self:OnExitClick() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.replyButton.gameObject,function(data) self:ReplyButtonClick() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.inputMask.gameObject,function(data) self:InputMaskClick() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.submitBtn.gameObject,function(data) self:SubmitBtnClick() end)
 
-    if Data.msg_type == 1 then
-        self.time.text = Data.createtime
-        self.title.text = Data.title
-        self.content.text = string.gsub(Data.content, '\\n', '\n')
-
-        if Data.email_pic and #Data.email_pic > 0 then
-            logic.cs.ABSystem.ui:DownloadImage(Data.email_pic, function(url, refCount)
-                if Data.email_pic ~= url then
-                    refCount:Release()
-                    return
-                end
-                local sprite = refCount:GetObject()
-                self.picture.sprite = sprite
-                self.picture:SetNativeSize()
-            end)
-            self.picture.gameObject:SetActiveEx(true)
-            if Data.email_url and #Data.email_url > 0 then
-                self.pictureBtn.onClick:RemoveAllListeners()
-                self.pictureBtn.onClick:AddListener(function()
-                    logic.cs.Application.OpenURL(Data.email_url);
-                end)
-            end
-        else
-            self.picture.gameObject:SetActiveEx(false)
-        end
-
-        self.type2:SetActiveEx(true)
-        self.type4:SetActiveEx(false)
-        self.gitBg:SetActiveEx(false)
-    end
-
-    if Data.msg_type == 2 then
-        self.time.text = Data.createtime
-        self.title.text = Data.title
-        self.content.text = string.gsub(Data.content, '\\n', '\n')
-
-        if Data.price_bkey and tonumber(Data.price_bkey) > 0 then
-            self.keyText.text = "x" .. Data.price_bkey
-        else
-            self.keyItem:SetActiveEx(false)
-        end
-        if Data.price_diamond and tonumber(Data.price_diamond) > 0 then
-            self.dimandText.text = "x" .. Data.price_diamond
-        else
-            self.dimandItem:SetActiveEx(false)
-        end
-        self.btnText.text = "RECEIVE"
-
-        if Data.price_status == 1 then
-            self.receiveButton.gameObject:SetActiveEx(false)
-        end
-
-        if Data.email_pic and #Data.email_pic > 0 then
-            logic.cs.ABSystem.ui:DownloadImage(Data.email_pic, function(url, refCount)
-                if Data.email_pic ~= url then
-                    refCount:Release()
-                    return
-                end
-                local sprite = refCount:GetObject()
-                self.picture.sprite = sprite
-                self.picture:SetNativeSize()
-            end)
-            self.picture.gameObject:SetActiveEx(true)
-            if Data.email_url and #Data.email_url > 0 then
-                self.pictureBtn.onClick:RemoveAllListeners()
-                self.pictureBtn.onClick:AddListener(function()
-                    logic.cs.Application.OpenURL(Data.email_url);
-                end)
-            end
-        else
-            self.picture.gameObject:SetActiveEx(false)
-        end
-
-        self.receiveButton.onClick:RemoveAllListeners()
-        self.receiveButton.onClick:AddListener(function()
-            logic.gameHttp:AchieveMsgPrice(Data.msgid, function(result)
-                local json = core.json.Derialize(result)
-                local code = tonumber(json.code)
-                if code == 200 then
-                    logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
-                    logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
-                    self.receiveButton.gameObject:SetActiveEx(false)
-
-                    hit:SetActiveEx(false)
-                    --CS.Dispatcher.dispatchEvent(CS.EventEnum.RequestRedPoint);
-                    GameController.MainFormControl:RedPointRequest();
-                    if(self.emailItem)then
-                        Data.price_status = 1
-                        Data.status=1;
-                        self.emailItem:SetData(Data);
-                    end
-                else
-                    logic.cs.UIAlertMgr:Show("TIPS", json.msg)
-                end
-            end)
-        end)
-
-        self.gitItemBg:SetActiveEx(true)
-        self.gitBg:SetActiveEx(true)
-
-        self.type2:SetActiveEx(true)
-        self.type4:SetActiveEx(false)
-    else
-        self.gitBg:SetActiveEx(false)
-    end
-
-    if Data.msg_type == 3 then
-        self.time.text = Data.createtime
-        self.title.text = Data.title
-        self.content.text = string.gsub(Data.content, '\\n', '\n')
-
-        if Data.button_name and #Data.button_name > 0 then
-            self.btnText.text = Data.button_name
-        else
-            self.btnText.text = "RECEIVE"
-        end
-
-        if Data.email_pic and #Data.email_pic > 0 then
-            logic.cs.ABSystem.ui:DownloadImage(Data.email_pic, function(url, refCount)
-                if Data.email_pic ~= url then
-                    refCount:Release()
-                    return
-                end
-                local sprite = refCount:GetObject()
-                self.picture.sprite = sprite
-                self.picture:SetNativeSize()
-            end)
-            self.picture.gameObject:SetActiveEx(true)
-            if Data.email_url and #Data.email_url > 0 then
-                self.pictureBtn.onClick:RemoveAllListeners()
-                self.pictureBtn.onClick:AddListener(function()
-                    logic.cs.Application.OpenURL(Data.email_url);
-                end)
-            end
-        else
-            self.picture.gameObject:SetActiveEx(false)
-        end
-
-        self.receiveButton.onClick:RemoveAllListeners()
-        self.receiveButton.onClick:AddListener(function()
-            logic.cs.Application.OpenURL(Data.button_link);
-        end)
-
-        self.gitItemBg:SetActiveEx(false)
-        self.gitBg:SetActiveEx(true)
-
-        self.type2:SetActiveEx(true)
-        self.type4:SetActiveEx(false)
-    end
-
-    if Data.msg_type == 4 then
-        self.timeText.text = Data.createtime
-        self.bookText.text = Data.book_name
-        self.bodyText.text = "<b><color=#101010>" .. Data.replied_nickname .. ": </color></b>" .. Data.replied_content
-        local contentTxt = Data.comment_content
-        if Data.comment_is_self == 0 then
-            contentTxt = logic.cs.PluginTools:ReplaceBannedWords(contentTxt)
-        end
-        self.contentText.text = contentTxt
-
-        local co = coroutine.start(function()
-            coroutine.wait(0.1)
-            logic.cs.PluginTools:ContentSizeFitterRefresh(self.bodyText.transform);
-            logic.cs.PluginTools:ContentSizeFitterRefresh(self.contentText.transform);
-        end)
-        self.nameText.text = Data.comment_nickname
-
-        --加载头像
-        GameHelper.luaShowDressUpForm(Data.comment_avatar, self.headImage, DressUp.Avatar, 1001);
-        --加载头像框
-        GameHelper.luaShowDressUpForm(Data.comment_avatar_frame, self.HeadFrame, DressUp.AvatarFrame, 2001);
-
-        self.replyButton.onClick:RemoveAllListeners()
-        self.replyButton.onClick:AddListener(function()
-            self.inputMask.gameObject:SetActiveEx(true)
-            logic.cs.EventSystem.current:SetSelectedGameObject(self.inputField.gameObject)
-        end)
-        self.inputMask.onClick:RemoveAllListeners()
-        self.inputMask.onClick:AddListener(function()
-            self.inputMask.gameObject:SetActiveEx(false)
-        end)
-
-        self.submitBtn.onClick:RemoveAllListeners()
-        self.submitBtn.onClick:AddListener(function()
-            local content = self.inputField.text
-            if #content == 0 then
-                return
-            end
-            logic.gameHttp:CreateBookCommentReply(Data.comment_id, content, Data.reply_id, function(result)
-                local json = core.json.Derialize(result)
-                local code = tonumber(json.code)
-                if code == 200 then
-                    self.inputField.text = ""
-                    self.inputMask.gameObject:SetActiveEx(false)
-                else
-                    logic.cs.UIAlertMgr:Show("TIPS", json.msg)
-                end
-            end)
-        end)
-
-        self.type4:SetActiveEx(true)
-        self.type2:SetActiveEx(false)
-    end
-
-    self.btnClose.onClick:RemoveAllListeners()
-    self.btnClose.onClick:AddListener(function()
-        self:OnExitClick()
-    end)
 
     local uiform1 = root:GetComponent("CUIForm")
     local safeArea = logic.cs.ResolutionAdapter:GetSafeArea()
@@ -285,27 +82,167 @@ function UIEmailInfoForm:OnInitView()
         SetSafeAreaHeight(Type4, safeAreaHeight)
         SetSafeAreaHeight(InputMask, safeAreaHeight)
     end
+
+    self.EmailInfo=nil;
 end
+
 
 function UIEmailInfoForm:OnOpen()
     UIView.OnOpen(self)
+
+    --EmailControl 赋值本界面
+    GameController.EmailControl:SetEmailInfo(self);
 end
+
 
 function UIEmailInfoForm:OnClose()
     UIView.OnClose(self)
+
+    --EmailControl 赋值本界面
+    GameController.EmailControl:SetEmailInfo(nil);
 end
+
+
+function UIEmailInfoForm:SetEmailData(id)
+
+    local Info=Cache.EmailCache:GetInfoById(id);
+    if(Info==nil)then return; end
+    self.EmailInfo=Info;
+
+    if(Info.msg_type == 1)then  --1系统消息
+
+        self.type2:SetActiveEx(true)
+        self.type4:SetActiveEx(false)
+        self.gitBg:SetActiveEx(false)
+    elseif(Info.msg_type == 2)then  --2奖励信息
+
+        if(Info.price_bkey and tonumber(Info.price_bkey) > 0)then
+            self.keyText.text = "x" .. Info.price_bkey;
+        else
+            self.keyItem:SetActiveEx(false);
+        end
+
+        if(Info.price_diamond and tonumber(Info.price_diamond) > 0)then
+            self.dimandText.text = "x" .. Info.price_diamond;
+        else
+            self.dimandItem:SetActiveEx(false);
+        end
+
+        self.btnText.text = "RECEIVE";
+
+        if(Info.price_status == 1)then
+            self.receiveButton.gameObject:SetActiveEx(false);
+        end
+
+        self.gitItemBg:SetActiveEx(true)
+        self.gitBg:SetActiveEx(true)
+
+        self.type2:SetActiveEx(true)
+        self.type4:SetActiveEx(false)
+
+    elseif(Info.msg_type == 3)then  --3问卷调查
+        if(Info.button_name and #Info.button_name > 0)then
+            self.btnText.text = Info.button_name;
+        else
+            self.btnText.text = "RECEIVE";
+        end
+        self.gitItemBg:SetActiveEx(false);
+        self.gitBg:SetActiveEx(true);
+        self.type2:SetActiveEx(true);
+        self.type4:SetActiveEx(false);
+    elseif(Info.msg_type == 4)then  --4书本用户回复
+        self.timeText.text = Info.createtime
+        self.bookText.text = Info.book_name
+        self.bodyText.text = "<b><color=#101010>" .. Info.replied_nickname .. ": </color></b>" .. Info.replied_content
+        local contentTxt = Info.comment_content
+        if(Info.comment_is_self == 0)then
+            contentTxt = logic.cs.PluginTools:ReplaceBannedWords(contentTxt)
+        end
+        self.contentText.text = contentTxt
+
+        local co = coroutine.start(function()
+            coroutine.wait(0.1)
+            logic.cs.PluginTools:ContentSizeFitterRefresh(self.bodyText.transform);
+            logic.cs.PluginTools:ContentSizeFitterRefresh(self.contentText.transform);
+        end)
+        self.nameText.text = Info.comment_nickname
+
+        --加载头像
+        GameHelper.luaShowDressUpForm(Info.comment_avatar, self.headImage, DressUp.Avatar, 1001);
+        --加载头像框
+        GameHelper.luaShowDressUpForm(Info.comment_avatar_frame, self.HeadFrame, DressUp.AvatarFrame, 2001);
+
+        self.type4:SetActiveEx(true)
+        self.type2:SetActiveEx(false)
+    end
+
+    if(Info.msg_type ~= 4)then
+        self.time.text = Info.createtime
+        self.title.text = Info.title
+        self.content.text = string.gsub(Info.content, '\\n', '\n')
+
+
+        if(Info.email_pic and #Info.email_pic > 0)then
+            logic.cs.ABSystem.ui:DownloadImage(Info.email_pic, function(url, refCount)
+                if(Info.email_pic ~= url)then
+                    refCount:Release();
+                    return
+                end
+                local sprite = refCount:GetObject()
+                self.picture.sprite = sprite
+                self.picture:SetNativeSize()
+            end)
+            self.picture.gameObject:SetActiveEx(true)
+            if(Info.email_url and #Info.email_url > 0)then
+                self.pictureBtn.onClick:RemoveAllListeners()
+                self.pictureBtn.onClick:AddListener(function()
+                    logic.cs.Application.OpenURL(Info.email_url);
+                end)
+            end
+        else
+            self.picture.gameObject:SetActiveEx(false);
+        end
+    end
+end
+
+
+function UIEmailInfoForm:ReplyButtonClick()
+    self.inputMask.gameObject:SetActiveEx(true);
+    logic.cs.EventSystem.current:SetSelectedGameObject(self.inputField.gameObject);
+end
+
+function UIEmailInfoForm:InputMaskClick()
+    self.inputMask.gameObject:SetActiveEx(false);
+end
+
+
+function UIEmailInfoForm:SubmitBtnClick()
+    local content = self.inputField.text;
+    if(#content == 0)then
+        return;
+    end
+
+    if(self.EmailInfo)then
+        GameController.EmailControl:CreateBookCommentReplyRequest(self.EmailInfo.comment_id, content, self.EmailInfo.reply_id);
+    end
+end
+
+function UIEmailInfoForm:ReceiveButtonClick()
+    if(self.EmailInfo)then
+        if(self.EmailInfo.msg_type == 2)then
+            GameController.EmailControl:AchieveMsgPriceRequest(self.EmailInfo.msgid);
+        elseif(self.EmailInfo.msg_type == 3)then
+            logic.cs.Application.OpenURL(self.EmailInfo.button_link);
+        end
+    end
+end
+
 
 function UIEmailInfoForm:OnExitClick()
     UIView.__Close(self)
     if self.onClose then
-        self.onClose()
+        self.onClose();
     end
-end
-
-function UIEmailInfoForm:SetEmailData(Data, _Hit,item)
-    self.emailData = Data
-    hit = _Hit;
-    self.emailItem=item;
 end
 
 return UIEmailInfoForm

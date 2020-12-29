@@ -30,7 +30,6 @@ function UIEmailForm:OnInitView()
     self.mPrivateLetterPanel =CS.DisplayUtil.GetChild(this.gameObject, "PrivateLetterPanel");
     self.PrivateLetterPanel = require('Logic/UI/UI_Email/Panel/PrivateLetterPanel').New(self.mPrivateLetterPanel);
 
-
     self.TopTile =CS.DisplayUtil.GetChild(this.gameObject, "TopTile");
     self.CloseBtn =CS.DisplayUtil.GetChild(self.TopTile, "CloseBtn");
     self.ContactUsButton =CS.DisplayUtil.GetChild(self.TopTile, "ContactUsButton");
@@ -52,6 +51,8 @@ function UIEmailForm:OnInitView()
     logic.cs.UIEventListener.AddOnClickListener(self.DeleteBtn,function(data) self:DeleteBtnClick(data) end);
     logic.cs.UIEventListener.AddOnClickListener(self.CollectBtn,function(data) self:CollectBtnClick(data) end);
 
+
+
 end
 
 --endregion
@@ -63,6 +64,9 @@ function UIEmailForm:OnOpen()
     UIView.OnOpen(self)
     GameController.EmailControl:SetData(self);
     self:MailboxTabClick(nil);
+
+    --请求获取邮箱信息
+    GameController.EmailControl:GetPrivateLetterBoxPageRequest(1);
 end
 
 --endregion
@@ -75,10 +79,6 @@ function UIEmailForm:OnClose()
 
     GameController.EmailControl:SetData(nil);
 
-
-
-
-
     if(self.CommunityTab)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.MailboxTab.gameObject,function(data) self:MailboxTabClick(data) end);
         logic.cs.UIEventListener.RemoveOnClickListener(self.PrivateLetterTab.gameObject,function(data) self:PrivateLetterTabClick(data) end);
@@ -86,6 +86,26 @@ function UIEmailForm:OnClose()
         logic.cs.UIEventListener.RemoveOnClickListener(self.CloseBtn,function(data) self:OnExitClick(); end)
         logic.cs.UIEventListener.RemoveOnClickListener(self.ContactUsButton,function(data) logic.cs.IGGSDKMrg:OpenTSH(); end)
     end
+
+
+    --Toogle 标签按钮
+    self.TabScrollRect = nil;
+    self.MailboxTab = nil;
+    self.PrivateLetterTab = nil;
+
+    --关闭销毁 【邮件】
+    self.EmailPanel:Delete();
+    --关闭销毁 【个人私信】
+    self.PrivateLetterPanel:Delete();
+
+    self.TopTile = nil;
+    self.CloseBtn = nil;
+    self.ContactUsButton = nil;
+
+    self.Bottom = nil;
+    self.BatchBtn = nil;
+    self.CollectBtn = nil;
+    self.DeleteBtn = nil;
 end
 
 --endregion
@@ -148,30 +168,87 @@ end
 --endregion
 
 
---region 【点击*批量管理】
-function UIEmailForm:BatchBtnClick(data)
+--region【批量检测】
+function UIEmailForm:BatchTest(msgid,_type,len,isAdd)
 
+    self.DeleteBtn:SetActive(false);
+    self.BatchBtn:SetActive(false);
+    self.CollectBtn:SetActive(false);
 
+    if(len>0)then
+        if(_type==1)then
+            if(Cache.EmailCache:IsUnread(msgid,isAdd)==true)then --是否有未读
+                self.CollectBtn:SetActive(true);
+            else
+                self.DeleteBtn:SetActive(true);
+            end
+        end
+    else
+        self.BatchBtn:SetActive(true);
+    end
 end
 --endregion
 
+
+--region 【点击*批量管理】
+local numb=0;
+function UIEmailForm:BatchBtnClick()
+    numb=numb+1;
+    if(self.EmailPanel)then
+        if(numb%2==0)then
+            self.EmailPanel:SelectAll(false,false);
+        else
+            self.EmailPanel:SelectAll(true,false);
+        end
+    end
+end
+--endregion
+
+
 --region 【点击*收取】
 function UIEmailForm:CollectBtnClick(data)
-
-
+    GameController.EmailControl:ReadSelected();
 end
 --endregion
 
 
 --region 【点击*删除】
-function UIEmailForm:BatchBtnClick(data)
+function UIEmailForm:DeleteBtnClick(data)
+--activeSelf
+    GameController.EmailControl:DeleteSelected();
+end
+--endregion
 
+
+--region 【单个、批量删除邮件】
+function UIEmailForm:DelMail()
+    self.DeleteBtn:SetActive(false);
+    self.CollectBtn:SetActive(false);
+    self.BatchBtn:SetActive(true);
+    numb=numb+1;
+    self.EmailPanel:SelectAll(false,true);
+end
+--endregion
+
+
+--region【领取奖励】
+function UIEmailForm:AchieveMsgPrice(msgid)
+
+    if(self.EmailPanel)then
+        self.EmailPanel:AchieveMsgPrice(msgid);
+    end
 
 end
 --endregion
 
 
-
+--region【刷新信鸽列表】
+function UIEmailForm:UpdateGetPrivateLetterBoxList(page)
+    if(self.PrivateLetterPanel)then
+        self.PrivateLetterPanel:UpdateGetPrivateLetterBoxList(page);
+    end
+end
+--endregion
 
 
 --region 【界面关闭】

@@ -14,7 +14,7 @@ function StoryItem2:__init(gameObject)
     self.AutorName =CS.DisplayUtil.GetChild(gameObject, "AutorName"):GetComponent("Text");
 
     --按钮监听
-    logic.cs.UIEventListener.AddOnClickListener(self.BookIconImage.gameObject,function(data) self:BookOnclicke() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.gameObject,function(data) self:BookOnclicke() end)
     self.m_downloadSeq = 1;
     self.BookInfo=nil;
     self.mItemIndex = 0;
@@ -92,8 +92,8 @@ end
 
 --销毁
 function StoryItem2:__delete()
-    if(self.BookIconImage)then
-        logic.cs.UIEventListener.RemoveOnClickListener(self.BookIconImage.gameObject,function(data) self:BookOnclicke() end)
+    if(self.gameObject)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.gameObject,function(data) self:BookOnclicke() end)
     end
     self.rectTransform=nil;
     self.BookIconImage =nil;

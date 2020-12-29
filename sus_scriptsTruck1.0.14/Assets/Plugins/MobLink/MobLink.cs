@@ -73,11 +73,8 @@ namespace com.moblink.unity3d
 			{
 				Debug.Log("[moblink-unity]OnRestoreScene(). path: " + scene.path +
 				          ", params: " + customParams.toJson());
-				string url = customParams["startPage"].ToString();
-				Debug.Log("[moblink-unity]ReceiveSharingUrl=:" + url);
-				ParseUrl(url, out _,out var nvc);
-				string inviteCode = nvc.Get("invite_code");
-				Debug.Log("[moblink-unity]inviteCode=:" + url);
+				string inviteCode = customParams["invite_code"].ToString();
+				Debug.Log("[moblink-unity]inviteCode=:" + inviteCode);
 				InviteCode = inviteCode;
 				
 			} else

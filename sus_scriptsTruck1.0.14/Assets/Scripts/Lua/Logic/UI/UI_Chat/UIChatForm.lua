@@ -18,7 +18,6 @@ local allCount=0;
 
 --【ChatItem脚本列表】
 local ItemList={};
-
 function UIChatForm:OnInitView()
     UIView.OnInitView(self)
     this=self.uiform;
@@ -27,17 +26,32 @@ function UIChatForm:OnInitView()
     --list插件
     self.LoopListView2:InitListView(allCount,UIChatForm.OnGetItemByRowColumn);
 
+    self.LoopListView2.ScrollRect.onValueChanged:AddListener(function(value)
+        self:OnBookScrollChanged(value)
+    end)
+
+
+    self.TopTile = CS.DisplayUtil.GetChild(this.gameObject, "TopTile");
     self.Bottom = CS.DisplayUtil.GetChild(this.gameObject, "Bottom");
 
     self.InputField = CS.DisplayUtil.GetChild(self.Bottom, "InputField"):GetComponent("InputField");
     self.InputField.shouldHideMobileInput = true;
-
     self.SubmitBtn = CS.DisplayUtil.GetChild(self.Bottom, "SubmitBtn");
+    self.CloseBtn = CS.DisplayUtil.GetChild(this.gameObject, "CloseBtn");
 
+    self.PlayerName =CS.DisplayUtil.GetChild(self.TopTile , "PlayerName"):GetComponent("Text");
 
     logic.cs.UIEventListener.AddOnClickListener(self.SubmitBtn,function(data) self:SubmitBtnClick(); end)
+    logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data) self:OnExitClick(); end)
 
-    self:Moni()
+    --对方uid
+    self.Author_Uid=0;
+
+    self.m_page = 0;
+    --等待消息返回
+    self.m_waitBookRefresh=false;
+    --等待ui刷新
+    self.m_waitUiRefresh=false;
 end
 --endregion
 
@@ -46,7 +60,7 @@ end
 
 function UIChatForm:OnOpen()
     UIView.OnOpen(self)
-
+    GameController.ChatControl:SetData(self);
 end
 
 --endregion
@@ -56,81 +70,69 @@ end
 
 function UIChatForm:OnClose()
     UIView.OnClose(self)
+    GameController.ChatControl:SetData(nil);
+
+    --【清除列表所有对象 和 脚本】
+    if(ItemList)then
+        for _key, _value in pairs(ItemList) do
+            if(_value)then
+                _value:Delete();--【销毁】
+            end
+        end
+    end
+
+    --重置页数
+    GameController.ChatControl:Reset();
+
+    if(self.LoopListView2)then
+        self.LoopListView2.ScrollRect.onValueChanged:AddListener(function(value)
+            self:OnBookScrollChanged(value);
+        end)
+    end
+
+    --【删除所有服务器数据】
+    Cache.ChatCache:ClearMas();
+
+    if(self.CloseBtn)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.CloseBtn,function(data) self:OnExitClick() end);
+    end
+
+    self.LoopListView2 = nil;
+    self.Bottom = nil;
+    self.InputField = nil;
+    self.SubmitBtn = nil;
+    self.CloseBtn = nil;
+    self.Author_Uid = nil;
+    self.m_page = nil;
+    self.m_waitBookRefresh = nil;
+    self.m_waitUiRefresh = nil;
+    ItemList={};
+    this=nil;
+    allCount=0;
 end
 
 --endregion
-
-
---region【模拟对话数据】
-
-local chatlist={};
-function UIChatForm:Moni()
-
-
-    --【模拟对话数据】
-    local chatInfo1={};
-    chatInfo1.id=1;
-    chatInfo1.type=1; --1我自己  2他人
-    chatInfo1.playername="monkey";
-    chatInfo1.content="You do not have enough words to suggest. A minimum of 10 characters is required."
-    chatInfo1.avatar=1005;
-    chatInfo1.avatar_frame=2007;
-
-
-    local chatInfo2={};
-    chatInfo2.id=1;
-    chatInfo2.type=2;
-    chatInfo2.playername="Tom";
-    chatInfo2.content="Your secrets user data is being migrated. lt will take a little time. Please wait patiently. After the migration, you can experience it."
-    chatInfo2.avatar=1003;
-    chatInfo2.avatar_frame=2007;
-
-
-    local chatInfo3={};
-    chatInfo3.id=1;
-    chatInfo3.type=2;
-    chatInfo3.playername="Tom";
-    chatInfo3.content="Fuck."
-    chatInfo3.avatar=1003;
-    chatInfo3.avatar_frame=2007;
-
-
-    local chatInfo4={};
-    chatInfo4.id=1;
-    chatInfo4.type=2;
-    chatInfo4.playername="Jack";
-    chatInfo4.content="Keys unlock chapters and can be purchased at the Shop."
-    chatInfo4.avatar=1003;
-    chatInfo4.avatar_frame=2007;
-
-
-    local chatInfo5={};
-    chatInfo5.id=1;
-    chatInfo5.type=1; --1我自己  2他人
-    chatInfo5.playername="monkey";
-    chatInfo5.content="Thank you for your feedback. We will discuss this with our team."
-    chatInfo5.avatar=1005;
-    chatInfo5.avatar_frame=2007;
-
-
-
-    table.insert(chatlist,chatInfo1);
-    table.insert(chatlist,chatInfo2);
-    table.insert(chatlist,chatInfo3);
-    table.insert(chatlist,chatInfo4);
-    table.insert(chatlist,chatInfo5);
-
-    self:UpdateInfo();
-end
---endregion
-
 
 --region【设置列表Item】
-function UIChatForm:UpdateInfo()
-    if(chatlist==nil)then return; end
-    allCount=table.length(chatlist);
+function UIChatForm:UpdateChatInfo(uid,page,nickname)
+    self.Author_Uid=uid;
+
+    if (page and page > 0)then
+        self.m_page = page;
+        self.m_waitBookRefresh = false;
+    end
+
+    if(Cache.ChatCache.ChatList==nil)then return; end
+    allCount=table.length(Cache.ChatCache.ChatList);
     --【设置列表总数量】
     self.LoopListView2:SetListItemCount(allCount);
+
+    local _index = allCount - 1;
+    self:OnJumpToItem(_index);
+
+    if(nickname)then
+        self.PlayerName.text=nickname;
+    end
 end
 --endregion
 
@@ -144,14 +146,18 @@ function UIChatForm.OnGetItemByRowColumn(listView,index)
 
     local _index=index+1;
 
-    local itemData =chatlist[_index];
+    local itemData = nil;
+    if(Cache.ChatCache.ChatList)then
+        itemData=Cache.ChatCache.ChatList[_index];
+    end
+
     if(itemData == nil)then return nil; end
 
-    local item=nil;
 
-    if(itemData.type==2)then
+    local item=nil;
+    if(itemData.is_self==0)then
         item = listView:NewListViewItem("ChatItem1");  --【左边其他人】
-    elseif(itemData.type==1)then
+    elseif(itemData.is_self==1)then
         item = listView:NewListViewItem("ChatItem2");  --【右边我自己】
     end
 
@@ -190,22 +196,12 @@ end
 
 function UIChatForm:SubmitBtnClick()
 
-    if(self.InputField.text==nil or self.InputField.text=="")then return; end
+    if(self.InputField==nil or self.InputField.text==nil or self.InputField.text=="" or self.Author_Uid==nil)then
+        logic.cs.UITipsMgr:PopupTips("This cannot be left empty.", false);
+        return;
+    end
+    GameController.ChatControl:SendWriterLetterRequest(self.Author_Uid,self.InputField.text);
 
-    local chatInfo={};
-    chatInfo.id=1;
-    chatInfo.type=1; --1我自己  2他人
-    chatInfo.playername="monkey";
-    chatInfo.content=self.InputField.text;
-    chatInfo.avatar=1005;
-    chatInfo.avatar_frame=2007;
-
-    table.insert(chatlist,chatInfo);
-
-    self:UpdateInfo()
-
-    local _index = allCount - 1;
-    self:OnJumpToItem(_index);
 end
 
 --endregion
@@ -220,6 +216,28 @@ function UIChatForm:OnJumpToItem(itemIndex)
 end
 
 --endregion
+
+
+function UIChatForm:OnBookScrollChanged(value)
+    if(self.m_waitBookRefresh==true)then
+        return;
+    end
+    if(self.m_waitUiRefresh==true)then
+        if (value.y >= 0.1)then
+            self.m_waitUiRefresh = false;
+        end
+
+    else
+        if (value.y < 0.1)then
+            self.m_waitUiRefresh = true;--等待ui刷新
+            self.m_waitBookRefresh = true;--等待消息返回
+
+            if(self.Author_Uid==nil)then return; end
+            GameController.ChatControl:GetPrivateLetterPageRequest(self.Author_Uid,self.m_page+1);
+        end
+    end
+end
+
 
 
 --region 【界面关闭】

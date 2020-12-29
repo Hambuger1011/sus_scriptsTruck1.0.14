@@ -4,6 +4,7 @@ local CommunityControl = BaseClass("CommunityControl", core.Singleton)
 local UICommunityForm=nil;
 --region【构造函数】
 function CommunityControl:__init()
+    self.m_curPage=0;
 end
 --endregion
 
@@ -12,6 +13,7 @@ end
 
 function CommunityControl:SetData(uicommunity)
     UICommunityForm=uicommunity;
+    self.m_curPage=0;
 end
 
 --endregion
@@ -32,10 +34,10 @@ function CommunityControl:GetWriterInfo(uid,result)
     if(code == 200)then
         --存入缓存数据；
         --【获取作者详情】
-        Cache.ComuniadaCache.WriterInfo=json.data;
+        Cache.ComuniadaCache:UpdateWriterInfo(json.data)
+        Cache.ComuniadaCache.WriterInfo.uid=uid;
 
         logic.UIMgr:Open(logic.uiid.UICommunityForm)
-
         if(uid)then
             self:GetActionLogPageRequest(uid,1)
         end
@@ -46,6 +48,10 @@ end
 
 --region 【获取动态列表(分页)】
 function CommunityControl:GetActionLogPageRequest(uid,page)
+    if (self.m_curPage >= page)then  --已经请求过
+        return;
+    end
+    self.m_curPage = page;
     logic.gameHttp:GetActionLogPage(uid,page,function(result) self:GetActionLogPage(uid,page,result); end)
 end
 --endregion
@@ -58,9 +64,12 @@ function CommunityControl:GetActionLogPage(uid,page,result)
     local code = tonumber(json.code)
     if(code == 200)then
         --存入缓存数据；
-        --【获取作者详情】
-        Cache.ComuniadaCache.DynamicList=json.data;
-
+        if(page>1)then
+            Cache.ComuniadaCache:UpdateDynamicList(json.data);
+        else
+            Cache.ComuniadaCache.DynamicList=json.data.data;
+            Cache.ComuniadaCache.DynamicList_Count=json.data.count;
+        end
         --刷新界面
         if(UICommunityForm)then
             UICommunityForm:UpdateWriterInfo(page);
@@ -100,6 +109,74 @@ function CommunityControl:GetWriterHomeBookList(uid,result)
     end
 end
 --endregion
+
+
+
+--region 【关注作者】
+function CommunityControl:SetWriterFollowRequest(uid)
+    logic.gameHttp:SetWriterFollow(uid,function(result) self:SetWriterFollow(uid,result); end)
+end
+--endregion
+
+
+--region 【关注作者*响应】
+function CommunityControl:SetWriterFollow(uid,result)
+    logic.debug.Log("----SetWriterFollow---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+        --存入缓存数据；
+        if(Cache.ComuniadaCache.WriterInfo)then
+            Cache.ComuniadaCache.WriterInfo.is_follow=json.data.status;
+            if(json.data.status==1)then
+                Cache.ComuniadaCache.WriterInfo.fans_count=Cache.ComuniadaCache.WriterInfo.fans_count+1;--【粉丝+1】
+            else
+                Cache.ComuniadaCache.WriterInfo.fans_count=Cache.ComuniadaCache.WriterInfo.fans_count-1;--【粉丝-1】
+            end
+        end
+
+        --刷新界面
+        if(UICommunityForm)then
+            UICommunityForm:UpdateWriterFollow();
+        end
+    end
+end
+--endregion
+
+--region 【赞同作者】
+function CommunityControl:SetWriterAgreeRequest(uid)
+    logic.gameHttp:SetWriterAgree(uid,function(result) self:SetWriterAgree(uid,result); end)
+end
+--endregion
+
+
+--region 【赞同作者*响应】
+function CommunityControl:SetWriterAgree(uid,result)
+    logic.debug.Log("----SetWriterAgree---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+        --存入缓存数据；
+        if(Cache.ComuniadaCache.WriterInfo)then
+            Cache.ComuniadaCache.WriterInfo.agree_count=json.data.agree_count;
+            Cache.ComuniadaCache.WriterInfo.is_agree=json.data.status;
+        end
+
+        --刷新界面
+        if(UICommunityForm)then
+            UICommunityForm:UpdateWriterAgree();
+        end
+    end
+end
+--endregion
+
+
+
+function CommunityControl:ViewMoreBtnClick()
+    if(UICommunityForm)then
+        UICommunityForm:ViewMoreBtnClick();
+    end
+end
 
 
 

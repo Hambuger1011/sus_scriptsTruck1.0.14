@@ -360,6 +360,8 @@ function MainFormControl:GetRedDot(result)
         local se_move_finish = Cache.RedDotCache.se_move_finish;
         --【首冲奖励未领取: 1.有未领取 0.没有】
         local first_recharge = Cache.RedDotCache.first_recharge;
+        --【邀请奖奖励未领取: 1.有未领取 0.没有】
+        local invite_award = Cache.RedDotCache.invite_award;
 
         local ui_downform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
 
@@ -425,6 +427,15 @@ function MainFormControl:GetRedDot(result)
         else
             --红点标识 【活动页面里】【限时活动页】【首冲奖励红点】【开关】
             Cache.RedDotCache.FirstRechargePoint=false;
+        end
+
+        --【邀请奖励未领取: 1.有未领取 0.没有】
+        if(invite_award==1)then
+            --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
+            Cache.RedDotCache.InviteAwardPoint=true;
+        else
+            --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
+            Cache.RedDotCache.InviteAwardPoint=false;
         end
 
         --【第三方登录绑定奖励未领取 1已领取，0未领取】

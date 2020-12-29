@@ -819,6 +819,8 @@ end
 --endregion
 
 
+--region【刷新活动Banner】
+
 function ActivityControl:UpdateActivityBanner()
     --搜索界面
 
@@ -836,6 +838,18 @@ function ActivityControl:UpdateActivityBanner()
     end
 end
 
+--endregion
+
+
+--region【刷新广告CD结束】
+
+function ActivityControl:EndCD()
+    if(UIActivityForm)then
+        UIActivityForm:EndCD();
+    end
+end
+
+--endregion
 
 
 --析构函数

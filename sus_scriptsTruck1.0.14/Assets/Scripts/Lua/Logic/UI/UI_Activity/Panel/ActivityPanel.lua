@@ -222,6 +222,16 @@ end
 --endregion
 
 
+--region 【刷新常规活动】【广告CD结束】
+function ActivityPanel:EndCD()
+    if(self.FreeRewardPanel)then
+        self.FreeRewardPanel:EndCD();
+    end
+end
+
+--endregion
+
+
 --region【销毁】
 
 function ActivityPanel:__delete()

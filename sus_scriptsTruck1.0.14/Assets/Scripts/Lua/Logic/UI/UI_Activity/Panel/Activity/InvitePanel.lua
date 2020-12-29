@@ -65,6 +65,8 @@ function InvitePanel:SetUI()
                                 Collected.gameObject:SetActiveEx(true)
                                 logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
                                 logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
+                                --刷新红点状态
+                                GameController.MainFormControl:RedPointRequest();
                             end
                         end)
                     end)

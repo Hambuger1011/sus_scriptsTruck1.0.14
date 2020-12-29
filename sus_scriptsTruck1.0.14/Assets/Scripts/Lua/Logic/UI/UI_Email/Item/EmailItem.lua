@@ -1,42 +1,24 @@
----@class EmailItem
-local UIBubbleBox = require('Logic/StoryEditor/UI/Editor/BubbleItem/UIBubbleBox')
-local EmailItem  = core.Class('EmailItem',UIBubbleBox)
-local UIEmailInfoForm = require('Logic/UI/UI_Email/UIEmailInfoForm')
 
----@class EmailItem_Item
-local Item = core.Class("EmailItem.Item")
+local EmailItem = core.Class("EmailItem")
 
-function Item:__init(uiItem)
-    self.transform = uiItem
-    self.gameObject = uiItem.gameObject
 
-    self.SetActive = function(self,isOn)
-        self.gameObject:SetActiveEx(isOn)
-    end
-end
+function EmailItem:__init(gameObject)
+    self.gameObject=gameObject;
 
---region-------EmailItem
+    self.BGButton = CS.DisplayUtil.GetChild(gameObject, "BGButton"):GetComponent("Button");
+    self.OpenImage =CS.DisplayUtil.GetChild(gameObject, "OpenImage");
+    self.Hit =CS.DisplayUtil.GetChild(gameObject, "Hit");
+    self.TitleText =CS.DisplayUtil.GetChild(gameObject, "TitleText"):GetComponent("Text");
+    self.Content =CS.DisplayUtil.GetChild(gameObject, "Content"):GetComponent("Text");
+    self.TimeText =CS.DisplayUtil.GetChild(gameObject, "TimeText"):GetComponent("Text");
+    self.GiftBtn = CS.DisplayUtil.GetChild(gameObject, "GiftBtn"):GetComponent("Button");
+    self.HeadImage = CS.DisplayUtil.GetChild(gameObject, "HeadImage"):GetComponent("Image");
+    self.HeadFrame = CS.DisplayUtil.GetChild(gameObject, "HeadFrame"):GetComponent("Image");
+    self.SelectTab = CS.DisplayUtil.GetChild(gameObject, "SelectTab"):GetComponent("UIToggle");
+    self.HeadImageMask =CS.DisplayUtil.GetChild(gameObject, "HeadImageMask");
 
----@param uiItem UIBubbleItem
-function EmailItem:__init(uiItem)
-    UIBubbleBox.__init(self, uiItem)
-    local transform = uiItem.transform
-    self.uiBinding = transform:GetComponent(typeof(logic.cs.UIBinding))
-    self.bgButton = self.uiBinding:Get('BGButton',typeof(logic.cs.Button))
-    self.openImage = self.uiBinding:Get('OpenImage').gameObject
-    self.hit = self.uiBinding:Get('Hit').gameObject
-    self.title = self.uiBinding:Get('Title',  typeof(logic.cs.Text))
-    self.content = self.uiBinding:Get('Content',  typeof(logic.cs.Text))
-    self.time = self.uiBinding:Get('Time',  typeof(logic.cs.Text))
-    self.giftButton = self.uiBinding:Get('Gift',typeof(logic.cs.Button))
-    self.headImage = self.uiBinding:Get('HeadImage', typeof(logic.cs.Image))
-    self.HeadFrame = self.uiBinding:Get('HeadFrame', typeof(logic.cs.Image))
-
-    self.headImageMask = self.uiBinding:Get('HeadImageMask').gameObject
-
-    self.SetActive = function(self,isOn)
-        self.gameObject:SetActiveEx(isOn)
-    end
+    logic.cs.UIEventListener.AddOnClickListener(self.SelectTab.gameObject,function(data) self:SelectTabClick(data) end);
+    self.Info=nil;
 end
 
 
@@ -44,103 +26,126 @@ function EmailItem:GetSize()
     return self.boxSize
 end
 
-function EmailItem:SetSize()
-end
+function EmailItem:SetItemData(info)
+    self.Info=info;
 
-function EmailItem:SetData(Data)
-    if Data.pageNum and Data.pageNum ~= 0 then
-        Data.pageNum = 0
-    elseif Data.pageNum and Data.pageNum == 0 and Data.GetNextPage then
-        Data.GetNextPage()
-        Data.GetNextPage = nil
+    --【显示时间】
+    self.TimeText.text = info.createtime;
+    --【显示标题】
+    self.TitleText.text = info.title;
+    --【显示内容】
+    local contentTxt = string.gsub(info.content,'\\n','\n');
+    if(info.msg_type == 4 and info.comment_is_self == 0)then
+        contentTxt = logic.cs.PluginTools:ReplaceBannedWords(contentTxt);
     end
-    self.time.text = Data.createtime
-    self.title.text = Data.title
+    self.Content.text = contentTxt;
 
-    local contentTxt = string.gsub(Data.content,'\\n','\n')
-    if Data.msg_type == 4 and Data.comment_is_self == 0 then
-        contentTxt = logic.cs.PluginTools:ReplaceBannedWords(contentTxt)
-    end
-    self.content.text = contentTxt
-    if Data.msg_type == 4 then
-
+    --【加载头像和头像框】
+    if(info.msg_type == 4)then
         --加载头像
-        GameHelper.luaShowDressUpForm(Data.comment_avatar,self.headImage,DressUp.Avatar,1001);
+        GameHelper.luaShowDressUpForm(info.comment_avatar,self.HeadImage,DressUp.Avatar,1001);
         --加载头像框
-        GameHelper.luaShowDressUpForm(Data.comment_avatar_frame,self.HeadFrame,DressUp.AvatarFrame,2001);
+        GameHelper.luaShowDressUpForm(info.comment_avatar_frame,self.HeadFrame,DressUp.AvatarFrame,2001);
 
-        --self.headImage.sprite = CS.ResourceManager.Instance:GetUISprite("ProfileForm/img_renwu"..Data.comment_face_icon);
-        self.headImageMask:SetActiveEx(true)
+        self.HeadImageMask:SetActiveEx(true);
     else
-        self.headImageMask:SetActiveEx(false)
+        self.HeadImageMask:SetActiveEx(false);
     end
 
-    if Data.msg_type == 2 and Data.price_status == 0 then
-        self.giftButton.gameObject:SetActiveEx(true)
+    --【是否显示有物品图标】
+    if(info.msg_type == 2 and info.price_status == 0)then
+        self.GiftBtn.gameObject:SetActiveEx(true);
     else
-        self.giftButton.gameObject:SetActiveEx(false)
+        self.GiftBtn.gameObject:SetActiveEx(false);
     end
 
-    if Data.status == 1 and Data.msg_type ~= 4 then
-        self.openImage:SetActiveEx(true)
+    --【是否已读图标】
+    if(info.status == 1 and info.msg_type ~= 4)then
+        self.OpenImage:SetActiveEx(true);
     else
-        self.openImage:SetActiveEx(false)
+        self.OpenImage:SetActiveEx(false);
     end
 
-    self:updateRedPoint(Data)
+    --【刷新红点】
+    self:updateRedPoint(info);
 
-    self.bgButton.onClick:RemoveAllListeners()
-    self.bgButton.onClick:AddListener(function()
-        self:OnItemClick(Data)
+    self.BGButton.onClick:RemoveAllListeners()
+    self.BGButton.onClick:AddListener(function()
+        self:OnItemClick(info);
     end)
 
-    self.boxSize = core.Vector2.New(715, 155)
+    self.boxSize = core.Vector2.New(715, 155);
 
 end
+
+local UIEmailInfoForm=nil;
 
 --endregion
-function EmailItem:OnItemClick(Data)
-    logic.debug.PrintTable(Data)
+function EmailItem:OnItemClick(info)
+    logic.debug.PrintTable(info)
 
-    if Data.status == 1 then
-        UI_EmailInfo:SetEmailData(Data,self.hit,self);
-        logic.UIMgr:Open(logic.uiid.EmailInfo)
+    if(info.status == 1)then
+        UIEmailInfoForm = logic.UIMgr:Open(logic.uiid.UIEmailInfoForm)
+        if(UIEmailInfoForm)then
+            UIEmailInfoForm:SetEmailData(info.msgid);
+        end
     else
-        logic.gameHttp:ReadSystemMsg(Data.msgid,function(result)
-            local json = core.json.Derialize(result)
-            local code = tonumber(json.code)
-            if code == 200 then
-                logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount = logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount - 1
-
-                Data.status = 1
-                self:updateRedPoint(Data)
-                UIEmailInfoForm:SetEmailData(json.data.sysarr,self.hit,self);
-                if(Data.msg_type~=2)then
-                    self.openImage:SetActiveEx(true)
-                end
-
-                GameController.MainFormControl:RedPointRequest();
-                logic.UIMgr:Open(logic.uiid.EmailInfo)
-            else
-                logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-            end
-        end)
+        UIEmailInfoForm = logic.UIMgr:Open(logic.uiid.UIEmailInfoForm);
+        GameController.EmailControl:ReadSystemMsgRequest(info.msgid);
     end
 end
+
 
 function EmailItem:updateRedPoint(_Data)
     if(_Data.msg_type==2)then
         if(_Data.price_status==0)then
-            self.hit:SetActiveEx(true)
+            self.Hit:SetActiveEx(true)
         else
-            self.hit:SetActiveEx(false)
+            self.Hit:SetActiveEx(false)
         end
     else
         if _Data.status == 1 then
-            self.hit:SetActiveEx(false)
+            self.Hit:SetActiveEx(false)
         else
-            self.hit:SetActiveEx(true)
+            self.Hit:SetActiveEx(true)
         end
     end
 end
+
+function EmailItem:SelectTabClick()
+    if(self.Info and self.SelectTab.isOn==true)then
+        GameController.EmailControl:BatchTest(self.Info.msgid,1,true);
+    else
+        GameController.EmailControl:BatchTest(self.Info.msgid,1,false);
+    end
+end
+
+
+
+--销毁
+function EmailItem:__delete()
+    if(self.BookIconImage)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.SelectTab.gameObject,function(data) self:SelectTabClick(data) end);
+    end
+
+    self.BGButton =nil;
+    self.OpenImage =nil;
+    self.Hit =nil;
+    self.TitleText =nil;
+    self.Content =nil;
+    self.TimeText =nil;
+    self.GiftBtn =nil;
+    self.HeadImage =nil;
+    self.HeadFrame =nil;
+    self.SelectTab =nil;
+    self.HeadImageMask =nil;
+
+    if(CS.XLuaHelper.is_Null(self.gameObject)==false)then
+        logic.cs.GameObject.Destroy(self.gameObject)
+    end
+    self.gameObject=nil;
+end
+
+
+
 return EmailItem

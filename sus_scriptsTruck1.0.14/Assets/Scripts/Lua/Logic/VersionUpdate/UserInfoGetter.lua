@@ -22,6 +22,7 @@ function UserInfoGetter:GetUserInfoRun(IGGId,accessToken)
     end)
 
     --logic.cs.UINetLoadingMgr:Show()
+    logic.cs.UserDataManager:SetInviteCode()
     logic.gameHttp:Login(IGGId,accessToken,0,function(result)
         self:OnLoginCallBack(result)
     end)

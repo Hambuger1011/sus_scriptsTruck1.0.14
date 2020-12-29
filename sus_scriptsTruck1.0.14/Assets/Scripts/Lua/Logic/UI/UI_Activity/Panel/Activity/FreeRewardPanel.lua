@@ -12,13 +12,13 @@ function FreeRewardPanel:__init(gameObject)
     self.WatchBtnText =CS.DisplayUtil.GetChild(gameObject, "WatchBtnText"):GetComponent("Text");
     self.WatchBtnMask =CS.DisplayUtil.GetChild(gameObject, "WatchBtnMask");
     self.WatchBtnMaskText =CS.DisplayUtil.GetChild(gameObject, "WatchBtnMaskText"):GetComponent("Text");
+    self.CDText =CS.DisplayUtil.GetChild(gameObject, "CDText"):GetComponent("Text");
+
 
     logic.cs.UIEventListener.AddOnClickListener(self.WatchBtn,function(data) self:WatchBtnClick() end)
 
     --广告剩余领取此时
     self.ads_number = 0;
-
-
 end
 --endregion
 
@@ -26,17 +26,17 @@ end
 --region 【刷新观看广告】
 function FreeRewardPanel:UpdateFreeRewardPanel()
     --开启倒计时 计时器
-    GameHelper.FRPanel_CountDown(self.TimeText);
+    GameHelper.FRPanel_CountDown(self.TimeText,self.CDText);
     self.ads_number = Cache.ActivityCache.ad_number;
 
     self.WatchBtnText.text = string.format("WATCH (%s)",self.ads_number)
     self.WatchBtnMaskText.text = string.format("WATCH (%s)",self.ads_number)
     if(self.ads_number == 0)then
-        self.WatchBtnMask.gameObject:SetActiveEx(true)
-        self.WatchBtn.gameObject:SetActiveEx(false)
+        self.WatchBtnMask.gameObject:SetActiveEx(true);
+        self.WatchBtn.gameObject:SetActiveEx(false);
     else
-        self.WatchBtnMask.gameObject:SetActiveEx(false)
-        self.WatchBtn.gameObject:SetActiveEx(true)
+        self.WatchBtnMask.gameObject:SetActiveEx(false);
+        self.WatchBtn.gameObject:SetActiveEx(true);
     end
 end
 --endregion
@@ -71,6 +71,22 @@ function FreeRewardPanel:ReceiveDailyAdAward()
 end
 
 
+function FreeRewardPanel:StartCD()
+    self.CDText.gameObject:SetActiveEx(true);
+    self.WatchBtnMask.gameObject:SetActiveEx(true)
+    self.WatchBtn.gameObject:SetActiveEx(false)
+
+    GameHelper.FR_CDNum=60;
+    GameHelper.StartFRTimer();
+end
+
+function FreeRewardPanel:EndCD()
+    self.CDText.gameObject:SetActiveEx(false);
+    self.WatchBtnMask.gameObject:SetActiveEx(false);
+    self.WatchBtn.gameObject:SetActiveEx(true);
+end
+
+
 --region【销毁】
 function FreeRewardPanel:__delete()
 
@@ -78,6 +94,8 @@ function FreeRewardPanel:__delete()
         logic.cs.UIEventListener.RemoveOnClickListener(self.WatchBtn,function(data) self:WatchBtnClick() end);
     end
 
+    --销毁计时器
+    GameHelper.CloseFR_Timer();
     self.TimeText = nil;
     self.WatchBtn = nil;
     self.WatchBtnText = nil;

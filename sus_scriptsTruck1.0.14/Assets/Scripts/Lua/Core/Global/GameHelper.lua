@@ -641,28 +641,45 @@ end
 GameHelper.FR_Timer=nil;
 --广告倒计时秒数
 GameHelper.FR_timeNum=0;
+--广告倒计时 CD冷却秒数
+GameHelper.FR_CDNum=0;
+
 
 --活动页面看广告倒计时
-function GameHelper.FRPanel_CountDown(Timetext)
+function GameHelper.FRPanel_CountDown(Timetext,CDtext)
     if(GameHelper.FR_Timer==nil)then
-        GameHelper.FR_Timer = core.Timer.New(function() GameHelper.UpdateFRTime(Timetext)  end,1,-1);
+        GameHelper.FR_Timer = core.Timer.New(function() GameHelper.UpdateFRTime(Timetext,CDtext)  end,1,-1);
     end
     --开启计时器
     GameHelper.StartFRTimer();
 end
 
 
-function GameHelper.UpdateFRTime(Timetext)
+function GameHelper.UpdateFRTime(Timetext,CDtext)
     GameHelper.FR_timeNum=GameHelper.FR_timeNum-1;
     local hour =  math.modf( GameHelper.FR_timeNum / 3600 );
     local minute = math.fmod( math.modf(GameHelper.FR_timeNum / 60), 60 );
     local second = math.fmod(GameHelper.FR_timeNum, 60 );
     Timetext.text = string.format("%02d:%02d:%02d", hour, minute, second);
 
+    if(GameHelper.FR_CDNum>0)then
+        local second2 = math.fmod(GameHelper.FR_CDNum, 60 );
+        CDtext.text = string.format("%02d:%02d:%02d", 0, 0, second2);
+    end
+
     if(GameHelper.FR_timeNum<0)then
         --先停止计时器
         GameHelper.StopFR_Timer();
     end
+
+    if(GameHelper.FR_CDNum<0)then
+        --先停止计时器
+        GameHelper.StopFR_Timer();
+
+        --结束CD操作
+        GameController.ActivityControl:EndCD()
+    end
+
 end
 
 
@@ -741,3 +758,36 @@ end
 
 --endregion
 
+
+--region【展示创作书本封面】
+
+function GameHelper.ShowUGCStoryBg(cover_image,DefaultImg_sprite,BookIconImage)
+
+    if not string.IsNullOrEmpty(cover_image) then
+        local url,md5 = logic.StoryEditorMgr:ParseImageUrl(cover_image)
+        local filename = logic.config.WritablePath .. '/cache/story_image/'..md5
+
+        local downloadSeq = self.m_downloadSeq
+        logic.StoryEditorMgr.data:LoadSprite(filename, md5, url,function(sprite)
+            if downloadSeq ~= self.m_downloadSeq then
+                logic.debug.LogError('seq mismatch:'..downloadSeq..'<=>'..self.m_downloadSeq)
+                return
+            end
+            GameHelper.SetBookCover(sprite,DefaultImg_sprite,BookIconImage);
+        end)
+    end
+
+end
+
+
+function GameHelper.SetBookCover(sprite,DefaultImg_sprite,BookIconImage)
+    if(CS.XLuaHelper.is_Null(sprite)==false and DefaultImg_sprite)then
+        sprite = DefaultImg_sprite;
+    end
+
+    if(BookIconImage==nil)then return; end
+    logic.StoryEditorMgr:SetCover(BookIconImage,sprite,BookIconImage.transform.rect.size);
+end
+
+
+--endregion

@@ -25,6 +25,10 @@ function RedDotCache:__init()
     self.attention_media=0;
     --【用户迁移奖励未领取: 1.有未领取 0.没有】
     self.se_move_finish=0;
+    --【首冲奖励未领取: 1.有未领取 0.没有】
+    self.first_recharge=0;
+    --【邀请奖励未领取: 1.有未领取 0.没有】
+    self.invite_award=0;
 
 
 
@@ -48,6 +52,8 @@ function RedDotCache:__init()
     self.MoveRedPoint=false;
     --红点标识 【活动页面里】【限时活动页】【首充奖励红点】【开关】
     self.FirstRechargePoint=false;
+    --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
+    self.InviteAwardPoint=false;
 end
 
 function RedDotCache:UpdateData(data)
@@ -61,6 +67,7 @@ function RedDotCache:UpdateData(data)
     self.attention_media=data.attention_media;
     self.se_move_finish=data.se_move_finish;
     self.first_recharge=data.first_recharge;
+    self.invite_award=data.invite_award;
 end
 
 

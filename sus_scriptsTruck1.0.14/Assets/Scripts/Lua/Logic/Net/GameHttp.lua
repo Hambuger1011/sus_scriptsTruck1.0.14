@@ -1339,4 +1339,103 @@ function GameHttp:SetPropByType(_type,callback)
     self:Get(self, "api_getPropByType", param, callback, nil, nil, true)
 end
 
+
+--【关注作者】
+function GameHttp:SetWriterFollow(_uid,callback)
+    local param = {
+        uid=_uid;
+    }
+    self:Post(self, "api_setWriterFollow", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【赞同作者】
+function GameHttp:SetWriterAgree(_uid,callback)
+    local param = {
+        uid=_uid;
+    }
+    self:Post(self, "api_setWriterAgree", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
+--【获取信鸽可用次数】
+function GameHttp:GetFreePrivateLetterCount(callback)
+    local param = {
+    }
+    self:Get(self, "api_getFreePrivateLetterCount", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【发送信鸽】
+function GameHttp:SendWriterLetter(_uid,_content,callback)
+    local param = {
+        uid=_uid;
+        content=_content;
+    }
+    self:Post(self, "api_sendWriterLetter", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【修改签名】
+function GameHttp:UpdateSign(_sign,callback)
+    local param = {
+        sign=_sign;
+    }
+    self:Post(self, "api_updateSign", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
+--【获取信箱私信列表(分页)】【跟哪些人对话的列表  boxlist】
+function GameHttp:GetPrivateLetterBoxPage(_page,_limit,callback)
+    local param = {
+        page=_page;
+        limit=_limit;
+    }
+    self:Get(self, "api_getPrivateLetterBoxPage", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
+--【获取私信对话列表(分页)】【跟某个人单独聊天的具体内容】
+function GameHttp:GetPrivateLetterPage(_uid,_page,_limit,callback)
+    local param = {
+        uid=_uid;
+        page=_page;
+        limit=_limit;
+    }
+    self:Get(self, "api_getPrivateLetterPage", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
+--【单个、批量删除邮件】
+function GameHttp:DelMail(_msgid,callback)
+    local param = {
+        msgid=_msgid;
+    }
+    self:Post(self, "api_delMail", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【批量已读或领取奖励邮件】
+function GameHttp:BatchReadReceiveMail(_msgid,callback)
+    local param = {
+        msgid=_msgid;
+    }
+    self:Post(self, "api_batchReadReceiveMail", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+
 return GameHttp.New()

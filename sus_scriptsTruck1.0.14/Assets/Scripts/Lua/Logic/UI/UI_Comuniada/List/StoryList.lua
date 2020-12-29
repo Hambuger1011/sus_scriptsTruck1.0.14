@@ -103,6 +103,10 @@ function StoryList:__delete()
     self.storyType=nil;
     self.ItemList=nil;
     self:ClearList();
+
+    if(CS.XLuaHelper.is_Null(self.gameObject)==false)then
+        logic.cs.GameObject.Destroy(self.gameObject)
+    end
     self.gameObject=nil;
 end
 

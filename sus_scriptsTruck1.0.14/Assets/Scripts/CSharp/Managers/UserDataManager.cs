@@ -416,9 +416,14 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public bool FirstChargeHaveShown = false;
 
-    public string InviteCode = MobLink.InviteCode;
+    public string InviteCode = String.Empty;
 
     public UserDataManager() { }
+
+    public void SetInviteCode()
+    {
+        InviteCode = MobLink.InviteCode;
+    }
 
     public int GetBroadcastId()
     {

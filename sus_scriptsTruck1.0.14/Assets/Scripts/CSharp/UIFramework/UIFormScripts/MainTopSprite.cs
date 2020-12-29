@@ -176,6 +176,7 @@ public class MainTopSprite : BaseUIForm
         {
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UICommunityForm);");
+			CloseAllUI();
         }
         else if (CurUI == "UIChargeMoneyForm1")
         {

@@ -18,6 +18,7 @@ function Cache.Init()
     Cache.ComuniadaCache=require("Logic/Cache/ComuniadaCache");
     Cache.BusquedaCache=require("Logic/Cache/BusquedaCache");
     Cache.EmailCache=require("Logic/Cache/EmailCache");
+    Cache.ChatCache=require("Logic/Cache/ChatCache");
 
     isInit = true
 end
