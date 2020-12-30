@@ -40,16 +40,23 @@ function PrivateLetterItem:SetItemData(itemData,itemIndex)
 
 end
 
+
 function PrivateLetterItem:Openlicke()
+    Cache.EmailCache:SetPrivateState(self.Info.id);
+    self.State:SetActive(false);
+    self.OpenImage:SetActive(false);
     if(self.Info)then
         GameController.ChatControl:GetPrivateLetterPageRequest(self.Info.from_uid,1,self.Info.user_info.nickname);
     end
 end
 
+
 function PrivateLetterItem:SelectTabclicke()
-    Cache.EmailCache:SetPrivateState(self.Info.id);
-    self.State:SetActive(false);
-    self.OpenImage:SetActive(false);
+    if(self.Info and self.SelectTab.isOn==true)then
+        GameController.EmailControl:BatchTest(self.Info.id,2,true);
+    else
+        GameController.EmailControl:BatchTest(self.Info.id,2,false);
+    end
 end
 
 

@@ -1437,5 +1437,15 @@ function GameHttp:BatchReadReceiveMail(_msgid,callback)
     end, nil, nil, true)
 end
 
+--【单个、批量删除私信】
+function GameHttp:DelPrivateLetter(_ids,callback)
+    local param = {
+        ids=_ids;
+    }
+    self:Post(self, "api_delPrivateLetter", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
 
 return GameHttp.New()

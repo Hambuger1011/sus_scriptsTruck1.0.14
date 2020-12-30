@@ -227,13 +227,6 @@ end
 
 
 function UIActivityBannerForm:SetView(state)
-    if(self.Titile1_Clone_Obj)then
-        self.Titile1_Clone_Obj:SetActive(false);
-        self.Text1:SetActive(true);
-        self.Image1:SetActive(true);
-        self.Titile1_Rect.anchoredPosition={x=-3,y=0};
-        self.TimeLeftText1.gameObject:SetActive(true);
-    end
 
     self._state1=state;
     if(state== EnumActivity.ColoredEgg)then    --彩蛋
@@ -249,22 +242,15 @@ function UIActivityBannerForm:SetView(state)
         self.Titile1.text="Key-Free Reading Carnival!"
         self:Countdown1(Cache.LimitTimeActivityCache.FreeKey.countdown);
     elseif(state== EnumActivity.MoveCode)then   --迁移
+        self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
         --【临时】【临时】
         --显示图片
         self.Titile1.text=Cache.MainCache.migration.migration_banner_title;
-        self.Titile1_Clone.text=Cache.MainCache.migration.migration_banner_content;
+       -- self.Titile1_Clone.text=Cache.MainCache.migration.migration_banner_content;
     end
 end
 
 function UIActivityBannerForm:SetView2(state)
-
-    if(self.Titile2_Clone_Obj)then
-        self.Titile2_Clone_Obj:SetActive(false);
-        self.Text2:SetActive(true);
-        self.Image2:SetActive(true);
-        self.Titile2_Rect.anchoredPosition={x=-3,y=0};
-        self.TimeLeftText2.gameObject:SetActive(true);
-    end
 
     self._state2=state;
     if(state== EnumActivity.ColoredEgg)then    --彩蛋
@@ -280,9 +266,10 @@ function UIActivityBannerForm:SetView2(state)
         self.Titile2.text="Key-Free Reading Carnival!"
         self:Countdown2(Cache.LimitTimeActivityCache.FreeKey.countdown);
     elseif(state== EnumActivity.MoveCode)then   --迁移
+        self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
         --【临时】【临时】
         self.Titile2.text=Cache.MainCache.migration.migration_banner_title;
-        self.Titile2_Clone.text=Cache.MainCache.migration.migration_banner_content;
+      --  self.Titile2_Clone.text=Cache.MainCache.migration.migration_banner_content;
     end
 end
 --endregion

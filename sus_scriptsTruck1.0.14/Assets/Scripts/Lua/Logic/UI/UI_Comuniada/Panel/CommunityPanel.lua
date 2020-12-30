@@ -19,12 +19,11 @@ function CommunityPanel:__init(gameObject)
 
     --快捷创作按钮
     self.AnchorGoBtn =CS.DisplayUtil.GetChild(gameObject, "AnchorGoBtn");
-    --搜索按钮
-    self.BusquedaBtn =CS.DisplayUtil.GetChild(gameObject, "BusquedaBtn");
+
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.AnchorGoBtn,function(data) self:AnchorGoBtnClick() end)
-    logic.cs.UIEventListener.AddOnClickListener(self.BusquedaBtn,function(data) self:BusquedaBtnClick() end)
+
 end
 
 function CommunityPanel:UpdateStoryList()
@@ -53,16 +52,6 @@ function CommunityPanel:AnchorGoBtnClick(data)
 
     --埋点*点击快捷创作
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UgcWriteBook);
-end
-
-
-function CommunityPanel:BusquedaBtnClick(data)
-
-    --打开搜索界面
-    logic.UIMgr:Open(logic.uiid.UIBusquedaForm);
-
-    --埋点*点击搜索
-    logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UgcSearch);
 end
 
 

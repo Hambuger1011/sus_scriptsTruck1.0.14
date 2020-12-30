@@ -33,15 +33,22 @@ function UIChatForm:OnInitView()
 
     self.TopTile = CS.DisplayUtil.GetChild(this.gameObject, "TopTile");
     self.Bottom = CS.DisplayUtil.GetChild(this.gameObject, "Bottom");
+    self.TopRect = self.TopTile:GetComponent("RectTransform");
+    self.BottomRect = self.Bottom:GetComponent("RectTransform");
+
 
     self.InputField = CS.DisplayUtil.GetChild(self.Bottom, "InputField"):GetComponent("InputField");
     self.InputField.shouldHideMobileInput = true;
-    self.SubmitBtn = CS.DisplayUtil.GetChild(self.Bottom, "SubmitBtn");
     self.CloseBtn = CS.DisplayUtil.GetChild(this.gameObject, "CloseBtn");
-
     self.PlayerName =CS.DisplayUtil.GetChild(self.TopTile , "PlayerName"):GetComponent("Text");
 
-    logic.cs.UIEventListener.AddOnClickListener(self.SubmitBtn,function(data) self:SubmitBtnClick(); end)
+    self.SubmitBtn = CS.DisplayUtil.GetChild(self.Bottom, "SubmitBtn"):GetComponent("Image");
+    self.SubmitText =CS.DisplayUtil.GetChild(self.SubmitBtn.gameObject, "SubmitText"):GetComponent("Text");
+    self.SubmitNum =CS.DisplayUtil.GetChild(self.SubmitBtn.gameObject, "SubmitNum"):GetComponent("Text");
+
+    self.SubmitBtnMask = CS.DisplayUtil.GetChild(self.Bottom, "SubmitBtnMask");
+
+    logic.cs.UIEventListener.AddOnClickListener(self.SubmitBtn.gameObject,function(data) self:SubmitBtnClick(); end)
     logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data) self:OnExitClick(); end)
 
     --对方uid
@@ -61,6 +68,16 @@ end
 function UIChatForm:OnOpen()
     UIView.OnOpen(self)
     GameController.ChatControl:SetData(self);
+
+    --【屏幕适配】
+    local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, nil, 750, 120);
+    local size = self.TopRect.sizeDelta;
+    size.y = size.y + offect;
+    self.TopRect.sizeDelta = size;
+
+    local size2 = self.BottomRect.sizeDelta;
+    size2.y = size2.y + offect;
+    self.BottomRect.sizeDelta=size2;
 end
 
 --endregion
@@ -133,6 +150,9 @@ function UIChatForm:UpdateChatInfo(uid,page,nickname)
     if(nickname)then
         self.PlayerName.text=nickname;
     end
+
+    --同步发送信鸽次数
+    self:UpdateSendCount()
 end
 --endregion
 
@@ -236,6 +256,30 @@ function UIChatForm:OnBookScrollChanged(value)
             GameController.ChatControl:GetPrivateLetterPageRequest(self.Author_Uid,self.m_page+1);
         end
     end
+end
+
+
+function UIChatForm:UpdateSendCount()
+
+    --【发送信息 总次数】
+    local SendChatAll= Cache.ChatCache.total;
+    if(SendChatAll>0)then
+        self.SubmitBtn.gameObject:SetActive(true)
+        local FreeCount= Cache.ChatCache.free;
+        if(FreeCount>0)then
+            self.SubmitText.text="Free";
+            self.SubmitNum.text=FreeCount.."/5";
+        else
+            local backpack= Cache.ChatCache.backpack;
+            self.SubmitText.text="Send";
+            self.SubmitNum.text=tostring(backpack);
+        end
+    else
+        self.SubmitBtn.gameObject:SetActive(false);
+        self.SubmitBtnMask:SetActive(true);
+    end
+
+
 end
 
 

@@ -42,6 +42,24 @@ function EmailCache:UpdateEmailList(datas)
     end
 end
 
+function EmailCache:AddEmailList(datas)
+    self.sysarr_count=datas.sysarr_count;
+    self.pages_total=datas.pages_total;
+
+    if(GameHelper.islistHave(self.EmailList)==true)then
+        local eList=datas.sysarr;
+        local len=table.length(eList);
+        if(eList and len>0)then
+            for i = 1,len do
+                local info =require("Logic/Cache/EmailInfo/EmailInfo").New();
+                info:UpdateData(eList[i]);
+                table.insert(self.EmailList,info);
+            end
+        end
+    end
+end
+
+
 
 function EmailCache:UpdateInfo(info)
 
@@ -120,6 +138,45 @@ function EmailCache:IsUnread(msgid,isAdd)
 
     return false;
 end
+
+
+function EmailCache:ClearUnreadList()
+    UnreadList={};
+end
+
+
+
+local UnreadList_Private={};
+function EmailCache:IsUnreadPrivate(msgid,isAdd)
+    if(msgid==nil)then return false; end
+    if(isAdd==true)then
+        if(GameHelper.islistHave(self.EmailList)==true)then
+            local len=table.length(self.EmailList);
+            for i = 1, len do
+                if(self.EmailList[i].msgid==msgid and self.EmailList[i].is_read==0)then
+                    table.insert(UnreadList_Private,msgid);
+                    break;
+                end
+            end
+        end
+
+    else
+        table.removebyvalue(UnreadList_Private,msgid);
+    end
+
+    local lens=table.length(UnreadList_Private);
+    if(lens>0)then
+        return true;
+    end
+
+    return false;
+end
+
+
+function EmailCache:ClearUnreadList_Private()
+    UnreadList_Private={};
+end
+
 
 
 --信鸽人物列表

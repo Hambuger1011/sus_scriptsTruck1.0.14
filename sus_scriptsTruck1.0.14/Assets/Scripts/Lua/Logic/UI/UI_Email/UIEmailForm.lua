@@ -31,6 +31,7 @@ function UIEmailForm:OnInitView()
     self.PrivateLetterPanel = require('Logic/UI/UI_Email/Panel/PrivateLetterPanel').New(self.mPrivateLetterPanel);
 
     self.TopTile =CS.DisplayUtil.GetChild(this.gameObject, "TopTile");
+    self.TopRect = self.TopTile:GetComponent("RectTransform");
     self.CloseBtn =CS.DisplayUtil.GetChild(self.TopTile, "CloseBtn");
     self.ContactUsButton =CS.DisplayUtil.GetChild(self.TopTile, "ContactUsButton");
 
@@ -43,6 +44,7 @@ function UIEmailForm:OnInitView()
     logic.cs.UIEventListener.AddOnClickListener(self.PrivateLetterTab.gameObject,function(data) self:PrivateLetterTabClick(data) end);
 
     self.Bottom =CS.DisplayUtil.GetChild(this.gameObject, "Bottom");
+    self.BottomRect = self.Bottom:GetComponent("RectTransform");
     self.BatchBtn =CS.DisplayUtil.GetChild(self.Bottom, "BatchBtn");
     self.CollectBtn =CS.DisplayUtil.GetChild(self.Bottom, "CollectBtn");
     self.DeleteBtn =CS.DisplayUtil.GetChild(self.Bottom, "DeleteBtn");
@@ -67,6 +69,17 @@ function UIEmailForm:OnOpen()
 
     --请求获取邮箱信息
     GameController.EmailControl:GetPrivateLetterBoxPageRequest(1);
+
+
+    --【屏幕适配】
+    local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, nil, 750, 120);
+    local size = self.TopRect.sizeDelta;
+    size.y = size.y + offect;
+    self.TopRect.sizeDelta = size;
+
+    local size2 = self.BottomRect.sizeDelta;
+    size2.y = size2.y + offect;
+    self.BottomRect.sizeDelta=size2;
 end
 
 --endregion
@@ -78,7 +91,7 @@ function UIEmailForm:OnClose()
     UIView.OnClose(self)
 
     GameController.EmailControl:SetData(nil);
-
+    GameController.EmailControl:EmailReset();
     if(self.CommunityTab)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.MailboxTab.gameObject,function(data) self:MailboxTabClick(data) end);
         logic.cs.UIEventListener.RemoveOnClickListener(self.PrivateLetterTab.gameObject,function(data) self:PrivateLetterTabClick(data) end);
@@ -182,6 +195,12 @@ function UIEmailForm:BatchTest(msgid,_type,len,isAdd)
             else
                 self.DeleteBtn:SetActive(true);
             end
+        elseif(_type==2)then
+            if(Cache.EmailCache:IsUnreadPrivate(msgid,isAdd)==true)then --是否有未读
+                self.CollectBtn:SetActive(true);
+            else
+                self.DeleteBtn:SetActive(true);
+            end
         end
     else
         self.BatchBtn:SetActive(true);
@@ -194,11 +213,21 @@ end
 local numb=0;
 function UIEmailForm:BatchBtnClick()
     numb=numb+1;
-    if(self.EmailPanel)then
-        if(numb%2==0)then
-            self.EmailPanel:SelectAll(false,false);
-        else
-            self.EmailPanel:SelectAll(true,false);
+    if(self.mEmailPanel.activeSelf==true)then    --邮件
+        if(self.EmailPanel)then
+            if(numb%2==0)then
+                self.EmailPanel:SelectAll(false,false);
+            else
+                self.EmailPanel:SelectAll(true,false);
+            end
+        end
+    elseif(self.mPrivateLetterPanel.activeSelf==true)then      --个人私信
+        if(self.PrivateLetterPanel)then
+            if(numb%2==0)then
+                self.PrivateLetterPanel:SelectAll(false,false);
+            else
+                self.PrivateLetterPanel:SelectAll(true,false);
+            end
         end
     end
 end
@@ -207,26 +236,37 @@ end
 
 --region 【点击*收取】
 function UIEmailForm:CollectBtnClick(data)
-    GameController.EmailControl:ReadSelected();
+    if(self.mEmailPanel.activeSelf==true)then    --邮件
+        GameController.EmailControl:ReadSelected(1);
+    elseif(self.mPrivateLetterPanel.activeSelf==true)then      --个人私信
+        GameController.EmailControl:ReadSelected(2);
+    end
 end
 --endregion
 
 
 --region 【点击*删除】
 function UIEmailForm:DeleteBtnClick(data)
---activeSelf
-    GameController.EmailControl:DeleteSelected();
+    if(self.mEmailPanel.activeSelf==true)then    --邮件
+        GameController.EmailControl:DeleteSelected(1);
+    elseif(self.mPrivateLetterPanel.activeSelf==true)then      --个人私信
+        GameController.EmailControl:DeleteSelected(2);
+    end
 end
 --endregion
 
 
 --region 【单个、批量删除邮件】
-function UIEmailForm:DelMail()
+function UIEmailForm:DelMail(_type)
     self.DeleteBtn:SetActive(false);
     self.CollectBtn:SetActive(false);
     self.BatchBtn:SetActive(true);
     numb=numb+1;
-    self.EmailPanel:SelectAll(false,true);
+    if(_type==1)then
+        self.EmailPanel:SelectAll(false,true);
+    elseif(_type==2)then
+        self.PrivateLetterPanel:SelectAll(false,true);
+    end
 end
 --endregion
 

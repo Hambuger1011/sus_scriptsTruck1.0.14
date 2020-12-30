@@ -55,12 +55,16 @@ function ChatControl:GetPrivateLetterPage(uid,page,nickname,result)
     local code = tonumber(json.code)
     if(code == 200)then
 
-        --if(page<=1)then
-        --    if(json.data.per_page <= 0)then
-        --        json.data.per_page=1;
-        --    end
-        --    self.m_maxPage= (json.data.total + json.data.per_page) / json.data.per_page;
-        --end
+        if (json.data.current_page ~= page)then --页码不匹配
+            return;
+        end
+
+        if(page<=1)then
+            if(json.data.per_page <= 0)then
+                json.data.per_page=1;
+            end
+            self.m_maxPage= (json.data.total + json.data.per_page) / json.data.per_page;
+        end
 
         if(page>1)then
             --存入缓存数据；
@@ -69,6 +73,33 @@ function ChatControl:GetPrivateLetterPage(uid,page,nickname,result)
             --存入缓存数据；
             Cache.ChatCache:UpdateTypeList(json.data);
         end
+
+        -- 【获取信鸽可用次数】
+        self:GetFreePrivateLetterCountRequest(uid,page,nickname);
+
+    end
+end
+
+--endregion
+
+
+
+--region 【获取信鸽可用次数】
+function ChatControl:GetFreePrivateLetterCountRequest(uid,page,nickname)
+    logic.gameHttp:GetFreePrivateLetterCount(function(result) self:GetFreePrivateLetterCount(result,uid,page,nickname); end)
+end
+--endregion
+
+
+--region 【获取信鸽可用次数*响应】
+function ChatControl:GetFreePrivateLetterCount(result,uid,page,nickname)
+    logic.debug.Log("----GetFreePrivateLetterCount---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+        --存入缓存数据；
+        Cache.ChatCache:UpdateChatCount(json.data);
+
         if(UIChatForm)then
             UIChatForm:UpdateChatInfo(uid,page,nickname)
         else
@@ -77,10 +108,11 @@ function ChatControl:GetPrivateLetterPage(uid,page,nickname,result)
                 uichat:UpdateChatInfo(uid,page,nickname)
             end
         end
+
     end
 end
-
 --endregion
+
 
 
 --region 【发送信鸽】
@@ -101,13 +133,15 @@ function ChatControl:SendWriterLetter(uid,content,result)
         --【获取用户的邮箱信息】
         Cache.ChatCache:AddNewChat(json.data.new_id,uid,content);
 
+        --刷新发送信鸽的次数
+        Cache.ChatCache:UpdateSendCount();
+
         if(UIChatForm)then
             UIChatForm:UpdateChatInfo(uid,nil);
         end
     end
 end
 --endregion
-
 
 
 

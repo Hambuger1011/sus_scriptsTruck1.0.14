@@ -2,41 +2,52 @@ local EmailPanel = core.Class("EmailPanel")
 
 local EmailItem = require('Logic/UI/UI_Email/Item/EmailItem');
 
-local pageNum = 1
-local ItemList={};
 
-local allCount=0;
+local ItemList={};
 function EmailPanel:__init(gameObject)
     self.gameObject=gameObject;
 
     self.ScrollRect =CS.DisplayUtil.GetChild(gameObject, "ScrollRect");
 
-    self.UIVirtualList =CS.DisplayUtil.GetChild(self.ScrollRect, "MainContent"):GetComponent("UIVirtualList");
+    self.UIVirtualList =CS.DisplayUtil.GetChild(self.ScrollRect, "EmailList"):GetComponent("UIVirtualList");
     --【Item刷新】
     self.UIVirtualList.onItemRefresh =EmailPanel.OnGetItemByRowColumn;
-
+    self.UIVirtualList.scrollRect.onValueChanged:AddListener(function(value)
+        self:OnBookScrollChanged(value)
+    end)
 
     self.NoEmail =CS.DisplayUtil.GetChild(gameObject, "NoEmail");
     self.bookId = logic.bookReadingMgr.selectBookId
-    pageNum = 1;
+
+    --【总编号】
+    self.TotalCount=1;
+    self.m_page = 0;
+    --等待消息返回
+    self.m_waitBookRefresh=false;
+    --等待ui刷新
+    self.m_waitUiRefresh=false;
 
     --请求获取邮箱信息
-    GameController.EmailControl:GetSystemMsgRequest(pageNum);
+    GameController.EmailControl:GetSystemMsgRequest(1);
 end
 
 
 
 function EmailPanel:UpdateEmail(page)
 
-    pageNum=page
+    if (page > 0)then
+        self.m_page = page;
+        self.m_waitBookRefresh = false;
+    end
 
-    allCount=table.length(Cache.EmailCache.EmailList);
+    self.TotalCount=table.length(Cache.EmailCache.EmailList);
 
-    if(allCount and allCount>0)then
+    if(self.TotalCount and self.TotalCount>0)then
         --【设置列表总数量】
-        self.UIVirtualList:SetItemCount(allCount);
+        self.UIVirtualList:SetItemCount(self.TotalCount);
         self.NoEmail:SetActiveEx(false);
     else
+        self.UIVirtualList:SetItemCount(0);
         self.NoEmail:SetActiveEx(true);
     end
 end
@@ -71,6 +82,26 @@ function EmailPanel.OnGetItemByRowColumn(row)
     end
 
 end
+
+function EmailPanel:OnBookScrollChanged(value)
+    if(self.m_waitBookRefresh==true)then
+        return;
+    end
+    if(self.m_waitUiRefresh==true)then
+        if (value.y >= 0.1)then
+            self.m_waitUiRefresh = false;
+        end
+
+    else
+        if (value.y < 0.1)then
+            self.m_waitUiRefresh = true;--等待ui刷新
+            self.m_waitBookRefresh = true;--等待消息返回
+            --请求获取邮箱信息
+            GameController.EmailControl:GetSystemMsgRequest(self.m_page+1);
+        end
+    end
+end
+
 
 
 
@@ -126,13 +157,16 @@ function EmailPanel:__delete()
         ItemList={};
     end
 
+    self.UIVirtualList.scrollRect.onValueChanged:RemoveAllListeners();
+    self.TotalCount = nil;
+    self.m_page = nil;
+    self.m_waitBookRefresh = nil;
+    self.m_waitUiRefresh = nil;
     self.ScrollRect = nil;
     self.UIVirtualList = nil;
     self.NoEmail = nil;
     self.bookId = nil;
     self.gameObject = nil;
-    pageNum = 0;
-
 end
 
 return EmailPanel

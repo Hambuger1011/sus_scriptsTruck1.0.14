@@ -18,6 +18,8 @@ function UIComuniadaForm:OnInitView()
     self.TabScrollRect = CS.DisplayUtil.GetChild(this.gameObject, "TabScrollRect");
     self.CommunityTab = CS.DisplayUtil.GetChild(self.TabScrollRect, "CommunityTab"):GetComponent("UIToggle");
     self.FavoritesTab = CS.DisplayUtil.GetChild(self.TabScrollRect, "FavoritesTab"):GetComponent("UIToggle");
+    --搜索按钮
+    self.BusquedaBtn =CS.DisplayUtil.GetChild(self.TabScrollRect, "BusquedaBtn");
 
     --社区面板
     self.mCommunityPanel =CS.DisplayUtil.GetChild(this.gameObject, "CommunityPanel");
@@ -31,6 +33,8 @@ function UIComuniadaForm:OnInitView()
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.CommunityTab.gameObject,function(data) self:CommunityTabClick(data) end);
     logic.cs.UIEventListener.AddOnClickListener(self.FavoritesTab.gameObject,function(data) self:FavoritesTabClick(data) end);
+
+    logic.cs.UIEventListener.AddOnClickListener(self.BusquedaBtn,function(data) self:BusquedaBtnClick() end)
 end
 --endregion
 
@@ -61,6 +65,7 @@ function UIComuniadaForm:OnClose()
     if(self.CommunityTab)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.CommunityTab.gameObject,function(data) self:CommunityTabClick(data) end);
         logic.cs.UIEventListener.RemoveOnClickListener(self.FavoritesTab.gameObject,function(data) self:FavoritesTabClick(data) end);
+        logic.cs.UIEventListener.RemoveOnClickListener(self.BusquedaBtn,function(data) self:BusquedaBtnClick() end)
     end
 
 end
@@ -163,6 +168,14 @@ function UIComuniadaForm:UpdateHotWriter()
     end
 end
 --endregion
+
+
+function UIComuniadaForm:BusquedaBtnClick(data)
+    --打开搜索界面
+    logic.UIMgr:Open(logic.uiid.UIBusquedaForm);
+    --埋点*点击搜索
+    logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UgcSearch);
+end
 
 
 --region 【界面关闭】

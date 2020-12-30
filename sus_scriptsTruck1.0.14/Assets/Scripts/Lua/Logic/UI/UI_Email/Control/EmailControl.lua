@@ -9,10 +9,22 @@ function EmailControl:__init()
     self.BatchList_Email={};
     self.BatchList_Private={};
 
+
+    self.email_curPage=0;
+    self.email_maxPage=1;
+
     self.m_curPage=0;
     self.m_maxPage=1;
 end
 --endregion
+
+
+
+function EmailControl:EmailReset()
+    self.email_curPage=0;
+    self.email_maxPage=1;
+end
+
 
 
 --region【设置界面】
@@ -32,6 +44,14 @@ end
 
 --region 【获取用户的邮箱信息】
 function EmailControl:GetSystemMsgRequest(page)
+    if (self.email_curPage >= page)then  --已经请求过
+    return;
+    end
+
+    if (page> self.email_maxPage)then  --超过最大页码数
+    return;
+    end
+    self.email_curPage = page;
     logic.gameHttp:GetSystemMsg(page,function(result) self:GetSystemMsg(page,result); end)
 end
 --endregion
@@ -43,9 +63,16 @@ function EmailControl:GetSystemMsg(page,result)
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
     if(code == 200)then
-        --存入缓存数据；
-        --【获取用户的邮箱信息】
-        Cache.EmailCache:UpdateEmailList(json.data);
+        self.email_maxPage= json.data.pages_total;
+
+        if(page>1)then
+            --【增加数据】
+            Cache.EmailCache:AddEmailList(json.data);
+        else
+            --存入缓存数据；
+            --【获取用户的邮箱信息】
+            Cache.EmailCache:UpdateEmailList(json.data);
+        end
 
         if(UIEmailForm)then
             UIEmailForm:UpdateEmail(page)
@@ -72,6 +99,9 @@ function EmailControl:ReadSystemMsg(msgid,result)
         --【获取用户的邮箱信息】
         Cache.EmailCache:UpdateInfo(json.data);
         logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount = logic.cs.UserDataManager.selfBookInfo.data.unreadmsgcount - 1;
+
+        --设置邮件已读
+        Cache.EmailCache:SetStatus(msgid);
 
         --刷新红点
         GameController.MainFormControl:RedPointRequest();
@@ -106,8 +136,7 @@ function EmailControl:AchieveMsgPrice(msgid,result)
         logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey));
         logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond));
 
-        --设置邮件已读
-        Cache.EmailCache:SetStatus(msgid);
+
         --设置邮件已领取奖励
         Cache.EmailCache:SetPriceStatus(msgid);
         --红点刷新
@@ -121,9 +150,6 @@ function EmailControl:AchieveMsgPrice(msgid,result)
         if(UIEmailForm)then
             UIEmailForm:AchieveMsgPrice(msgid);
         end
-
-
-
 
     end
 end
@@ -213,30 +239,6 @@ end
 --endregion
 
 
---region 【获取私信对话列表(分页)】【跟某个人单独聊天的具体内容】
-function EmailControl:GetPrivateLetterPageRequest(page)
-    logic.gameHttp:GetPrivateLetterPage(page,nil,function(result) self:GetPrivateLetterPage(page,result); end)
-end
---endregion
-
-
---region 【获取私信对话列表(分页)*响应】【跟某个人单独聊天的具体内容】
-function EmailControl:GetPrivateLetterPage(page,result)
-    logic.debug.Log("----GetPrivateLetterPage---->" .. result);
-    local json = core.json.Derialize(result);
-    local code = tonumber(json.code)
-    if(code == 200)then
-        --存入缓存数据；
-        --【获取用户的邮箱信息】
-        -- Cache.EmailCache:UpdateEmailList(json.data);
-
-        if(UIEmailForm)then
-            --UIEmailForm:UpdateEmail(page)
-        end
-    end
-end
---endregion
-
 
 --region【批量检测】
 
@@ -269,12 +271,11 @@ end
 
 
 --region【批量删除选中】
-function EmailControl:DeleteSelected()
+function EmailControl:DeleteSelected(_type)
     local str="";
 
     local len_email = table.length(self.BatchList_Email);
-    if(len_email>0)then
-
+    if(_type==1)then
         if(len_email>0 and self.BatchList_Email)then
             for i = 1, len_email do
                 Cache.EmailCache:DeleteEmail(self.BatchList_Email[i]);
@@ -284,20 +285,22 @@ function EmailControl:DeleteSelected()
                 else
                     str=str..","..self.BatchList_Email[i];
                 end
-
             end
            self:DelMailRequest(str);
         end
-    else
+    elseif(_type==2)then
         local len = table.length(self.BatchList_Private);
         if(len>0 and self.BatchList_Private)then
             for i = 1, len do
                 Cache.EmailCache:DeletePlayer(self.BatchList_Private[i]);
 
-                if(i<len)then
-                    str=self.BatchList_Private[i]..",";
+                if(i==1)then
+                    str=tostring(self.BatchList_Private[i]);
+                else
+                    str=str..","..self.BatchList_Private[i];
                 end
             end
+            self:DelPrivateLetterRequest(str);
         end
     end
 end
@@ -319,10 +322,9 @@ function EmailControl:DelMail(_msgid,result)
     if(code == 200)then
         if(UIEmailForm)then
             UIEmailForm:UpdateEmail(1);
-            UIEmailForm:DelMail();
+            UIEmailForm:DelMail(1);
 
             self.BatchList_Email={};
-            self.BatchList_Private={};
         end
     end
 end
@@ -330,11 +332,10 @@ end
 
 
 --region【批量已读领取选中】
-function EmailControl:ReadSelected()
+function EmailControl:ReadSelected(_type)
     local str="";
     local len_email = table.length(self.BatchList_Email);
-    if(len_email>0)then
-
+    if(_type==1)then
         if(len_email>0 and self.BatchList_Email)then
             for i = 1, len_email do
                 Cache.EmailCache:ReadEmail(self.BatchList_Email[i]);
@@ -344,16 +345,14 @@ function EmailControl:ReadSelected()
                 else
                     str=str..","..self.BatchList_Email[i];
                 end
-
             end
             self:BatchReadReceiveMailRequest(str);
         end
-    else
+    elseif(_type==2)then
         local len = table.length(self.BatchList_Private);
         if(len>0 and self.BatchList_Private)then
             for i = 1, len do
                 Cache.EmailCache:ReadPlayer(self.BatchList_Private[i]);
-
                 if(i<len)then
                     str=self.BatchList_Private[i]..",";
                 end
@@ -384,14 +383,43 @@ function EmailControl:BatchReadReceiveMail(_msgid,result)
 
         if(UIEmailForm)then
             UIEmailForm:UpdateEmail(1);
-            UIEmailForm:DelMail();
+            UIEmailForm:DelMail(1);
 
             self.BatchList_Email={};
-            self.BatchList_Private={};
+            Cache.EmailCache:ClearUnreadList()
         end
     end
 end
 --endregion
+
+
+--region【单个、批量删除私信】
+function EmailControl:DelPrivateLetterRequest(ids)
+    logic.gameHttp:DelPrivateLetter(ids,function(result) self:DelPrivateLetter(ids,result); end)
+end
+--endregion
+
+
+--region 【单个、批量删除私信】
+function EmailControl:DelPrivateLetter(ids,result)
+    logic.debug.Log("----DelPrivateLetter---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+
+        if(UIEmailForm)then
+            UIEmailForm:UpdateGetPrivateLetterBoxList(1);
+            UIEmailForm:DelMail(2);
+
+            self.BatchList_Private={};
+            Cache.EmailCache:ClearUnreadList_Private()
+        end
+
+    end
+end
+--endregion
+
+
 
 --析构函数
 function EmailControl:__delete()

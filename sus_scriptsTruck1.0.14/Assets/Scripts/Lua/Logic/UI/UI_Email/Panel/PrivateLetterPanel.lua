@@ -42,6 +42,8 @@ function PrivateLetterPanel:UpdateGetPrivateLetterBoxList(page)
         self.UIVirtualList:SetItemCount(self.TotalCount);
         self.NoEmail:SetActiveEx(false);
     else
+        --【设置列表总数量】
+        self.UIVirtualList:SetItemCount(0);
         self.NoEmail:SetActiveEx(true);
     end
 end
@@ -94,10 +96,23 @@ function PrivateLetterPanel:OnBookScrollChanged(value)
 end
 
 function PrivateLetterPanel:UpdatePrivateLetter(page)
+end
 
 
-
-
+function PrivateLetterPanel:SelectAll(show,isResetAll)
+    if(ItemList)then
+        local len = table.count(ItemList);
+        if(len and len>0)then
+            for k,_value in pairs(ItemList) do
+                if(_value)then
+                    if(isResetAll==true)then
+                        _value.SelectTab.isOn=false;
+                    end
+                    _value.SelectTab.gameObject:SetActiveEx(show);
+                end
+            end
+        end
+    end
 end
 
 

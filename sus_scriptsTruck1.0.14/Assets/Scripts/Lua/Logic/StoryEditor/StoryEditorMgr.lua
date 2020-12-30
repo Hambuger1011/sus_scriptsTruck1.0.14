@@ -76,6 +76,11 @@ function UIStoryEditorMgr:EnterStoryEditorMode()
         uiform.uiform:Hide();
     end
 
+    logic.UIMgr:Close(logic.uiid.UICommunityForm);
+    logic.UIMgr:Close(logic.uiid.UIBusquedaForm);
+    logic.UIMgr:Close(logic.uiid.UIMasForm);
+
+
     self.data:LoadData()
 end
 

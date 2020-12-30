@@ -46,6 +46,16 @@ function AuthorInfoPanel:UpdateInfo()
         self:UpdateWriterFollow();
         --【刷新 点赞状态】
         self:UpdateWriterAgree();
+
+        if(logic.cs.UserDataManager.userInfo and logic.cs.UserDataManager.userInfo.data)then
+            --如果作者uid  等于 自己的uid     【隐藏信鸽按钮】
+            if(Cache.ComuniadaCache.WriterInfo.uid==logic.cs.UserDataManager.userInfo.data.userinfo.uid)then
+                self.MessageBtn:SetActive(false);
+            else
+                self.MessageBtn:SetActive(true);
+            end
+        end
+
     else
         --显示头像
         GameHelper.luaShowDressUpForm(-1,self.HeadIcon,DressUp.Avatar,1001);
@@ -98,7 +108,7 @@ end
 
 function AuthorInfoPanel:MessageBtnClick(data)
     if(Cache.ComuniadaCache.WriterInfo.uid)then
-        GameController.ChatControl:GetPrivateLetterPageRequest(Cache.ComuniadaCache.WriterInfo.uid,1);
+        GameController.ChatControl:GetPrivateLetterPageRequest(Cache.ComuniadaCache.WriterInfo.uid,1,Cache.ComuniadaCache.WriterInfo.nickname);
     end
 end
 
