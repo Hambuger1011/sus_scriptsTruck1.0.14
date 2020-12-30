@@ -15,6 +15,7 @@ function InvitePanel:OnInitView()
     self.closeButton = CS.DisplayUtil.GetChild(this.gameObject, "CloseButton")
     self.Item = CS.DisplayUtil.GetChild(this.gameObject, "Item")
     self.Content = CS.DisplayUtil.GetChild(this.gameObject, "Content")
+    self.ScrollRect =CS.DisplayUtil.GetChild(this.gameObject, "Scroll View"):GetComponent("ScrollRect");
     logic.cs.UIEventListener.AddOnClickListener(self.closeButton, function(data)
         self:OnExitClick()
     end)
@@ -32,6 +33,8 @@ function InvitePanel:SetUI()
         local code = tonumber(json.code);
         if code == 200 then
             local InviteData = json.data
+            local CollectedIndex = 1
+            self.ScrollRect.gameObject:SetActiveEx(false)
             for i, v in pairs(InviteData) do
                 local Item = logic.cs.GameObject.Instantiate(self.Item, self.Content.transform)
                 local NumText =CS.DisplayUtil.GetChild(Item, "NumText"):GetComponent(typeof(logic.cs.Text));
@@ -50,7 +53,6 @@ function InvitePanel:SetUI()
                     InviteButton.gameObject:SetActiveEx(true)
                     InviteButton.onClick:RemoveAllListeners()
                     InviteButton.onClick:AddListener(function()
-                        --logic.cs.UITipsMgr:ShowTips("coming soon");
                         logic.cs.SdkMgr.shareSDK:ShareMsg("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
                     end)
                 elseif v.status == 1 then
@@ -70,6 +72,9 @@ function InvitePanel:SetUI()
                             end
                         end)
                     end)
+                    if CollectedIndex == 1 then
+                        CollectedIndex = i
+                    end
                 elseif v.status == 2 then
                     Collected.gameObject:SetActiveEx(true)
                 end
@@ -85,6 +90,11 @@ function InvitePanel:SetUI()
                 DiamondNum.text = "x"..v.diamond_count
                 Item:SetActiveEx(true)
             end
+            coroutine.start(function()
+                coroutine.wait(0.5)
+                self.ScrollRect.gameObject:SetActiveEx(true)
+                self.ScrollRect.verticalNormalizedPosition=(14-CollectedIndex)/13;
+            end)
         end
     end)
 
