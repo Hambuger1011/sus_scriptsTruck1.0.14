@@ -474,7 +474,7 @@ function MainFormControl:GetRedDot(result)
         end
 
 
-        if(Cache.RedDotCache.MoveRedPoint==true or Cache.RedDotCache.FreeRedPoint==true or Cache.RedDotCache.FollowRedPoint==true or Cache.RedDotCache.BindRedPoint==true or Cache.RedDotCache.FirstRechargePoint==true)then
+        if(Cache.RedDotCache.MoveRedPoint==true or Cache.RedDotCache.FreeRedPoint==true or Cache.RedDotCache.FollowRedPoint==true or Cache.RedDotCache.BindRedPoint==true or Cache.RedDotCache.FirstRechargePoint==true or Cache.RedDotCache.InviteAwardPoint==true)then
             --显示主界面底栏 活动中心红点
             if(ui_downform)then
                 ui_downform:Rward_RedImg_show(true);

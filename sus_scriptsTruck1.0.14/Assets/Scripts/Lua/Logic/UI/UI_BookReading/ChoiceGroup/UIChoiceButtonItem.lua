@@ -21,7 +21,7 @@ function UIChoiceButtonItem:__init(gameObject)
     self.textKeyProp = get(self.transform,'DiamondIcon/btnKeyProp/Text',typeof(logic.cs.Text))
     self.transItemParentProp = self.transform:Find('DiamondIcon/btnKeyProp/list')
     self.objItemParentProp = self.transItemParentProp.gameObject
-    self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/list/item').gameObject
+    self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/item').gameObject
     self.btnKeyProp.onClick:AddListener(function()
         self:ShowPropList()
     end)
@@ -59,6 +59,7 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
     self.selection = selection
     self.cost = 20 or cost
     self.hiddenEgg = hiddenEgg
+    self.textKeyProp.text = tostring(self.cost)
     self.txtInfo.text = logic.bookReadingMgr:ReplaceChar(selection)
     self.isHadBuy = false
 
@@ -158,6 +159,8 @@ function UIChoiceButtonItem:ShowPropBtn()
     end
     self.objBtnKeyProp:SetActive(true)
     local discount_list = userPropInfo.discount_list
+    self.transItemParentProp:ClearAllChild()
+    self.itemPropList = {}
     for i=0,discount_list.Count-1,1 do
         self:AddItemProp(discount_list[i])
     end
@@ -199,6 +202,9 @@ function UIChoiceButtonItem:AddItemProp(data)
         fucShowCheck = fucShowCheck,
         fucOnClick = fucOnClick
     }
+    item.button.onClick:AddListener(function()
+        item:fucOnClick()
+    end)
     table.insert(self.itemPropList, item)
     return item
 end

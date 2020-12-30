@@ -40,6 +40,8 @@ function InvitePanel:SetUI()
                 local NumText =CS.DisplayUtil.GetChild(Item, "NumText"):GetComponent(typeof(logic.cs.Text));
                 local Name =CS.DisplayUtil.GetChild(Item, "Name"):GetComponent(typeof(logic.cs.Text));
                 local DiamondNum =CS.DisplayUtil.GetChild(Item, "DiamondNum"):GetComponent(typeof(logic.cs.Text));
+                local Key =CS.DisplayUtil.GetChild(Item, "Key");
+                local KeyNum =CS.DisplayUtil.GetChild(Item, "KeyNum"):GetComponent(typeof(logic.cs.Text));
                 local InviteButton =CS.DisplayUtil.GetChild(Item, "InviteButton"):GetComponent(typeof(logic.cs.Button));
                 local CollectedButton =CS.DisplayUtil.GetChild(Item, "CollectedButton"):GetComponent(typeof(logic.cs.Button));
                 local Collected =CS.DisplayUtil.GetChild(Item, "Collected"):GetComponent(typeof(logic.cs.Button));
@@ -88,6 +90,11 @@ function InvitePanel:SetUI()
                 NumText.text = v.number
                 Name.text = v.user_info.nickname
                 DiamondNum.text = "x"..v.diamond_count
+                KeyNum.text = "x"..v.key_count
+                if tonumber(v.key_count) > 0 then
+                    Key:SetActiveEx(true)
+                    KeyNum.gameObject:SetActiveEx(true)
+                end
                 Item:SetActiveEx(true)
             end
             coroutine.start(function()

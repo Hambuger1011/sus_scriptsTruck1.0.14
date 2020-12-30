@@ -641,6 +641,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 		end
 	end
 	self.choiceCost = choiceCost
+	uiView.textKeyProp.text = tostring(self.choiceCost)
 	uiView.DetailText.text = tostring(descriptionText)
 	uiView.lbCost.text = tostring(choiceCost)
 	uiView.freePanel:SetActiveEx(isFree)
