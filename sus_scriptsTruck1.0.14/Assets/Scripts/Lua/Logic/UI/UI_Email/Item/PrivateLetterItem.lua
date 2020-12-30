@@ -42,11 +42,18 @@ end
 
 
 function PrivateLetterItem:Openlicke()
-    Cache.EmailCache:SetPrivateState(self.Info.id);
+
     self.State:SetActive(false);
     self.OpenImage:SetActive(false);
     if(self.Info)then
-        GameController.ChatControl:GetPrivateLetterPageRequest(self.Info.from_uid,1,self.Info.user_info.nickname);
+
+        if(self.Info.is_read==0)then
+            GameController.EmailControl:ReadPrivateLetterTeamRequest(self.Info.from_uid,true)
+        else
+            GameController.ChatControl:GetPrivateLetterPageRequest(self.Info.from_uid,1,self.Info.user_info.nickname);
+        end
+
+
     end
 end
 

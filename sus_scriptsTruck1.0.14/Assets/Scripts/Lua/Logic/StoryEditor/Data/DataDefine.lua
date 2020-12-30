@@ -92,7 +92,7 @@ local DataDefine = {}
 
 DataDefine.BookTags = {
     'Romance',
-    'LGBT',
+    'LGBTQ+',
     'Action',
     'Youth',
     'Adventure',

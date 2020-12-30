@@ -90,7 +90,7 @@ function PrivateLetterPanel:OnBookScrollChanged(value)
             self.m_waitUiRefresh = true;--等待ui刷新
             self.m_waitBookRefresh = true;--等待消息返回
             --请求获取邮箱信息
-            GameController.EmailControl:GetPrivateLetterBoxPageRequest(self.m_page+1);
+            GameController.EmailControl:GetPrivateLetterTeamPageRequest(self.m_page+1);
         end
     end
 end

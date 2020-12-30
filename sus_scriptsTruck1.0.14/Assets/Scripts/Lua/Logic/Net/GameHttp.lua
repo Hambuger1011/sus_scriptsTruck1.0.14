@@ -1392,13 +1392,13 @@ function GameHttp:UpdateSign(_sign,callback)
 end
 
 
---【获取信箱私信列表(分页)】【跟哪些人对话的列表  boxlist】
-function GameHttp:GetPrivateLetterBoxPage(_page,_limit,callback)
+--【获取私信组(分页)】【跟哪些人对话的列表  boxlist】
+function GameHttp:GetPrivateLetterTeamPage(_page,_limit,callback)
     local param = {
         page=_page;
         limit=_limit;
     }
-    self:Get(self, "api_getPrivateLetterBoxPage", param, function(result)
+    self:Get(self, "api_getPrivateLetterTeamPage", param, function(result)
         callback(result)
     end, nil, nil, true)
 end
@@ -1443,6 +1443,16 @@ function GameHttp:DelPrivateLetter(_ids,callback)
         ids=_ids;
     }
     self:Post(self, "api_delPrivateLetter", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【阅读私信组】
+function GameHttp:ReadPrivateLetterTeam(_ids,callback)
+    local param = {
+        ids=_ids;
+    }
+    self:Post(self, "api_readPrivateLetterTeam", param, function(result)
         callback(result)
     end, nil, nil, true)
 end

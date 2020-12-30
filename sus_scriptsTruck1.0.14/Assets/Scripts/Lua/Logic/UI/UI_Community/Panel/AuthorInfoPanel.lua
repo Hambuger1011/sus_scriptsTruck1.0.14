@@ -49,7 +49,7 @@ function AuthorInfoPanel:UpdateInfo()
 
         if(logic.cs.UserDataManager.userInfo and logic.cs.UserDataManager.userInfo.data)then
             --如果作者uid  等于 自己的uid     【隐藏信鸽按钮】
-            if(Cache.ComuniadaCache.WriterInfo.uid==logic.cs.UserDataManager.userInfo.data.userinfo.uid)then
+            if(Cache.ComuniadaCache.WriterInfo.uid== tonumber(logic.cs.UserDataManager.userInfo.data.userinfo.uid))then
                 self.MessageBtn:SetActive(false);
             else
                 self.MessageBtn:SetActive(true);

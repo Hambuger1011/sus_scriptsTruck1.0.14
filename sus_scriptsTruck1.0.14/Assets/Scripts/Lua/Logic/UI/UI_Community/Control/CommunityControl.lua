@@ -37,6 +37,8 @@ function CommunityControl:GetWriterInfo(uid,result)
         Cache.ComuniadaCache:UpdateWriterInfo(json.data)
         Cache.ComuniadaCache.WriterInfo.uid=uid;
 
+        logic.UIMgr:Close(logic.uiid.UIBusquedaForm);
+
         logic.UIMgr:Open(logic.uiid.UICommunityForm)
         if(uid)then
             self:GetActionLogPageRequest(uid,1)

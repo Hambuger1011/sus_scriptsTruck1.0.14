@@ -32,19 +32,18 @@ function UIPakageForm:OnInitView()
 
     self.objItemDetailPanel = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropDetail")
     self.mItemDetailPanel = PakageItemDetailPanel.New(self.objItemDetailPanel,self);
-    self.objItemDetailPanel:SetActive(false)
-    self.transParent = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout").transform
-    self.prefabItem = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout/Item")
-    self.prefabItem:SetActive(false)
-    self.objNoProp = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/NoProp")
-    self.objNoProp:SetActive(false)
-    self.objPropsList = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList")
+    self.transParent = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout").transform;
+    self.prefabItem = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout/Item");
+    self.objNoProp = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/NoProp");
+    self.objPropsList = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList");
+    self.TopTile = CS.DisplayUtil.GetChild(self.gameObject, "TopTile"):GetComponent("RectTransform");
+    self.CloseBtn = CS.DisplayUtil.GetChild(self.TopTile.gameObject, "CloseBtn"):GetComponent("Button");
+    self.CloseBtn.onClick:AddListener(function() self:OnExitClick() end)
 
-    self.btnClose = logic.cs.LuaHelper.GetComponent(self.transform, "BG/TopTile/CloseBtn",typeof(logic.cs.Button))
-    self.btnClose.onClick:AddListener(function()
-        self:OnExitClick()
-    end)
 
+    self.objNoProp:SetActive(false);
+    self.prefabItem:SetActive(false);
+    self.objItemDetailPanel:SetActive(false);
     self.propListData = {}
     self.itemList = {}
     self.iconCaches = self:InitIconCaches()
@@ -72,6 +71,13 @@ end
 
 function UIPakageForm:OnOpen()
     UIView.OnOpen(self)
+
+    --【屏幕适配】
+    local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, nil, 750, 120);
+    local size = self.TopTile.sizeDelta;
+    size.y = size.y + offect;
+    self.TopTile.sizeDelta = size;
+
 end
 
 function UIPakageForm:OnClose()

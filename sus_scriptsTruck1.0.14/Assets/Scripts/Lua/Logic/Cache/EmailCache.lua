@@ -273,6 +273,9 @@ end
 
 
 
+
+
+
 -- 析构函数
 function EmailCache:__delete()
 end

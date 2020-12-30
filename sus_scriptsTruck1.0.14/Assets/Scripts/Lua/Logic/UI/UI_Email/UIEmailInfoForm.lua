@@ -12,17 +12,6 @@ UIEmailInfoForm.config = {
 }
 local hit = nil;
 
-local function SetSafeAreaHeight(Center, safeAreaHeight)
-    local w = Center.rect.width
-    local h = Center.rect.height - safeAreaHeight
-    Center.anchorMax = core.Vector2.New(0.5, 1);
-    Center.anchorMin = core.Vector2.New(0.5, 1);
-    Center.pivot = core.Vector2.New(0.5, 1);
-    Center.sizeDelta = { x = w, y = h }
-    local pos1 = Center.anchoredPosition
-    pos1.y = pos1.y - safeAreaHeight * 1.5
-    Center.anchoredPosition = pos1
-end
 
 function UIEmailInfoForm:OnInitView()
     self.bookId = logic.bookReadingMgr.selectBookId
@@ -64,24 +53,14 @@ function UIEmailInfoForm:OnInitView()
     logic.cs.UIEventListener.AddOnClickListener(self.inputMask.gameObject,function(data) self:InputMaskClick() end)
     logic.cs.UIEventListener.AddOnClickListener(self.submitBtn.gameObject,function(data) self:SubmitBtnClick() end)
 
+    self.TopBg = CS.DisplayUtil.GetChild(self.uiform.gameObject, "TopBg"):GetComponent("RectTransform");
 
-    local uiform1 = root:GetComponent("CUIForm")
-    local safeArea = logic.cs.ResolutionAdapter:GetSafeArea()
-    local safeAreaHeight = uiform1:yPixel2View(safeArea.y)
-    if safeAreaHeight and safeAreaHeight > 0 then
-        local TopTile = root:Find('Bg/TopBg').transform
-        local Type2 = root:Find('Bg/Type2').transform
-        local Type4 = root:Find('Bg/Type4').transform
-        local InputMask = root:Find('Bg/InputMask').transform
+    --【屏幕适配】
+    local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, nil, 750, 120);
+    local size = self.TopBg.sizeDelta;
+    size.y = size.y + offect;
+    self.TopBg.sizeDelta = size;
 
-        local pos = TopTile.anchoredPosition
-        pos.y = pos.y - safeAreaHeight
-        TopTile.anchoredPosition = pos
-
-        SetSafeAreaHeight(Type2, safeAreaHeight)
-        SetSafeAreaHeight(Type4, safeAreaHeight)
-        SetSafeAreaHeight(InputMask, safeAreaHeight)
-    end
 
     self.EmailInfo=nil;
 end

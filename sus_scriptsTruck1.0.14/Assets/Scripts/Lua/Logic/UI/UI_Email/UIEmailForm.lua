@@ -68,7 +68,7 @@ function UIEmailForm:OnOpen()
     self:MailboxTabClick(nil);
 
     --请求获取邮箱信息
-    GameController.EmailControl:GetPrivateLetterBoxPageRequest(1);
+    GameController.EmailControl:GetPrivateLetterTeamPageRequest(1);
 
 
     --【屏幕适配】

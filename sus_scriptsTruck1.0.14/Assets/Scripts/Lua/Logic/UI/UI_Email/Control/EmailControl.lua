@@ -19,12 +19,12 @@ end
 --endregion
 
 
-
+--region【邮件页数重置】
 function EmailControl:EmailReset()
     self.email_curPage=0;
     self.email_maxPage=1;
 end
-
+--endregion
 
 
 --region【设置界面】
@@ -118,7 +118,6 @@ end
 --endregion
 
 
-
 --region 【读取用户的邮件】
 function EmailControl:AchieveMsgPriceRequest(msgid)
     logic.gameHttp:AchieveMsgPrice(msgid,function(result) self:AchieveMsgPrice(msgid,result); end)
@@ -156,7 +155,6 @@ end
 --endregion
 
 
-
 --region 【创建评论回复】
 function EmailControl:CreateBookCommentReplyRequest(comment_id, content, reply_id)
     logic.gameHttp:CreateBookCommentReply(comment_id, content, reply_id,function(result) self:CreateBookCommentReply(result); end)
@@ -181,8 +179,8 @@ end
 --endregion
 
 
---region 【获取信箱私信列表(分页)】【跟哪些人对话的列表  boxlist】
-function EmailControl:GetPrivateLetterBoxPageRequest(page)
+--region 【获取私信组(分页)】【跟哪些人对话的列表  boxlist】
+function EmailControl:GetPrivateLetterTeamPageRequest(page)
     if (self.m_curPage >= page)then  --已经请求过
         return;
     end
@@ -191,14 +189,14 @@ function EmailControl:GetPrivateLetterBoxPageRequest(page)
         return;
     end
     self.m_curPage = page;
-    logic.gameHttp:GetPrivateLetterBoxPage(page,nil,function(result) self:GetPrivateLetterBoxPage(page,result); end)
+    logic.gameHttp:GetPrivateLetterTeamPage(page,nil,function(result) self:GetPrivateLetterTeamPage(page,result); end)
 end
 --endregion
 
 
---region 【获取信箱私信列表(分页)*响应】【跟哪些人对话的列表  boxlist】
-function EmailControl:GetPrivateLetterBoxPage(page,result)
-    logic.debug.Log("----GetPrivateLetterBoxPage---->" .. result);
+--region 【获取私信组(分页)*响应】【跟哪些人对话的列表  boxlist】
+function EmailControl:GetPrivateLetterTeamPage(page,result)
+    logic.debug.Log("----GetPrivateLetterTeamPage---->" .. result);
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
     if(code == 200)then
@@ -237,7 +235,6 @@ end
 
 
 --endregion
-
 
 
 --region【批量检测】
@@ -363,7 +360,6 @@ end
 --endregion
 
 
-
 --region【批量已读或领取奖励邮件】
 function EmailControl:BatchReadReceiveMailRequest(msgid)
     logic.gameHttp:BatchReadReceiveMail(msgid,function(result) self:BatchReadReceiveMail(msgid,result); end)
@@ -400,7 +396,7 @@ end
 --endregion
 
 
---region 【单个、批量删除私信】
+--region 【单个、批量删除私信*响应】
 function EmailControl:DelPrivateLetter(ids,result)
     logic.debug.Log("----DelPrivateLetter---->" .. result);
     local json = core.json.Derialize(result);
@@ -415,6 +411,34 @@ function EmailControl:DelPrivateLetter(ids,result)
             Cache.EmailCache:ClearUnreadList_Private()
         end
 
+    end
+end
+--endregion
+
+
+--region【单个、批量阅读私信组】
+function EmailControl:ReadPrivateLetterTeamRequest(ids,isOne)
+    logic.gameHttp:ReadPrivateLetterTeam(ids,function(result) self:ReadPrivateLetterTeam(ids,isOne,result); end)
+end
+--endregion
+
+
+--region 【单个、批量阅读私信组*响应】
+function EmailControl:ReadPrivateLetterTeam(ids,isOne,result)
+    logic.debug.Log("----ReadPrivateLetterTeam---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+
+        --修改缓存为已读
+        Cache.EmailCache:SetPrivateState(self.Info.id);
+
+        --已读 是否是单条；
+        if(isOne==true)then
+            if(Cache.ComuniadaCache.WriterInfo.uid)then
+                GameController.ChatControl:GetPrivateLetterPageRequest(Cache.ComuniadaCache.WriterInfo.uid,1,Cache.ComuniadaCache.WriterInfo.nickname);
+            end
+        end
     end
 end
 --endregion

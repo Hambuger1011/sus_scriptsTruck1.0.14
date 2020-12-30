@@ -27,9 +27,6 @@ end
 --endregion
 
 
---endregion
-
-
 --region 【获取私信对话列表(分页)】【跟某个人单独聊天的具体内容】
 
 function ChatControl:GetPrivateLetterPageRequest(uid,page,nickname)
@@ -83,7 +80,6 @@ end
 --endregion
 
 
-
 --region 【获取信鸽可用次数】
 function ChatControl:GetFreePrivateLetterCountRequest(uid,page,nickname)
     logic.gameHttp:GetFreePrivateLetterCount(function(result) self:GetFreePrivateLetterCount(result,uid,page,nickname); end)
@@ -134,7 +130,7 @@ function ChatControl:SendWriterLetter(uid,content,result)
         Cache.ChatCache:AddNewChat(json.data.new_id,uid,content);
 
         --刷新发送信鸽的次数
-        Cache.ChatCache:UpdateSendCount();
+        Cache.ChatCache:UpdateChatCount(json.data);
 
         if(UIChatForm)then
             UIChatForm:UpdateChatInfo(uid,nil);

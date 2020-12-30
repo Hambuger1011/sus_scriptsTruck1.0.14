@@ -88,17 +88,6 @@ function ChatCache:ClearMas()
     end
 end
 
-function ChatCache:UpdateSendCount()
-    if(self.total==0)then self.free=0; self.backpack = 0; return; end
-    --免费次数
-    if(self.free>0)then
-        self.free=self.free-1;
-    elseif(self.backpack>0)then
-        self.backpack=self.backpack-1;
-    end
-    self.total=self.total-1;
-end
-
 
 -- 析构函数
 function ChatCache:__delete()
