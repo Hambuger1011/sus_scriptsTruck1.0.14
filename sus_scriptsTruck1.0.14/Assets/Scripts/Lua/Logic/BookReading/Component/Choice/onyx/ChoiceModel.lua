@@ -831,6 +831,8 @@ function ChoiceModel:ShowPropBtn()
     end
     uiView.objBtnKeyProp:SetActive(true)
     local discount_list = userPropInfo.discount_list
+	uiView.transItemParentProp:ClearAllChild()
+	uiView.itemPropList = {}
     for i=0,discount_list.Count-1,1 do
         self:AddItemProp(discount_list[i])
 	end

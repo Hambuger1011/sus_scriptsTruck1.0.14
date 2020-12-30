@@ -95,7 +95,7 @@ function GameHttp:Post(self, apiName, param, callback, timeoutMS, tryCount, isRe
     local sendSeq = getSendSeq()
     local sendInfo = ''
     if param then
-        sendInfo = string.format("<color=#009000>[lua][send]POST:[%d]%s\nphoneimei:%s\ntoken:%s\n%s</color>",
+        sendInfo = string.format("<color=#009000>[lua][send]POST:[%d]%s phoneimei:%s token:%s %s</color>",
                 sendSeq,
                 url,
                 logic.cs.GameHttpNet.UUID,
@@ -103,7 +103,7 @@ function GameHttp:Post(self, apiName, param, callback, timeoutMS, tryCount, isRe
                 core.json.Serialize(param)
         )
     else
-        sendInfo = string.format("<color=#009000>[lua][send]POST:[%d]%s\n%s</color>", sendSeq, url, 'no param')
+        sendInfo = string.format("<color=#009000>[lua][send]POST:[%d]%s %s</color>", sendSeq, url, 'no param')
     end
     logic.debug.Log(sendInfo)
     --logic.cs.CFileManager.WriteFileString('d://'..sendSeq..'.txt',sendInfo)

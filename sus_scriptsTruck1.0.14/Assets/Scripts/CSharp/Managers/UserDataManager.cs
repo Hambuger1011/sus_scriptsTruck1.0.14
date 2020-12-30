@@ -326,7 +326,7 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public void SetLuckyPropItem(bool isUse,PropInfoItem item=null)
     {
-        if (item == null)
+        if (item != null)
         {
             is_use_prop = isUse ? 1:0;
         }

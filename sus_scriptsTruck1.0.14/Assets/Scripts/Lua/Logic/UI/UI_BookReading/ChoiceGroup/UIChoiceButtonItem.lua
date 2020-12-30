@@ -165,9 +165,9 @@ function UIChoiceButtonItem:ShowPropBtn()
     lastItem:fucOnClick()
 end
 function UIChoiceButtonItem:ShowPropList()
-    local isShow = not uiView.objItemParentProp.activeSelf
+    local isShow = not self.objItemParentProp.activeSelf
     self.objItemParentProp.gameObject:SetActive(isShow)
-    uiView.textKeyProp.gameObject:SetActive(isShow)
+    self.textKeyProp.gameObject:SetActive(isShow)
 end
 function UIChoiceButtonItem:AddItemProp(data)
     local go = logic.cs.GameObject.Instantiate(self.itemPrefabProp,self.transItemParentProp,false)
