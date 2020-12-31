@@ -132,6 +132,7 @@ function LimitedTimePanel:__init(gameObject)
         self.MoveCodeText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeText"):GetComponent("Text");
         self.MoveCodeDetailText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeDetailText"):GetComponent("Text");
         self.MoveCodeBtnText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeBtnText"):GetComponent("Text");
+        self.MoveCodeBtn:SetActive(true);
 
         self.MoveCodeText.text=Cache.MainCache.migration.migration_title;
         self.MoveCodeDetailText.text=Cache.MainCache.migration.migration_content;

@@ -31,16 +31,8 @@ function StoryItem2:SetItemData(itemData,itemIndex)
         self.BookName.text = itemData.title;
     end
 
-    --if(self.gameObject)then
-    --    self.gameObject.name=tostring(itemIndex);
-    --end
-
-    if (itemData.read_count > 1000)then
-        local num=itemData.read_count/1000;
-        self.LookNumberText.text = string.format("%.1f", num).."k";
-    else
-        self.LookNumberText.text = tostring(itemData.read_count);
-    end
+    --【观看次数】【观看次数】【观看次数】
+    GameHelper.ShowLookNumber(itemData.read_count,self.LookNumberText);
 
     if(self.Content)then
         self.Content.text = itemData.description;

@@ -27,8 +27,17 @@ function EmailPanel:__init(gameObject)
     --等待ui刷新
     self.m_waitUiRefresh=false;
 
-    --请求获取邮箱信息
-    GameController.EmailControl:GetSystemMsgRequest(1);
+
+end
+
+
+function EmailPanel:SetBatchBtn(BatchBtn)
+    self.TotalCount=table.length(Cache.EmailCache.EmailList);
+    if(self.TotalCount and self.TotalCount>0)then
+        BatchBtn:SetActiveEx(true);
+    else
+        BatchBtn:SetActiveEx(false);
+    end
 end
 
 

@@ -48,9 +48,9 @@ function PrivateLetterItem:Openlicke()
     if(self.Info)then
 
         if(self.Info.is_read==0)then
-            GameController.EmailControl:ReadPrivateLetterTeamRequest(self.Info.from_uid,true)
+            GameController.EmailControl:ReadPrivateLetterTeamRequest(self.Info.id,true,self.Info.other_uid)
         else
-            GameController.ChatControl:GetPrivateLetterPageRequest(self.Info.from_uid,1,self.Info.user_info.nickname);
+            GameController.ChatControl:GetPrivateLetterPageRequest(self.Info.other_uid,1,self.Info.user_info.nickname);
         end
 
 

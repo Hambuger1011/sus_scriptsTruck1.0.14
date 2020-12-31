@@ -65,11 +65,12 @@ end
 function UIEmailForm:OnOpen()
     UIView.OnOpen(self)
     GameController.EmailControl:SetData(self);
-    self:MailboxTabClick(nil);
-
     --请求获取邮箱信息
     GameController.EmailControl:GetPrivateLetterTeamPageRequest(1);
+    --请求获取邮箱信息
+    GameController.EmailControl:GetSystemMsgRequest(1);
 
+    self:MailboxTabClick(nil);
 
     --【屏幕适配】
     local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, nil, 750, 120);
@@ -92,6 +93,7 @@ function UIEmailForm:OnClose()
 
     GameController.EmailControl:SetData(nil);
     GameController.EmailControl:EmailReset();
+    GameController.EmailControl:Reset();
     if(self.CommunityTab)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.MailboxTab.gameObject,function(data) self:MailboxTabClick(data) end);
         logic.cs.UIEventListener.RemoveOnClickListener(self.PrivateLetterTab.gameObject,function(data) self:PrivateLetterTabClick(data) end);
@@ -129,6 +131,10 @@ end
 function UIEmailForm:UpdateEmail(page)
     if(self.EmailPanel)then
         self.EmailPanel:UpdateEmail(page);
+
+        if(self.MailboxTab.isOn==true)then
+            self.EmailPanel:SetBatchBtn(self.BatchBtn);
+        end
     end
 end
 
@@ -165,6 +171,10 @@ function UIEmailForm:MailboxTabClick(data)
 
     --打开邮件面板
     self.mEmailPanel:SetActive(true);
+
+    if(self.EmailPanel)then
+        self.EmailPanel:SetBatchBtn(self.BatchBtn);
+    end
 end
 --endregion
 
@@ -177,6 +187,9 @@ function UIEmailForm:PrivateLetterTabClick(data)
     --打开个人私信面板
     self.mPrivateLetterPanel:SetActive(true);
 
+    if(self.PrivateLetterPanel)then
+        self.PrivateLetterPanel:SetBatchBtn(self.BatchBtn);
+    end
 end
 --endregion
 
@@ -260,7 +273,6 @@ end
 function UIEmailForm:DelMail(_type)
     self.DeleteBtn:SetActive(false);
     self.CollectBtn:SetActive(false);
-    self.BatchBtn:SetActive(true);
     numb=numb+1;
     if(_type==1)then
         self.EmailPanel:SelectAll(false,true);
@@ -286,6 +298,9 @@ end
 function UIEmailForm:UpdateGetPrivateLetterBoxList(page)
     if(self.PrivateLetterPanel)then
         self.PrivateLetterPanel:UpdateGetPrivateLetterBoxList(page);
+        if(self.PrivateLetterTab.isOn==true)then
+            self.PrivateLetterPanel:SetBatchBtn(self.BatchBtn);
+        end
     end
 end
 --endregion

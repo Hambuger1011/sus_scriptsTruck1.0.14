@@ -52,6 +52,8 @@ function DressUpCache:ResetLogin()
         accountInfo:ShowAvatar();
     end
 
+    --打开主界面
+    logic.UIMgr:Close(logic.uiid.UIActivityBannerForm);
 
     --【活动界面重置排序】
     GameController.ActivityControl:PanelSort();

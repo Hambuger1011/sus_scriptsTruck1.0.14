@@ -25,7 +25,9 @@ function RankItem:SetInfo(Info,_type)
     self.BookName.text =Info.ranking.."  "..Info.bookname;
     GameHelper.ShowIcon(Info.book_id,self.BookBG);
 
-    self.LookNumberText.text =tostring(Info.read_count) ;
+    --【观看次数】【观看次数】【观看次数】
+    GameHelper.ShowLookNumber(Info.read_count,self.LookNumberText);
+
     --展示标签
     GameHelper.ShowBookType(Info.book_id,self.BookTypeImg);
 

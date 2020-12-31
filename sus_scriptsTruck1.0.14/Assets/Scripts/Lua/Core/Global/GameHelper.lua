@@ -838,3 +838,27 @@ end
 
 
 --endregion
+
+
+--region【展示观看次数】
+function GameHelper.ShowLookNumber(read_count,LookNumberText)
+    if(LookNumberText==nil or read_count==nil or read_count<=0)then return; end
+
+    --【观看次数】【观看次数】【观看次数】
+    local readcount=read_count;
+
+    if(readcount >= 1000000)then
+        local num=readcount/1000000;
+        local _result = string.format("%.1f", num)
+        --观看次数
+        self.LookNumberText.text =tostring(_result)..'m';
+    elseif (readcount > 1000)then
+        local num=readcount/1000;
+        local _result = string.format("%.1f", num)
+        --观看次数
+        LookNumberText.text =tostring(_result)..'k';
+    else
+        LookNumberText.text =tostring(readcount);
+    end
+end
+--endregion

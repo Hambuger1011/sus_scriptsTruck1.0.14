@@ -8,6 +8,7 @@ function BookRankItem:__init(gameObject)
     self.BookName =CS.DisplayUtil.GetChild(gameObject, "BookName"):GetComponent("Text");
     self.BookTypeImg1 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg1"):GetComponent("Image");
     self.BookTypeImg2 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg2"):GetComponent("Image");
+    self.LookNumber =CS.DisplayUtil.GetChild(gameObject, "LookNumber"):GetComponent("Image");
     self.LookNumberText =CS.DisplayUtil.GetChild(gameObject, "LookNumberText"):GetComponent("Text");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
     logic.cs.UIEventListener.AddOnClickListener(self.gameObject,function(data) self:OnBookClick() end)
@@ -29,7 +30,9 @@ function BookRankItem:SetInfo(Info,_type,_index);
     --=====================================================================展示 show
     self.BookName.text =Info.ranking.."  "..Info.bookname;
     GameHelper.ShowIcon(Info.book_id,self.BookBG)
-    self.LookNumberText.text =tostring(Info.read_count) ;
+
+    --【观看次数】【观看次数】【观看次数】
+    GameHelper.ShowLookNumber(Info.read_count,self.LookNumberText);
 
     --展示标签1
     GameHelper.ShowBookType(Info.book_id,self.BookTypeImg1);
@@ -37,6 +40,14 @@ function BookRankItem:SetInfo(Info,_type,_index);
     GameHelper.ShowBookType2(Info.book_id,self.BookTypeImg2);
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
+
+    if(_type== RankType.Platform)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_Reading volume01");
+    elseif(_type== RankType.Newbook)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_new01");
+    elseif(_type== RankType.Popularity)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_popular01");
+    end
 end
 
 --点击书本

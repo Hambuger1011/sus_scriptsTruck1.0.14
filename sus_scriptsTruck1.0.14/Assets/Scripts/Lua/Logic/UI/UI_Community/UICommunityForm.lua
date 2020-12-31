@@ -76,13 +76,18 @@ end
 
 --region 【点击更多动态按钮】
 
-function UICommunityForm:ViewMoreBtnClick()
+function UICommunityForm:ViewMoreBtnClick(func)
 
     local len=table.length(Cache.ComuniadaCache.DynamicList);
     local _AllCount=Cache.ComuniadaCache.DynamicList_Count;
 
     if(allCount==6 and len > 1)then   --【说明是折叠着】【只显示1条】
         allCount=len+5;
+
+        if(func)then
+            func(1);
+        end
+
     else
         if(len%5==0 and _AllCount%5~=0)then  --【如果当前页 已经满数】【并且总数不是当前数】 【请求获取下一页】
             if(Cache.ComuniadaCache.WriterInfo.uid)then
@@ -90,7 +95,11 @@ function UICommunityForm:ViewMoreBtnClick()
                 return;
             end
         else
-            allCount=6; --【折叠成 单个动态】
+            allCount=6; --【折叠成 单个动态】`
+
+            if(func)then
+                func(2);
+            end
         end
     end
     --【设置列表总数量】

@@ -28,6 +28,17 @@ function PrivateLetterPanel:__init(gameObject)
 end
 
 
+function PrivateLetterPanel:SetBatchBtn(BatchBtn)
+    self.TotalCount=table.length(Cache.EmailCache.PlayerChatList);
+    if(self.TotalCount and self.TotalCount>0)then
+        BatchBtn:SetActiveEx(true);
+    else
+        BatchBtn:SetActiveEx(false);
+    end
+end
+
+
+
 function PrivateLetterPanel:UpdateGetPrivateLetterBoxList(page)
 
     if (page > 0)then

@@ -290,14 +290,13 @@ function EmailControl:DeleteSelected(_type)
         if(len>0 and self.BatchList_Private)then
             for i = 1, len do
                 Cache.EmailCache:DeletePlayer(self.BatchList_Private[i]);
-
                 if(i==1)then
                     str=tostring(self.BatchList_Private[i]);
                 else
                     str=str..","..self.BatchList_Private[i];
                 end
             end
-            self:DelPrivateLetterRequest(str);
+            self:DelPrivateLetterTeamRequest(str);
         end
     end
 end
@@ -349,11 +348,13 @@ function EmailControl:ReadSelected(_type)
         local len = table.length(self.BatchList_Private);
         if(len>0 and self.BatchList_Private)then
             for i = 1, len do
-                Cache.EmailCache:ReadPlayer(self.BatchList_Private[i]);
-                if(i<len)then
-                    str=self.BatchList_Private[i]..",";
+                if(i==1)then
+                    str=tostring(self.BatchList_Private[i]);
+                else
+                    str=str..","..self.BatchList_Private[i];
                 end
             end
+            self:ReadPrivateLetterTeamRequest(str,false,nil);
         end
     end
 end
@@ -390,25 +391,36 @@ end
 
 
 --region【单个、批量删除私信】
-function EmailControl:DelPrivateLetterRequest(ids)
-    logic.gameHttp:DelPrivateLetter(ids,function(result) self:DelPrivateLetter(ids,result); end)
+
+function EmailControl:DelPrivateLetterTeamRequest(ids)
+    logic.gameHttp:DelPrivateLetterTeam(ids,function(result) self:DelPrivateLetterTeam(ids,result); end)
 end
+
 --endregion
 
 
 --region 【单个、批量删除私信*响应】
-function EmailControl:DelPrivateLetter(ids,result)
-    logic.debug.Log("----DelPrivateLetter---->" .. result);
+function EmailControl:DelPrivateLetterTeam(ids,result)
+    logic.debug.Log("----DelPrivateLetterTeam---->" .. result);
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
     if(code == 200)then
 
+        local len = table.length(self.BatchList_Private);
+        if(len>0 and self.BatchList_Private)then
+            for i = 1, len do
+                Cache.EmailCache:DeletePlayer(self.BatchList_Private[i]);
+            end
+        end
+
+
+        self.BatchList_Private={};
+        Cache.EmailCache:ClearUnreadList_Private()
+
+
         if(UIEmailForm)then
             UIEmailForm:UpdateGetPrivateLetterBoxList(1);
             UIEmailForm:DelMail(2);
-
-            self.BatchList_Private={};
-            Cache.EmailCache:ClearUnreadList_Private()
         end
 
     end
@@ -417,27 +429,43 @@ end
 
 
 --region【单个、批量阅读私信组】
-function EmailControl:ReadPrivateLetterTeamRequest(ids,isOne)
-    logic.gameHttp:ReadPrivateLetterTeam(ids,function(result) self:ReadPrivateLetterTeam(ids,isOne,result); end)
+function EmailControl:ReadPrivateLetterTeamRequest(ids,isOne,writeUid)
+    logic.gameHttp:ReadPrivateLetterTeam(ids,function(result) self:ReadPrivateLetterTeam(ids,isOne,writeUid,result); end)
 end
 --endregion
 
 
 --region 【单个、批量阅读私信组*响应】
-function EmailControl:ReadPrivateLetterTeam(ids,isOne,result)
+function EmailControl:ReadPrivateLetterTeam(ids,isOne,writeUid,result)
     logic.debug.Log("----ReadPrivateLetterTeam---->" .. result);
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
     if(code == 200)then
 
-        --修改缓存为已读
-        Cache.EmailCache:SetPrivateState(self.Info.id);
-
         --已读 是否是单条；
         if(isOne==true)then
-            if(Cache.ComuniadaCache.WriterInfo.uid)then
-                GameController.ChatControl:GetPrivateLetterPageRequest(Cache.ComuniadaCache.WriterInfo.uid,1,Cache.ComuniadaCache.WriterInfo.nickname);
+            --修改缓存为已读
+            Cache.EmailCache:SetPrivateState(ids);
+            if(writeUid)then
+                GameController.ChatControl:GetPrivateLetterPageRequest(writeUid,1,Cache.ComuniadaCache.WriterInfo.nickname);
             end
+        else
+
+            local len = table.length(self.BatchList_Private);
+            if(len>0 and self.BatchList_Private)then
+                for i = 1, len do
+                    Cache.EmailCache:ReadPlayer(self.BatchList_Private[i]);
+                end
+            end
+
+            Cache.EmailCache:ClearUnreadList_Private()
+            self.BatchList_Private={};
+
+            if(UIEmailForm)then
+                UIEmailForm:UpdateGetPrivateLetterBoxList(1);
+                UIEmailForm:DelMail(2);
+            end
+
         end
     end
 end

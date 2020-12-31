@@ -1438,11 +1438,11 @@ function GameHttp:BatchReadReceiveMail(_msgid,callback)
 end
 
 --【单个、批量删除私信】
-function GameHttp:DelPrivateLetter(_ids,callback)
+function GameHttp:DelPrivateLetterTeam(_ids,callback)
     local param = {
         ids=_ids;
     }
-    self:Post(self, "api_delPrivateLetter", param, function(result)
+    self:Post(self, "api_delPrivateLetterTeam", param, function(result)
         callback(result)
     end, nil, nil, true)
 end

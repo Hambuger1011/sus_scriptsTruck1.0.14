@@ -150,10 +150,10 @@ local UnreadList_Private={};
 function EmailCache:IsUnreadPrivate(msgid,isAdd)
     if(msgid==nil)then return false; end
     if(isAdd==true)then
-        if(GameHelper.islistHave(self.EmailList)==true)then
-            local len=table.length(self.EmailList);
+        if(GameHelper.islistHave(self.PlayerChatList)==true)then
+            local len=table.length(self.PlayerChatList);
             for i = 1, len do
-                if(self.EmailList[i].msgid==msgid and self.EmailList[i].is_read==0)then
+                if(self.PlayerChatList[i].id==msgid and self.PlayerChatList[i].is_read==0)then
                     table.insert(UnreadList_Private,msgid);
                     break;
                 end
@@ -224,9 +224,8 @@ function EmailCache:ReadPlayer(msgid)
     if(GameHelper.islistHave(self.PlayerChatList)==true)then
         local len=table.length(self.PlayerChatList);
         for i = 1, len do
-            if(self.PlayerChatList[i].msgid==msgid)then
-                self.PlayerChatList[i].status=1;
-                self.PlayerChatList[i].price_status=1;
+            if(self.PlayerChatList[i].id==msgid)then
+                self.PlayerChatList[i].is_read=1;
                 break;
             end
         end
@@ -253,18 +252,19 @@ function EmailCache:DeletePlayer(msgid)
     if(GameHelper.islistHave(self.PlayerChatList)==true)then
         local len=table.length(self.PlayerChatList);
         for i = 1, len do
-            if(self.PlayerChatList[i].msgid==msgid)then
-                self.PlayerChatList[i]=nil;
+            if(self.PlayerChatList[i].id==msgid)then
+                table.remove(self.PlayerChatList, i)
+                break;
             end
         end
     end
 end
 
-function EmailCache:SetPrivateState(msgid)
+function EmailCache:SetPrivateState(id)
     if(GameHelper.islistHave(self.PlayerChatList)==true)then
         local len=table.length(self.PlayerChatList);
         for i = 1, len do
-            if(self.PlayerChatList[i].msgid==msgid)then
+            if(self.PlayerChatList[i].id==id)then
                 self.PlayerChatList[i].is_read=1;
             end
         end

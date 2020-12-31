@@ -29,13 +29,13 @@ namespace ADTracking
     public class FirebaseTracker : IADTracker
     {
         private bool isAvailable = false;
-        
+
         /// <summary>
         /// 初始化
         /// </summary>
         public void Init(string customerInfo)
         {
-            /*
+       
             Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available)
@@ -57,7 +57,6 @@ namespace ADTracking
                 
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
             });
-            */
             if (Firebase.FirebaseApp.CheckDependencies() == DependencyStatus.Available)
             {
                 isAvailable = true;
@@ -84,7 +83,7 @@ namespace ADTracking
                 Debug.LogError("请检测手机上的谷歌服务是否正常。");
             }
         }
-        
+
         public void TrackInternal(string name, Dictionary<string, object> extraInfos)
         {
             Parameter[] firebaseExtraInfos = new Parameter[extraInfos.Count];
@@ -95,9 +94,9 @@ namespace ADTracking
                 firebaseExtraInfos[index] = new Parameter(extraInfo.Key, extraInfo.Value.ToString());
                 index++;
             }
-            
+
             Debug.LogError($"FirebaseAnalytics:{name}");
-            // FirebaseAnalytics.LogEvent(name, firebaseExtraInfos);
+            FirebaseAnalytics.LogEvent(name, firebaseExtraInfos);
         }
     }
 }

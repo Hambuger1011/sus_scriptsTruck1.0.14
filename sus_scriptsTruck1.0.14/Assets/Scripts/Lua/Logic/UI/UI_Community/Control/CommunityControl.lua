@@ -174,9 +174,9 @@ end
 
 
 
-function CommunityControl:ViewMoreBtnClick()
+function CommunityControl:ViewMoreBtnClick(func)
     if(UICommunityForm)then
-        UICommunityForm:ViewMoreBtnClick();
+        UICommunityForm:ViewMoreBtnClick(func);
     end
 end
 

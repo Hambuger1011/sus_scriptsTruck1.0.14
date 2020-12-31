@@ -208,7 +208,7 @@ function UIActivityBannerForm:SetInfo()
     GameController.MainFormControl:MoveBanner();
 
     --【设置层级】【设置层级】
-    local animaTimer=self.Image6.transform:DOLocalMoveX(233, 0.2):SetAutoKill(true):SetEase(core.tween.Ease.Flash)
+    local animaTimer=self.Image6.transform:DOLocalMoveX(233, 1):SetAutoKill(true):SetEase(core.tween.Ease.Flash)
 
     animaTimer:OnComplete(function()
         --设置层级
