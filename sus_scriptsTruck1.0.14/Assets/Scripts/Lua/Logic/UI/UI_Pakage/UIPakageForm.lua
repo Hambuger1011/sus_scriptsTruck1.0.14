@@ -30,7 +30,7 @@ function UIPakageForm:OnInitView()
     self.gameObject = self.uiform.gameObject
     self.transform = self.uiform.transform
 
-    self.objItemDetailPanel = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropDetail")
+    self.objItemDetailPanel = CS.DisplayUtil.FindChild(self.gameObject, "PropDetail")
     self.mItemDetailPanel = PakageItemDetailPanel.New(self.objItemDetailPanel,self);
     self.transParent = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout").transform;
     self.prefabItem = CS.DisplayUtil.FindChild(self.gameObject, "BG/Panel/PropsList/Viewport/Layout/Item");

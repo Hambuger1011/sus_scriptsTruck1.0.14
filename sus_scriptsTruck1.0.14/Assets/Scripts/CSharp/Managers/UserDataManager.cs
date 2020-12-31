@@ -329,8 +329,8 @@ public class UserDataManager : Singleton<UserDataManager> {
         if (item != null)
         {
             is_use_prop = isUse ? 1:0;
+            propInfoItem = item;
         }
-        propInfoItem = item;
     }
     //public void UpdatePropItem()
     public void UpdatePropItemWhenServerCallback()

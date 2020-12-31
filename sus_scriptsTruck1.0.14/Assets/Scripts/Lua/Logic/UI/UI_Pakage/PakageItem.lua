@@ -30,7 +30,7 @@ function PakageItem:SetData(itemData)
     self.imgIcon.sprite = self.parentUI:GetIconSprite(itemData.resources)
     self.txtNum.text = itemData.prop_num or "0"
     self.txtName.text = itemData.name or ""
-    self.objImgIconMark:SetActive(itemData.expire_time==-1)
+    self.objImgIconMark:SetActive(itemData.expire_time~=-1)
     if itemData.expire_time~=-1 then -- 道具过期时间：秒数，-1为永久
         self.txtCountDown.transform.parent.gameObject:SetActive(true)
         self:StartCoundown(itemData.expire_time)
