@@ -64,6 +64,7 @@ end
 
 --销毁
 function CommunityPanel:__delete()
+    self.AuthorList:Delete();
     --关闭销毁 【最受欢迎的】
     self.MostPopularList:Delete();
     --关闭销毁 【最新更新】

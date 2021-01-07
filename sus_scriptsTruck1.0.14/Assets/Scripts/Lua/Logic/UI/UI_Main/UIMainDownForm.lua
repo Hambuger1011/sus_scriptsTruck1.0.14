@@ -208,6 +208,7 @@ function UIMainDownForm:RwardToggleClick(data,data1)
         uiform = logic.UIMgr:Open(logic.uiid.UIActivityForm);
     else
         uiform.uiform:Appear();
+        uiform:SetBindStatus();
     end
 
     if(uiform and data1 and data1==3)then

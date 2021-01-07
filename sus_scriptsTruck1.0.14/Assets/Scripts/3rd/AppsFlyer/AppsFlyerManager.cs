@@ -592,9 +592,6 @@ public class AppsFlyerManager : Singleton<AppsFlyerManager>
         {
             AFtracker.Init(customerInfo);
         }
-
-        FirebaseTracker firebaseTracker = new FirebaseTracker();
-        firebaseTracker.Init(customerInfo);
     }
 
 

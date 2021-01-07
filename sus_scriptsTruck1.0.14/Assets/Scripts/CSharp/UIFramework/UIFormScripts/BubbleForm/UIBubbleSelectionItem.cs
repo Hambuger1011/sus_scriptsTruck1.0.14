@@ -38,8 +38,8 @@ public class UIBubbleSelectionItem : MonoBehaviour
     
     public void Init(string text, int cost, int hiddenEgg, int vIndex)
     {
-        pathButtonBGNormal = DialogDisplaySystem.Instance.GetUITexture("atlas/Choice/bg_chat_choice");
-        pathButtonBGDiamond = DialogDisplaySystem.Instance.GetUITexture("atlas/Choice/bg_chat_choice2");
+        pathButtonBGNormal = ResourceManager.Instance.GetUISprite("BookReadingForm/bg_chat_choice");
+        pathButtonBGDiamond = ResourceManager.Instance.GetUISprite("BookReadingForm/bg_chat_choice2");
 
         this.transform.localScale = Vector3.one;
         m_hidEgg = hiddenEgg;

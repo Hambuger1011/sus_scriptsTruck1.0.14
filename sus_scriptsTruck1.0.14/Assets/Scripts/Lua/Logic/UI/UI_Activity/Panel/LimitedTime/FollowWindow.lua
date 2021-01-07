@@ -13,11 +13,12 @@ function FollowWindow:__init(gameObject)
     self.Instagram = CS.DisplayUtil.GetChild(gameObject, "Instagram");
     self.Google = CS.DisplayUtil.GetChild(gameObject, "Google");
     self.Youtube = CS.DisplayUtil.GetChild(gameObject, "Youtube");
+    self.Youtube.gameObject:SetActiveEx(false);
     self.Twitter = CS.DisplayUtil.GetChild(gameObject, "Twitter");
     self.Google.gameObject:SetActiveEx(false);
-    self.Facebook.transform.anchoredPosition = core.Vector2.New(0,380)
+    self.Facebook.transform.anchoredPosition = core.Vector2.New(0,280)
     self.Bg = CS.DisplayUtil.GetChild(gameObject, "Bg").transform;
-    self.Bg.sizeDelta =  {x=610,y=680}
+    self.Bg.sizeDelta =  {x=610,y=580}
 
 
     logic.cs.UIEventListener.AddOnClickListener(self.Back,function(data) self.gameObject:SetActiveEx(false); end)

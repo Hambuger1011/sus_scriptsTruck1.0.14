@@ -79,7 +79,7 @@ function NarrationComponent:ShowDetails(
                     autoPlayTimer = core.Timer.New(function()
                         if logic.bookReadingMgr.playingComponent == self then
                             if logic.cs.GameDataMgr.InAutoPlay then
-                                self:OnSceneClick()
+                                self:OnSceneClick(true)
                                 autoPlayTimer:Stop()
                                 autoPlayTimer = nil
                             end

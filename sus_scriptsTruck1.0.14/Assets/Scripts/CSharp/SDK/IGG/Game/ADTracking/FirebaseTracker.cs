@@ -35,28 +35,29 @@ namespace ADTracking
         /// </summary>
         public void Init(string customerInfo)
         {
-       
-            Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus == Firebase.DependencyStatus.Available)
-                {
-                    // Create and hold a reference to your FirebaseApp,ßß
-                    // where app is a Firebase.FirebaseApp property of your application class.
-                    //   app = Firebase.FirebaseApp.DefaultInstance;
-                    isAvailable = true;
-                    FirebaseApp app = FirebaseApp.DefaultInstance;
-                    // Set a flag here to indicate whether Firebase is ready to use by your app.
-                }
-                else
-                {
-                    isAvailable = false;
-                    UnityEngine.Debug.LogError(System.String.Format(
-                        "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                    // Firebase Unity SDK is not safe to use here.
-                }
-                
-                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-            });
+
+            // Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+            //     var dependencyStatus = task.Result;
+            //     if (dependencyStatus == Firebase.DependencyStatus.Available)
+            //     {
+            //         // Create and hold a reference to your FirebaseApp,ßß
+            //         // where app is a Firebase.FirebaseApp property of your application class.
+            //         //   app = Firebase.FirebaseApp.DefaultInstance;
+            //         isAvailable = true;
+            //         FirebaseApp app = FirebaseApp.DefaultInstance;
+            //         // Set a flag here to indicate whether Firebase is ready to use by your app.
+            //     }
+            //     else
+            //     {
+            //         isAvailable = false;
+            //         UnityEngine.Debug.LogError(System.String.Format(
+            //             "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+            //         // Firebase Unity SDK is not safe to use here.
+            //     }
+            //
+            //     FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+            // });
+
             if (Firebase.FirebaseApp.CheckDependencies() == DependencyStatus.Available)
             {
                 isAvailable = true;

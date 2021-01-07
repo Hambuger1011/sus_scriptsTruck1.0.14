@@ -405,12 +405,16 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
         // Debug.LogError("购买成功。");
         Debug.LogError("购买成功。订单号：" + purchase.orderId + "    ItemID:" + result.GetItem().GetId());
 
-#if ENABLE_DEBUG
-        GameHttpNet.Instance.DevFinishOrder(purchase.orderId, result.GetItem().GetId(), "", DevFinishOrderCallBack);
-#else
+        if (UserDataManager.Instance.versionInfo != null && UserDataManager.Instance.versionInfo.data != null &&
+            UserDataManager.Instance.versionInfo.data.is_test_pay == 1)
+        {
+            GameHttpNet.Instance.DevFinishOrder(purchase.orderId, result.GetItem().GetId(), "", DevFinishOrderCallBack);
+        }
+
+#if !ENABLE_DEBUG
         EventDispatcher.Dispatch(EventEnum.PaySuccess);
 #endif
-        
+
         NewChargeTips tipForm = CUIManager.Instance.GetForm<NewChargeTips>(UIFormName.NewChargeTips);
 
         if (tipForm != null) CUIManager.Instance.CloseForm(UIFormName.NewChargeTips);

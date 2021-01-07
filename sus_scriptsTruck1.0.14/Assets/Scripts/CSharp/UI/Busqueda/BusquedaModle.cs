@@ -51,7 +51,7 @@ public class BusquedaModle
     private void AddGeneroPrefbName()
     {
         generoPrefbName[(int)BusquedaType.Button1] = "Romance";
-        generoPrefbName[(int)BusquedaType.Button2] = "LGBT";
+        generoPrefbName[(int)BusquedaType.Button2] = "LGBTQ+";
         generoPrefbName[(int)BusquedaType.Button3] = "Action";
         generoPrefbName[(int)BusquedaType.Button4] = "Youth";
         generoPrefbName[(int)BusquedaType.Button5] = "Adventure";

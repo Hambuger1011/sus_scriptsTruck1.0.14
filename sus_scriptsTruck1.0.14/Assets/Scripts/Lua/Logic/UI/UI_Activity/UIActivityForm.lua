@@ -105,6 +105,8 @@ function UIActivityForm:OnClose()
     self.mNewsPanel = nil;
     self.NewsPanel = nil;
     self.WebViewHide=false;
+
+
 end
 
 --endregion
@@ -243,6 +245,17 @@ function UIActivityForm:SignInReceiveReward()
         self.ActivityPanel:SignInReceiveReward();
     end
 end
+--endregion
+
+
+
+--region 【刷新常规活动 每日任务】
+
+function UIActivityForm:UpdateTasks(data)
+    --【获取任务列表】【每日任务】
+    GameController.ActivityControl:GetMyTaskListRequest();
+end
+
 --endregion
 
 
@@ -390,6 +403,16 @@ end
 
 --endregion
 
+--region 【刷新常规活动】【广告CD开始】
+function UIActivityForm:StartCD()
+    if(self.ActivityPanel)then
+        self.ActivityPanel:StartCD();
+    end
+end
+
+--endregion
+
+
 --region 【刷新常规活动】【广告CD结束】
 function UIActivityForm:EndCD()
     if(self.ActivityPanel)then
@@ -398,6 +421,18 @@ function UIActivityForm:EndCD()
 end
 
 --endregion
+
+
+--region 【刷新常规活动】【广告CD】【展示文本】
+
+function UIActivityForm:ShowCD(txt)
+    if(self.ActivityPanel)then
+        self.ActivityPanel:ShowCD(txt);
+    end
+end
+
+--endregion
+
 
 --region【UIActivityForm设置ScrollRect】---【常规活动】
 

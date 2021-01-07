@@ -222,10 +222,30 @@ end
 --endregion
 
 
+--region 【刷新常规活动】【广告CD开始】
+function ActivityPanel:StartCD()
+    if(self.FreeRewardPanel)then
+        self.FreeRewardPanel:StartCD();
+    end
+end
+
+--endregion
+
+
 --region 【刷新常规活动】【广告CD结束】
 function ActivityPanel:EndCD()
     if(self.FreeRewardPanel)then
         self.FreeRewardPanel:EndCD();
+    end
+end
+
+--endregion
+
+
+--region 【刷新常规活动】【广告CD】【展示文本】
+function ActivityPanel:ShowCD(txt)
+    if(self.FreeRewardPanel)then
+        self.FreeRewardPanel:ShowCD(txt);
     end
 end
 
@@ -239,7 +259,6 @@ function ActivityPanel:SetVerticalNormalizedPosition()
     end
 end
 --endregion
-
 
 
 --region【销毁】

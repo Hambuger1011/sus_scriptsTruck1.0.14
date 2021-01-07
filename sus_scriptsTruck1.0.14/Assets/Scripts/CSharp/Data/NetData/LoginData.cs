@@ -331,6 +331,7 @@ public class VersionInfo
     public string resource_version;                          //版本信息
     public string resource_url;                            //大于等于1.0.41时, api与资源请求地址
     public int log_status;                 //埋点开关
+    public int is_test_pay;
 }
 
 

@@ -339,7 +339,7 @@ function ChoiceWholeClothes:SetSpineData(selectIdx)
 	end
 
 	local clothesName = "clothes" .. clothesID
-	local expressionName = "expression1"
+	local expressionName = "expression0"
 	local hair1Name	= "hair1"
 	local hair2Name	= "hair1_1"
 
@@ -413,7 +413,7 @@ function ChoiceWholeClothes:updateView()
     elseif self.buyType == BuyType.Video then
         logic.cs.ABSystem.ui:SetAtlasSprite(uiView.imgConfirmCost2, "BookReadingForm", "icon_video")
     end
-    uiView.txtConfirmCost2.text = tostring(self.cost)
+    uiView.txtConfirmCost2.text ="<color=#AF691EFF>" .. tostring(self.cost) .. "</color>"
 end
 
 

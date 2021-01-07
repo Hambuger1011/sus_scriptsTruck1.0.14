@@ -25,12 +25,12 @@ function ViewMoreBtn:Setext(_type)
     local anima=nil;
 
     if(_type==1)then
-        self.ViewMoreText.text="ViewMore";
-        anima=self.Arrow.transform:DORotate({x=0,y=0,z=0 },0.2):SetAutoKill(true):SetEase(core.tween.Ease.Flash);
-        anima:Play();
-    elseif(_type==2)then
         self.ViewMoreText.text="Show Less";
         anima=self.Arrow.transform:DORotate({x=0,y=0,z=-180 },0.2):SetAutoKill(true):SetEase(core.tween.Ease.Flash);
+        anima:Play();
+    elseif(_type==2)then
+        self.ViewMoreText.text="ViewMore";
+        anima=self.Arrow.transform:DORotate({x=0,y=0,z=0 },0.2):SetAutoKill(true):SetEase(core.tween.Ease.Flash);
         anima:Play();
     end
 
@@ -39,6 +39,10 @@ end
 
 --销毁
 function ViewMoreBtn:__delete()
+
+    self.ViewMoreText =nil;
+    self.Arrow =nil;
+
     if(self.gameObject)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.gameObject,function(data) self:ViewMoreBtnClick() end)
     end

@@ -171,11 +171,7 @@ public class ActivityRewardedAd
     {
         string type = args.Type;
         double amount = args.Amount;
-
-        if (CallBack != null)
-        {
-            CallBack();
-        }
+   
         Debug.LogError("HandleUserEarnedReward event received for " + amount.ToString() + " " + type);
         //XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIRatinglevelForm);");
     }
@@ -197,7 +193,12 @@ public class ActivityRewardedAd
         this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
 
         Debug.LogError("HandleRewardedAdClosed  event received");
-        XLuaManager.Instance.GetLuaEnv().DoString(@" ");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
+
+        if (CallBack != null)
+        {
+            CallBack();
+        }
     }
 
 

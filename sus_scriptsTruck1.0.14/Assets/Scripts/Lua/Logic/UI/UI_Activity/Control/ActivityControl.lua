@@ -841,11 +841,33 @@ end
 --endregion
 
 
+--region【刷新广告CD开始】
+
+function ActivityControl:StartCD()
+    if(UIActivityForm)then
+        UIActivityForm:StartCD();
+    end
+end
+
+--endregion
+
+
 --region【刷新广告CD结束】
 
 function ActivityControl:EndCD()
     if(UIActivityForm)then
         UIActivityForm:EndCD();
+    end
+end
+
+--endregion
+
+
+--region 【刷新常规活动】【广告CD】【展示文本】
+
+function ActivityControl:ShowCD(txt)
+    if(UIActivityForm)then
+        UIActivityForm:ShowCD(txt);
     end
 end
 

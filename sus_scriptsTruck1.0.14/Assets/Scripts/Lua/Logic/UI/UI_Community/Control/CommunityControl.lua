@@ -41,7 +41,7 @@ function CommunityControl:GetWriterInfo(uid,result)
 
         logic.UIMgr:Open(logic.uiid.UICommunityForm)
         if(uid)then
-            self:GetActionLogPageRequest(uid,1)
+            self:GetActionLogPageRequest(uid,1,nil)
         end
     end
 end
@@ -49,18 +49,18 @@ end
 
 
 --region 【获取动态列表(分页)】
-function CommunityControl:GetActionLogPageRequest(uid,page)
+function CommunityControl:GetActionLogPageRequest(uid,page,func)
     if (self.m_curPage >= page)then  --已经请求过
         return;
     end
     self.m_curPage = page;
-    logic.gameHttp:GetActionLogPage(uid,page,function(result) self:GetActionLogPage(uid,page,result); end)
+    logic.gameHttp:GetActionLogPage(uid,page,function(result) self:GetActionLogPage(uid,page,func,result); end)
 end
 --endregion
 
 
 --region 【获取动态列表(分页)*响应】
-function CommunityControl:GetActionLogPage(uid,page,result)
+function CommunityControl:GetActionLogPage(uid,page,func,result)
     logic.debug.Log("----GetActionLogPage---->".. result);
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
@@ -75,6 +75,8 @@ function CommunityControl:GetActionLogPage(uid,page,result)
         --刷新界面
         if(UICommunityForm)then
             UICommunityForm:UpdateWriterInfo(page);
+            UICommunityForm:UpdateButton(func);
+            UICommunityForm:UpdateDynamicTitle();
         end
 
         --【获取作者首页书本列表】
@@ -82,7 +84,6 @@ function CommunityControl:GetActionLogPage(uid,page,result)
     end
 end
 --endregion
-
 
 
 --region 【获取作者首页书本列表】
@@ -111,7 +112,6 @@ function CommunityControl:GetWriterHomeBookList(uid,result)
     end
 end
 --endregion
-
 
 
 --region 【关注作者】
@@ -144,6 +144,7 @@ function CommunityControl:SetWriterFollow(uid,result)
     end
 end
 --endregion
+
 
 --region 【赞同作者】
 function CommunityControl:SetWriterAgreeRequest(uid)

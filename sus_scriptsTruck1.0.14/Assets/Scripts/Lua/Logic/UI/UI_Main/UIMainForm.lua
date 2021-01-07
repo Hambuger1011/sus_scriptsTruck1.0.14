@@ -242,7 +242,7 @@ end
 --刷新LGBT列表
 function UIMainForm:UpdateLGBTList(LGBT_book)
     if(self.LGBTList.gameObject)then
-        self.LGBTList:UpdateList(LGBT_book,"LGBT",BuriedPoint_bookType.LGBT);
+        self.LGBTList:UpdateList(LGBT_book,"LGBTQ+",BuriedPoint_bookType.LGBT);
     end
 end
 

@@ -68,6 +68,13 @@ function UIComuniadaForm:OnClose()
         logic.cs.UIEventListener.RemoveOnClickListener(self.BusquedaBtn,function(data) self:BusquedaBtnClick() end)
     end
 
+    self.CommunityPanel:Delete();
+    self.FavoritesPanel:Delete();
+    self.TabScrollRect = nil;
+    self.CommunityTab = nil;
+    self.FavoritesTab = nil;
+    self.BusquedaBtn = nil;
+
 end
 
 --endregion

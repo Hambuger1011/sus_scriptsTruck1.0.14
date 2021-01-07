@@ -140,6 +140,7 @@ public class ProfileForm : BaseUIForm
         Twitter = transform.Find("CommunityWindow/BG/Twitter/Image").gameObject;
         Instagram = transform.Find("CommunityWindow/BG/Instagram/Image").gameObject;
         Youtube = transform.Find("CommunityWindow/BG/Youtube/Image").gameObject;
+        transform.Find("CommunityWindow/BG/Youtube").gameObject.SetActiveEx(false);
         Google = transform.Find("CommunityWindow/BG/Google/Image").gameObject;
         transform.Find("CommunityWindow/BG/Google").gameObject.SetActiveEx(false);
         Back = transform.Find("CommunityWindow/BG/Back/Back").gameObject;

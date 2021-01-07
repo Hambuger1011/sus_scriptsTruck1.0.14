@@ -41,7 +41,7 @@ function UIFavoritosForm:InitView()
     self.btnCreate.onClick:AddListener(function()
         logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.SwitchComuniada, 1)
         local uiView = logic.UIMgr:Open(logic.uiid.Story_NewBook)
-        uiView:SetData(self.storyDetial,nil,true)
+        uiView:SetData(self.storyDetial)
     end)
 
     ---@type StoryEditor_BookDetial[]

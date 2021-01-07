@@ -54,7 +54,7 @@ public class ShareSdk : MonoBehaviour
     #endregion
 
 
-    # region share txt
+    #region share txt
 
     public void ShareMsg(string vMsg)
     {
@@ -80,13 +80,13 @@ public class ShareSdk : MonoBehaviour
 
 #endif
 
-    
+
 
 #if UNITY_IOS
- //    [DllImport("__Internal")]
-	// private static extern void Onyx_NativeShare(string text, string encodedMedia);
- //    [DllImport ("__Internal")]
- //    private static extern void copyTextToClipboard(string text);
+    [DllImport("__Internal")]
+    private static extern void Onyx_NativeShare(string text, string encodedMedia);
+    //[DllImport("__Internal")]
+    //private static extern void copyTextToClipboard(string text);
 
     public delegate void OnShareSuccess(string platform);
 	public delegate void OnShareCancel(string platform);
@@ -116,14 +116,14 @@ public class ShareSdk : MonoBehaviour
 		LOG.Info("------NativeShare-----");
 
 			if(texture != null) {
-				//Debug.Log("NativeShare: Texture");
-				byte[] val = texture.EncodeToPNG();
+            Debug.Log("NativeShare: Texture");
+            byte[] val = texture.EncodeToPNG();
 				string bytesString = System.Convert.ToBase64String (val);
-                // Onyx_NativeShare(text, bytesString);
-			} else {
-				//Debug.Log("NativeShare: No Texture");
-                // Onyx_NativeShare(text, "");
-			}
+            Onyx_NativeShare(text, bytesString);
+        } else {
+            Debug.Log("NativeShare: No Texture");
+            Onyx_NativeShare(text, "");
+        }
 
 	}
 	private void OnNativeShareSuccess(string result){

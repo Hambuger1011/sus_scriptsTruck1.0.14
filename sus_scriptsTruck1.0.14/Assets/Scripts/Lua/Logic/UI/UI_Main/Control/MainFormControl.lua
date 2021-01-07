@@ -175,8 +175,18 @@ function MainFormControl:GetSelfBookInfo(result)
 
         if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
         and not logic.cs.UserDataManager.FirstChargeHaveShown then
-            logic.cs.UserDataManager.FirstChargeHaveShown = true
-            logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
+            logic.gameHttp:GetRewardConfig(function(result)
+                if(string.IsNullOrEmpty(result))then return; end
+                logic.debug.Log("----GetRewardConfig---->" .. result)
+                local json = core.json.Derialize(result);
+                local code = tonumber(json.code);
+                if(code == 200)then
+                    --缓存奖励数据
+                    Cache.ActivityCache:UpdatedRewardConfig(json.data);
+                    logic.cs.UserDataManager.FirstChargeHaveShown = true
+                    logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
+                end
+            end)
         end
 
 

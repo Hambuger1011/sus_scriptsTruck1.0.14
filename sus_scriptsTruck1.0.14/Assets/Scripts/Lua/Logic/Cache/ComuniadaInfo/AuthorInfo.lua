@@ -42,12 +42,12 @@ function AuthorInfo:__delete()
     self.last_update_book_time=nil;
     self.last_update_book_id=nil;
     self.is_online=nil;
-    self.user_info=nil;
     self.user_info.nickname=nil;
     self.user_info.avatar=nil;
     self.user_info.avatar_frame=nil;
     self.user_info.comment_frame=nil;
     self.user_info.barrage_frame=nil;
+    self.user_info=nil;
 end
 
 

@@ -134,6 +134,7 @@ function ChatControl:SendWriterLetter(uid,content,result)
 
         if(UIChatForm)then
             UIChatForm:UpdateChatInfo(uid,nil);
+            UIChatForm:SendSuccess();
         end
     end
 end

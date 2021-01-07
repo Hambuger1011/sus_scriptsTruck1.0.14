@@ -87,10 +87,8 @@ public class BookLoadingTexte : MonoBehaviour
         myArraylist.Add("You'll get a free key every two hours to read new chapters!");
         myArraylist.Add("Tired of watching Ads? Make a purchase and they'll disappear forever!");
         myArraylist.Add("Be adventurous and try different books, you might like them!");
-        myArraylist.Add("Over 500.000 people play Secrets: Game of Choices around the world!");
         myArraylist.Add("Buy all the clothes you like; our wardrobe is infinite!");
         myArraylist.Add("Don't know what to read? Play one of the recommended stories!");
-        myArraylist.Add("What's your favorite book in Secrets: Game of Choices? Tell us on Facebook!");
         myArraylist.Add("We're finding the best outfits, please wait…");
         myArraylist.Add("Be patient! We're setting all the backgrounds in the story… ");
         myArraylist.Add("Share the game in Facebook to get free Diamonds!");
@@ -107,7 +105,6 @@ public class BookLoadingTexte : MonoBehaviour
         myArraylist.Add("Creating Universe (this may take some time)");
         myArraylist.Add("Resistance is futile. Prepare to be amazed!");
         myArraylist.Add("Calculating meaning of life...");
-        myArraylist.Add("Secrets: Game of Choices contains more than 1,000,000 words.");
         myArraylist.Add("And in her smile I see something more beautiful than the stars.");
         myArraylist.Add("When someone loves you, the way they talk about you is different. You feel safe and comfortable.");
         myArraylist.Add("Some women choose to follow men, and some women choose to follow their dreams.");
@@ -119,8 +116,6 @@ public class BookLoadingTexte : MonoBehaviour
         myArraylist.Add("Every great love starts with a great story...");
         myArraylist.Add("Come sleep with me: We won't make Love, Love will make us.");
         myArraylist.Add("If you want to keep a secret, you must also hide it from yourself.");
-        myArraylist.Add("There are two types of secrets: the kind you want to keep in, and the kind you don't dare to let out.");
-        myArraylist.Add("Sometimes, the biggest secrets you can only tell a stranger.");
         myArraylist.Add("If someone wants you, nothing can keep you away. If he doesn't want you, nothing can make him stay.");
         myArraylist.Add("Attitude is a choice. Happiness is a choice. Whatever choice you make makes you. Choose wisely.");
         myArraylist.Add("You cannot control the behavior of others, but you can choose how you respond to it.");

@@ -187,12 +187,12 @@ end
 
 
 
-function BaseDialogueComponent:OnSceneClick()
+function BaseDialogueComponent:OnSceneClick(_showNextDialog)
     if self.IsPlayTween or self.cfg.trigger == 1 then
         return
     end
     Base.OnSceneClick(self)
-    if logic.cs.BookReadingWrapper.IsTextTween then
+    if logic.cs.BookReadingWrapper.IsTextTween and not _showNextDialog then
         self.ui.DialogText:StopTyperTween()
         logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.dialog_click)
     else
@@ -250,11 +250,13 @@ function BaseDialogueComponent:ShowDetails(
         
         local callback = function()
             if DialogBoxContent then DialogBoxContent:SetActiveEx(true) end
+            local PlayerNameTxt = string.Empty
             if self.cfg.role_id == 1 then
-                PlayerName.text = logic.bookReadingMgr.bookData.PlayerName
+                PlayerNameTxt = logic.bookReadingMgr.bookData.PlayerName
             else
-                PlayerName.text = logic.bookReadingMgr:GetRoleName(self.cfg.role_id)
+                PlayerNameTxt = logic.bookReadingMgr:GetRoleName(self.cfg.role_id)
             end
+            PlayerName.text = string.upper(PlayerNameTxt)
             self.IsPlayTween = false
             logic.bookReadingMgr.view:textDialogTween(self,DialogBox,typertext,0,showText,function()
                 if self.cfg.trigger == 1 then
@@ -266,7 +268,7 @@ function BaseDialogueComponent:ShowDetails(
                         autoPlayTimer = core.Timer.New(function()
                             if logic.bookReadingMgr.playingComponent == self then
                                 if logic.cs.GameDataMgr.InAutoPlay then
-                                    self:OnSceneClick()
+                                    self:OnSceneClick(true)
                                     autoPlayTimer:Stop()
                                     autoPlayTimer = nil
                                 end

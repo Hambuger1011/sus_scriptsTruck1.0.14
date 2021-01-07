@@ -41,10 +41,6 @@ function UICommunityForm:OnInitView()
     self.MainContent = CS.DisplayUtil.GetChild(self.LoopListView2.gameObject, "MainContent")
 
     --logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data) self:OnExitClick() end);
-    self.mWriterList=nil;
-    self.WriterList=nil;
-    self.mHistoryList=nil;
-    self.HistoryList=nil;
     self.m_page = 0;
 end
 --endregion
@@ -68,6 +64,42 @@ end
 function UICommunityForm:OnClose()
     UIView.OnClose(self)
     GameController.CommunityControl:SetData(nil);
+
+    Cache.ComuniadaCache.DynamicList={};
+    Cache.ComuniadaCache.DynamicList_Count=0;
+
+    --【清除列表所有对象 和 脚本】
+    if(scriptItemList)then
+        for _key, _value in pairs(scriptItemList) do
+            if(_value)then
+                _value:Delete();--【销毁】
+            end
+        end
+        scriptItemList={};
+    end
+
+
+    if(WriterList)then
+        WriterList:Delete();--【销毁】
+        WriterList=nil;
+    end
+
+    if(HistoryList)then
+        HistoryList:Delete();--【销毁】
+        HistoryList=nil;
+    end
+
+    if(ViewMoreBtn)then
+        ViewMoreBtn:Delete();--【销毁】
+        ViewMoreBtn=nil;
+    end
+
+    if(AuthorInfoPanel)then
+        AuthorInfoPanel:Delete();--【销毁】
+        AuthorInfoPanel=nil;
+    end
+
+
 end
 
 --endregion
@@ -77,34 +109,51 @@ end
 --region 【点击更多动态按钮】
 
 function UICommunityForm:ViewMoreBtnClick(func)
-
     local len=table.length(Cache.ComuniadaCache.DynamicList);
     local _AllCount=Cache.ComuniadaCache.DynamicList_Count;
-
     if(allCount==6 and len > 1)then   --【说明是折叠着】【只显示1条】
         allCount=len+5;
-
-        if(func)then
-            func(1);
-        end
-
+        --【刷新按钮状态】
+        self:UpdateButton(func);
     else
-        if(len%5==0 and _AllCount%5~=0)then  --【如果当前页 已经满数】【并且总数不是当前数】 【请求获取下一页】
-            if(Cache.ComuniadaCache.WriterInfo.uid)then
-                GameController.CommunityControl:GetActionLogPageRequest(Cache.ComuniadaCache.WriterInfo.uid,self.m_page+1);
-                return;
-            end
-        else
-            allCount=6; --【折叠成 单个动态】`
-
-            if(func)then
-                func(2);
+        if(len > 1)then
+            if(len%5==0 and len<_AllCount)then   --【如果当前页 已经满数】【并且总数不是当前数】 【请求获取下一页】
+                if(Cache.ComuniadaCache.WriterInfo.uid)then
+                    GameController.CommunityControl:GetActionLogPageRequest(Cache.ComuniadaCache.WriterInfo.uid,self.m_page+1,func);
+                    return;
+                end
+            elseif(len==_AllCount)then
+                allCount=6; --【折叠成 单个动态】`
+                --【刷新按钮状态】
+                self:UpdateButton(func);
             end
         end
     end
+
     --【设置列表总数量】
     self.LoopListView2:SetListItemCount(allCount);
 end
+
+--【刷新按钮状态】
+function UICommunityForm:UpdateButton(func)
+    if(func==nil)then return; end
+
+    local len=table.length(Cache.ComuniadaCache.DynamicList);
+    local _AllCount=Cache.ComuniadaCache.DynamicList_Count;
+    if(allCount==6 and len > 1)then   --【说明是折叠着】【只显示1条】
+        func(2);
+    else
+        if(len > 1)then
+            if(len%5==0 and len<_AllCount)then   --【如果当前页 已经满数】【并且总数不是当前数】 【请求获取下一页】
+                func(2);
+            elseif(len==_AllCount)then
+                func(1);
+            end
+        end
+    end
+end
+
+
 
 --endregion
 
@@ -120,6 +169,7 @@ function UICommunityForm:UpdateWriterInfo(page)
         self.m_page = page;
     end
 
+    local _AllCount=Cache.ComuniadaCache.DynamicList_Count;
     local len=table.length(Cache.ComuniadaCache.DynamicList);
     if(len and len>=0)then
         if(page==1)then
@@ -134,7 +184,7 @@ function UICommunityForm:UpdateWriterInfo(page)
 
                 --不展示更多按钮
                 isBestDynam=false;
-            elseif(len > 1)then  --【当只有一条动态的情况】
+            elseif(len > 1)then  --【当有多条动态的情况】
                 allCount = 6;
 
                 --展示更多按钮
@@ -209,7 +259,9 @@ function UICommunityForm.OnGetItemByRowColumn(listView,index)
 
     --如果有动态
     if(isDynamic)then
-        local itemData = Cache.ComuniadaCache:GetDynamicList(_index)
+        local m_Index=_index-2;
+
+        local itemData = Cache.ComuniadaCache:GetDynamicList(m_Index);
 
         --【GameObect唯一编号】
         local onlyID=item.gameObject:GetInstanceID();
@@ -270,6 +322,21 @@ function UICommunityForm:UpdateWriterAgree()
 end
 
 --endregion
+
+
+--region【刷新作者点赞】
+
+function UICommunityForm:UpdateDynamicTitle()
+
+    if(AuthorInfoPanel)then
+        AuthorInfoPanel:UpdateDynamicTitle();
+    end
+
+end
+
+--endregion
+
+
 
 
 --region 【界面关闭】

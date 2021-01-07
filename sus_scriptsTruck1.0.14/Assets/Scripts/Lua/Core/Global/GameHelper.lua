@@ -598,6 +598,9 @@ end
 function GameHelper.GetBindStatus()
     local UserInfo = GameHelper.DicToLuaTable(logic.cs.IGGSDKMrg.UserInfo)
     logic.debug.PrintTable(UserInfo,"UserInfo")
+    if UserInfo.LoginType and #UserInfo.LoginType> 0 and UserInfo.LoginType ~= "Device" then
+        return true
+    end
     if GameHelper.IsNotNilOrZero(UserInfo.FBIsBind) or GameHelper.IsNotNilOrZero(UserInfo.GoogleIsBind) or GameHelper.IsNotNilOrZero(UserInfo.IGGIsBind)
             or GameHelper.IsNotNilOrZero(UserInfo.AppleIsBind) or GameHelper.IsNotNilOrZero(UserInfo.GameCenterIsBind) then
         return true
@@ -644,45 +647,28 @@ end
 GameHelper.FR_Timer=nil;
 --广告倒计时秒数
 GameHelper.FR_timeNum=0;
---广告倒计时 CD冷却秒数
-GameHelper.FR_CDNum=0;
-
 
 --活动页面看广告倒计时
-function GameHelper.FRPanel_CountDown(Timetext,CDtext)
+function GameHelper.FRPanel_CountDown(Timetext)
     if(GameHelper.FR_Timer==nil)then
-        GameHelper.FR_Timer = core.Timer.New(function() GameHelper.UpdateFRTime(Timetext,CDtext)  end,1,-1);
+        GameHelper.FR_Timer = core.Timer.New(function() GameHelper.UpdateFRTime(Timetext)  end,1,-1);
     end
     --开启计时器
     GameHelper.StartFRTimer();
 end
 
 
-function GameHelper.UpdateFRTime(Timetext,CDtext)
+function GameHelper.UpdateFRTime(Timetext)
     GameHelper.FR_timeNum=GameHelper.FR_timeNum-1;
     local hour =  math.modf( GameHelper.FR_timeNum / 3600 );
     local minute = math.fmod( math.modf(GameHelper.FR_timeNum / 60), 60 );
     local second = math.fmod(GameHelper.FR_timeNum, 60 );
     Timetext.text = string.format("%02d:%02d:%02d", hour, minute, second);
 
-    if(GameHelper.FR_CDNum>0)then
-        local second2 = math.fmod(GameHelper.FR_CDNum, 60 );
-        CDtext.text = string.format("%02d:%02d:%02d", 0, 0, second2);
-    end
-
     if(GameHelper.FR_timeNum<0)then
         --先停止计时器
         GameHelper.StopFR_Timer();
     end
-
-    if(GameHelper.FR_CDNum<0)then
-        --先停止计时器
-        GameHelper.StopFR_Timer();
-
-        --结束CD操作
-        GameController.ActivityControl:EndCD()
-    end
-
 end
 
 
@@ -712,8 +698,41 @@ function GameHelper.CloseFR_Timer()
 end
 
 
+--看广告倒计时
+GameHelper.FR_CDTimer=nil;
+--广告倒计时 CD冷却秒数
+GameHelper.FR_CDNum=0;
 
+--活动页面看广告倒计时
+function GameHelper.FRCD_CountDown()
+    if(GameHelper.FR_CDTimer==nil)then
+        GameHelper.FR_CDTimer = core.Timer.New(function() GameHelper.UpdateFRCDTime()  end,1,-1);
+        GameHelper.FR_CDTimer:Start();  --开启计时器
+    end
+end
 
+function GameHelper.UpdateFRCDTime()
+    if(GameHelper.FR_CDNum>0)then
+        GameHelper.FR_CDNum=GameHelper.FR_CDNum-1;
+        local str = string.format("%02d:%02d:%02d", 0, 0, GameHelper.FR_CDNum);
+        GameController.ActivityControl:ShowCD(str);
+    end
+
+    if(GameHelper.FR_CDNum<=0)then
+        --先停止计时器
+        GameHelper.CloseFRCD_Timer();
+        --结束CD操作
+        GameController.ActivityControl:EndCD()
+    end
+end
+
+--关闭并销毁计时器
+function GameHelper.CloseFRCD_Timer()
+    if(GameHelper.FR_CDTimer)then
+        GameHelper.FR_CDTimer:Stop();
+        GameHelper.FR_CDTimer=nil;
+    end
+end
 --endregion
 
 
@@ -808,16 +827,21 @@ end
 
 --region【展示创作书本封面】
 
+
+local m_downloadSeq=0;
 function GameHelper.ShowUGCStoryBg(cover_image,DefaultImg_sprite,BookIconImage)
+
+
+    m_downloadSeq=m_downloadSeq+1
 
     if not string.IsNullOrEmpty(cover_image) then
         local url,md5 = logic.StoryEditorMgr:ParseImageUrl(cover_image)
         local filename = logic.config.WritablePath .. '/cache/story_image/'..md5
 
-        local downloadSeq = self.m_downloadSeq
+        local downloadSeq = m_downloadSeq
         logic.StoryEditorMgr.data:LoadSprite(filename, md5, url,function(sprite)
-            if downloadSeq ~= self.m_downloadSeq then
-                logic.debug.LogError('seq mismatch:'..downloadSeq..'<=>'..self.m_downloadSeq)
+            if downloadSeq ~= m_downloadSeq then
+                logic.debug.LogError('seq mismatch:'..downloadSeq..'<=>'..m_downloadSeq)
                 return
             end
             GameHelper.SetBookCover(sprite,DefaultImg_sprite,BookIconImage);

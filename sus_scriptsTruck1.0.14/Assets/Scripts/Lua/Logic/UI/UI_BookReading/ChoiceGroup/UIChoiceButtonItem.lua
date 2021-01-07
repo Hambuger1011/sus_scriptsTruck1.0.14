@@ -57,7 +57,7 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
     end
     self.index = index
     self.selection = selection
-    self.cost = 20 or cost
+    self.cost = cost
     self.hiddenEgg = hiddenEgg
     self.textKeyProp.text = tostring(self.cost)
     self.txtInfo.text = logic.bookReadingMgr:ReplaceChar(selection)

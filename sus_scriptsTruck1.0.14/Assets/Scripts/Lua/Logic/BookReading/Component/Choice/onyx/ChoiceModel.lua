@@ -493,7 +493,7 @@ function ChoiceModel:SetSpineData(selectIdx)
 	
 
 	-- local clothesName = "clothes" .. clothesID
-	-- local expressionName = "expression1"
+	-- local expressionName = "expression0"
 	-- local hair1Name	= "hair1"
 	-- local hair2Name	= "hair1_1"
 
@@ -643,7 +643,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 	self.choiceCost = choiceCost
 	uiView.textKeyProp.text = tostring(self.choiceCost)
 	uiView.DetailText.text = tostring(descriptionText)
-	uiView.lbCost.text = tostring(choiceCost)
+	uiView.lbCost.text = "<color=#AF691EFF>" .. tostring(choiceCost) .. "</color>"
 	uiView.freePanel:SetActiveEx(isFree)
 	uiView.payPanel:SetActiveEx(not isFree)
 	uiView.fxSelectClothes:SetActiveEx(not isFree)
@@ -655,6 +655,14 @@ function ChoiceModel:UpdateDetialsView(isInit)
 	uiView.ClothNumber.text= string.format("CHOICE[%d/%d]",self.selectIdx[self.modelType],self.numOfChoice[self.modelType]);
     --self:ShowPiontType(self.selectIdx[self.modelType])
 
+	if self.numOfChoice[self.modelType] > 1 then
+		uiView.imgLeftArrow.gameObject:SetActiveEx(true)
+		uiView.imgRightArrow.gameObject:SetActiveEx(true)
+	else
+		uiView.imgLeftArrow.gameObject:SetActiveEx(false)
+		uiView.imgRightArrow.gameObject:SetActiveEx(false)
+	end
+
 
 	if not delayMove then
 		self:MovePeople();
@@ -665,7 +673,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 
 	local skinName = 'skin'..skinID
 	local clothesName = "clothes" .. clothesID
-	local expressionName = "expression1"
+	local expressionName = "expression0"
 	local hair1Name	= "hair1"
 	local hair2Name	= "hair1_1"
 	if hairID > 1 then

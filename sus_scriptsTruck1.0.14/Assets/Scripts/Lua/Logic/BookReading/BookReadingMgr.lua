@@ -319,6 +319,8 @@ function BookReadingMgr:PlayById(id)
     if self.playingComponent == nil then
         return
     end
+    logic.cs.GameDataMgr.AutoPlayOpen = nil
+    logic.cs.GameDataMgr.AutoPlayClose = nil
     logic.debug.LogWarning(string.format('---play dialog id=%d,type=%s',id,self.playingComponent.__cname))
     self.bookData.DialogueID = id
 	--播放bgm

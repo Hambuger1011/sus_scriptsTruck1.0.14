@@ -31,7 +31,7 @@ public class TypeSelectionFormLogic
     private void AddButttonName()
     {
         GeneroButtonName[(int)TypeSlectNumber.Button1- 3] = "Romance";
-        GeneroButtonName[(int)TypeSlectNumber.Button2- 3] = "LGBT";
+        GeneroButtonName[(int)TypeSlectNumber.Button2- 3] = "LGBTQ+";
         GeneroButtonName[(int)TypeSlectNumber.Button3- 3] = "Action";
         GeneroButtonName[(int)TypeSlectNumber.Button4- 3] = "Youth";
         GeneroButtonName[(int)TypeSlectNumber.Button5- 3] = "Adventure";

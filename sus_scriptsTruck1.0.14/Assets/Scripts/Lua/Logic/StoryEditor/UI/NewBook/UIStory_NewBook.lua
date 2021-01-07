@@ -120,7 +120,7 @@ function UIStory_NewBook:OnOpen()
         local flag = logic.cs.PlayerPrefs.GetInt(logic.cs.UserDataManager.userInfo.data.userinfo.phoneimei..'_story_privacy',0)
         self.firstCreate = (flag == 0)
     end
-    self.step_privacy:SetActiveEx(self.firstCreate)
+    self.step_privacy:SetActiveEx(false)
     self:GotoStep1()
 end
 
@@ -138,7 +138,7 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param onFinishCallback function(newDetials)
-function UIStory_NewBook:SetData(storyDetial,onFinishCallback,ShowIggAgreement)
+function UIStory_NewBook:SetData(storyDetial,onFinishCallback)
     self.onFinishCallback = onFinishCallback
     if storyDetial then
         self.isNewBook = false
@@ -164,10 +164,8 @@ function UIStory_NewBook:SetData(storyDetial,onFinishCallback,ShowIggAgreement)
     ---@type StoryEditor_BookDetials
     self.storyDetial = storyDetial
     self:RefreshUI()
-    if ShowIggAgreement then
-        self.step_privacy:SetActiveEx(false)
-        logic.cs.IGGAgreementMrg:OnRequestStatusCustomClick()
-    end
+    self.step_privacy:SetActiveEx(false)
+    logic.cs.IGGAgreementMrg:OnRequestStatusCustomClick()
 end
 
 function UIStory_NewBook:RefreshUI()

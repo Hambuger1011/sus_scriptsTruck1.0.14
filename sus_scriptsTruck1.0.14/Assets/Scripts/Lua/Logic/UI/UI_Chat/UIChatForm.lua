@@ -227,6 +227,16 @@ end
 --endregion
 
 
+--region【发送成功】
+
+function UIChatForm:SendSuccess()
+    if(self.InputField)then
+       self.InputField.text="";
+    end
+end
+
+--endregion
+
 --region 【跳转到指定Item】
 
 function UIChatForm:OnJumpToItem(itemIndex)

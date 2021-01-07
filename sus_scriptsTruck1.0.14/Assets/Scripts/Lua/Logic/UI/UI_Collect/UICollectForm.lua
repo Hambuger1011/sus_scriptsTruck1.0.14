@@ -23,11 +23,6 @@ UICollectForm.config = {
 function UICollectForm:OnInitView()
     UIView.OnInitView(self)
     local this=self.uiform
-
-    local img = CS.DisplayUtil.GetChild(this.gameObject, "Title"):GetComponent(typeof(logic.cs.Image));
-    img.sprite = logic.cs.ABSystem.ui:GetUITexture(CS.AbTag.Global,
-            "Assets/Bundle/BookPreview/Icon/tempimage1.png");
-    
     self.Diamonds =CS.DisplayUtil.GetChild(this.gameObject, "Diamonds")
     self.Keys =CS.DisplayUtil.GetChild(this.gameObject, "Keys")
     self.ClothesCoupon =CS.DisplayUtil.GetChild(this.gameObject, "ClothesCoupon")

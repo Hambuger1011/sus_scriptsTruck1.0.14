@@ -549,6 +549,7 @@ public class UniHttp
         obj.Headers["phoneimei"] = uuid;
         obj.Headers["token"] = Token;
         obj.Headers["lang"] = lang;
+        obj.Headers["version"] = SdkMgr.Instance.GameVersion();
         obj.Headers["access-token"] = accessToken;
         obj.Headers["system-type"] = systemType.ToString();
         obj.Headers["iggid"] = iggId;
@@ -575,6 +576,7 @@ public class UniHttp
         obj.Headers["phoneimei"] = uuid;
         obj.Headers["token"] = Token;
         obj.Headers["lang"] = lang;
+        obj.Headers["version"] = SdkMgr.Instance.GameVersion();
         obj.Headers["access-token"] = accessToken;
         obj.Headers["system-type"] = systemType.ToString();
         obj.Headers["iggid"] = iggId;

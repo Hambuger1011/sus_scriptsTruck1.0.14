@@ -13,6 +13,7 @@ function AuthorInfoPanel:__init(gameObject)
     self.LikeToogle =CS.DisplayUtil.GetChild(gameObject, "LikeToogle"):GetComponent("UIToggle");
     self.ThumbUpToogle =CS.DisplayUtil.GetChild(gameObject, "ThumbUpToogle"):GetComponent("UIToggle");
     self.ThumbUpText =CS.DisplayUtil.GetChild(self.ThumbUpToogle.gameObject, "ThumbUpText"):GetComponent("Text");
+    self.DynamicTitleTxt =CS.DisplayUtil.GetChild(gameObject, "DynamicTitleTxt"):GetComponent("Text");
 
     --飞鸽按钮
     self.MessageBtn =CS.DisplayUtil.GetChild(gameObject, "MessageBtn");
@@ -55,6 +56,8 @@ function AuthorInfoPanel:UpdateInfo()
                 self.MessageBtn:SetActive(true);
             end
         end
+
+
 
     else
         --显示头像
@@ -138,8 +141,38 @@ end
 
 --endregion
 
+function AuthorInfoPanel:UpdateDynamicTitle()
+    local _AllCount=Cache.ComuniadaCache.DynamicList_Count;
+    if(_AllCount>0)then
+        self.DynamicTitleTxt.gameObject:SetActive(true);
+    elseif(_AllCount==0)then
+        self.DynamicTitleTxt.gameObject:SetActive(false);
+    end
+end
+
+
 --销毁
 function AuthorInfoPanel:__delete()
+    --按钮监听
+    if(self.MessageBtn)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.MessageBtn,function(data) self:MessageBtnClick() end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.LikeToogle.gameObject,function(data) self:LikeToogleClick() end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.ThumbUpToogle.gameObject,function(data) self:ThumbUpToogleClick() end)
+    end
+    self.HeadIcon = nil;
+    self.HeadFrame = nil;
+    self.AuthorName = nil;
+    self.PersonalStatus = nil;
+    self.BookNumsText = nil;
+    self.FansNumsText = nil;
+    self.LikeToogle = nil;
+    self.ThumbUpToogle = nil;
+    self.ThumbUpText = nil;
+    self.DynamicTitleTxt = nil;
+    self.MessageBtn = nil;
+    self.DynamicTitleTxt = nil;
+
+    self.gameObject = nil;
 end
 
 return AuthorInfoPanel

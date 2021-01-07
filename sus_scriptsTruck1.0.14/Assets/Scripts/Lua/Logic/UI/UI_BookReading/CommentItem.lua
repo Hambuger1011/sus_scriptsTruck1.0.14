@@ -36,6 +36,10 @@ function CommentItem:__init(uiItem)
     self.likeBtn = self.uiBinding:Get('LikeBtn', typeof(logic.cs.UITweenButton))
     self.unLikeBtn = self.uiBinding:Get('UnLikeBtn', typeof(logic.cs.UITweenButton))
     self.replyBtn = self.uiBinding:Get('ReplyBtn', typeof(logic.cs.UITweenButton))
+    self.LikeIcon =CS.DisplayUtil.GetChild(self.likeBtn.gameObject, "LikeIcon"):GetComponent("Image");
+    self.UnLikeIcon =CS.DisplayUtil.GetChild(self.unLikeBtn.gameObject, "UnLikeIcon"):GetComponent("Image");
+
+
 
     self.SetActive = function(self, isOn)
         self.gameObject:SetActiveEx(isOn)
@@ -88,6 +92,11 @@ function CommentItem:SetData(Data)
     self.unLikeText.text = self:FormatNum(Data.disagree_count)
     self.replyText.text = Data.reply_count
 
+
+    if(Data.agree)then
+        self:SetAgreeState(Data.agree,Data.agree_count,Data.disagree_count);
+    end
+
     self.itemButton.onClick:RemoveAllListeners()
     self.itemButton.onClick:AddListener(function()
         self:OnItemClick(Data)
@@ -101,9 +110,19 @@ function CommentItem:SetData(Data)
             if code == 200 then
                 logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.ThumbUpRecord, "", "", tostring(logic.bookReadingMgr.selectBookId))
                 Data.agree_count = json.data.agree_count
-                self.likeText.text = self:FormatNum(Data.agree_count)
                 Data.disagree_count = json.data.disagree_count
-                self.unLikeText.text = self:FormatNum(Data.disagree_count)
+
+
+                if(json.data.disagree==1)then
+                    Data.agree=2;
+                elseif(json.data.agree==1)then
+                    Data.agree=json.data.agree;
+                else
+                    Data.agree=0;
+                end
+                if(Data.agree)then
+                    self:SetAgreeState(Data.agree,Data.agree_count);
+                end
             else
                 logic.cs.UIAlertMgr:Show("TIPS", json.msg)
             end
@@ -118,9 +137,19 @@ function CommentItem:SetData(Data)
             if code == 200 then
                 logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.CancelThumbUp, "", "", tostring(logic.bookReadingMgr.selectBookId))
                 Data.agree_count = json.data.agree_count
-                self.likeText.text = self:FormatNum(Data.agree_count)
                 Data.disagree_count = json.data.disagree_count
-                self.unLikeText.text = self:FormatNum(Data.disagree_count)
+
+                if(json.data.disagree==1)then
+                    Data.agree=2;
+                elseif(json.data.agree==1)then
+                    Data.agree=json.data.agree;
+                else
+                    Data.agree=0;
+                end
+                if(Data.agree)then
+                    self:SetAgreeState(Data.agree,Data.agree_count,Data.disagree_count);
+                end
+
             else
                 logic.cs.UIAlertMgr:Show("TIPS", json.msg)
             end
@@ -139,9 +168,35 @@ function CommentItem:SetData(Data)
     self.boxSize = core.Vector2.New(750, height)
 end
 
+
+function CommentItem:SetAgreeState(agree,agree_count,disagree_count)
+    if(self.LikeIcon==nil or self.UnLikeIcon==nil)then return; end
+    self.LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike");
+    self.UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike");
+    if(agree)then
+        if(agree==0)then --0中立
+        elseif(agree==1)then  --1赞同
+            self.LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike_1");
+        elseif(agree==2)then  --2不赞同
+            self.UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike_1");
+        end
+    end
+
+    if(self.likeText and agree_count)then
+        self.likeText.text = self:FormatNum(agree_count)
+
+    end
+
+    if(self.unLikeText and disagree_count)then
+        self.unLikeText.text = self:FormatNum(disagree_count)
+    end
+end
+
+
+
 --endregion
 function CommentItem:OnItemClick(Data)
-    UI_Reply:SetCommentData(Data)
+    UI_Reply:SetCommentData(Data,function(_Data) self:SetAgreeState(_Data.agree,_Data.agree_count,_Data.disagree_count)end)
     logic.UIMgr:Open(logic.uiid.Reply)
 end
 

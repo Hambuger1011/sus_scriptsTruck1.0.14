@@ -317,7 +317,7 @@ function GameHttp:Login(iggid, access_token, is_switch, callback)
         access_token = access_token,
         is_switch = is_switch,
     }
-    if #logic.cs.UserDataManager.InviteCode > 0 then
+    if(logic.cs.UserDataManager.InviteCode and #logic.cs.UserDataManager.InviteCode > 0)then
         param = {
             system_type = logic.cs.GameHttpNet.SYSTEMTYPE,
             iggid = iggid,

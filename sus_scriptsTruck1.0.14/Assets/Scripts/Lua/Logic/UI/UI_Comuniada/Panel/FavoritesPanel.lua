@@ -43,7 +43,12 @@ end
 
 
 function FavoritesPanel:__delete()
+    if(self.CreateNewBtn)then
+        --按钮监听
+        logic.cs.UIEventListener.RemoveOnClickListener(self.CreateNewBtn,function(data) self:CreateNewBtnClick() end)
+    end
 
+    self.CreateNewBtn =nil;
     if(self.MyWriterList)then
         --关闭销毁 【我写作的故事】
         self.MyWriterList:Delete();

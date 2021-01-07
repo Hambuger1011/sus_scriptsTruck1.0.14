@@ -19,8 +19,8 @@ function DynamicItem:SetItemData(itemData,itemIndex)
     self.mItemIndex = itemIndex;
     self.BookInfo = itemData;
 
-    if(self.TitleTxt)then
-        self.TitleTxt.text = itemData.chapter_number;
+    if(self.TitleTxt and itemData.book_info)then
+        self.TitleTxt.text = itemData.book_info.title.." Chapter "..itemData.chapter_number;
     end
 
     if(self.Content)then
@@ -31,13 +31,25 @@ function DynamicItem:SetItemData(itemData,itemIndex)
         self.TimeText.text = itemData.time_code;
     end
 
-    ----【展示创作书本封面】
-    --local cover_image = itemData.cover_image
-    --GameHelper.ShowUGCStoryBg(cover_image,nil,self.BookIcon)
+    if(itemData.book_info)then
+        --【展示创作书本封面】
+        local cover_image = itemData.book_info.cover_image
+        GameHelper.ShowUGCStoryBg(cover_image,nil,self.BookIcon)
+    else
+        self.BookIcon.sprite = CS.ResourceManager.Instance:GetUISprite("MainForm/bg_img");
+    end
 end
 
 --销毁
 function DynamicItem:__delete()
+
+    self.rectTransform=nil;
+    self.BookIcon=nil;
+    self.TitleTxt=nil;
+    self.Content=nil;
+    self.TimeText=nil;
+    self.BookInfo=nil;
+    self.mItemIndex=nil;
 
     if(CS.XLuaHelper.is_Null(self.gameObject)==false)then
         logic.cs.GameObject.Destroy(self.gameObject)

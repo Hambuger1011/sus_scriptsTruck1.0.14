@@ -105,7 +105,7 @@ function EmailCache:GetInfoById(msgid)
         local len=table.length(self.EmailList);
         for i = 1, len do
             if(self.EmailList[i].msgid==msgid)then
-               return self.EmailList[i];
+                return self.EmailList[i];
             end
         end
     end
@@ -239,8 +239,8 @@ function EmailCache:DeleteEmail(msgid)
         local len=table.length(self.EmailList);
         for i = 1, len do
             if(self.EmailList[i].msgid==msgid)then
-                 table.remove(self.EmailList, i)
-                 break;
+                table.remove(self.EmailList, i)
+                break;
             end
         end
     end

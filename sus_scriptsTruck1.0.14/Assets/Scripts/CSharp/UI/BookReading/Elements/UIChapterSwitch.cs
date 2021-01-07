@@ -39,8 +39,8 @@ UIBookReadingElement
 
     //道具相关
     bool isCheckedKeyPropBtn = true;
-    Button btnKeyProp = null;
-    GameObject objKeyPropDeleteLine = null;
+    public Button btnKeyProp;
+    public GameObject objKeyPropDeleteLine;
 
     private int m_curBookID;
     private int m_curDialogID;
@@ -83,13 +83,6 @@ UIBookReadingElement
         BtFeedback.onClick.RemoveListener(FeedbackOnclick);
         CloseBtn.onClick.RemoveListener(ReturnToSelectChapterView);
 
-        btnKeyProp = transform.Find("Frame/BtnNextChapter/IconImage/btnKeyProp").GetComponent<Button>();
-        objKeyPropDeleteLine = transform.Find("Frame/BtnNextChapter/IconImage/btnKeyProp/line_delete").gameObject;
-        btnKeyProp.gameObject.SetActive(false);
-        objKeyPropDeleteLine.SetActive(false);
-        btnKeyProp.onClick.AddListener(OnClickKeyPropBtn);
-        RefreshKeyPropBtnState();
-
         UIEventListener.RemoveOnClickListener(KeyButton, KeyButtonOnclicke);
         EventDispatcher.RemoveMessageListener(EventEnum.OnKeyNumChange.ToString(), OnKeyNumChange);
 
@@ -99,6 +92,7 @@ UIBookReadingElement
     }
     void Awake()
     {
+        
         btnRestart.onClick.AddListener(OnRestart);
         btnContinue.onClick.AddListener(OnContinue);
         BtFeedback.onClick.AddListener(FeedbackOnclick);
@@ -115,6 +109,9 @@ UIBookReadingElement
         Transform bgTrans = this.gameObject.transform.Find("Frame");
         if (GameUtility.IpadAspectRatio() && bgTrans != null)
             bgTrans.localScale = Vector3.one * 0.7f;
+
+        LOG.Error("==================awake");
+        btnKeyProp.onClick.AddListener(OnClickKeyPropBtn);
     }
 
 

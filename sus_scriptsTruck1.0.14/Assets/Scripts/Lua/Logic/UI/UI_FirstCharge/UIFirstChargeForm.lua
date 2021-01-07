@@ -7,8 +7,8 @@ local base = UIView
 local uiid = logic.uiid
 
 local PosList = {
-    core.Vector2.New(241,132),core.Vector2.New(142,259),
-    core.Vector2.New(-239,130),core.Vector2.New(-134,259),
+    core.Vector2.New(190,214),core.Vector2.New(142,259),
+    core.Vector2.New(-190,214),core.Vector2.New(-134,259),
     core.Vector2.New(3,317),
 }
 local RewardTrans = {}
@@ -33,8 +33,18 @@ function UIFirstChargeForm:OnInitView()
     self.Diamonds =CS.DisplayUtil.GetChild(root.gameObject, "Diamonds")
     self.ClothesCoupon =CS.DisplayUtil.GetChild(root.gameObject, "ClothesCoupon")
     self.OptionCoupon =CS.DisplayUtil.GetChild(root.gameObject, "OptionCoupon")
+    self.ClothesCoupon:SetActive(false)
+    self.OptionCoupon:SetActive(false)
     self.CommentsIcon =CS.DisplayUtil.GetChild(root.gameObject, "CommentsIcon")
-    RewardTrans = {self.Keys,self.Diamonds,self.ClothesCoupon,self.OptionCoupon,self.CommentsIcon}
+    self.KeysNum =CS.DisplayUtil.GetChild(root.gameObject, "KeysNum"):GetComponent(typeof(logic.cs.Text))
+    self.DiamondsNum =CS.DisplayUtil.GetChild(root.gameObject, "DiamondsNum"):GetComponent(typeof(logic.cs.Text))
+    self.CommentsIconNum =CS.DisplayUtil.GetChild(root.gameObject, "CommentsIconNum"):GetComponent(typeof(logic.cs.Text))
+    RewardTrans = {self.Keys,self.OptionCoupon,self.Diamonds,self.ClothesCoupon,self.CommentsIcon}
+
+    local firstRecharge = Cache.ActivityCache.first_recharge;
+    self.DiamondsNum.text = "x".. firstRecharge.diamond_count;
+    self.KeysNum.text = "x".. firstRecharge.key_count;
+    self.CommentsIconNum.text = "x1";
     
     self.GoBtn = get(root,'Bg/GoBtn',typeof(logic.cs.Button))
     self.Close = get(root,'Bg/Close',typeof(logic.cs.Button))

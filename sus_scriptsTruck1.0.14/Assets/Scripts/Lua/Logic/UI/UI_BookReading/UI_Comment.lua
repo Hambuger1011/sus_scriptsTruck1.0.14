@@ -267,6 +267,10 @@ function UI_Comment:OnOpen()
 end
 
 function UI_Comment:OnClose()
+    local uiform = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);
+    if(uiform)then
+        uiform:UpdateTasks();
+    end
     self:BackToMainClick()
     UIView.OnClose(self)
 end

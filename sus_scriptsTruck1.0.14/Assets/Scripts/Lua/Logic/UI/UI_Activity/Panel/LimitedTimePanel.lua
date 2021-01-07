@@ -16,7 +16,7 @@ function LimitedTimePanel:__init(gameObject)
     self.BindDetailText = CS.DisplayUtil.GetChild(self.BindBG, "BindDetailText"):GetComponent("Text");
     self.BindRedPoint = CS.DisplayUtil.GetChild(self.BindBG, "RedPoint");
 
-    self.BindDetailText.text = "Get 10 Diamoads";
+    self.BindDetailText.text = "Get 10 Diamonds!";
     --【设置绑定状态】
     logic.cs.IGGSDKMrg.bindCallBack = function() self:SetBindStatus(); end
     self:SetBindStatus();
@@ -80,10 +80,18 @@ function LimitedTimePanel:__init(gameObject)
     self.InviteDetailText = CS.DisplayUtil.GetChild(self.InviteBG, "InviteDetailText"):GetComponent("Text");
     self.InviteAwardPoint = CS.DisplayUtil.GetChild(self.InviteBG, "RedPoint");
 
-    self.InviteDetailText.text = "You can get up to 350 Diamonds when you invite your friends to register for an account.";
+    self.InviteDetailText.text = "You can get up to 70 Diamonds when you invite your friends to register for an account.";
 
     logic.cs.UIEventListener.AddOnClickListener(self.InviteButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
-    
+
+
+    --【暂时屏蔽】
+    if(CS.XLuaHelper.GetPlatFormType()<2)then
+        self.InviteBG:SetActive(true);
+    else
+        self.InviteBG:SetActive(false);
+    end
+
     --endregion
 
     --region【首充奖励】
@@ -129,15 +137,15 @@ function LimitedTimePanel:__init(gameObject)
 
         self.MoveCodeBG =CS.DisplayUtil.GetChild(self.gameObject, "MoveCodeBG")
         self.MoveCodeRedPoint = CS.DisplayUtil.GetChild(self.MoveCodeBG, "RedPoint");
+        self.MoveCodeBtn = CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeBtn");
         self.MoveCodeText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeText"):GetComponent("Text");
         self.MoveCodeDetailText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeDetailText"):GetComponent("Text");
-        self.MoveCodeBtnText =CS.DisplayUtil.GetChild(self.MoveCodeBG, "MoveCodeBtnText"):GetComponent("Text");
-        self.MoveCodeBtn:SetActive(true);
+        self.MoveCodeBtnText =CS.DisplayUtil.GetChild(self.MoveCodeBtn, "MoveCodeBtnText"):GetComponent("Text");
+        self.MoveCodeBG:SetActive(true);
 
         self.MoveCodeText.text=Cache.MainCache.migration.migration_title;
         self.MoveCodeDetailText.text=Cache.MainCache.migration.migration_content;
         self.MoveCodeBtnText.text=Cache.MainCache.migration.migration_btn;
-
         logic.cs.UIEventListener.AddOnClickListener(self.MoveCodeBG,function(data) self:MoveCodeBtnClick() end);
     end
 
@@ -246,13 +254,10 @@ function LimitedTimePanel:GetRewardConfig_Response()
     end
     
     local firstRecharge = Cache.ActivityCache.first_recharge;
-    for k, v in pairs(firstRecharge.item_list) do
-        if v.id == 10101 then
-            self.NumText1.text = "x"..v.num;
-        elseif v.id == 10102 then
-            self.NumText2.text = "x"..v.num;
-        end
-    end
+    --self.NumText1.text = "x"..firstRecharge.item_list[1].num;
+    --self.NumText2.text = "x"..firstRecharge.item_list[2].num;
+    self.NumText1.text = "";
+    self.NumText2.text = "";
     self.NumText3.text = "x".. firstRecharge.diamond_count;
     self.NumText4.text = "x".. firstRecharge.key_count;
     self.NumText5.text = "x1";
@@ -403,20 +408,11 @@ end
 
 --region【领取首充奖励】
 function LimitedTimePanel:ClaimFirstchargeOnClick()
-    local clothesCouponNum = 0 
-    local optionCouponNum = 0
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then
         local firstRecharge = Cache.ActivityCache.first_recharge;
-        for k, v in pairs(firstRecharge.item_list) do
-            if v.id == 10101 then
-                optionCouponNum = v.num;
-            elseif v.id == 10102 then
-                clothesCouponNum = v.num;
-            end
-        end
         uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,clothesCouponNum,optionCouponNum,1);
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,0,0,1);
     end
 end
 --endregion

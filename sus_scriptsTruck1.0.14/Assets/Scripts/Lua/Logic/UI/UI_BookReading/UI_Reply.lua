@@ -185,7 +185,7 @@ function UI_Reply:FormatNum(_num)
     end
     return _num
 end
-
+local _Func=nil;
 function UI_Reply:InitComment(callback)
     local Data = self.commentData
     local comment = self.uiBinding:Get('Comment').transform
@@ -202,6 +202,8 @@ function UI_Reply:InitComment(callback)
     local likeBtn = uiBinding:Get('LikeBtn',  typeof(logic.cs.UITweenButton))
     local unLikeBtn = uiBinding:Get('UnLikeBtn',  typeof(logic.cs.UITweenButton))
     local replyBtn = uiBinding:Get('ReplyBtn',  typeof(logic.cs.UITweenButton))
+    local LikeIcon =CS.DisplayUtil.GetChild(likeBtn.gameObject, "LikeIcon"):GetComponent("Image");
+    local UnLikeIcon =CS.DisplayUtil.GetChild(unLikeBtn.gameObject, "UnLikeIcon"):GetComponent("Image");
 
     --headImage.sprite = CS.ResourceManager.Instance:GetUISprite("ProfileForm/img_renwu"..Data.face_icon);
     nameText.text = Data.nickname
@@ -232,6 +234,20 @@ function UI_Reply:InitComment(callback)
     self.replyBg.transform:SetInsetAndSizeFromParentEdge(logic.cs.RectTransform.Edge.Top, height , centerSize.y - height)
 
 
+    if(Data.agree)then
+        LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike");
+        UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike");
+        if(Data.agree)then
+            if(Data.agree==0)then --0中立
+            elseif(Data.agree==1)then  --1赞同
+                LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike_1");
+            elseif(Data.agree==2)then  --2不赞同
+                UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike_1");
+            end
+        end
+    end
+
+
     likeBtn.onClick:RemoveAllListeners()
     likeBtn.onClick:AddListener(function()
         logic.gameHttp:BookCommentSetAgree(Data.id,function(result)
@@ -243,6 +259,33 @@ function UI_Reply:InitComment(callback)
                 likeText.text = self:FormatNum(Data.agree_count)
                 Data.disagree_count = json.data.disagree_count
                 unLikeText.text = self:FormatNum(Data.disagree_count)
+
+
+                if(json.data.disagree==1)then
+                    Data.agree=2;
+                elseif(json.data.agree==1)then
+                    Data.agree=json.data.agree;
+                else
+                    Data.agree=0;
+                end
+                if(Data.agree)then
+                     LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike");
+                     UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike");
+                    if(Data.agree)then
+                        if(Data.agree==0)then --0中立
+                        elseif(Data.agree==1)then  --1赞同
+                            LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike_1");
+                        elseif(Data.agree==2)then  --2不赞同
+                            UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike_1");
+                        end
+                    end
+
+                    if(_Func)then
+                        _Func(Data);
+                    end
+
+                end
+
             else
                 logic.cs.UIAlertMgr:Show("TIPS",json.msg)
             end
@@ -260,6 +303,31 @@ function UI_Reply:InitComment(callback)
                 Data.disagree_count = json.data.disagree_count
                 likeText.text = self:FormatNum(Data.agree_count)
                 unLikeText.text = self:FormatNum(Data.disagree_count)
+
+
+
+                if(json.data.disagree==1)then
+                    Data.agree=2;
+                elseif(json.data.agree==1)then
+                    Data.agree=json.data.agree;
+                else
+                    Data.agree=0;
+                end
+                if(Data.agree)then
+                    LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike");
+                    UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike");
+                    if(Data.agree)then
+                        if(Data.agree==0)then --0中立
+                        elseif(Data.agree==1)then  --1赞同
+                            LikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn__iconlike_1");
+                        elseif(Data.agree==2)then  --2不赞同
+                            UnLikeIcon.sprite = CS.ResourceManager.Instance:GetUISprite("Comment/btn_icon_dislike_1");
+                        end
+                    end
+                    if(_Func)then
+                        _Func(Data);
+                    end
+                end
             else
                 logic.cs.UIAlertMgr:Show("TIPS",json.msg)
             end
@@ -281,8 +349,10 @@ function UI_Reply:InitComment(callback)
     end
 end
 
-function UI_Reply:SetCommentData(data)
+
+function UI_Reply:SetCommentData(data,Func)
     self.commentData = data
+    _Func=Func;
 end
 
 function UI_Reply:AddUIItem(newInstance,useTween,scrollToBottom)

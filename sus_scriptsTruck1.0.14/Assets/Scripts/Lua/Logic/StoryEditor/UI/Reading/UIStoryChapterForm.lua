@@ -113,9 +113,9 @@ function UIStoryChapterForm:RefresUI()
         end)
     end
 
-    self.BookName.text = self.storyDetial.title
-    self.Content.text = self.storyDetial.description
-    self.AuthorName.text = 'Author: '..(self.storyDetial.writer_name or '')
+    self.BookName.text = self.storyDetial.title;
+    self.Content.text = self.storyDetial.description;
+    self.AuthorName.text = self.storyDetial.user_info.nickname;
     self.LookNumberText.text = tostring(self.storyDetial.read_count)
     self:InitCatagoryList()
 

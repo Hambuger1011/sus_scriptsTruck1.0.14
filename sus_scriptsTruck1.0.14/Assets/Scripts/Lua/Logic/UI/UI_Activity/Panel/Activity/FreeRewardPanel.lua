@@ -17,8 +17,6 @@ function FreeRewardPanel:__init(gameObject)
 
     logic.cs.UIEventListener.AddOnClickListener(self.WatchBtn,function(data) self:WatchBtnClick() end)
 
-    --广告剩余领取此时
-    self.ads_number = 0;
 end
 --endregion
 
@@ -26,25 +24,19 @@ end
 --region 【刷新观看广告】
 function FreeRewardPanel:UpdateFreeRewardPanel()
     --开启倒计时 计时器
-    GameHelper.FRPanel_CountDown(self.TimeText,self.CDText);
-    self.ads_number = Cache.ActivityCache.ad_number;
+    GameHelper.FRPanel_CountDown(self.TimeText);
 
-    self.WatchBtnText.text = string.format("WATCH (%s)",self.ads_number)
-    self.WatchBtnMaskText.text = string.format("WATCH (%s)",self.ads_number)
-    if(self.ads_number == 0)then
-        self.WatchBtnMask.gameObject:SetActiveEx(true);
-        self.WatchBtn.gameObject:SetActiveEx(false);
-    else
-        self.WatchBtnMask.gameObject:SetActiveEx(false);
-        self.WatchBtn.gameObject:SetActiveEx(true);
-    end
+    self.WatchBtnText.text = string.format("WATCH (%s)",Cache.ActivityCache.ad_number);
+    self.WatchBtnMaskText.text = string.format("WATCH (%s)",Cache.ActivityCache.ad_number);
+
+    --【设置按钮状态】
+    self:SetButtonState();
 end
 --endregion
 
 
 function FreeRewardPanel:WatchBtnClick()
-
-    if(self.ads_number and self.ads_number > 0)then
+    if(Cache.ActivityCache.ad_number and Cache.ActivityCache.ad_number > 0)then
         if(CS.XLuaHelper.GetPlatFormType()==0)then
             self:AdAwardRequest();
         else
@@ -62,28 +54,54 @@ function FreeRewardPanel:AdAwardRequest()
 end
 
 function FreeRewardPanel:ReceiveDailyAdAward()
+    --【广告剩余次数-1】
     Cache.ActivityCache.ad_number = Cache.ActivityCache.ad_number - 1
+    --【设置按钮状态】
+    self:SetButtonState();
+end
 
-    if(Cache.ActivityCache.ad_number == 0)then
-        self.WatchBtnMask.gameObject:SetActiveEx(true)
-        self.WatchBtn.gameObject:SetActiveEx(false)
+
+function FreeRewardPanel:ShowCD(txt)
+    if(txt)then
+        self.CDText.text=txt;
     end
 end
 
 
 function FreeRewardPanel:StartCD()
-    self.CDText.gameObject:SetActiveEx(true);
-    self.WatchBtnMask.gameObject:SetActiveEx(true)
-    self.WatchBtn.gameObject:SetActiveEx(false)
-
+    --【设置CD】【开始计时】
     GameHelper.FR_CDNum=60;
-    GameHelper.StartFRTimer();
+    GameHelper.FRCD_CountDown();
+
+    --【设置按钮状态】
+    self:SetButtonState();
 end
 
 function FreeRewardPanel:EndCD()
-    self.CDText.gameObject:SetActiveEx(false);
-    self.WatchBtnMask.gameObject:SetActiveEx(false);
-    self.WatchBtn.gameObject:SetActiveEx(true);
+    --【设置按钮状态】
+    self:SetButtonState();
+end
+
+
+function FreeRewardPanel:SetButtonState()
+    if(Cache.ActivityCache.ad_number <= 0)then  --【次数为0】
+        self.WatchBtnMask.gameObject:SetActiveEx(true);  --【灰色按钮】
+        self.WatchBtn.gameObject:SetActiveEx(false);    --【亮色按钮】
+        self.CDText.gameObject:SetActiveEx(false);    --【CD文字】
+
+    else
+        self.WatchBtnMask.gameObject:SetActiveEx(false); --【灰色按钮】
+        self.WatchBtn.gameObject:SetActiveEx(true);   --【亮色按钮】
+
+        if(GameHelper.FR_CDNum<=0)then
+            self.CDText.gameObject:SetActiveEx(false); --【CD文字】
+        else
+            self.CDText.gameObject:SetActiveEx(true);  --【CD文字】
+            self.WatchBtnMask.gameObject:SetActiveEx(true);  --【灰色按钮】
+            self.WatchBtn.gameObject:SetActiveEx(false); --【亮色按钮】
+        end
+    end
+
 end
 
 
@@ -101,7 +119,7 @@ function FreeRewardPanel:__delete()
     self.WatchBtnText = nil;
     self.WatchBtnMask = nil;
     self.WatchBtnMaskText = nil;
-    self.ads_number = nil;
+    self.CDText = nil;
 
     self.gameObject=nil;
 end

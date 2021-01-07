@@ -4,6 +4,7 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using System.Reflection;
+using ADTracking;
 
 namespace Framework
 {
@@ -47,9 +48,16 @@ namespace Framework
             base.UnInit();
             //Singleton<BugLocateLogSys>.DestroyInstance();
         }
+        public FirebaseTracker firebaseTracker = new FirebaseTracker();
 
         public virtual void Start()
         {
+            if (firebaseTracker != null)
+            {
+                //firebase初始化
+                firebaseTracker.Init("");
+            }
+
             GameUtility.SetGameViewScale();
             //GL.Clear(false, true, Color.black);//清除显示缓存,防止花屏
             Application.runInBackground = true;

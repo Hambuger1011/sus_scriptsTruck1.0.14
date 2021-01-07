@@ -17,10 +17,10 @@ namespace GameFramework
             PBXProject _pbxProj = new PBXProject();//创建xcode project类
 
             _pbxProj.ReadFromString(File.ReadAllText(projPath));//xcode project读入
-            
+
             var capManager = new ProjectCapabilityManager(projPath, "usdk.entitlements", PBXProject.GetUnityTargetName());//创建设置Capability类
-            
             capManager.AddInAppPurchase();
+            capManager.AddAssociatedDomains(new string[] { "applinks:bo09.t4m.cn" });
             capManager.AddPushNotifications(false);//设置Capability
             capManager.AddGameCenter();
             capManager.AddSignInWithApple();

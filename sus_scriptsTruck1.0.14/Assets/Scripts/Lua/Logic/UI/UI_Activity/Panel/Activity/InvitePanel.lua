@@ -55,7 +55,11 @@ function InvitePanel:SetUI()
                     InviteButton.gameObject:SetActiveEx(true)
                     InviteButton.onClick:RemoveAllListeners()
                     InviteButton.onClick:AddListener(function()
-                        logic.cs.SdkMgr.shareSDK:ShareMsg("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
+                        if core.config.os == OS.iOS then
+                            logic.cs.SdkMgr.shareSDK:NativeShare("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
+                        else
+                            logic.cs.SdkMgr.shareSDK:ShareMsg("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
+                        end
                     end)
                 elseif v.status == 1 then
                     CollectedButton.gameObject:SetActiveEx(true)

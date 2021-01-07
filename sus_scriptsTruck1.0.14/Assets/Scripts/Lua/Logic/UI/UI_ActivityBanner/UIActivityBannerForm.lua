@@ -17,20 +17,22 @@ function UIActivityBannerForm:OnInitView()
     UIView.OnInitView(self)
     this=self.uiform;
 
-
     self.ActivityBanner1 =CS.DisplayUtil.GetChild(this.gameObject, "ActivityBanner1"):GetComponent("Image");
     self.Titile1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "Titile1"):GetComponent("Text");
-    self.TimeLeftText1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "TimeLeftText1"):GetComponent("Text");
-    self.Image6 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "Image");
+    self.Content1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "Content1"):GetComponent("Text");
+    self.TimeObj1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "TimeObj1");
+    self.TimeLeftText1 =CS.DisplayUtil.GetChild(self.TimeObj1, "TimeLeftText1"):GetComponent("Text");
+    self.TextCanvas1=CS.DisplayUtil.GetChild(this.gameObject, "TextCanvas1"):GetComponent("RectTransform");
+    self.Banner1Rect=self.ActivityBanner1:GetComponent("RectTransform");
 
     self.ActivityBanner2 =CS.DisplayUtil.GetChild(this.gameObject, "ActivityBanner2"):GetComponent("Image");
     self.Titile2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "Titile2"):GetComponent("Text");
-    self.TimeLeftText2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "TimeLeftText2"):GetComponent("Text");
-
-    self.Titile1.fontSize=38;
-    self.Titile2.fontSize=38;
-    self.ActivityBanner1.sprite=nil;
-    self.ActivityBanner2.sprite=nil;
+    self.Content2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "Content2"):GetComponent("Text");
+    self.TimeObj2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "TimeObj2");
+    self.TimeLeftText2 =CS.DisplayUtil.GetChild(self.TimeObj2, "TimeLeftText2"):GetComponent("Text");
+    self.Titile2_Rect=self.Titile2.gameObject:GetComponent("RectTransform");
+    self.TextCanvas2=CS.DisplayUtil.GetChild(this.gameObject, "TextCanvas2"):GetComponent("RectTransform");
+    self.Banner2Rect=self.ActivityBanner2:GetComponent("RectTransform");
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.ActivityBanner1.gameObject,function(data) self:ActivityBanner1Click() end)
@@ -196,7 +198,7 @@ function UIActivityBannerForm:SetInfo()
         self:SetView2(self.showlist[2]);
         --开启计时器
         GameHelper.MainBannerTimer(function() self:Anima() end)
-    elseif(len>3)then
+    elseif(len>=3)then
         self:SetView(self.showlist[1]);
         self:SetView2(self.showlist[2]);
         self.AllCount=2;
@@ -208,7 +210,7 @@ function UIActivityBannerForm:SetInfo()
     GameController.MainFormControl:MoveBanner();
 
     --【设置层级】【设置层级】
-    local animaTimer=self.Image6.transform:DOLocalMoveX(233, 1):SetAutoKill(true):SetEase(core.tween.Ease.Flash)
+    local animaTimer=self.TimeObj1.transform:DOLocalMoveX(1, 1):SetAutoKill(true):SetEase(core.tween.Ease.Flash)
 
     animaTimer:OnComplete(function()
         --设置层级
@@ -227,6 +229,9 @@ end
 
 
 function UIActivityBannerForm:SetView(state)
+    self.TimeObj1:SetActive(true);
+    self.Content1.gameObject:SetActive(false);
+    self.TextCanvas1.anchoredPosition={x=375,y=50};
 
     self._state1=state;
     if(state== EnumActivity.ColoredEgg)then    --彩蛋
@@ -245,12 +250,18 @@ function UIActivityBannerForm:SetView(state)
         self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
         --【临时】【临时】
         --显示图片
+        self.TimeObj1:SetActive(false);
+        self.Content1.gameObject:SetActive(true);
+        self.TextCanvas1.anchoredPosition={x=270,y=50};
         self.Titile1.text=Cache.MainCache.migration.migration_banner_title;
-       -- self.Titile1_Clone.text=Cache.MainCache.migration.migration_banner_content;
+        self.Content1.text=Cache.MainCache.migration.migration_banner_content;
     end
 end
 
 function UIActivityBannerForm:SetView2(state)
+    self.TimeObj2:SetActive(true);
+    self.Content2.gameObject:SetActive(false);
+    self.TextCanvas2.anchoredPosition={x=375,y=50};
 
     self._state2=state;
     if(state== EnumActivity.ColoredEgg)then    --彩蛋
@@ -268,8 +279,11 @@ function UIActivityBannerForm:SetView2(state)
     elseif(state== EnumActivity.MoveCode)then   --迁移
         self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
         --【临时】【临时】
+        self.TimeObj2:SetActive(false);
+        self.Content2.gameObject:SetActive(true);
+        self.TextCanvas2.anchoredPosition={x=270,y=50};
         self.Titile2.text=Cache.MainCache.migration.migration_banner_title;
-      --  self.Titile2_Clone.text=Cache.MainCache.migration.migration_banner_content;
+        self.Content2.text=Cache.MainCache.migration.migration_banner_content;
     end
 end
 --endregion

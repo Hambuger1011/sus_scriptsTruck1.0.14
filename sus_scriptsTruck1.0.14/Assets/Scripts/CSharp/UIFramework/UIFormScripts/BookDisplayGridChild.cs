@@ -379,6 +379,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_manek_03");
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(295);
                 PlayButtonEx.SetActive(false);
+                btnKeyProp.gameObject.SetActive(false);
             }
             else
             {
@@ -396,12 +397,14 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_manek_03");
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(297);
                 PlayButtonEx.SetActive(false);
+                btnKeyProp.gameObject.SetActive(false);
             }
              else
              {
                  PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_manek_03");
                  PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(298);
                 PlayButtonEx.SetActive(false);
+                btnKeyProp.gameObject.SetActive(false);
             }
         }
 
