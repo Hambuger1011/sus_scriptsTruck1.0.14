@@ -23,16 +23,8 @@ UICollectForm.config = {
 function UICollectForm:OnInitView()
     UIView.OnInitView(self)
     local this=self.uiform
-    self.Diamonds =CS.DisplayUtil.GetChild(this.gameObject, "Diamonds")
-    self.Keys =CS.DisplayUtil.GetChild(this.gameObject, "Keys")
-    self.ClothesCoupon =CS.DisplayUtil.GetChild(this.gameObject, "ClothesCoupon")
-    self.OptionCoupon =CS.DisplayUtil.GetChild(this.gameObject, "OptionCoupon")
-    self.CommentsIcon =CS.DisplayUtil.GetChild(this.gameObject, "CommentsIcon")
-    self.DiamondsNum =CS.DisplayUtil.GetChild(this.gameObject, "DiamondsNum"):GetComponent(typeof(logic.cs.Text))
-    self.KeysNum =CS.DisplayUtil.GetChild(this.gameObject, "KeysNum"):GetComponent(typeof(logic.cs.Text))
-    self.ClothesCouponNum =CS.DisplayUtil.GetChild(this.gameObject, "ClothesCouponNum"):GetComponent(typeof(logic.cs.Text))
-    self.OptionCouponNum =CS.DisplayUtil.GetChild(this.gameObject, "OptionCouponNum"):GetComponent(typeof(logic.cs.Text))
-    self.CommentsIconNum =CS.DisplayUtil.GetChild(this.gameObject, "CommentsIconNum"):GetComponent(typeof(logic.cs.Text))
+    self.Item =CS.DisplayUtil.GetChild(this.gameObject, "Item")
+    self.LayoutGroup =CS.DisplayUtil.GetChild(this.gameObject, "Layout Group").transform
     self.CLAIM =CS.DisplayUtil.GetChild(this.gameObject, "CLAIM")
     self.CLAIMx2 =CS.DisplayUtil.GetChild(this.gameObject, "CLAIMx2")
     self.Title =CS.DisplayUtil.GetChild(this.gameObject, "Title")
@@ -40,42 +32,38 @@ end
 
 local CLAIMCallback=nil;
 function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
-                               _clothesCouponNum,_optionCouponNum,_commentsIconNum)
+                               _itemData)
     RewardTrans = {}
     if(_diamondsNum and tonumber(_diamondsNum) > 0)then
-        --table.insert(RewardTrans,self.Diamonds)
-        self.DiamondsNum.text = "x".._diamondsNum;
-        self.Diamonds.gameObject:SetActiveEx(true);
-    else
-        self.Diamonds.gameObject:SetActiveEx(false);
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.LayoutGroup,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".._diamondsNum;
+        Icon.sprite = Cache.PropCache.SpriteData[1]
+        table.insert(RewardTrans,item)
     end
     if(_keysNum and tonumber(_keysNum) > 0)then
-        --table.insert(RewardTrans,self.Keys)
-        self.KeysNum.text = "x".._keysNum;
-        self.Keys.gameObject:SetActiveEx(true);
-    else
-        self.Keys.gameObject:SetActiveEx(false);
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.LayoutGroup,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".._keysNum;
+        Icon.sprite = Cache.PropCache.SpriteData[2]
+        table.insert(RewardTrans,item)
     end
-    if(_clothesCouponNum and tonumber(_clothesCouponNum) > 0)then
-        --table.insert(RewardTrans,self.ClothesCoupon)
-        self.ClothesCouponNum.text = "x".._clothesCouponNum;
-        self.ClothesCoupon.gameObject:SetActiveEx(true);
-    else
-        self.ClothesCoupon.gameObject:SetActiveEx(false);
-    end
-    if(_optionCouponNum and tonumber(_optionCouponNum) > 0)then
-        --table.insert(RewardTrans,self.OptionCoupon)
-        self.OptionCouponNum.text = "x".._optionCouponNum;
-        self.OptionCoupon.gameObject:SetActiveEx(true);
-    else
-        self.OptionCoupon.gameObject:SetActiveEx(false);
-    end
-    if(_commentsIconNum and tonumber(_commentsIconNum) > 0)then
-        --table.insert(RewardTrans,self.CommentsIcon)
-        self.CommentsIconNum.text = "x".._commentsIconNum;
-        self.CommentsIcon.gameObject:SetActiveEx(true);
-    else
-        self.CommentsIcon.gameObject:SetActiveEx(false);
+    if _itemData then
+        for k, v in pairs(_itemData) do
+            local item = logic.cs.GameObject.Instantiate(self.Item,self.LayoutGroup,false)
+            local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+            local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+            Num.text = "x".. v.num;
+            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                Icon.sprite = Cache.PropCache.SpriteData[3]
+            else
+                Icon.sprite = Cache.PropCache.SpriteData[v.id]
+            end
+            item:SetActive(true)
+            table.insert(RewardTrans,item)
+        end
     end
     self.CLAIMx2.gameObject:SetActiveEx(_needX2);
     CLAIMCallback = _CLAIMCallback
@@ -83,9 +71,10 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
 end
 
 function UICollectForm:PlayAnim()
-    --for i = 1, #RewardTrans do
-    --    RewardTrans[i].transform:DOAnchorPos(PosList[#RewardTrans][i],1):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
-    --end
+    for i = 1, #RewardTrans do
+        RewardTrans[i]:SetActiveEx(true)
+        --RewardTrans[i].transform:DOAnchorPos(PosList[#RewardTrans][i],1):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
+    end
     --coroutine.start(function()
     --    coroutine.wait(0.5) 
     --    self.Title.transform:DORotate( core.Vector3(0,0,0),1)

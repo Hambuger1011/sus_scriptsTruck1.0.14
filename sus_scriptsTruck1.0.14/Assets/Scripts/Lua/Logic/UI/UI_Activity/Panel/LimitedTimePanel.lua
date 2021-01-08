@@ -412,7 +412,8 @@ function LimitedTimePanel:ClaimFirstchargeOnClick()
     if(uicollect)then
         local firstRecharge = Cache.ActivityCache.first_recharge;
         uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,0,0,1);
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,
+                Cache.ActivityCache.first_recharge.item_list);
     end
 end
 --endregion
