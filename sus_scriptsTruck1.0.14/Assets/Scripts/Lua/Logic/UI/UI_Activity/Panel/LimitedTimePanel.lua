@@ -100,12 +100,8 @@ function LimitedTimePanel:__init(gameObject)
     self.ChargeButton = CS.DisplayUtil.GetChild(self.FirstchargeBG, "ChargeButton");
     self.ClaimFirstcharge = CS.DisplayUtil.GetChild(self.FirstchargeBG, "ClaimFirstcharge");
     self.FirstchargeDetailText = CS.DisplayUtil.GetChild(self.FirstchargeBG, "FirstchargeDetailText"):GetComponent("Text");
-    self.NumText1 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText1"):GetComponent("Text");
-    self.NumText2 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText2"):GetComponent("Text");
-    self.NumText3 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText3"):GetComponent("Text");
-    self.NumText4 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText4"):GetComponent("Text");
-    self.NumText5 = CS.DisplayUtil.GetChild(self.FirstchargeBG, "NumText5"):GetComponent("Text");
     self.FirstRechargePoint = CS.DisplayUtil.GetChild(self.FirstchargeBG, "RedPoint");
+    self.Item = CS.DisplayUtil.GetChild(self.FirstchargeBG, "Item");
 
     self.FirstchargeDetailText.text = "Top up any amount to get insane rewards. Each account is only entitled to one Pack.";
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 0 then
@@ -254,13 +250,61 @@ function LimitedTimePanel:GetRewardConfig_Response()
     end
     
     local firstRecharge = Cache.ActivityCache.first_recharge;
-    --self.NumText1.text = "x"..firstRecharge.item_list[1].num;
-    --self.NumText2.text = "x"..firstRecharge.item_list[2].num;
-    self.NumText1.text = "";
-    self.NumText2.text = "";
-    self.NumText3.text = "x".. firstRecharge.diamond_count;
-    self.NumText4.text = "x".. firstRecharge.key_count;
-    self.NumText5.text = "x1";
+
+    local RewardTrans = {}
+    if tonumber(firstRecharge.diamond_count) > 0 then
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.FirstchargeBG.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. firstRecharge.diamond_count;
+        Icon.sprite = Cache.PropCache.SpriteData[1]
+        table.insert(RewardTrans,item)
+    end
+    if tonumber(firstRecharge.key_count) > 0 then
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.FirstchargeBG.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. firstRecharge.key_count;
+        Icon.sprite = Cache.PropCache.SpriteData[2]
+        table.insert(RewardTrans,item)
+    end
+
+    for k, v in pairs(firstRecharge.item_list) do
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.FirstchargeBG.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. v.num;
+        if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+            Icon.sprite = Cache.PropCache.SpriteData[3]
+        else
+            Icon.sprite = Cache.PropCache.SpriteData[v.id]
+        end
+        item:SetActive(true)
+        table.insert(RewardTrans,item)
+    end
+
+    local PosList =
+    {
+        {core.Vector2.New(422,-102)},
+
+        {core.Vector2.New(434,-70),core.Vector2.New(380,-153)},
+
+        {core.Vector2.New(478,-54),core.Vector2.New(406,-108),
+         core.Vector2.New(367,-187)},
+
+        {core.Vector2.New(500,-32),core.Vector2.New(433,-72),
+         core.Vector2.New(390,-126),core.Vector2.New(363,-193)},
+
+        {core.Vector2.New(500,-32),core.Vector2.New(445,-68),
+         core.Vector2.New(395.4,-108.3),core.Vector2.New(363,-157.8),
+         core.Vector2.New(360.4,-219.5),}
+    }
+    
+    local size = #RewardTrans > #PosList and #PosList or #RewardTrans
+    for i = 1, size do
+        RewardTrans[i].transform.anchoredPosition =PosList[size][i]
+        RewardTrans[i]:SetActive(true)
+    end
 
 end
 --endregion

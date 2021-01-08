@@ -14,9 +14,9 @@ function PropCache:__init()
     local sprite6 = CS.ResourceManager.Instance:GetUISprite("PakageForm/props_icon_choice_coupon")
     local sprite7 = CS.ResourceManager.Instance:GetUISprite("PakageForm/props_icon_key_oupon")
     local sprite8 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_messenger_dove")
-    local sprite9 = CS.ResourceManager.Instance:GetUISprite("PakageForm/dup_toukuang_light")
-    local sprite10 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_diamand1")
-    local sprite11 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_kyes1")
+    local sprite9 = CS.ResourceManager.Instance:GetUISprite("PakageForm/dup_toukuang_light")--临时奖励头像框
+    local sprite10 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_diamand1")--钻石
+    local sprite11 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_kyes1")--钥匙
     self.SpriteData[1] = sprite10
     self.SpriteData[2] = sprite11
     self.SpriteData[3] = sprite9
