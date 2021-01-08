@@ -8,6 +8,7 @@ function Cache.Init()
         return;
     end
     Cache.SignInCache=require("Logic/Cache/SignInCache");
+    Cache.PropCache=require("Logic/Cache/PropCache");
     Cache.MainCache=require("Logic/Cache/MainCache");
     Cache.RedDotCache=require("Logic/Cache/RedDotCache");
     Cache.SearchCache=require("Logic/Cache/SearchCache");

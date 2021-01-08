@@ -6,10 +6,37 @@ local base = UIView
 
 local uiid = logic.uiid
 
-local PosList = {
-    core.Vector2.New(190,214),core.Vector2.New(142,259),
-    core.Vector2.New(-190,214),core.Vector2.New(-134,259),
-    core.Vector2.New(3,317),
+local StartPosList =
+{
+    {core.Vector2.New(3,197)},
+
+    {core.Vector2.New(-84,159),core.Vector2.New(92,159)},
+
+    {core.Vector2.New(122,120),core.Vector2.New(-115,120),
+     core.Vector2.New(3,197)},
+
+    {core.Vector2.New(149,88),core.Vector2.New(64,175),
+     core.Vector2.New(-122,84),core.Vector2.New(-45,171)},
+
+    {core.Vector2.New(129,88),core.Vector2.New(87,171),
+     core.Vector2.New(-123,71),core.Vector2.New(-90,167),
+     core.Vector2.New(3,197),}
+}
+local PosList =
+{
+    {core.Vector2.New(3,317)},
+
+    {core.Vector2.New(-134,259),core.Vector2.New(142,259)},
+
+    {core.Vector2.New(190,215),core.Vector2.New(-186,215),
+     core.Vector2.New(3,317)},
+
+    {core.Vector2.New(241,132),core.Vector2.New(102,259),
+     core.Vector2.New(-239,130),core.Vector2.New(-94,259)},
+
+    {core.Vector2.New(241,132),core.Vector2.New(142,259),
+     core.Vector2.New(-239,130),core.Vector2.New(-134,259),
+     core.Vector2.New(3,317),}
 }
 local RewardTrans = {}
 
@@ -29,22 +56,44 @@ function UIFirstChargeForm:OnInitView()
     self.Reward =CS.DisplayUtil.GetChild(root.gameObject, "Reward"):GetComponent(typeof(logic.cs.CanvasGroup))
     self.TreasureBox =CS.DisplayUtil.GetChild(root.gameObject, "TreasureBox")
     self.BoxUp =CS.DisplayUtil.GetChild(root.gameObject, "BoxUp")
-    self.Keys =CS.DisplayUtil.GetChild(root.gameObject, "Keys")
-    self.Diamonds =CS.DisplayUtil.GetChild(root.gameObject, "Diamonds")
-    self.ClothesCoupon =CS.DisplayUtil.GetChild(root.gameObject, "ClothesCoupon")
-    self.OptionCoupon =CS.DisplayUtil.GetChild(root.gameObject, "OptionCoupon")
-    self.ClothesCoupon:SetActive(false)
-    self.OptionCoupon:SetActive(false)
-    self.CommentsIcon =CS.DisplayUtil.GetChild(root.gameObject, "CommentsIcon")
-    self.KeysNum =CS.DisplayUtil.GetChild(root.gameObject, "KeysNum"):GetComponent(typeof(logic.cs.Text))
-    self.DiamondsNum =CS.DisplayUtil.GetChild(root.gameObject, "DiamondsNum"):GetComponent(typeof(logic.cs.Text))
-    self.CommentsIconNum =CS.DisplayUtil.GetChild(root.gameObject, "CommentsIconNum"):GetComponent(typeof(logic.cs.Text))
-    RewardTrans = {self.Keys,self.OptionCoupon,self.Diamonds,self.ClothesCoupon,self.CommentsIcon}
 
     local firstRecharge = Cache.ActivityCache.first_recharge;
-    self.DiamondsNum.text = "x".. firstRecharge.diamond_count;
-    self.KeysNum.text = "x".. firstRecharge.key_count;
-    self.CommentsIconNum.text = "x1";
+    self.Item =CS.DisplayUtil.GetChild(root.gameObject, "Item")
+
+
+    for k, v in pairs(firstRecharge.item_list) do
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.Reward.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. v.num;
+        if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+            Icon.sprite = Cache.PropCache.SpriteData[3]
+        else
+            Icon.sprite = Cache.PropCache.SpriteData[v.id]
+        end
+        --Icon:SetNativeSize()
+        --Icon.transform.localScale = core.Vector3.New(0.5,0.5,1)
+        item:SetActive(true)
+        table.insert(RewardTrans,item)
+    end
+    
+    if tonumber(firstRecharge.diamond_count) > 0 then
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.Reward.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. firstRecharge.diamond_count;
+        Icon.sprite = Cache.PropCache.SpriteData[1]
+        table.insert(RewardTrans,item)
+    end
+    if tonumber(firstRecharge.key_count) > 0 then
+        local item = logic.cs.GameObject.Instantiate(self.Item,self.Reward.transform,false)
+        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+        Num.text = "x".. firstRecharge.key_count;
+        Icon.sprite = Cache.PropCache.SpriteData[2]
+        table.insert(RewardTrans,item)
+    end
+
     
     self.GoBtn = get(root,'Bg/GoBtn',typeof(logic.cs.Button))
     self.Close = get(root,'Bg/Close',typeof(logic.cs.Button))
@@ -81,8 +130,11 @@ function UIFirstChargeForm:PlayAnim()
 
     self.BoxUp.transform:DORotate( core.Vector3(0,0,0),duration)
 
-    for i = 1, #RewardTrans do
-        RewardTrans[i].transform:DOAnchorPos(PosList[i],duration):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
+    local size = #RewardTrans > #PosList and #PosList or #RewardTrans
+    for i = 1, size do
+        RewardTrans[i].transform.anchoredPosition =StartPosList[size][i]
+        RewardTrans[i]:SetActive(true)
+        RewardTrans[i].transform:DOAnchorPos(PosList[size][i],duration):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
     end
 
     self.TreasureBox.transform.localScale = core.Vector3.New(0.5,0.5,duration)
