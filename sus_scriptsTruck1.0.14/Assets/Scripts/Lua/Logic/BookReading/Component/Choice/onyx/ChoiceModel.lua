@@ -851,7 +851,8 @@ end
 function ChoiceModel:ShowPropList()
 	local isShow = not uiView.objItemParentProp.activeSelf
 	uiView.objItemParentProp.gameObject:SetActive(isShow)
-    uiView.textKeyProp.gameObject:SetActive(isShow)
+	local isUse = uiView.lbCost.text ~= uiView.textKeyProp.text
+	uiView.textKeyProp.gameObject:SetActive(isUse)
 end
 function ChoiceModel:AddItemProp(data)
     local go = logic.cs.GameObject.Instantiate(uiView.itemPrefabProp,uiView.transItemParentProp,false)
@@ -901,9 +902,9 @@ function ChoiceModel:OnClcikPropItem(propItem)
 	logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
 
 	--refresh ui
+	uiView.textKeyProp.text = tostring(self.choiceCost)
     uiView.textKeyProp.gameObject:SetActive(isUser)
     if isUser then
-        uiView.textKeyProp.text = tostring(self.choiceCost)
 		local newCost = tonumber(self.choiceCost)-tonumber(self.choiceCost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         uiView.lbCost.text = tostring(newCost)

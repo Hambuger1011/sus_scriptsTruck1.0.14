@@ -163,6 +163,20 @@ function ChoiceWholeClothes.InstallUI()
 		
 		logic.cs.ABSystem.ui:SetAtlasSprite(uiView.btnConfirm1.image, "BookReadingForm", "btn_me_s")
 		logic.cs.ABSystem.ui:SetAtlasSprite(uiView.btnConfirm2.image, "BookReadingForm", "btn_me_s1")
+
+
+		-- 道具相关
+		uiView.btnKeyProp = CS.DisplayUtil.GetChild(uiView.gameObject, "btnKeyProp"):GetComponent(typeof(logic.cs.Button))
+		uiView.objBtnKeyProp = uiView.btnKeyProp.gameObject
+		uiView.textKeyProp = CS.DisplayUtil.GetChild(uiView.gameObject, "textKeyProp"):GetComponent(typeof(logic.cs.Text))
+		uiView.objItemParentProp = CS.DisplayUtil.GetChild(uiView.gameObject, "transItemParentProp")
+		uiView.transItemParentProp = uiView.objItemParentProp.transform
+		uiView.itemPrefabProp = CS.DisplayUtil.GetChild(uiView.gameObject, "itemPrefabProp")
+		uiView.objBtnKeyProp:SetActive(false)
+		uiView.itemPrefabProp:SetActive(false)
+		uiView.textKeyProp.gameObject:SetActive(false)
+		uiView.itemPropList = {}
+		uiView.luckItemProp = nil
 	end
 end
 
@@ -194,6 +208,10 @@ end
 function ChoiceWholeClothes:Play()
 	self.InstallUI()
 	uiView.Reset()
+	self.cost = 0
+	uiView.btnKeyProp.onClick:AddListener(function()
+		self:ShowPropList()
+	end)
 
 	self.isComplete = false
 	logic.bookReadingMgr.view:BgAddBlurEffect(true)
@@ -414,9 +432,92 @@ function ChoiceWholeClothes:updateView()
         logic.cs.ABSystem.ui:SetAtlasSprite(uiView.imgConfirmCost2, "BookReadingForm", "icon_video")
     end
     uiView.txtConfirmCost2.text ="<color=#AF691EFF>" .. tostring(self.cost) .. "</color>"
+	uiView.textKeyProp.text = tostring(self.cost)
+	if isNotFree then
+		self:ShowPropBtn()
+	end
 end
 
+function ChoiceWholeClothes:ShowPropBtn()
+	local userPropInfo = logic.cs.UserDataManager.userPropInfo_Outfit
+	if not userPropInfo or not userPropInfo.discount_list or userPropInfo.discount_list.Count<=0 then
+		uiView.objBtnKeyProp:SetActive(false)
+		return
+	end
+	uiView.objBtnKeyProp:SetActive(true)
+	local discount_list = userPropInfo.discount_list
+	uiView.transItemParentProp:ClearAllChild()
+	uiView.itemPropList = {}
+	for i=0,discount_list.Count-1,1 do
+		self:AddItemProp(discount_list[i])
+	end
+	local lastItem = self:AddItemProp(nil)
+	lastItem:fucOnClick()
+end
+function ChoiceWholeClothes:ShowPropList()
+	local isShow = not uiView.objItemParentProp.activeSelf
+	uiView.objItemParentProp.gameObject:SetActive(isShow)
+	local isUse = uiView.txtConfirmCost2.text ~= uiView.textKeyProp.text
+	uiView.textKeyProp.gameObject:SetActive(isUse)
+end
+function ChoiceWholeClothes:AddItemProp(data)
+	local go = logic.cs.GameObject.Instantiate(uiView.itemPrefabProp,uiView.transItemParentProp,false)
+	go:SetActive(true)
+	local trans = go.transform
+	local button = logic.cs.LuaHelper.GetComponent(trans,'Button',typeof(logic.cs.Button))
+	local objCheck = trans:Find('checked').gameObject
+	local txtNum = logic.cs.LuaHelper.GetComponent(trans,'Text',typeof(logic.cs.Text))
+	if data~= nil then
+		txtNum.text = data.discount_string or "No Discount"
+	else
+		txtNum.text = "No Discount"
+	end
+	local fucShowCheck = function(_self,isShow)
+		_self.objCheck:SetActive(isShow)
+	end
+	local fucOnClick = function(_self)
+		if uiView.luckItemProp ~= _self then
+			self:OnClcikPropItem(_self)
+		end
+	end
+	local item ={
+		data = data,
+		gameObject = go,
+		transform = trans,
+		button = button,
+		objCheck = objCheck,
+		txtNum = txtNum,
+		fucShowCheck = fucShowCheck,
+		fucOnClick = fucOnClick,
+	}
+	item.button.onClick:AddListener(function()
+		item:fucOnClick()
+	end)
+	table.insert(uiView.itemPropList, item)
+	return item
+end
+function ChoiceWholeClothes:OnClcikPropItem(propItem)
+	for i,v in ipairs(uiView.itemPropList) do
+		v:fucShowCheck(v==propItem)
+	end
+	uiView.luckItemProp = propItem
+	local isUser = true
+	if propItem.data==nil then
+		isUser = false
+	end
+	logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
 
+	--refresh ui
+	uiView.textKeyProp.text = tostring(self.cost)
+	uiView.textKeyProp.gameObject:SetActive(isUser)
+	if isUser then
+		local newCost = tonumber(self.cost)-tonumber(self.cost)*tonumber(propItem.data.discount)
+		newCost = math.floor(newCost)
+		uiView.txtConfirmCost2.text = tostring(newCost)
+	else
+		uiView.txtConfirmCost2.text = tostring(self.cost)
+	end
+end
 
 function ChoiceWholeClothes:ChangeClothesMove(isLeftArrow)
 	if logic.cs.BookReadingWrapper.IsTextTween then
