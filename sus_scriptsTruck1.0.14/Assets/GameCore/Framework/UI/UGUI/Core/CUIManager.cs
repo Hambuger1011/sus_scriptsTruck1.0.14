@@ -232,6 +232,7 @@ namespace UGUI
         #region 加载UI
         public CUIForm OpenForm(string formPath, bool useFormPool = false, bool useCameraRenderMode = true, bool bReopen = false)
 		{
+			LOG.Info("OpenForm----"+formPath);
             CUIForm uiForm = this.OpenUnCloseForm(formPath, bReopen);
             if(uiForm == null)
             {

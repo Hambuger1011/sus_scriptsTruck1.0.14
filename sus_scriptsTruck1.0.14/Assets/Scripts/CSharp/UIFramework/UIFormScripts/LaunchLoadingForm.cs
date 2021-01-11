@@ -48,6 +48,7 @@ public class LaunchLoadingForm : BaseUIForm
     public override void OnOpen()
     {
         base.OnOpen();
+        this.LoadingBG.gameObject.SetActive(false);
 
         skeGraGo = this.transform.Find("Canvas/BG/LoadingBgAnim").gameObject;
 
@@ -339,9 +340,45 @@ public class LaunchLoadingForm : BaseUIForm
     }
 
 
+    private void DownloadNewCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
+    {
+        if (i != 0)
+        {
+            unityObjectRefCount.Release();
+            return;
+        }
+        LOG.Warn("下载了新图 version="+version);
+        PlayerPrefs.SetString("LoadImageVersion", version);
+    }
+    private void DownloadOldCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
+    {
+        if (i != 0)
+        {
+            unityObjectRefCount.Release();
+            return;
+        }
+        this.LoadingBG.sprite = unityObjectRefCount.GetObject() as Sprite;
+        this.LoadingBG.gameObject.SetActive(true);
+        LOG.Warn("下载了旧图 version="+version);
+        if (!version.Equals(UserDataManager.Instance.ResVersion))
+        {
+            DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);
+        }
+    }
 
     IEnumerator LoadCoverImage()
     {
+        var imgVersion = PlayerPrefs.GetString("LoadImageVersion");
+        
+        if (!string.IsNullOrEmpty(imgVersion))
+        {
+            DownloadMgr.Instance.DownloadLoadImg(imgVersion,DownloadOldCallBack);
+        }
+        else
+        {
+            this.LoadingBG.gameObject.SetActive(true);
+            DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);
+        }
         string url = null;
         uint version = 0;
 

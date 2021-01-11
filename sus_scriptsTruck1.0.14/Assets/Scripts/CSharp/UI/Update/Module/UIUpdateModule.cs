@@ -1,6 +1,8 @@
 ﻿using System;
+using AB;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using XLua;
 
 
@@ -50,6 +52,8 @@ public class UIUpdateModule : BaseUIForm
     private EnumUpdate CurUI = EnumUpdate.None;
 
     private GameObject FeedbackButton;
+
+    private Image loadImage;
     protected override void Awake()
     {
         base.Awake();
@@ -65,6 +69,18 @@ public class UIUpdateModule : BaseUIForm
         this.mUpdateEndPanel = DisplayUtil.GetChild(this.gameObject, "UpdateEndPanel").AddComponent<UpdateEndPanel>();
         this.mUpdateFailPanel = DisplayUtil.GetChild(this.gameObject, "UpdateFailPanel").AddComponent<UpdateFailPanel>();
         this.mUpdateAgainPanel = DisplayUtil.GetChild(this.gameObject, "UpdateAgainPanel").AddComponent<UpdateAgainPanel>();
+        this.loadImage = GameObject.Find("UIRect/BG").GetComponent<Image>();
+        this.loadImage.gameObject.SetActive(false);
+        var imgVersion = PlayerPrefs.GetString("LoadImageVersion");
+        
+        if (!string.IsNullOrEmpty(imgVersion))
+        {
+            DownloadMgr.Instance.DownloadLoadImg(imgVersion,DownloadOldCallBack);
+        }
+        else
+        {
+            this.loadImage.gameObject.SetActive(true);
+        }
 
     }
 
@@ -180,6 +196,16 @@ public class UIUpdateModule : BaseUIForm
         this.mUpdateFailPanel.onClose();
         this.mUpdateAgainPanel.onClose();
     }
-
-
+    
+    private void DownloadOldCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
+    {
+        if (i != 0)
+        {
+            unityObjectRefCount.Release();
+            return;
+        }
+        this.loadImage.sprite = unityObjectRefCount.GetObject() as Sprite;
+        this.loadImage.gameObject.SetActive(true);
+    }
+    
 }

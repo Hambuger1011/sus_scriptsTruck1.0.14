@@ -661,6 +661,20 @@ public class DownloadMgr : CMonoSingleton<DownloadMgr>
         var task = this.Download(url, filename, version, 1048576, true);
         return task;
     }
+    
+    public Task DownloadLoadImg(string version,Action<int, UnityObjectRefCount, string> callback)
+    {
+        var url = GameHttpNet.Instance.GetResourcesUrl() + "image/book_loading/0.jpg";
+        var filename = string.Format("{0}cache/book/loading/0.jpg", GameUtility.WritablePath, 0);
+        var task = DownloadMgr.Instance.Download(url, filename, version, 1048576, true);
+        task.AddComplete(() =>
+        {
+            var sprite = XLuaHelper.LoadSprite(task.filename);
+            UnityObjectRefCount refCount = SpriteRefCount.Create(sprite);
+            callback(0, refCount, version);
+        });
+        return task;
+    }
 }
 
 namespace Framework

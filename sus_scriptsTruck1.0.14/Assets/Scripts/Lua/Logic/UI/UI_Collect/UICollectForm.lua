@@ -7,10 +7,24 @@ local diamondsNum,keysNum
 local needX2 = false
 local CLAIMCallback
 local PosList = {
-    {core.Vector2.New(0,50)},
-    {core.Vector2.New(-150,50),core.Vector2.New(150,50)},
-    {core.Vector2.New(-150,50),core.Vector2.New(150,50),core.Vector2.New(0,200)},
-    {core.Vector2.New(-150,50),core.Vector2.New(150,50),core.Vector2.New(0,200),core.Vector2.New(0,-100)},
+    {core.Vector2.New(375,-300)},
+    {core.Vector2.New(280,-300),core.Vector2.New(470,-300)},
+    {core.Vector2.New(185,-300),core.Vector2.New(375,-300),core.Vector2.New(565,-300)},
+    {core.Vector2.New(280,-205),core.Vector2.New(470,-205),core.Vector2.New(280,-395),
+     core.Vector2.New(470,-395)},
+    {core.Vector2.New(185,-205),core.Vector2.New(375,-205),core.Vector2.New(565,-205),
+     core.Vector2.New(280,-395),core.Vector2.New(470,-395)},
+    {core.Vector2.New(185,-205),core.Vector2.New(375,-205),core.Vector2.New(565,-205),
+     core.Vector2.New(185,-395),core.Vector2.New(375,-395),core.Vector2.New(565,-395)},
+    {core.Vector2.New(185,-110),core.Vector2.New(375,-110),core.Vector2.New(565,-110),
+     core.Vector2.New(185,-300),core.Vector2.New(375,-300),core.Vector2.New(565,-300),
+     core.Vector2.New(375,-490)},
+    {core.Vector2.New(185,-110),core.Vector2.New(375,-110),core.Vector2.New(565,-110),
+     core.Vector2.New(185,-300),core.Vector2.New(375,-300),core.Vector2.New(565,-300),
+     core.Vector2.New(280,-490),core.Vector2.New(470,-490)},
+    {core.Vector2.New(185,-110),core.Vector2.New(375,-110),core.Vector2.New(565,-110),
+     core.Vector2.New(185,-300),core.Vector2.New(375,-300),core.Vector2.New(565,-300),
+     core.Vector2.New(185,-490),core.Vector2.New(375,-490),core.Vector2.New(565,-490)},
 }
 local RewardTrans = {}
 
@@ -61,7 +75,6 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
             else
                 Icon.sprite = Cache.PropCache.SpriteData[v.id]
             end
-            item:SetActive(true)
             table.insert(RewardTrans,item)
         end
     end
@@ -71,7 +84,9 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
 end
 
 function UICollectForm:PlayAnim()
-    for i = 1, #RewardTrans do
+    local size = #RewardTrans > #PosList and #PosList or #RewardTrans
+    for i = 1, size do
+        RewardTrans[i].transform.anchoredPosition =PosList[size][i]
         RewardTrans[i]:SetActiveEx(true)
         --RewardTrans[i].transform:DOAnchorPos(PosList[#RewardTrans][i],1):SetEase(core.tween.Ease.Flash):OnComplete(function()  end)
     end
