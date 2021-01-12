@@ -88,7 +88,7 @@ dependencies {
              exclude group: 'com.android.support'
          }
     
-        implementation 'com.google.firebase:firebase-messaging:18.0.0'
+        implementation 'com.google.firebase:firebase-messaging:20.3.0'
     
         implementation ('com.amazonaws:aws-android-sdk-kinesis:2.12.6') {
             exclude group: 'com.google.code.gson'
