@@ -502,7 +502,7 @@ public class DownloadMgr : CMonoSingleton<DownloadMgr>
         {
             return;
         }
-        Debug.LogError("+++curDownloadNum====>>"+DownloadMgr.Instance.curDownloadNum+"==times=>"+nums);
+        // Debug.LogError("+++curDownloadNum====>>"+DownloadMgr.Instance.curDownloadNum+"==times=>"+nums);
         
         task.isDownload = true;
         QueueWorkItem(DoWork, task);
