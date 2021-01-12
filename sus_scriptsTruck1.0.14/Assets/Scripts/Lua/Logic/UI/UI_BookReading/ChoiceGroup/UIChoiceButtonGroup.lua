@@ -137,10 +137,6 @@ function UIChoiceButtonGroup:onItemClick(item)
     logic.bookReadingMgr.view:ResetOperationTips()
     self.selectIdx = item.index
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectOption,"","",tostring(bookData.BookID),tostring(self.component.cfg.dialogID),tostring(self.selectIdx))
-    if logic.cs.UserDataManager.UserData and logic.cs.UserDataManager.UserData.DiamondNum < item.cost and not item.isHadBuy then
-        logic.bookReadingMgr.view:ShowChargeTips(item.cost)
-        return
-    end
     if logic.config.channel == Channel.Spain then
         ---@type UIValueChoice
         local uiValueChoice = logic.UIMgr:Open(logic.uiid.ValueChoice)
@@ -201,11 +197,13 @@ function UIChoiceButtonGroup:BookDialogOptionCallBack(result)
     --     --self:TurnToOption(code,msg)
     -- elseif code == 203 then --钥匙不够
     --     --self:TurnToOption(code,msg)
-    else
+    elseif code == 202 or code == 203 then
         logic.debug.LogError("--BookDialogOptionCallBack--扣费失败,BookId:" .. bookData.BookID .. " DialogId:" .. self.component.cfg.dialogID);
         
         local item = self.items[self.selectIdx]
         logic.bookReadingMgr.view:ShowChargeTips(item.cost)
+    else
+        self:TurnToOption(code,msg)
     end
 end
 

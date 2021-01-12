@@ -263,14 +263,7 @@ function ChoiceClothes:OnChoicesClothCostNotify(result)
 		logic.cs.UserDataManager:AddClothAfterPay(logic.bookReadingMgr.bookData.BookID, clothesID)
 		self:DoChoicesCloth()
 
-	elseif code == 202 or code == 203 or code == 204 then --免费衣服
-		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
-		self:DoChoicesCloth()
-
-		if self.ChoiceRoleGo.ConfirmMask.gameObject~=nil then			
-			self.ChoiceRoleGo.ConfirmMask.gameObject:SetActiveEx(false)
-		end
-	elseif code == 206 then
+	elseif code == 202 or code == 203 then
 		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
 		logic.bookReadingMgr.view:ShowChargeTips(self.cost)
 

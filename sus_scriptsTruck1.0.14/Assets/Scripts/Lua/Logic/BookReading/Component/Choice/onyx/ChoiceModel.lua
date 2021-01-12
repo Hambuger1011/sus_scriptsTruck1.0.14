@@ -705,10 +705,6 @@ function ChoiceModel:OnComfirmClick()
 	local hairCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Hair,hairID)
 
 	if self.modelType == ChoiceType.Skin then
-		if logic.cs.UserDataManager.UserData.DiamondNum < skinCfg.price and not isFree then
-			logic.bookReadingMgr.view:ShowChargeTips(skinCfg.price)
-			return
-		end
 		logic.bookReadingMgr:SaveModel(skinID,0,0)
 		logic.bookReadingMgr:SaveProgress(function(result)
 			local json = core.json.Derialize(result)
@@ -721,16 +717,15 @@ function ChoiceModel:OnComfirmClick()
 				self:OnSelectModeType(ChoiceType.Hair)
 				SetToggleState(ChoiceType.Hair)
 				logic.cs.UserDataManager:SaveCharacterHadBuy(tostring(skinID))
+			elseif code == 202 or code == 203 or code == 204 then
+				logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
+				logic.bookReadingMgr.view:ShowChargeTips(skinCfg.price)
 			else
 				logic.cs.UIAlertMgr:Show("TIPS",json.msg)
 				return
 			end
 		end)
 	elseif self.modelType == ChoiceType.Hair then
-		if logic.cs.UserDataManager.UserData.DiamondNum < hairCfg.price and not isFree then
-			logic.bookReadingMgr.view:ShowChargeTips(hairCfg.price)
-			return
-		end
 		logic.bookReadingMgr:SaveModel(0,0,hairID)
 		logic.bookReadingMgr:SaveProgress(function(result)
 			local json = core.json.Derialize(result)
@@ -742,16 +737,15 @@ function ChoiceModel:OnComfirmClick()
 				self:OnSelectModeType(ChoiceType.Clothes)
 				SetToggleState(ChoiceType.Clothes)
 				logic.cs.UserDataManager:SaveHairHadBuy(tostring(hairID))
+			elseif code == 202 or code == 203 or code == 204 then
+				logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
+				logic.bookReadingMgr.view:ShowChargeTips(hairCfg.price)
 			else
 				logic.cs.UIAlertMgr:Show("TIPS",json.msg)
 				return
 			end
 		end)
 	elseif self.modelType == ChoiceType.Clothes then
-		if logic.cs.UserDataManager.UserData.DiamondNum < clothesCfg.price and not isFree then
-			logic.bookReadingMgr.view:ShowChargeTips(clothesCfg.price)
-			return
-		end
 		local hairSelect = 1
 		local bookData = logic.bookReadingMgr.bookData
 		if bookData.hair_id and bookData.hair_id ~= 0 then
@@ -786,6 +780,9 @@ function ChoiceModel:OnComfirmClick()
 				logic.cs.UserDataManager:SaveOutfitHadBuy(tostring(clothesID))
 				skinIsSelected = false
 				self:OnChoicesModelNotify(result,nil,clothesID,hairSelect)
+			elseif code == 202 or code == 203 or code == 204 then
+				logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
+				logic.bookReadingMgr.view:ShowChargeTips(clothesCfg.price)
 			else
 				logic.cs.UIAlertMgr:Show("TIPS",json.msg)
 				return

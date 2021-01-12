@@ -708,32 +708,24 @@ function ChoiceWholeClothes:OnComfirmClick()
 			--logic.cs.UINetLoadingMgr:Show()
 		
 			if self.buyType == BuyType.Diamonds then
-				
-				if logic.cs.UserDataManager.UserData.DiamondNum < self.cost then
-				
-					uiView.imgLeftArrow.raycastTarget = true		
-					uiView.imgRightArrow.raycastTarget = true
-					logic.bookReadingMgr.view:ShowChargeTips(self.cost)
-				else
-					logic.bookReadingMgr:SaveOption(self.selectIdx)
-if self.cfg.trigger == ChoiceType.NPC then
-						if self.cfg.trigger == ChoiceType.Clothes then
-							logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
-						else
-							logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
-						end
+				logic.bookReadingMgr:SaveOption(self.selectIdx)
+				if self.cfg.trigger == ChoiceType.NPC then
+					if self.cfg.trigger == ChoiceType.Clothes then
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
 					else
-						if self.cfg.trigger == ChoiceType.Clothes then
-							logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
-						else
-							logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
-						end
-					end					logic.bookReadingMgr:SaveProgress(function(result)
-						logic.cs.UserDataManager:SaveClothHadBuy(tostring(clothesID))
-						SaveProResult=result
-						self:OnChoicesClothCostNotify(result)
-					end)
-				end
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+					end
+				else
+					if self.cfg.trigger == ChoiceType.Clothes then
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+					else
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+					end
+				end					logic.bookReadingMgr:SaveProgress(function(result)
+				logic.cs.UserDataManager:SaveClothHadBuy(tostring(clothesID))
+				SaveProResult=result
+				self:OnChoicesClothCostNotify(result)
+			end)
 			end
 
 			
@@ -741,18 +733,7 @@ if self.cfg.trigger == ChoiceType.NPC then
 	end
 
 	if self.buyType == BuyType.Diamonds then
-
-	
-		if logic.cs.UserDataManager.UserData.DiamondNum < self.cost then
-			uiView.imgLeftArrow.raycastTarget = true		
-			uiView.imgRightArrow.raycastTarget = true
-			logic.bookReadingMgr.view:ShowChargeTips(self.cost)
-			
-
-		else
-			doChoice(true)
-		
-		end
+		doChoice(true)
 	elseif self.buyType == BuyType.Video then
 		if self.cost > 0 then
 			local seeVideoNum = logic.cs.UserDataManager:GetSeeVideoNumOfClothes(logic.bookReadingMgr.bookData.BookID, clothesID)
@@ -905,10 +886,7 @@ function ChoiceWholeClothes:OnChoicesClothCostNotify(result)
 		logic.cs.UserDataManager:AddClothAfterPay(logic.bookReadingMgr.bookData.BookID, clothesID)
 		self:DoChoicesCloth()
 
-	elseif code == 202 or code == 203 or code == 204 then --免费衣服
-		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
-		self:DoChoicesCloth()
-	elseif code == 206 then
+	elseif code == 202 or code == 203 then
 		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
 		logic.bookReadingMgr.view:ShowChargeTips(self.cost)
 	else
