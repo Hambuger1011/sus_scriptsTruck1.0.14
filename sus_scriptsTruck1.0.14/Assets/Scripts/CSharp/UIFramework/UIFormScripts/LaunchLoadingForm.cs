@@ -347,7 +347,7 @@ public class LaunchLoadingForm : BaseUIForm
             unityObjectRefCount.Release();
             return;
         }
-        LOG.Warn("下载了新图 version="+version);
+        LOG.Info("下载了新图 version="+version);
         PlayerPrefs.SetString("LoadImageVersion", version);
     }
     private void DownloadOldCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
@@ -359,7 +359,7 @@ public class LaunchLoadingForm : BaseUIForm
         }
         this.LoadingBG.sprite = unityObjectRefCount.GetObject() as Sprite;
         this.LoadingBG.gameObject.SetActive(true);
-        LOG.Warn("下载了旧图 version="+version);
+        LOG.Info("下载了旧图 version="+version);
         if (!version.Equals(UserDataManager.Instance.ResVersion))
         {
             DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);

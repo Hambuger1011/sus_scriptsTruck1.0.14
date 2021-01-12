@@ -68,7 +68,7 @@ function UIChoiceButtonGroup:initItems(selections,cost,hiddenEgg)
         ---@type UIChoiceButtonItem
         local item = self.items[i]
         item:SetActive(true)
-        item:initData(i,selections[i],cost[i],hiddenEgg[i], self.component.cfg.dialogID)
+        item:initData(i,selections[i],cost[i],hiddenEgg[i], self.component.cfg.dialogID,self.items)
     end
     for i=self.maxNum + 1,#self.items do
         ---@type UIChoiceButtonItem

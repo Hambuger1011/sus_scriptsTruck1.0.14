@@ -317,7 +317,7 @@ public class BookDisplayForm : BaseUIForm
         {
             firstIndex = curMainPageIndex - 1;
         }
-        Debug.LogError($"lzh =======> len={len} curMainPageIndex={curMainPageIndex} lastMainPageIndex={lastMainPageIndex} {firstIndex} {mDisplayItemList.Count}");
+        Debug.Log($"lzh =======> len={len} curMainPageIndex={curMainPageIndex} lastMainPageIndex={lastMainPageIndex} {firstIndex} {mDisplayItemList.Count}");
         for (int i = 0; i < len; i++)
         {
             ScrollViewPageCell cell = mCellList[i];
@@ -346,7 +346,7 @@ public class BookDisplayForm : BaseUIForm
             }
             else
             {
-                //Debug.LogError($"lzh =========> i={i} mDisplayItemList.Count = {mDisplayItemList.Count} {bookDetails.ChapterDiscriptionArray.Length}");
+                //Debug.Log($"lzh =========> i={i} mDisplayItemList.Count = {mDisplayItemList.Count} {bookDetails.ChapterDiscriptionArray.Length}");
                 displayItem = GetPageItem();
             }
             cell.MountItem(cell.transform, displayItem);
@@ -768,7 +768,7 @@ public class BookDisplayForm : BaseUIForm
     }
     private void startReading(int vChapterId)
     {
-        Debug.LogError($"lzh ===========> startReading({vChapterId})");
+        Debug.Log($"lzh ===========> startReading({vChapterId})");
         EventDispatcher.Dispatch(EventEnum.NavigationClose);
         EventDispatcher.Dispatch(EventEnum.NoticeClose);
         initDialogDisplaySystemData(vChapterId);

@@ -170,7 +170,7 @@ public class BookDisplayGridChild : MonoBehaviour {
     private void OnPlayerHandler(PointerEventData data)
     {
         AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        Debug.LogError($"lzh ===========> OnPlayerHandler: {mChapterIsOpen} {mIsComplete} {mIsLock}");
+        Debug.Log($"lzh ===========> OnPlayerHandler: {mChapterIsOpen} {mIsComplete} {mIsLock}");
         if (mChapterIsOpen)
         {
             if (mIsComplete)

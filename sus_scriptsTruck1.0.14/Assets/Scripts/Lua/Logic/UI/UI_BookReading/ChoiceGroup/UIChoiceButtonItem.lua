@@ -19,6 +19,7 @@ function UIChoiceButtonItem:__init(gameObject)
     self.btnKeyProp = get(self.transform,'DiamondIcon/btnKeyProp',typeof(logic.cs.Button))
     self.objBtnKeyProp = self.btnKeyProp.gameObject
     self.textKeyProp = get(self.transform,'DiamondIcon/btnKeyProp/Text',typeof(logic.cs.Text))
+    self.DiscountText = get(self.transform,'DiamondIcon/btnKeyProp/DiscountText',typeof(logic.cs.Text))
     self.transItemParentProp = self.transform:Find('DiamondIcon/btnKeyProp/list')
     self.objItemParentProp = self.transItemParentProp.gameObject
     self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/item').gameObject
@@ -45,7 +46,7 @@ function UIChoiceButtonItem:init(index,callback)
     self.button.onClick:AddListener(callback)
 end
 
-function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
+function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID,items)
     if not selection then
         selection = ''
     end
@@ -62,6 +63,8 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID)
     self.textKeyProp.text = tostring(self.cost)
     self.txtInfo.text = logic.bookReadingMgr:ReplaceChar(selection)
     self.isHadBuy = false
+    self.items = items
+    --self.DiscountText.text = self.data.discount_string
 
     local GetHadBuySelectId=logic.cs.UserDataManager:GetHadBuySelectId(dialogID);
     print("lua====dialogID:"..dialogID)  
@@ -161,16 +164,30 @@ function UIChoiceButtonItem:ShowPropBtn()
     local discount_list = userPropInfo.discount_list
     self.transItemParentProp:ClearAllChild()
     self.itemPropList = {}
+    local firstItem = nil
     for i=0,discount_list.Count-1,1 do
-        self:AddItemProp(discount_list[i])
+        local itemProp = self:AddItemProp(discount_list[i])
+        if firstItem == nil then
+            firstItem = itemProp
+        end
     end
     local lastItem = self:AddItemProp(nil)
-    lastItem:fucOnClick()
+    if firstItem ~= nil then
+        firstItem:fucOnClick()
+    else
+        lastItem:fucOnClick()
+    end
 end
 function UIChoiceButtonItem:ShowPropList()
     local isShow = not self.objItemParentProp.activeSelf
     self.objItemParentProp.gameObject:SetActive(isShow)
-    self.textKeyProp.gameObject:SetActive(isShow)
+    local isUse = self.txtCost.text ~= self.textKeyProp.text
+    self.textKeyProp.gameObject:SetActive(isUse)
+    for k, v in pairs(self.items) do
+        if v ~= self then
+            v.objItemParentProp.gameObject:SetActiveEx(false)
+        end
+    end
 end
 function UIChoiceButtonItem:AddItemProp(data)
     local go = logic.cs.GameObject.Instantiate(self.itemPrefabProp,self.transItemParentProp,false)
@@ -191,6 +208,7 @@ function UIChoiceButtonItem:AddItemProp(data)
 		if self.luckItemProp ~= _self then
 			self:OnClcikPropItem(_self)
 		end
+        self.objItemParentProp.gameObject:SetActive(false)
     end
     local item ={
         data = data,
@@ -223,11 +241,13 @@ function UIChoiceButtonItem:OnClcikPropItem(propItem)
     self.textKeyProp.gameObject:SetActive(isUser)
     if isUser then
         self.textKeyProp.text = tostring(self.cost)
+        self.DiscountText.text = propItem.data.discount_string
         local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         self.txtCost.text = tostring(newCost)
     else
         self.txtCost.text = tostring(self.cost)
+        self.DiscountText.text = ""
     end
 end
 

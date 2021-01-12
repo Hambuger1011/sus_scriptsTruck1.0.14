@@ -839,11 +839,19 @@ function ChoiceModel:ShowPropBtn()
     local discount_list = userPropInfo.discount_list
 	uiView.transItemParentProp:ClearAllChild()
 	uiView.itemPropList = {}
+	local firstItem = nil
     for i=0,discount_list.Count-1,1 do
-        self:AddItemProp(discount_list[i])
+		local itemProp = self:AddItemProp(discount_list[i])
+		if firstItem == nil then
+			firstItem = itemProp
+		end
 	end
 	local lastItem = self:AddItemProp(nil)
-	lastItem:fucOnClick()
+	if firstItem ~= nil then
+		firstItem:fucOnClick()
+	else
+		lastItem:fucOnClick()
+	end
 end
 function ChoiceModel:ShowPropList()
 	local isShow = not uiView.objItemParentProp.activeSelf
@@ -870,6 +878,7 @@ function ChoiceModel:AddItemProp(data)
 		if uiView.luckItemProp ~= _self then
 			self:OnClcikPropItem(_self)
 		end
+		uiView.objItemParentProp.gameObject:SetActive(false)
     end
     local item ={
         data = data,
