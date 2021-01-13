@@ -1,4 +1,4 @@
-#if (UNITY_IOS)
+#if true//(UNITY_IOS)
 
 using System;
 using System.IO;
@@ -223,8 +223,16 @@ namespace GameFramework
                     if (index == -1)
                     {
                         string strFirst = "didReceiveRemoteNotification:(NSDictionary*)userInfo\n{\n";
-                        str = str.Replace(strFirst, strFirst + "\t::printf(\"didReceiveRemoteNotification:(NSDictionary*)userInfo\");\n" 
-                                                             + "\tif ([IGGTSHybrid.sharedInstance didReceiveRemoteNotifications:userInfo]) {\n"
+                        str = str.Replace(strFirst, strFirst 
+                                                             + "\t::printf(\"didReceiveRemoteNotification:(NSDictionary*)userInfo\");\n" 
+                                                             +"\tif([userInfo objectForKey:@\"broadcast\"] ){\n" 
+                                                             +"\tNSString * tempstr = (NSString *)[userInfo objectForKey:@\"broadcast\"];\n" 
+                                                             +"\tNSLog(@\"broadcast info：%@\",tempstr);\n" 
+                                                             +"\tNSString * userinfoStr =(NSString *)userInfo;\n" 
+                                                             +"\tNSLog(@\"broadcast userinfoStr：%@\",userinfoStr);\n" 
+                                                             +"\tUnitySendMessage( \"GoogleSdk\", \"ReceiveBroadcast\", [tempstr UTF8String]  );\n" 
+                                                             +"\t}\n" 
+                                                             + "\telse ([IGGTSHybrid.sharedInstance didReceiveRemoteNotifications:userInfo]) {\n"
                                                              + "\t\tUIAlertController *alert = [UIAlertController alertControllerWithTitle:@\"客服\" message:@\"收到一条客服回复，是否现在去查看(游戏由运营决定可选接入、是否弹窗)\"\n"
                                                              + "\t\t\tpreferredStyle:UIAlertControllerStyleAlert];\n"
                                                              + "\t\t[alert addAction:[UIAlertAction actionWithTitle:@\"去查看\" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {\n"

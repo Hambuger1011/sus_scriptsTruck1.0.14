@@ -86,10 +86,12 @@ public class BookDisplayGridChild : MonoBehaviour {
     //道具相关
     bool isCheckedKeyPropBtn = true;
     Button btnKeyProp = null;
+    Image propImage = null;
     GameObject objKeyPropDeleteLine = null;
     //道具相关_reset
     bool isCheckedKeyPropBtn2 = true;
     Button btnKeyProp2 = null;
+    Image propImage2 = null;
     GameObject objKeyPropDeleteLine2 = null;
 
 
@@ -128,6 +130,7 @@ public class BookDisplayGridChild : MonoBehaviour {
         returns.onClick.AddListener(ReturnButtonOnclicke);//重置按钮
 
         btnKeyProp = transform.Find("PlayButton/Image/btnKeyProp").GetComponent<Button>();
+        propImage = btnKeyProp.transform.Find("Image").GetComponent<Image>();
         objKeyPropDeleteLine = transform.Find("PlayButton/Image/btnKeyProp/line_delete").gameObject;
         btnKeyProp.gameObject.SetActive(false);
         objKeyPropDeleteLine.SetActive(false);
@@ -135,6 +138,7 @@ public class BookDisplayGridChild : MonoBehaviour {
         RefreshKeyPropBtnState();
 
         btnKeyProp2 = transform.Find("ReseGame/Bg/BtnResetChapter/NeedKey/btnKeyProp").GetComponent<Button>();
+        propImage2 = btnKeyProp2.transform.Find("Image").GetComponent<Image>();
         objKeyPropDeleteLine2 = transform.Find("ReseGame/Bg/BtnResetChapter/NeedKey/btnKeyProp/line_delete").gameObject;
         btnKeyProp2.gameObject.SetActive(false);
         objKeyPropDeleteLine2.SetActive(false);
@@ -723,6 +727,10 @@ return function()
         btnKeyProp.gameObject.SetActive(true);
         objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
         if (isCheckedKeyPropBtn)
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+        else
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
+        if (isCheckedKeyPropBtn)
         {
             UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
         }
@@ -775,6 +783,10 @@ return function()
         }
         btnKeyProp2.gameObject.SetActive(true);
         objKeyPropDeleteLine2.SetActive(isCheckedKeyPropBtn2);
+        if (isCheckedKeyPropBtn2)
+            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+        else
+            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
 
         if (isCheckedKeyPropBtn2)
         {
