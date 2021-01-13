@@ -62,12 +62,12 @@ function PakageItem:ShowDeltaTime(delta)
     if delta<0 then delta = 0 end
     if delta >= hourSeconds then
         local hour = math.floor(delta/hourSeconds)
-        self.txtCountDown.text = string.format("Expiress in %d hours",hour)
+        self.txtCountDown.text = string.format("Expires in %d hours",hour)
     elseif delta >= minuteSeconds then
         local minute = math.floor(delta/minuteSeconds)
-        self.txtCountDown.text = string.format("Expiress in %d mins",minute)
+        self.txtCountDown.text = string.format("Expires in %d mins",minute)
     else
-        self.txtCountDown.text = string.format("Expiress in %d sec",delta)
+        self.txtCountDown.text = string.format("Expires in %d sec",delta)
     end
 end
 
