@@ -24,8 +24,6 @@ function UIEmailInfoForm:OnInitView()
     self.title = self.uiBinding:Get('Title', typeof(logic.cs.Text))
     self.content = self.uiBinding:Get('Content', typeof(logic.cs.Text))
     self.gitBg = self.uiBinding:Get('GitBg').gameObject
-    self.keyText = self.uiBinding:Get('KeyText', typeof(logic.cs.Text))
-    self.dimandText = self.uiBinding:Get('DimandText', typeof(logic.cs.Text))
     self.btnText = self.uiBinding:Get('BtnText', typeof(logic.cs.Text))
     self.picture = self.uiBinding:Get('Picture', typeof(logic.cs.Image))
     self.pictureBtn = self.picture.transform:GetComponent(typeof(logic.cs.Button))
@@ -43,8 +41,7 @@ function UIEmailInfoForm:OnInitView()
     self.submitBtn = self.uiBinding:Get('SubmitBtn', typeof(logic.cs.Button))
     self.inputMask = self.uiBinding:Get('InputMask', typeof(logic.cs.Button))
     self.inputField = self.uiBinding:Get('InputField', typeof(logic.cs.InputField))
-    self.keyItem = self.uiBinding:Get('KeyItem').gameObject
-    self.dimandItem = self.uiBinding:Get('DimandItem').gameObject
+    self.Item = self.uiBinding:Get('Item')
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.receiveButton.gameObject,function(data) self:ReceiveButtonClick() end)
@@ -95,16 +92,35 @@ function UIEmailInfoForm:SetEmailData(id)
         self.gitBg:SetActiveEx(false)
     elseif(Info.msg_type == 2)then  --2奖励信息
 
-        if(Info.price_bkey and tonumber(Info.price_bkey) > 0)then
-            self.keyText.text = "x" .. Info.price_bkey;
-        else
-            self.keyItem:SetActiveEx(false);
+        if (Info.price_bkey and tonumber(Info.price_bkey) > 0) then
+            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
+            local Icon = item:GetComponent(typeof(logic.cs.Image))
+            Text.text = "x".. Info.price_bkey;
+            Icon.sprite = Cache.PropCache.SpriteData[2]
+            item:SetActiveEx(true)
+        end
+        if (Info.price_diamond and tonumber(Info.price_diamond) > 0) then
+            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
+            local Icon = item:GetComponent(typeof(logic.cs.Image))
+            Text.text = "x".. Info.price_diamond;
+            Icon.sprite = Cache.PropCache.SpriteData[1]
+            item:SetActiveEx(true)
         end
 
-        if(Info.price_diamond and tonumber(Info.price_diamond) > 0)then
-            self.dimandText.text = "x" .. Info.price_diamond;
-        else
-            self.dimandItem:SetActiveEx(false);
+        for k, v in pairs(Info.item_list) do
+            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
+            local Icon = item:GetComponent(typeof(logic.cs.Image))
+            Text.text = "x".. v.num;
+            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                Icon.sprite = Cache.PropCache.SpriteData[3]
+            else
+                local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
+                Icon.sprite = sprite
+            end
+            item:SetActive(true)
         end
 
         self.btnText.text = "RECEIVE";

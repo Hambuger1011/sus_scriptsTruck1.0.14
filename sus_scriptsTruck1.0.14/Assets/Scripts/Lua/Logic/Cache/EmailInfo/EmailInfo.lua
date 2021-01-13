@@ -59,6 +59,7 @@ function EmailInfo:__init()
     self.comment_avatar=0;
     self.comment_avatar_frame=0;
     self.comment_comment_frame=0;
+    self.item_list={};
 end
 
 function EmailInfo:UpdateData(data)
@@ -91,6 +92,7 @@ function EmailInfo:UpdateData(data)
     self.comment_avatar=data.comment_avatar;
     self.comment_avatar_frame=data.comment_avatar_frame;
     self.comment_comment_frame=data.comment_comment_frame;
+    self.item_list=data.item_list;
 end
 
 --销毁
@@ -121,6 +123,7 @@ function EmailInfo:__delete()
     self.comment_is_self=nil;
     self.reply_id=nil;
     self.replied_is_self=nil;
+    self.item_list={};
 end
 
 

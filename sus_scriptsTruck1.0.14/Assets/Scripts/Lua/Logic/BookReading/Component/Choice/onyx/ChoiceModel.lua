@@ -96,6 +96,7 @@ local InstallUI = function()
 		uiView.objItemParentProp = uiView.uiBinding:Get('transItemParentProp')
 		uiView.transItemParentProp = uiView.objItemParentProp.transform
 		uiView.itemPrefabProp = uiView.uiBinding:Get('itemPrefabProp')
+		uiView.DiscountText = uiView.uiBinding:Get('DiscountText',typeof(logic.cs.Text))
 		-- uiView.btnKeyProp.onClick:AddListener(function()
 		-- 	self:ShowPropList()
 		-- end)
@@ -914,8 +915,10 @@ function ChoiceModel:OnClcikPropItem(propItem)
 		local newCost = tonumber(self.choiceCost)-tonumber(self.choiceCost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         uiView.lbCost.text = tostring(newCost)
+		uiView.DiscountText.text = propItem.data.discount_string
     else
         uiView.lbCost.text = tostring(self.choiceCost)
+		uiView.DiscountText.text = ""
     end
 end
 

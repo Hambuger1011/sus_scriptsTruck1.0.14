@@ -172,6 +172,7 @@ function ChoiceWholeClothes.InstallUI()
 		uiView.objItemParentProp = CS.DisplayUtil.GetChild(uiView.gameObject, "transItemParentProp")
 		uiView.transItemParentProp = uiView.objItemParentProp.transform
 		uiView.itemPrefabProp = CS.DisplayUtil.GetChild(uiView.gameObject, "itemPrefabProp")
+		uiView.DiscountText = CS.DisplayUtil.GetChild(uiView.gameObject, "DiscountText"):GetComponent(typeof(logic.cs.Text))
 		uiView.objBtnKeyProp:SetActive(false)
 		uiView.itemPrefabProp:SetActive(false)
 		uiView.textKeyProp.gameObject:SetActive(false)
@@ -209,6 +210,7 @@ function ChoiceWholeClothes:Play()
 	self.InstallUI()
 	uiView.Reset()
 	self.cost = 0
+	uiView.btnKeyProp.onClick:RemoveAllListeners()
 	uiView.btnKeyProp.onClick:AddListener(function()
 		self:ShowPropList()
 	end)
@@ -523,8 +525,10 @@ function ChoiceWholeClothes:OnClcikPropItem(propItem)
 		local newCost = tonumber(self.cost)-tonumber(self.cost)*tonumber(propItem.data.discount)
 		newCost = math.floor(newCost)
 		uiView.txtConfirmCost2.text = tostring(newCost)
+		uiView.DiscountText.text = propItem.data.discount_string
 	else
 		uiView.txtConfirmCost2.text = tostring(self.cost)
+		uiView.DiscountText.text = ""
 	end
 end
 

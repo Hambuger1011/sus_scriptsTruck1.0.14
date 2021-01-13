@@ -64,7 +64,6 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID,ite
     self.txtInfo.text = logic.bookReadingMgr:ReplaceChar(selection)
     self.isHadBuy = false
     self.items = items
-    --self.DiscountText.text = self.data.discount_string
 
     local GetHadBuySelectId=logic.cs.UserDataManager:GetHadBuySelectId(dialogID);
     print("lua====dialogID:"..dialogID)  

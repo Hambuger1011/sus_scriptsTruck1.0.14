@@ -90,7 +90,7 @@ public class ProfileForm : BaseUIForm
 
     private GameObject CommunityWindow, Facebook, Twitter, Instagram, Google, Youtube, Back, AjustesBg;
 
-    private Text compleNumber, MyReadBookNumber, VersionText, terminosText, politicaText;
+    private Text compleNumber, MyReadBookNumber, VersionText, terminosText, politicaText,iggIdText;
 
     private List<IGGAgreement> IggAgreementList;
 
@@ -150,6 +150,7 @@ public class ProfileForm : BaseUIForm
         MyReadBookNumber = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/Libros/compleNumber")
             .GetComponent<Text>();
         VersionText = transform.Find("Frame/ScrollView/Viewport/Content/AjustesBg/VersionText").GetComponent<Text>();
+        iggIdText = transform.Find("Frame/ScrollView/Viewport/Content/TopBg/IggId/IggIdText").GetComponent<Text>();
         politicaText = transform.Find("Frame/ScrollView/Viewport/Content/AjustesBg/Politica/Text").GetComponent<Text>();
         terminosText = transform.Find("Frame/ScrollView/Viewport/Content/AjustesBg/Terminos/Text").GetComponent<Text>();
 
@@ -377,6 +378,7 @@ public class ProfileForm : BaseUIForm
         }
 
         VersionText.text = "©IGG All Rights Reserved.\nversion " + SdkMgr.Instance.GameVersion();
+        iggIdText.text = UserDataManager.Instance.IGGid;
 
         //UUidInputField.text = UserDataManager.Instance.userInfo.data.userinfo.phoneimei.ToString();
 
