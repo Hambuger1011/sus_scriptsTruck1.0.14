@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,21 +66,37 @@ public class BroadcastTipForm : BaseUIForm
     //检查是否还有广播需要播
     private void checkBroadcastLeft()
     {
-        if (UserDataManager.Instance.BroadcastQueue == null || UserDataManager.Instance.BroadcastQueue.Count <= 0)
+        if ((UserDataManager.Instance.GMBroadcastQueue == null || UserDataManager.Instance.GMBroadcastQueue.Count <= 0) &&
+            (UserDataManager.Instance.BroadcastQueue == null || UserDataManager.Instance.BroadcastQueue.Count <= 0))
         {
             BroadCastIsOver();
             mBroadcastIsRun = false;
             return;
         }
-        string chatMsg = UserDataManager.Instance.BroadcastQueue.Peek();
+        
+        string chatMsg = GetMsg();
         if (string.IsNullOrEmpty(chatMsg))
         {
-            UserDataManager.Instance.BroadcastQueue.Dequeue();
             checkBroadcastLeft();
             return;
         }
         doRun(chatMsg);
-        UserDataManager.Instance.BroadcastQueue.Dequeue();
+    }
+
+    private string GetMsg()
+    {
+        string chatMsg = String.Empty;
+        if (UserDataManager.Instance.GMBroadcastQueue.Count > 0)
+        {
+            chatMsg = UserDataManager.Instance.GMBroadcastQueue.Peek();
+            UserDataManager.Instance.GMBroadcastQueue.Dequeue();
+        }
+        else if (UserDataManager.Instance.BroadcastQueue.Count > 0)
+        {
+            chatMsg = UserDataManager.Instance.BroadcastQueue.Peek();
+            UserDataManager.Instance.BroadcastQueue.Dequeue();
+        }
+        return chatMsg;
     }
 
     //所有广播，已经播放完

@@ -183,6 +183,8 @@ public class LoopBroadcastItemInfo
     public int end;
     public int gap;
     public int curShowTime;
+    public int type;
+    public string color;
 }
 
 //屏蔽字的替换
@@ -371,6 +373,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     /// <summary>
     /// 缓存广播列表
     /// </summary>
+    public Queue<string> GMBroadcastQueue = new Queue<string>();
     public Queue<string> BroadcastQueue = new Queue<string>();
     public List<LoopBroadcastItemInfo> LoopBroadcastList = new List<LoopBroadcastItemInfo>();
 
@@ -484,7 +487,11 @@ public class UserDataManager : Singleton<UserDataManager> {
                     {
                         if (itemInfo.curShowTime + itemInfo.gap <= GameDataMgr.Instance.GetCurrentUTCTime())
                         {
-                            AddBroadcast(itemInfo.msg);
+                            if (itemInfo.type == 1)
+                                AddGMBroadcast((itemInfo.msg));
+                            else
+                                AddBroadcast(itemInfo.msg);
+                            
                             UIAlertMgr.Instance.BroadcastShow();
                             LoopBroadcastList[i].curShowTime = GameDataMgr.Instance.GetCurrentUTCTime();
                         }
@@ -1493,9 +1500,96 @@ public class UserDataManager : Singleton<UserDataManager> {
         BroadcastQueue.Enqueue(vMsg);
     }
 
+    public void AddGMBroadcast(string vMsg)
+    {
+        GMBroadcastQueue.Enqueue(vMsg);
+    }
+
     public void AddLoopBroadcast(LoopBroadcastItemInfo vMsgItem)
     {
         LoopBroadcastList.Add(vMsgItem);
+    }
+
+
+    public void OnReceiveBroadcast(string vInfo,string vMsg)
+    {
+        vInfo = vInfo.Replace("'", "\"");
+        Dictionary<string,string> resultDic = JsonHelper.JsonToObject<Dictionary<string,string>>(vInfo);
+        int type = 0;
+        string resultStr = String.Empty;
+        if (resultDic != null)
+        {
+            if(resultDic.ContainsKey("type"))
+                type =int.Parse(resultDic["type"]);
+            
+            if (resultDic.ContainsKey("color"))
+            {
+                resultStr = "<color='#"+resultDic["color"]+"'>"+vMsg+"</color>";
+            }
+            else
+            {
+                resultStr = vMsg;
+            }
+        }
+
+        if (type == 1)
+        {
+            UserDataManager.Instance.AddGMBroadcast(resultStr);
+        }
+        else
+        {
+            UserDataManager.Instance.AddBroadcast(resultStr);
+        }
+        UIAlertMgr.Instance.BroadcastShow();
+
+        #region  hide
+// Dictionary<string, object> recMsg = JsonHelper.JsonToObject<Dictionary<string, object>>(vMsg);
+         //    if(recMsg.ContainsKey("extras"))
+         //    {
+         //        Dictionary<string, object> typeDic = JsonHelper.JsonToObject<Dictionary<string, object>>(recMsg["extras"].ToString());
+         //        if (typeDic.ContainsKey("type"))
+         //        {
+         //            if (int.Parse(typeDic["type"].ToString()) == 1)
+         //            {
+         //                //android
+         //                if (recMsg.ContainsKey("content"))
+         //                {
+         //                    AddBroadcast(recMsg["message"].ToString());
+         //                    UIAlertMgr.Instance.BroadcastShow();
+         //                }
+         //            }
+         //            else if (int.Parse(typeDic["type"].ToString()) == 2)
+         //            {
+         //                //android
+         //                if (recMsg.ContainsKey("message"))
+         //                {
+         //                    LoopBroadcastItemInfo loopItemInfo = new LoopBroadcastItemInfo();
+         //                    loopItemInfo.id = UserDataManager.Instance.GetBroadcastId();
+         //                    loopItemInfo.msg = recMsg["message"].ToString();
+         //                    if (typeDic.ContainsKey("begin"))
+         //                        loopItemInfo.begin = int.Parse(typeDic["begin"].ToString());
+         //                    if (typeDic.ContainsKey("end"))
+         //                        loopItemInfo.end = int.Parse(typeDic["end"].ToString());
+         //                    if (typeDic.ContainsKey("gap"))
+         //                        loopItemInfo.gap = int.Parse(typeDic["gap"].ToString()) * 60;
+         //
+         //                    if (loopItemInfo.begin == 0 || loopItemInfo.end == 0 || loopItemInfo.gap == 0)
+         //                    {
+         //                        UserDataManager.Instance.AddBroadcast(recMsg["message"].ToString());
+         //                        UIAlertMgr.Instance.BroadcastShow();
+         //                    }
+         //                    else
+         //                    {
+         //                        UserDataManager.Instance.AddLoopBroadcast(loopItemInfo);
+         //                    }
+         //                }
+         //            }
+         //        }
+         //    }
+        
+
+        #endregion
+         
     }
 
 

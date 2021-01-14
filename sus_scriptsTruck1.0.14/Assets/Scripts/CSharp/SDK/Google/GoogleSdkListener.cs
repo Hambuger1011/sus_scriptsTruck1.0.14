@@ -160,10 +160,17 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
         }
     }
 
-    public void ReceiveBroadcast(string vMsg)
+    public void ReceiveBroadcast(string vInfo)
     {
-        Debug.LogError("====ReceiveBroadcast===>>"+vMsg);
-        //UserDataManager.Instance.OnReceiveBroadcast(vMsg);
+        Debug.LogError("====ReceiveBroadcast===>>"+vInfo);
+        if (!string.IsNullOrEmpty(vInfo))
+        {
+            string[] strArr = vInfo.Split('^');
+            if (strArr != null && strArr.Length > 1)
+            {
+                UserDataManager.Instance.OnReceiveBroadcast(strArr[0],strArr[1]);
+            }
+        }
     }
 }
 
