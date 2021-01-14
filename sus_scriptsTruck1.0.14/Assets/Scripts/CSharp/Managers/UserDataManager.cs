@@ -322,6 +322,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     public PropInfo userPropInfo_Outfit;//装扮类型道具信息
     public PropInfo userPropInfo_Choice;//选项类型道具信息
     public PropInfo userPropInfo_Key;   //钥匙类型道具信息
+    public int SendSeq = 0;
 
 
     public void SetLuckyPropItem(bool isUse,PropInfoItem item=null)
@@ -330,6 +331,7 @@ public class UserDataManager : Singleton<UserDataManager> {
         {
             is_use_prop = isUse ? 1:0;
             propInfoItem = item;
+            SendSeq = GameHttpNet.Instance.SendSeq + 1;
         }
         else
         {
@@ -344,8 +346,12 @@ public class UserDataManager : Singleton<UserDataManager> {
         {
             propInfoItem.prop_num--;
         }
-        is_use_prop = 0;
-        propInfoItem = null;
+
+        if (GameHttpNet.Instance.SendSeq == SendSeq)
+        {
+            is_use_prop = 0;
+            propInfoItem = null;
+        }
     }
 
 

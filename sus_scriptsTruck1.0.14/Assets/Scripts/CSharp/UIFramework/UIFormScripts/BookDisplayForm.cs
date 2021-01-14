@@ -577,6 +577,7 @@ public class BookDisplayForm : BaseUIForm
         //UITipsMgr.Instance.PopupTips("Reset Book Successful.", false);
     }
 
+    private int restartCost = 0;
     private void ResetChapterHandler(int vChapterId)
     {
         
@@ -612,16 +613,11 @@ public class BookDisplayForm : BaseUIForm
         {
             if (bookDetails.CharacterPricesArray.Length >= mChapterId)
             {
-                int restartCost = int.Parse(bookDetails.CharacterPricesArray[mChapterId - 1]);
+                restartCost = int.Parse(bookDetails.CharacterPricesArray[mChapterId - 1]);
                 if (UserDataManager.Instance.CheckBookHasBuy(mCurBookId))
                     restartCost = 0;
                 if (restartCost > 0)
                 {
-                    if (UserDataManager.Instance.UserData.KeyNum < restartCost && XLuaHelper.LimitTimeActivity == 0)
-                    {
-                        OpenChargeTip(1, restartCost, restartCost * 0.99f, true);
-                        return;
-                    }
 #if USE_SERVER_DATA
                     
 #else
@@ -673,6 +669,10 @@ public class BookDisplayForm : BaseUIForm
                 else if (jo.code == 203)    //你的钥匙数量不足,无法重置
                 {
                     OpenChargeTip(1, 0, 1 * 0.99f, true);
+                }
+                else if (jo.code == 201)    //你的钥匙数量不足,无法重置
+                {
+                    OpenChargeTip(1, restartCost, restartCost * 0.99f, true);
                 }
             }, null);
         }
@@ -854,12 +854,6 @@ public class BookDisplayForm : BaseUIForm
 
                 if (continueCost > 0 && UserDataManager.Instance.bookDetailInfo.data.cost_max_chapter < mChapterId)
                 {
-
-                    if (UserDataManager.Instance.UserData.KeyNum < continueCost && XLuaHelper.LimitTimeActivity==0)
-                    {
-                        OpenChargeTip(1, continueCost, continueCost * 0.99f, true);
-                        return;
-                    }
 #if USE_SERVER_DATA
                     //UINetLoadingMgr.Instance.Show();
                     GameHttpNet.Instance.BuyChapter(mCurBookId, mChapterId, BuyChapterCallBack);
@@ -939,7 +933,7 @@ public class BookDisplayForm : BaseUIForm
         }
         else if (buyData.code == 208)
         {
-            LOG.Error("--BuyChapterCallBack--扣费失败");
+            OpenChargeTip(1, continueCost, continueCost * 0.99f, true);
         }
     }
     

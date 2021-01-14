@@ -290,6 +290,12 @@ public class GameHttpNet : CSingleton<GameHttpNet>
 
     int _sendSeq = 0;
 
+    public int SendSeq
+    {
+        get { return _sendSeq; }
+        set { _sendSeq = value; }
+    }
+    
     public int getSendSeq()
     {
         _sendSeq = _sendSeq + 1;

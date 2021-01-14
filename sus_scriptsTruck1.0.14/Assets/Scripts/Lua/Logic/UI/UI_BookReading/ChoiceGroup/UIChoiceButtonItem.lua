@@ -23,6 +23,7 @@ function UIChoiceButtonItem:__init(gameObject)
     self.transItemParentProp = self.transform:Find('DiamondIcon/btnKeyProp/list')
     self.objItemParentProp = self.transItemParentProp.gameObject
     self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/item').gameObject
+    self.PropImage = self.transform:Find('DiamondIcon/btnKeyProp/Image'):GetComponent(typeof(logic.cs.Image))
     self.btnKeyProp.onClick:AddListener(function()
         self:ShowPropList()
     end)
@@ -244,9 +245,11 @@ function UIChoiceButtonItem:OnClcikPropItem(propItem)
         local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         self.txtCost.text = tostring(newCost)
+        self.PropImage.sprite = Cache.PropCache.SpriteData[6];
     else
         self.txtCost.text = tostring(self.cost)
         self.DiscountText.text = ""
+        self.PropImage.sprite = Cache.PropCache.SpriteData[1];
     end
 end
 

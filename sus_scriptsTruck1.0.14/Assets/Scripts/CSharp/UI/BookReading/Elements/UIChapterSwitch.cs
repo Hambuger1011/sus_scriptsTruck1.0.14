@@ -40,6 +40,7 @@ UIBookReadingElement
     //道具相关
     bool isCheckedKeyPropBtn = true;
     public Button btnKeyProp;
+    public Image propImage = null;
     public GameObject objKeyPropDeleteLine;
 
     private int m_curBookID;
@@ -473,40 +474,6 @@ UIBookReadingElement
             AppsFlyerManager.Instance.FINISH_OFFICIAL_BOOK();
             return;
         }
-        
-        if (UserDataManager.Instance.UserData.KeyNum < continueCost && XLuaHelper.LimitTimeActivity == 0)
-        {
-            int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
-            if (type==1)
-            {
-
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                           UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
-            }else if (type==2)
-            {
-                MyBooksDisINSTANCE.Instance.VideoUI(1);
-                return;
-            }else
-            {
-
-                //CUIManager.Instance.OpenForm(UIFormName.ChargeTipsForm);
-                //ChargeTipsForm tipForm = CUIManager.Instance.GetForm<ChargeTipsForm>(UIFormName.ChargeTipsForm);
-
-                CUIManager.Instance.OpenForm(UIFormName.NewChargeTips);
-                NewChargeTips tipForm = CUIManager.Instance.GetForm<NewChargeTips>(UIFormName.NewChargeTips);
-
-
-                if (tipForm != null)
-                    tipForm.Init(1, continueCost, continueCost * 0.99f);
-                return;
-            }
-
-        }
 
         //通知服务端扣费
         //UINetLoadingMgr.Instance.Show();
@@ -621,7 +588,35 @@ UIBookReadingElement
         }
         else if (buyData.code == 208)
         {
-            LOG.Error("--BuyChapterCallBack--扣费失败");
+            int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
+            if (type==1)
+            {
+
+                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
+                    UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
+                {
+                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
+                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
+                    return;
+                }
+            }else if (type==2)
+            {
+                MyBooksDisINSTANCE.Instance.VideoUI(1);
+                return;
+            }else
+            {
+
+                //CUIManager.Instance.OpenForm(UIFormName.ChargeTipsForm);
+                //ChargeTipsForm tipForm = CUIManager.Instance.GetForm<ChargeTipsForm>(UIFormName.ChargeTipsForm);
+
+                CUIManager.Instance.OpenForm(UIFormName.NewChargeTips);
+                NewChargeTips tipForm = CUIManager.Instance.GetForm<NewChargeTips>(UIFormName.NewChargeTips);
+
+
+                if (tipForm != null)
+                    tipForm.Init(1, continueCost, continueCost * 0.99f);
+                return;
+            }
         }
     }
     
@@ -883,6 +878,10 @@ UIBookReadingElement
         }
         btnKeyProp.gameObject.SetActive(true);
         objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
+        if (isCheckedKeyPropBtn)
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+        else
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
         if (isCheckedKeyPropBtn)
         {
             UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);

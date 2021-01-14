@@ -34,9 +34,9 @@ local PosList =
     {core.Vector2.New(241,132),core.Vector2.New(102,259),
      core.Vector2.New(-239,130),core.Vector2.New(-94,259)},
 
-    {core.Vector2.New(241,132),core.Vector2.New(142,259),
-     core.Vector2.New(-239,130),core.Vector2.New(-134,259),
-     core.Vector2.New(3,317),}
+    {core.Vector2.New(257,116),core.Vector2.New(158,249),
+     core.Vector2.New(-259,126),core.Vector2.New(-160,253),
+     core.Vector2.New(-3,317),}
 }
 local RewardTrans = {}
 
@@ -68,12 +68,13 @@ function UIFirstChargeForm:OnInitView()
         Num.text = "x".. v.num;
         if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
             Icon.sprite = Cache.PropCache.SpriteData[3]
+            Icon:SetNativeSize()
+            Icon.transform.localScale = core.Vector3.New(0.4,0.4,1)
         else
             Icon.sprite = Cache.PropCache.SpriteData[v.id]
+            Icon:SetNativeSize()
+            Icon.transform.localScale = core.Vector3.New(0.5,0.5,1)
         end
-        --Icon:SetNativeSize()
-        --Icon.transform.localScale = core.Vector3.New(0.5,0.5,1)
-        item:SetActive(true)
         table.insert(RewardTrans,item)
     end
     
@@ -83,6 +84,8 @@ function UIFirstChargeForm:OnInitView()
         local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
         Num.text = "x".. firstRecharge.diamond_count;
         Icon.sprite = Cache.PropCache.SpriteData[1]
+        Icon:SetNativeSize()
+        Icon.transform.localScale = core.Vector3.New(0.8,0.8,1)
         table.insert(RewardTrans,item)
     end
     if tonumber(firstRecharge.key_count) > 0 then
@@ -91,6 +94,8 @@ function UIFirstChargeForm:OnInitView()
         local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
         Num.text = "x".. firstRecharge.key_count;
         Icon.sprite = Cache.PropCache.SpriteData[2]
+        Icon:SetNativeSize()
+        Icon.transform.localScale = core.Vector3.New(0.8,0.8,1)
         table.insert(RewardTrans,item)
     end
 

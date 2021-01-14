@@ -173,6 +173,7 @@ function ChoiceWholeClothes.InstallUI()
 		uiView.transItemParentProp = uiView.objItemParentProp.transform
 		uiView.itemPrefabProp = CS.DisplayUtil.GetChild(uiView.gameObject, "itemPrefabProp")
 		uiView.DiscountText = CS.DisplayUtil.GetChild(uiView.gameObject, "DiscountText"):GetComponent(typeof(logic.cs.Text))
+		uiView.PropImage = CS.DisplayUtil.GetChild(uiView.gameObject, "PropImage"):GetComponent(typeof(logic.cs.Image))
 		uiView.objBtnKeyProp:SetActive(false)
 		uiView.itemPrefabProp:SetActive(false)
 		uiView.textKeyProp.gameObject:SetActive(false)
@@ -526,9 +527,11 @@ function ChoiceWholeClothes:OnClcikPropItem(propItem)
 		newCost = math.floor(newCost)
 		uiView.txtConfirmCost2.text = tostring(newCost)
 		uiView.DiscountText.text = propItem.data.discount_string
+		uiView.PropImage.sprite = Cache.PropCache.SpriteData[4];
 	else
 		uiView.txtConfirmCost2.text = tostring(self.cost)
 		uiView.DiscountText.text = ""
+		uiView.PropImage.sprite = Cache.PropCache.SpriteData[1];
 	end
 end
 

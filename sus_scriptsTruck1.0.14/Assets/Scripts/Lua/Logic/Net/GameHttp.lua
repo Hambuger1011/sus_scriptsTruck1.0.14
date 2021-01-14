@@ -61,10 +61,6 @@ function GameHttp:SetUrlHead()
 
 end
 
-local getSendSeq = function()
-    _sendSeq = _sendSeq + 1
-    return _sendSeq
-end
 
 local moveWaitCallBack
 local moveWait
@@ -92,7 +88,7 @@ function GameHttp:Post(self, apiName, param, callback, timeoutMS, tryCount, isRe
         end
     end
 
-    local sendSeq = getSendSeq()
+    local sendSeq = logic.cs.GameHttpNet:getSendSeq()
     local sendInfo = ''
     if param then
         sendInfo = string.format("<color=#009000>[lua][send]POST:[%d]%s phoneimei:%s token:%s %s</color>",
@@ -222,7 +218,7 @@ function GameHttp:Get(self, apiName, param, callback, timeoutMS, tryCount, isReq
     local url = logic.cs.GameHttpNet.GameUrlHead .. "/" .. apiName .. urlParam
     --logic.debug.Log("<color=cyan>---GET:"..url.."</color>");
 
-    local sendSeq = getSendSeq()
+    local sendSeq = logic.cs.GameHttpNet:getSendSeq()
     local sendInfo = ''
     if param then
         sendInfo = string.format("<color=#009000>[lua][send]GET:[%d]%s/%s   phoneimei:%s  token:%s  %s</color>",

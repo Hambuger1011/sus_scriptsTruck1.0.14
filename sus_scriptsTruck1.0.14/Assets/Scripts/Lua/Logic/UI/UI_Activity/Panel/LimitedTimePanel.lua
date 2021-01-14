@@ -258,6 +258,8 @@ function LimitedTimePanel:GetRewardConfig_Response()
         local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
         Num.text = "x".. firstRecharge.diamond_count;
         Icon.sprite = Cache.PropCache.SpriteData[1]
+        Icon:SetNativeSize()
+        Icon.transform.localScale = core.Vector3.New(0.4,0.4,1)
         table.insert(RewardTrans,item)
     end
     if tonumber(firstRecharge.key_count) > 0 then
@@ -266,6 +268,8 @@ function LimitedTimePanel:GetRewardConfig_Response()
         local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
         Num.text = "x".. firstRecharge.key_count;
         Icon.sprite = Cache.PropCache.SpriteData[2]
+        Icon:SetNativeSize()
+        Icon.transform.localScale = core.Vector3.New(0.4,0.4,1)
         table.insert(RewardTrans,item)
     end
 
@@ -279,7 +283,8 @@ function LimitedTimePanel:GetRewardConfig_Response()
         else
             Icon.sprite = Cache.PropCache.SpriteData[v.id]
         end
-        item:SetActive(true)
+        Icon:SetNativeSize()
+        Icon.transform.localScale = core.Vector3.New(0.2,0.2,1)
         table.insert(RewardTrans,item)
     end
 
