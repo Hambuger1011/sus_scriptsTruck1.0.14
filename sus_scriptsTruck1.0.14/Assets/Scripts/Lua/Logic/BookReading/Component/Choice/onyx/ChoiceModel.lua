@@ -231,6 +231,7 @@ function ChoiceModel:Play()
 	InstallUI()
 	uiView.Reset()
 	self.cost = 0
+	uiView.btnKeyProp.onClick:RemoveAllListeners()
 	uiView.btnKeyProp.onClick:AddListener(function()
 		self:ShowPropList()
 	end)

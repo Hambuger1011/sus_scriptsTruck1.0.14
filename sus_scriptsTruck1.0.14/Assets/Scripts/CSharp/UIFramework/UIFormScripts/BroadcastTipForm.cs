@@ -22,16 +22,37 @@ public class BroadcastTipForm : BaseUIForm
     {
         base.OnOpen();
 
+        CheckPos();
+    }
+
+    private void CheckPos()
+    {
+        float offect = 0;
+#if !UNITY_EDITOR && UNITY_ANDROID
+        if (ResolutionAdapter.androidisSafeArea == true)
+        {
+            offect=60;
+        }
+#endif
+#if UNITY_EDITOR || UNITY_IOS
+        if (ResolutionAdapter.HasUnSafeArea)
+        {
+            var safeArea = ResolutionAdapter.GetSafeArea();
+            var _offset = myForm.Pixel2View(safeArea.position);
+            offect = _offset.y;
+        }
+#endif
+
         if (MyBooksDisINSTANCE.Instance.GetIsPlaying())
         {
-            //在游戏中
-            FrameTrans.anchoredPosition = new Vector2(0, 0);
+            //在书本阅读中
+            FrameTrans.anchoredPosition = new Vector2(0, 0 - offect);
         }
         else
         {
-            //不在游戏中
-            FrameTrans.anchoredPosition = new Vector2(0, -103);
-        }     
+            //不在书本阅读中
+            FrameTrans.anchoredPosition = new Vector2(0, -103 - offect);
+        }  
     }
 
     /// <summary>
@@ -50,6 +71,7 @@ public class BroadcastTipForm : BaseUIForm
     //开始执行跑马灯效果
     private void doRun(string vIniformation)
     {
+        CheckPos();
         TxtContent.text = vIniformation;
         Regex reg = new Regex(@"</?\w+[^>]*>");
         string resultStr = reg.Replace(vIniformation, "");

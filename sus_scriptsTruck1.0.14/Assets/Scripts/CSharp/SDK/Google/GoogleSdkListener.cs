@@ -132,7 +132,7 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
 
     public void ReceiveTSHMsg(string msg)
     {
-        Debug.LogError("ReceiveTSHMsg:" + msg);
+        Debug.Log("ReceiveTSHMsg:" + msg);
     }
 		
     public void ReceiveSharingInfo(string inviteCode)
@@ -162,7 +162,7 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
 
     public void ReceiveBroadcast(string vInfo)
     {
-        Debug.LogError("====ReceiveBroadcast===>>"+vInfo);
+        Debug.Log("====ReceiveBroadcast===>>"+vInfo);
         if (!string.IsNullOrEmpty(vInfo))
         {
             string[] strArr = vInfo.Split('^');

@@ -24,6 +24,7 @@ function UIChoiceButtonItem:__init(gameObject)
     self.objItemParentProp = self.transItemParentProp.gameObject
     self.itemPrefabProp = self.transform:Find('DiamondIcon/btnKeyProp/item').gameObject
     self.PropImage = self.transform:Find('DiamondIcon/btnKeyProp/Image'):GetComponent(typeof(logic.cs.Image))
+    self.btnKeyProp.onClick:RemoveAllListeners()
     self.btnKeyProp.onClick:AddListener(function()
         self:ShowPropList()
     end)

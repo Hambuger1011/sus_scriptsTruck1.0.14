@@ -1,4 +1,4 @@
-#if true//(UNITY_IOS)
+#if(UNITY_IOS)
 
 using System;
 using System.IO;
