@@ -165,12 +165,12 @@ namespace AB
 
         public override CAsset LoadAsync(string refTag, enResType resType, string strAssetName, Action<CAsset> finishFunc = null, bool isAbRes = true)
         {
-            return ui.bundle.LoadAsync(refTag, resType, strAssetName, finishFunc, isAbRes);
+            return ui.bundle(AbResBundle_DataTable.IsDataTableAsset(strAssetName)).LoadAsync(refTag, resType, strAssetName, finishFunc, isAbRes);
         }
 
         public override CAsset LoadImme(string refTag, enResType resType, string strAssetName, bool isAbRes = true)
         {
-            return ui.bundle.LoadImme(refTag, resType, strAssetName, isAbRes);
+            return ui.bundle(AbResBundle_DataTable.IsDataTableAsset(strAssetName)).LoadImme(refTag, resType, strAssetName, isAbRes);
         }
 
         public override void GC()

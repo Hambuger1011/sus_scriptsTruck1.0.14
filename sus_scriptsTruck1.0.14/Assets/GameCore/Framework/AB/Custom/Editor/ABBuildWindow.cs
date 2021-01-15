@@ -10,6 +10,9 @@ using UnityEngine;
 
 public class ABBuildWindow : EditorWindow
 {
+    public static readonly string SystemName_Common = "COMMON";
+    public static readonly string SystemName_DataTable = "DataTable";
+
     static ABBuildWindow m_instance = null;
     [MenuItem("GameTools/AssetBundle/打包", false, MenuPriority.AB + 100)]
     public static void ShowWindow()
@@ -21,7 +24,7 @@ public class ABBuildWindow : EditorWindow
             m_instance = ScriptableObject.CreateInstance<ABBuildWindow>();
             m_instance.Show(immediate);
             m_instance.Focus();
-            m_instance.position = AlignCenter(1024, 800);
+            m_instance.position = AlignCenter(800, 600);
 
             //Texture iconTexture = Resources.Load<Texture2D>(EditorGUIUtility.isProSkin ? "Textures/Icon_Dark" : "Textures/Icon_Light");
             //m_instance.titleContent = new GUIContent("EUI Design", iconTexture);
@@ -95,14 +98,25 @@ public class ABBuildWindow : EditorWindow
         if (GUILayout.Button("全部打包", GUILayout.Height(35)))
         {
             BuildCommon();
+            BuildDataConfig();
             foreach (var itr in bookMap)
             {
                 BuildBook(itr.Key, itr.Value);
             }
         }
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("通用资源", GUILayout.Height(35)))
         {
             BuildCommon();
+        }
+        if (GUILayout.Button("DataTable", GUILayout.Height(35)))
+        {
+            BuildDataConfig();
+        }
+        GUILayout.EndHorizontal();
+        int index = 0;
+        if (bookMap.Count > 0) {
+            GUILayout.BeginHorizontal();
         }
         foreach (var itr in bookMap)
         {
@@ -110,6 +124,16 @@ public class ABBuildWindow : EditorWindow
             {
                 BuildBook(itr.Key, itr.Value);
             }
+            if (index % 4 == 3)
+            {
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+            }
+            index++;
+        }
+        if (bookMap.Count > 0)
+        {
+            GUILayout.EndHorizontal();
         }
         GUILayout.EndScrollView();
     }
@@ -119,6 +143,23 @@ public class ABBuildWindow : EditorWindow
         try
         {
             var options = new AbOptions_UI();
+            AbBuilder uiBuilder = new AbBuilder(options);
+            uiBuilder.Begin();
+            uiBuilder.Analyze();
+            uiBuilder.Build();
+            uiBuilder.End();
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+        }
+    }
+
+    void BuildDataConfig()
+    {
+        try
+        {
+            var options = new AbOptions_DataTable();
             AbBuilder uiBuilder = new AbBuilder(options);
             uiBuilder.Begin();
             uiBuilder.Analyze();

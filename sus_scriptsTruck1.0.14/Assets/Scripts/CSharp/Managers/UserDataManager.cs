@@ -385,6 +385,7 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public int Version = 0;     //客戶端版本号
     public string ResVersion = "";  //客户端资源版本号
+    public string DataTableVersion = "";  //配置表资源版本号
 
     public string UserCountry = ""; //玩家所在的国家
 
@@ -1517,10 +1518,14 @@ public class UserDataManager : Singleton<UserDataManager> {
         Dictionary<string,string> resultDic = JsonHelper.JsonToObject<Dictionary<string,string>>(vInfo);
         int type = 0;
         string resultStr = String.Empty;
+        int times = 1;
         if (resultDic != null)
         {
             if(resultDic.ContainsKey("type"))
                 type =int.Parse(resultDic["type"]);
+            
+            if(resultDic.ContainsKey("times"))
+                times = int.Parse(resultDic["times"]);
             
             if (resultDic.ContainsKey("color"))
             {
@@ -1534,7 +1539,10 @@ public class UserDataManager : Singleton<UserDataManager> {
 
         if (type == 1)
         {
-            UserDataManager.Instance.AddGMBroadcast(resultStr);
+            for (int i = 0; i < times; i++)
+            {
+                UserDataManager.Instance.AddGMBroadcast(resultStr);
+            }
         }
         else
         {

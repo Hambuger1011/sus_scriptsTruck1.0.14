@@ -83,13 +83,13 @@ namespace AB
             analyzer.ScanToSingle<GameObject>("Assets/Bundle/ComEff");
 
 
-            analyzer.AddAsset("assets/bundle/data/pb_define.txt");
-            analyzer.ScanToSingle<TextAsset>("Assets/Bundle/Data/Common");//打包配置表
-            analyzer.Scan<TextAsset>("Assets/Bundle/Data/BookDialog");//打包书本配置表
+            //analyzer.AddAsset("assets/bundle/data/pb_define.txt");
+            //analyzer.ScanToSingle<TextAsset>("Assets/Bundle/Data/Common");//打包配置表
+            //analyzer.Scan<TextAsset>("Assets/Bundle/Data/BookDialog");//打包书本配置表
             //analyzer.Scan<Texture2D>("Assets/Bundle/BookPreview/banner");
 
             analyzer.AddAsset("assets/bundle/lua/lua.asset");
-            ScanBookIcon();
+            //ScanBookIcon();
             //ScanBookRes();
 #if CHANNEL_ONYX
             //ScanCatPreview();

@@ -25,7 +25,7 @@ public class CatResourcesSystem : SingletonMono<CatResourcesSystem>
         UserDataManager.Instance.ReturnCatAtionInfoDic().Clear();
 
         var catScenePath = "Assets/Bundle/catpreview.prefab";
-        ABSystem.ui.bundle.LoadAsync(AbTag.Cat, enResType.ePrefab, catScenePath, (_) =>
+        ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(catScenePath)).LoadAsync(AbTag.Cat, enResType.ePrefab, catScenePath, (_) =>
         {
             AbBookRes resList = _.Get<AbBookRes>();
             foreach (var res in resList.objs)
@@ -35,7 +35,7 @@ public class CatResourcesSystem : SingletonMono<CatResourcesSystem>
         });
 
         var catPath = "Assets/Bundle/cat.prefab";
-        ABSystem.ui.bundle.LoadAsync(AbTag.Cat, enResType.ePrefab, catPath, (_) =>
+        ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(catPath)).LoadAsync(AbTag.Cat, enResType.ePrefab, catPath, (_) =>
         {
             if (UserDataManager.Instance.SceneInfo != null)
             {
@@ -101,7 +101,7 @@ public class CatResourcesSystem : SingletonMono<CatResourcesSystem>
         UserDataManager.Instance.ReturnCatAtionInfoDic().Clear();
 
         var catScenePath = "Assets/Bundle/catpreview.prefab";
-        ABSystem.ui.bundle.LoadAsync(AbTag.Cat, enResType.ePrefab, catScenePath, (_) =>
+        ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(catScenePath)).LoadAsync(AbTag.Cat, enResType.ePrefab, catScenePath, (_) =>
         {
             AbBookRes resList = _.Get<AbBookRes>();
             foreach (var res in resList.objs)
@@ -394,7 +394,7 @@ public class CatResourcesSystem : SingletonMono<CatResourcesSystem>
     /// <param name="isChapterAsset">是否加载章节的资源</param>
     private void PreLoadAsset(enResType resType, string strAssetName, bool isChapterAsset = false)
     {
-        var asset = ABSystem.ui.bundle.LoadAsync(AbTag.Cat, resType, strAssetName);
+        var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(strAssetName)).LoadAsync(AbTag.Cat, resType, strAssetName);
         if (asset == null)
         {
             LOG.Error("预加载失败:type=" + resType + "," + strAssetName);

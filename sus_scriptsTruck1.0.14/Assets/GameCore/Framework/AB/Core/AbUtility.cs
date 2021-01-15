@@ -116,16 +116,29 @@ namespace AB
             }
         }
 
-        static string _abUri = null;
-        public static string abUri
+        static string _abUriCommon = null;
+        public static string abUrlCommon
         {
             get
             {
-                if (_abUri == null)
+                if (_abUriCommon == null)
                 {
-                    _abUri = GameHttpNet.Instance.GetAssetBundleUrl();
+                    _abUriCommon = GameHttpNet.Instance.GetABUrlCommon();
                 }
-                return _abUri;
+                return _abUriCommon;
+            }
+        }
+
+        static string _abUriDatatable = null;
+        public static string abUriDatatable
+        {
+            get
+            {
+                if (_abUriDatatable == null)
+                {
+                    _abUriDatatable = GameHttpNet.Instance.GetABUrlDatatable();
+                }
+                return _abUriDatatable;
             }
         }
 

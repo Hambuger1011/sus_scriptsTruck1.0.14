@@ -59,7 +59,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         return _abUri;
     }
 
-    public string GetAssetBundleUrl()
+    public string GetABUrlCommon()
     {
         string _abUri = null;
 
@@ -74,6 +74,26 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 _abUri = GetResourcesUrl();
                 string[] versionArr = UserDataManager.Instance.ResVersion.Split('@');
                 _abUri = string.Format("{0}common/{1}/{2}/{3}/", _abUri, GameUtility.Platform, versionArr[0],versionArr[1]);
+                break;
+        }
+
+        return _abUri;
+    }
+    public string GetABUrlDatatable()
+    {
+        string _abUri = null;
+
+        switch (GameDataMgr.Instance.ResourceType)
+        {
+#if ENABLE_DEBUG
+            case 0:
+                _abUri = GetResourcesUrl();
+                break;
+#endif
+            default:
+                _abUri = GetResourcesUrl();
+                string[] versionArr = UserDataManager.Instance.DataTableVersion.Split('@');
+                _abUri = string.Format("{0}datatable/{1}/{2}/{3}/", _abUri, GameUtility.Platform, versionArr[0], versionArr[1]);
                 break;
         }
 
@@ -176,7 +196,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         LOG.Info("----Phone UUID----->" + UUID +" talkingData--deviceId-->"+TalkingDataManager.Instance.GetDeviceId());
 #endif
     }
-
+    
     /// <summary>
     /// 手机唯一码
     /// </summary>

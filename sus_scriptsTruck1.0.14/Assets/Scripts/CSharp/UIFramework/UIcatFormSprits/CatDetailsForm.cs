@@ -173,7 +173,7 @@ public class CatDetailsForm : CatBaseForm {
 
     private void PlayCatTones()
     {
-        var asset = ABSystem.ui.bundle.LoadImme(AbTag.Cat, enResType.eAudio, string.Concat("assets/Bundle/CatPreview/CatSounds/", CatId, ".mp3"));
+        var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(string.Concat("assets/Bundle/CatPreview/CatSounds/", CatId, ".mp3"))).LoadImme(AbTag.Cat, enResType.eAudio, string.Concat("assets/Bundle/CatPreview/CatSounds/", CatId, ".mp3"));
         AudioManager.Instance.PlayCatTones(asset.resAudioClip);
     }
 

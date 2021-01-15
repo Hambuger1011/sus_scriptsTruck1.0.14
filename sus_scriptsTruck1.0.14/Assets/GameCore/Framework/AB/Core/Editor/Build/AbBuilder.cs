@@ -458,7 +458,6 @@ namespace AB
 
     public abstract class AbstractAbOptions
     {
-
         public HashSet<string> specialDependencyExt = new HashSet<string>()
         {
             ".unity",
@@ -558,10 +557,14 @@ namespace AB
         string GetCopyPath()
         {
             string outPath = String.Empty;
-            if (SystemName.Equals("COMMON"))
+            if (SystemName.Equals(ABBuildWindow.SystemName_Common) || SystemName.Equals(ABBuildWindow.SystemName_DataTable))
+            {
                 outPath = $"{GameUtility.WritablePath}ab/{SystemName.ToLower()}/{GameUtility.Platform}/{GameUtility.version}/{GameUtility.resVersion}/";
+            }
             else
+            {
                 outPath = $"{GameUtility.WritablePath}ab/book/{GameUtility.Platform}/{SystemName.ToLower()}/";
+            }
 
             if (GameUtility.isEditorMode) GameUtility.GetPath(outPath);
             return outPath;
@@ -576,7 +579,6 @@ namespace AB
             StringBuilder md5 = new StringBuilder();
             AssetBundleManifest assetBundleManifest = AbBuilder.LoadAssetBundleManifest(this.builder.outputPath);
             Debug.Log(assetBundleManifest.GetAllAssetBundles().Length);
-            //return;
 
             Dictionary<string, string> hashDict = new Dictionary<string, string>();
             Directory.CreateDirectory(outPath);

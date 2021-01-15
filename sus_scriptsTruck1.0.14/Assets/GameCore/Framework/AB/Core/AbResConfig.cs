@@ -9,6 +9,7 @@
     using UnityEditor;
 #endif
     using System.IO;
+    using System.Text;
 
     public class AbResConfig
     {
@@ -38,7 +39,11 @@
                     this.Write(bw);
                 }
             }
+            // lzh
+            File.WriteAllText(savePath + ".json", ToString());
         }
+
+        
 
         public void UpdateLastModify()
         {
@@ -105,8 +110,6 @@
             }
         }
 
-
-
         public void Write(BinaryWriter bw)
         {
             bw.WriteString(this.lastModify);
@@ -155,6 +158,27 @@
                 abConfItems.Add(item);
 #endif
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            sb.Append($"\"lastModify\":\"{lastModify}\",");
+            sb.Append($"\"assetCount\":{assetCount},");
+            sb.Append($"\"abConfItems\":[");
+            int len = abConfItems.Count;
+            for (int i = 0; i < len; i++)
+            {
+                sb.Append(abConfItems[i].ToString());
+                if (i < len - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.Append($"]");
+            sb.Append("}");
+            return sb.ToString();
         }
     }
 
@@ -219,14 +243,21 @@
                     switch (AbUtility.loadType)
                     {
                         case enLoadType.eFile:
-                            _abFilePath = string.Concat(AbUtility.abReadonlyPath, this.bundleContext.rootPath, this.fileHashName);
+                            string[] versionArr = UserDataManager.Instance.ResVersion.Split('@');
+                            if(this.bundleContext.rootPath.Equals("datatable/"))
+                                versionArr = UserDataManager.Instance.DataTableVersion.Split('@');
+                            _abFilePath = string.Concat(AbUtility.abReadonlyPath, this.bundleContext.rootPath, string.Format("{0}/{1}/{2}",  versionArr[0], versionArr[1],fileHashName));
                             return _abFilePath;
                         default: 
                             break;
                     }
 #endif
                     if (this.bundleContext.rootPath.Equals("common/"))
-                        _abFilePath = string.Concat(AbUtility.abUri, this.fileHashName, "?", UserDataManager.Instance.ResVersion, this.crc);
+                        _abFilePath = string.Concat(AbUtility.abUrlCommon, this.fileHashName, "?", UserDataManager.Instance.ResVersion, this.crc);
+                    else if(this.bundleContext.rootPath.Equals("datatable/"))
+                    {
+                        _abFilePath = string.Concat(AbUtility.abUriDatatable, this.fileHashName, "?", UserDataManager.Instance.DataTableVersion, this.crc);
+                    }
                     else
                     {
                         string[] sArray = this.bundleContext.rootPath.Split(new string[] { "book_" ,"/"}, StringSplitOptions.RemoveEmptyEntries); //进行字符串的截取
@@ -272,8 +303,37 @@
 
         public override string ToString()
         {
-            //return base.ToString();
-            return filename;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            sb.Append($"\"filename\":\"{filename}\",");
+            sb.Append($"\"fileHashName\":\"{fileHashName}\",");
+            sb.Append($"\"abType\":\"{abType}\",");
+            sb.Append($"\"crc\":{crc},");
+            sb.Append($"\"size\":{size},");
+            sb.Append($"\"assetNames_len\":\"{assetNames.Length}\",");
+            sb.Append($"\"assetNames\":[");
+            for(int i=0;i< assetNames.Length;i++)
+            {
+                sb.Append($"\"{assetNames[i]}\"");
+                if (i < assetNames.Length - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.Append("],");
+            sb.Append($"\"dependencyList_len\":\"{dependencyList.Length}\",");
+            sb.Append($"\"dependencyList\":[");
+            for (int i = 0; i < dependencyList.Length; i++)
+            {
+                sb.Append($"\"{dependencyList[i]}\"");
+                if (i < dependencyList.Length - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.Append("]");
+            sb.Append("}");
+            return sb.ToString();
         }
 
 

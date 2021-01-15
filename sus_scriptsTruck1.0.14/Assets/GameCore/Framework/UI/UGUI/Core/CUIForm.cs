@@ -193,7 +193,7 @@ namespace UGUI
 
         public static CUIForm LoadRes(string formPrefabPath)
         {
-            var asset = ABSystem.ui.bundle.LoadImme(AbTag.Null, enResType.ePrefab, formPrefabPath);
+            var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(formPrefabPath)).LoadImme(AbTag.Null, enResType.ePrefab, formPrefabPath);
             if (asset == null)
             {
                 LOG.Error("未找到UI Prefab:" + formPrefabPath);

@@ -201,7 +201,7 @@ namespace Framework
                 //		".prefeb"
                 //	});
                 //}
-                asset = ABSystem.ui.bundle.LoadImme(AbTag.Null, enResType.ePrefab,text);
+                asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(text)).LoadImme(AbTag.Null, enResType.ePrefab,text);
                 if (asset != null)
                 {
                     asset.Retain(this);

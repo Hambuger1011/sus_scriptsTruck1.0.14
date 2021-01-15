@@ -95,7 +95,7 @@ public class UITest : MonoBehaviour {
     [Test("Google SDK")]
     void GoogleSDK()
     {
-        ABSystem.ui.bundle.LoadAsync("UITest",enResType.ePrefab, CUIID.Canvas_GoogleSDK, (_) =>
+        ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(CUIID.Canvas_GoogleSDK)).LoadAsync("UITest", enResType.ePrefab, CUIID.Canvas_GoogleSDK,  (_) =>
         {
             _.Retain(this);
             CUIManager.Instance.OpenForm(CUIID.Canvas_GoogleSDK, useCameraRenderMode: false);

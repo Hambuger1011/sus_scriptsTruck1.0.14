@@ -337,7 +337,7 @@ public class XLuaManager : MonoBehaviour
                 return;
             }
 #if ENABLE_DEBUG
-            ABSystem.ui.bundle.LoadAsync(AbTag.Debug, enResType.ePrefab, CUIID.Canvas_Debug, (_) =>
+            ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(CUIID.Canvas_Debug)).LoadAsync(AbTag.Debug, enResType.ePrefab, CUIID.Canvas_Debug, (_) =>
             {
                 Tiinoo.DeviceConsole.DeviceConsoleLoader.Load();
                 if (GameFrameworkImpl.Instance.isShowDebugPanel)

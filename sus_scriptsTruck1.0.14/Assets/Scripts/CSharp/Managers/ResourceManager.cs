@@ -38,7 +38,7 @@ public class ResourceManager : Singleton<ResourceManager>
     private static string AudioTonesPath = "Assets/Bundle/Music/";
     public AudioClip GetAudioTones(string path)
     {
-        var asset = ABSystem.ui.bundle.LoadImme(AbTag.Global, enResType.eAudio, string.Concat(AudioTonesPath, path));
+        var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(string.Concat(AudioTonesPath, path))).LoadImme(AbTag.Global, enResType.eAudio, string.Concat(AudioTonesPath, path));
         return asset.resAudioClip;
     }
 

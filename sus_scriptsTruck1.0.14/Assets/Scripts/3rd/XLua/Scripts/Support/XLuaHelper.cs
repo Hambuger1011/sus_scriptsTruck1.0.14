@@ -209,7 +209,7 @@ public static class XLuaHelper
     public static AbAtlas GetAtlas(string refTag, enResType resType, string strAssetName)
     {
         AbAtlas atlas;
-        var asset = ABSystem.ui.bundle.LoadImme(refTag, resType, strAssetName);
+        var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(strAssetName)).LoadImme(refTag, resType, strAssetName);
         atlas = asset.Get<AbAtlas>();
         return atlas;
     }
@@ -604,7 +604,7 @@ public static class XLuaHelper
     /// </summary>
     public static void PlayBgMusic(string path)
     {
-        var asset = ABSystem.ui.bundle.LoadImme(AbTag.Global, enResType.eAudio, string.Concat(path, ".mp3"));
+        var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(string.Concat(path, ".mp3"))).LoadImme(AbTag.Global, enResType.eAudio, string.Concat(path, ".mp3"));
         AudioManager.Instance.PlayBGM(asset.resAudioClip);
     }
 

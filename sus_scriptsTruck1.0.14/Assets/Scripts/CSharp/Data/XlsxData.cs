@@ -21,7 +21,7 @@ public class XlsxData
         byte[] rawBytes = null;
         if (ABSystem.Instance.isUseAssetBundle)
         {
-            var asset = ABSystem.ui.bundle.LoadImme(AbTag.Null, enResType.eText, strFileName);
+            var asset = ABSystem.ui.bundle(AbResBundle_DataTable.IsDataTableAsset(strFileName)).LoadImme(AbTag.Null, enResType.eText, strFileName);
             rawBytes = asset.resTextAsset.bytes;
         }
         else

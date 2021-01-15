@@ -146,16 +146,24 @@ public class CLaunchState : GameStateBase
 
                    //游戏版本号/资源版本号
                     string versionStr = UserDataManager.Instance.versionInfo.data.resource_version;
+                    string dataversionStr = UserDataManager.Instance.versionInfo.data.database_version;
                     LOG.Info("客户端版本号为：" + SdkMgr.Instance.GameVersion());
 
 
 #if ENABLE_DEBUG
                     if (GameDataMgr.Instance.UserLocalVersion)
+                    {
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),GameDataMgr.Instance.LocalVersion,System.Environment.TickCount.ToString());
+                        //UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),GameDataMgr.Instance.LocalVersion,System.Environment.TickCount.ToString());
+                    }
                     else
+                    {
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),versionStr,System.Environment.TickCount.ToString());
+                        UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),dataversionStr,System.Environment.TickCount.ToString());
+                    }
 #else
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}",SdkMgr.Instance.GameVersion(), versionStr);
+                        UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}",SdkMgr.Instance.GameVersion(), dataversionStr);
 #endif
                     string[] addressArr = UserDataManager.Instance.versionInfo.data.resource_url.Split('@');
                     

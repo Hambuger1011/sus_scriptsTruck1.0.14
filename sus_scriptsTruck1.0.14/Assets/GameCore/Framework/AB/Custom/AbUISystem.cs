@@ -10,12 +10,19 @@
 
     public class AbUISystem
     {
-        public readonly AbResBundle bundle = new AbResBundle("common/");
+        readonly AbResBundle_Common bundleCommon = new AbResBundle_Common("common/");
+        readonly AbResBundle_DataTable bundleDataTable = new AbResBundle_DataTable("datatable/");
+        //public  AbResBundle bundle = new AbResBundle("common/");
+        public AbResBundle bundle(bool isDataTableAsset=false)
+        {
+            return isDataTableAsset ? bundleDataTable as AbResBundle : bundleCommon as AbResBundle;
+        }
+
         Dictionary<string, AbAtlas> m_atlasDict = new Dictionary<string, AbAtlas>();
 
         [NonSerialized]
         public List<AbTask> m_preLoadData = new List<AbTask>();
-
+        
 
         [NonSerialized]
         public int hadLoaded = 0;
@@ -34,7 +41,36 @@
                     break;
             }
 #endif
-            ABMgr.Instance.StartCoroutine(bundle.DoLoadBundleConfig("config", callback, progressCallBack));
+            //ABMgr.Instance.StartCoroutine(bundle.DoLoadBundleConfig("config", callback, progressCallBack));
+            ABMgr.Instance.StartCoroutine(_LoadBundleConfig(callback, progressCallBack));
+        }
+
+        IEnumerator _LoadBundleConfig(Action<bool> callback, Action<float> progressCallBack)
+        {
+            yield return bundleCommon.DoLoadBundleConfig("config", (bSuc) =>
+            {
+                if (!bSuc)
+                {
+                    callback(bSuc);
+                }
+            }, (p)=>
+            {
+                progressCallBack(p * 0.5f);
+            });
+
+            bool _bSuc=false;
+            yield return bundleDataTable.DoLoadBundleConfig("config", (bSuc) =>
+            {
+                _bSuc = bSuc;
+                callback(bSuc);
+            }, (p) =>
+            {
+                progressCallBack(p * 0.5f + 0.5f);
+            });
+            if (_bSuc)
+            {
+                progressCallBack(1f);
+            }
         }
 
         #region 预加载
@@ -87,16 +123,16 @@
         private void PreLoadBookBanner()
         {
             var path = string.Concat("assets/bundle/BookPreview/icon.prefab");
-            var asset = ABSystem.ui.bundle.LoadAsync(AbTag.Global, enResType.ePrefab, path, (_) =>
+            var asset = ABSystem.ui.bundleDataTable.LoadAsync(AbTag.Global, enResType.ePrefab, path, (_) =>
             {
                 var resList = _.Get<AbBookRes>();
                 if(_.abConfigItem != null)
                 {
-                    LOG.Error("res count:" + resList.objs.Length + ":" + _.abConfigItem.fileHashName + ",resVer=" + UserDataManager.Instance.ResVersion);
+                    LOG.Error("res count:" + resList.objs.Length + ":" + _.abConfigItem.fileHashName + ",resVer=" + UserDataManager.Instance.DataTableVersion);
                 }
                 else
                 {
-                    LOG.Error("res count:" + resList.objs.Length + ",resVer=" + UserDataManager.Instance.ResVersion);
+                    LOG.Error("res count:" + resList.objs.Length + ",resVer=" + UserDataManager.Instance.DataTableVersion);
                 }
                 foreach (var res in resList.objs)
                 {
@@ -110,7 +146,7 @@
 
         public CAsset PreLoadAtlas(string strAtlasName)
         {
-            var asset = bundle.LoadAsync(AbTag.Global, enResType.eAtlas, string.Concat("assets/bundle/atlas/", strAtlasName, ".prefab"));
+            var asset = bundleDataTable.LoadAsync(AbTag.Global, enResType.eAtlas, string.Concat("assets/bundle/atlas/", strAtlasName, ".prefab"));
             if (asset == null)
             {
                 Debug.LogError("预加载图集失败:" + strAtlasName);
@@ -132,24 +168,25 @@
             {
                 return null;
             }
+           
             var abFileName = AbUtility.NormalizerAbName(strBundleName);
-            var context = ABSystem.ui.bundle;
+            AbWork context = bundle(AbResBundle_DataTable.IsDataTableAsset(abFileName));
             var abConfig = context.resConfig;
             var abConfigItem = abConfig.GetConfigItemByAbName(abFileName);
-            var bundle = CBundle.Get(context, abConfigItem, false);
-            if (bundle == null)
+            var cbundle = CBundle.Get(context, abConfigItem, false);
+            if (cbundle == null)
             {
                 Debug.LogError("预加载失败:bundle=" + strBundleName);
                 return null;
             }
-            bundle.Retain(this);
-            m_preLoadData.Add(bundle);
-            return bundle;
+            cbundle.Retain(this);
+            m_preLoadData.Add(cbundle);
+            return cbundle;
         }
 
         public void PreLoadAsset(enResType resType, string strAssetName, Action<CAsset> finishFunc = null)
         {
-            var asset = bundle.LoadAsync(AbTag.Global, resType, strAssetName, finishFunc);
+            var asset = bundle(AbResBundle_DataTable.IsDataTableAsset(strAssetName)).LoadAsync(AbTag.Global, resType, strAssetName, finishFunc);
             if (asset == null)
             {
                 Debug.LogError("预加载失败:type=" + resType + "," + strAssetName);
@@ -256,7 +293,8 @@
 
         public void FixedUpdate()
         {
-            bundle.FixedUpdate();
+            bundleCommon.FixedUpdate();
+            bundleDataTable.FixedUpdate();
         }
 
         public Sprite GetAtlasSprite(string s)
@@ -273,7 +311,7 @@
             }
             //string assetName = string.Concat("assets/UIAtlsaCache/", strAtlasName, "/", strSpriteName, ".png");
             //var asset = bundle.LoadImme(enResType.eAtlas, string.Concat("assets/bundle/atlas/", strAtlasName, ".prefab"));
-            var asset = bundle.LoadImme(AbTag.Global, enResType.eAtlas, string.Concat("UI/Atlas/", strAtlasName));
+            var asset = bundleCommon.LoadImme(AbTag.Global, enResType.eAtlas, string.Concat("UI/Atlas/", strAtlasName));
             asset.Retain(this);
             asset.AddCall((_) =>
             {
@@ -320,7 +358,7 @@
             }
             //string assetName = string.Concat("assets/UIAtlsaCache/", strAtlasName, "/", strSpriteName, ".png");
             //var asset = bundle.LoadImme(enResType.eAtlas, string.Concat("assets/bundle/atlas/", strAtlasName, ".prefab"));
-            var asset = bundle.LoadImme(AbTag.Global, enResType.eAtlas, string.Concat("UI/Atlas/", strAtlasName));
+            var asset = bundleCommon.LoadImme(AbTag.Global, enResType.eAtlas, string.Concat("UI/Atlas/", strAtlasName));
             asset.Retain(this);
             asset.AddCall((_) =>
             {
@@ -337,7 +375,7 @@
 
         public GameObject GetGameObject(string tag, string assetName)
         {
-            var asset = bundle.LoadImme(tag, enResType.ePrefab, assetName);
+            var asset = bundle(AbResBundle_DataTable.IsDataTableAsset(assetName)).LoadImme(tag, enResType.ePrefab, assetName);
             if (asset == null || asset.resPrefab == null)
             {
                 LOG.Error("缓存中不存在资源:" + assetName);
@@ -349,7 +387,7 @@
 
         public Object GetObject(string tag, string assetName)
         {
-            var asset = bundle.LoadImme(tag, enResType.eObject, assetName);
+            var asset = bundle(AbResBundle_DataTable.IsDataTableAsset(assetName)).LoadImme(tag, enResType.eObject, assetName);
             if (asset == null || asset.resObject == null)
             {
                 LOG.Error("缓存中不存在资源:" + assetName);
@@ -361,7 +399,7 @@
 
         public Sprite GetUITexture(string tag, string assetName)
         {
-            var asset = bundle.LoadImme(tag, enResType.eSprite, assetName);
+            var asset = bundle(AbResBundle_DataTable.IsDataTableAsset(assetName)).LoadImme(tag, enResType.eSprite, assetName);
             if (asset == null || asset.resSprite == null)
             {
                 //Debug.LogError("资源不存在:" + assetName);
