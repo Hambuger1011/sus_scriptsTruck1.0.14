@@ -109,19 +109,19 @@ public class BookReadingWrapper : CSingleton<BookReadingWrapper>
 
     public void PrepareReading(bool isContinue,string bookurl = null)
     {
-        CUIManager.Instance.CloseForm(UIFormName.GuideForm);
-        LOG.Info("开始阅读:bookID=" + this.BookID + ",chapterID=" + this.ChapterID);
-        this.IsTextTween = false;
-
-        var luaenv = XLuaManager.Instance.GetLuaEnv();
-        var res = luaenv.DoString(@"
-return function(isContinue, bookurl)
-    GameMain.StartReading(isContinue,url)
-end");
-        using (var func = (LuaFunction)res[0])
-        {
-            func.Action<bool,string> (isContinue, bookurl);
-        }
+       // CUIManager.Instance.CloseForm(UIFormName.GuideForm);
+//         LOG.Info("开始阅读:bookID=" + this.BookID + ",chapterID=" + this.ChapterID);
+//         this.IsTextTween = false;
+//
+//         var luaenv = XLuaManager.Instance.GetLuaEnv();
+//         var res = luaenv.DoString(@"
+// return function(isContinue, bookurl)
+//     GameMain.StartReading(isContinue,url)
+// end");
+//         using (var func = (LuaFunction)res[0])
+//         {
+//             func.Action<bool,string> (isContinue, bookurl);
+//         }
 
         //CUIManager.Instance.CloseForm(UIFormName.BookDisplayForm);
         //CUIManager.Instance.CloseForm(UIFormName.MainFormTop);

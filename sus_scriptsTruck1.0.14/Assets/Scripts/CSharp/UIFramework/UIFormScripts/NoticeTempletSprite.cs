@@ -164,7 +164,7 @@ public class NoticeTempletSprite : MonoBehaviour {
     private void VipFunction()
     {
         LOG.Info("vip按钮被点击了");
-        CUIManager.Instance.OpenForm(UIFormName.VIP);
+
     }
     #endregion
 
@@ -172,7 +172,7 @@ public class NoticeTempletSprite : MonoBehaviour {
     private void PremiumGiftBag()
     {
         LOG.Info("点击了超级礼包");
-        CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
+
     }
     #endregion
 

@@ -202,15 +202,6 @@ public class UpdateRunningPanel : MonoBehaviour
       
     }
 
-    private void FeedbackButtonOnClick(PointerEventData data)
-    {
-        //CUIManager.Instance.OpenForm(UIFormName.LoadingFeedBack);
-        var uiform = CUIManager.Instance.OpenForm(UIFormName.FAQFeedBack);
-        if (uiform != null)
-        {
-            uiform.GetComponent<FAQFeedBack>().ShowTypeProblem(1);
-        }
-    }
 
     public void onClose()
     {

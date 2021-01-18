@@ -142,6 +142,7 @@ public class ActivityRewardedAd
     /// </summary>
     private void HandleRewardedAdOpening(object sender, EventArgs args)
     {
+        _lock = false;
         //AF事件记录*  用户播放广告
         AppsFlyerManager.Instance.ADS_PLAY();
 
@@ -154,7 +155,7 @@ public class ActivityRewardedAd
     /// </summary>
     private void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
     {
-
+        _lock = false;
         Debug.LogError("HandleRewardedAdFailedToShow event received with message:" + args.Message);
     }
 
@@ -163,16 +164,21 @@ public class ActivityRewardedAd
     /// 如果您必须使用广告请求完成块加载广告，请限制广告加载重试次数，以免在网络连接受限等情况下广告请求连续失败。
     ///
 
+
+    private bool isReward=false;
     /// <summary>
     /// Called when the user should be rewarded for interacting with the ad.  在与广告互动应获得奖励的情况下调用。
     /// 在用户因观看视频而应获得奖励时被调用。 Reward 参数描述了要呈现给用户的奖励。
     /// </summary>
     private void HandleUserEarnedReward(object sender, Reward args)
     {
+        _lock = false;
         string type = args.Type;
         double amount = args.Amount;
    
         Debug.LogError("HandleUserEarnedReward event received for " + amount.ToString() + " " + type);
+
+        isReward = true;
         //XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIRatinglevelForm);");
     }
 
@@ -189,19 +195,21 @@ public class ActivityRewardedAd
     /// </summary>
     private void HandleRewardedAdClosed(object sender, EventArgs args)
     {
+        _lock = false;
         //【活动页面】激励视频广告  创建并加载  【请求另一个激励广告】【请求另一个激励广告】【请求另一个激励广告】
         this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
 
         Debug.LogError("HandleRewardedAdClosed  event received");
         XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
 
-        if (CallBack != null)
+        if (CallBack != null && isReward==true)
         {
+            isReward = false;
             CallBack();
         }
     }
 
-
+    private bool _lock = false;
     /// <summary>
     ///【活动页面】显示播放激励视频广告
     /// </summary>
@@ -210,9 +218,10 @@ public class ActivityRewardedAd
         CallBack = vCallBack;
         if (this.activity_rewardedAd != null)
         {
-            if (this.activity_rewardedAd.IsLoaded())
+            if (this.activity_rewardedAd.IsLoaded() && _lock==false)
             {
                 this.activity_rewardedAd.Show();
+                _lock = true;
             }
             else
             {

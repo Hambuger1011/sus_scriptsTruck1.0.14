@@ -300,14 +300,6 @@ UIBookReadingElement
         this.gameObject.SetActiveEx(false);
     }
 
-    private void ShowAwardGame()
-    {
-        AwardGameItem item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.AwardGame).GetComponent<AwardGameItem>();
-        item.transform.SetParent(transform, false);
-        item.transform.localPosition = Vector3.zero;
-        item.transform.localScale = Vector3.one;
-        item.IniteGame(3, 1);
-    }
 
     private void OnRestart()
     {
@@ -317,13 +309,7 @@ UIBookReadingElement
             int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
             if (type==1)
             {
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                      UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
+               
             }else if (type==2)
             {
                 MyBooksDisINSTANCE.Instance.VideoUI(1);
@@ -392,13 +378,7 @@ UIBookReadingElement
                      int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
                      if (type==1)
                      {
-                         if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                                              UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                         {
-                             CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                             CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                             return;
-                         }
+                       
                      }else if (type==2)
                      {
                          MyBooksDisINSTANCE.Instance.VideoUI(1);
@@ -482,13 +462,13 @@ UIBookReadingElement
 
     private void FeedbackOnclick()
     {
-        CUIManager.Instance.OpenForm(UIFormName.FeedbackForm);
+        // CUIManager.Instance.OpenForm(UIFormName.FeedbackForm);
 
     }
     private void FeedbackCloseOnclick()
     {
         //Debug.Log("ddsd");
-        CUIManager.Instance.CloseForm(UIFormName.FeedbackForm);
+        // CUIManager.Instance.CloseForm(UIFormName.FeedbackForm);
     }
 
    
@@ -527,13 +507,7 @@ UIBookReadingElement
             int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
             if (type == 1)
             {
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-             UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
+              
             }
             else if (type == 2)
             {
@@ -559,13 +533,7 @@ UIBookReadingElement
             if (type == 1)
             {
 
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                  UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
+             
             }
             else if (type == 2)
             {
@@ -592,13 +560,7 @@ UIBookReadingElement
             if (type==1)
             {
 
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                    UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
+             
             }else if (type==2)
             {
                 MyBooksDisINSTANCE.Instance.VideoUI(1);

@@ -1,22 +1,20 @@
+platform :ios, '10.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Unity-iPhone' do
-  #FacebookSDK\Plugins\Editor\Dependencies.xml
-  pod 'FBSDKCoreKit', '~> 6.2'
-  pod 'FBSDKLoginKit', '~> 6.2'
-  pod 'FBSDKShareKit', '~> 6.2'
-  pod 'FBSDKGamingServicesKit', '~> 6.2'
-  pod 'Firebase/Analytics', '6.21.0'  
-  pod 'Firebase/Core', '6.21.0'
-  pod 'Fabric', '1.10.2'
-  pod 'Crashlytics', '3.14.0'
-  pod 'Firebase/Crashlytics', '6.21.0'
-  
+  pod 'FBSDKCoreKit', '8.2.0'
+  pod 'FBSDKLoginKit', '8.2.0'
+  pod 'FBSDKShareKit', '8.2.0'
+  pod 'FBSDKGamingServicesKit', '8.2.0'
+  pod 'Firebase/Analytics', '7.4.0'
+  pod 'Firebase/Core', '7.4.0'
+  pod 'Firebase/Crashlytics'  
   pod 'mob_linksdk_pro'
   
-  pod 'Google-Mobile-Ads-SDK'
-  pod 'GoogleMobileAdsMediationUnity'
-  pod 'GoogleMobileAdsMediationFacebook', '6.0.0.0'
+  pod 'Google-Mobile-Ads-SDK', '7.69.0'
+  pod 'GoogleMobileAdsMediationUnity', '3.6.0.0'
+  pod 'GoogleMobileAdsMediationFacebook', '6.2.0.0'
   #pod 'GoogleMobileAdsMediationTestSuite'
   
 end
+

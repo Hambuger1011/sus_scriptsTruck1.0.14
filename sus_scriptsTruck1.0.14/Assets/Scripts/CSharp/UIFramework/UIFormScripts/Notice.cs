@@ -59,7 +59,7 @@ public class Notice : BaseUIForm
     }
     private void CloseButton(PointerEventData data)
     {
-        CUIManager.Instance.CloseForm(UIFormName.Notice);
+
 
         //公告关闭后弹出其他的礼包
 

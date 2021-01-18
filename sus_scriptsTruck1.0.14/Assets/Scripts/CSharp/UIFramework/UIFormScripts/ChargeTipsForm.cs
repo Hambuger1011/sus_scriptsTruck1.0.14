@@ -42,7 +42,6 @@ public class ChargeTipsForm :   BaseUIForm
 
 
     private bool DiamondAddisFalse = false;
-    private CatMainForm catMainform;
 
     public override void OnOpen()
     {

@@ -1,4 +1,4 @@
-#if(UNITY_IOS)
+#if (UNITY_IOS)
 
 using System;
 using System.IO;
@@ -225,15 +225,15 @@ namespace GameFramework
                         string strFirst = "didReceiveRemoteNotification:(NSDictionary*)userInfo\n{\n";
                         str = str.Replace(strFirst, strFirst 
                                                              + "\t::printf(\"didReceiveRemoteNotification:(NSDictionary*)userInfo\");\n" 
+                                                             +"\tif(userInfo != nil){\n" 
                                                              +"\tif([userInfo objectForKey:@\"broadcast\"] ){\n" 
                                                              +"\tNSString * tempstr = (NSString *)[userInfo objectForKey:@\"broadcast\"];\n" 
-                                                             +"\ttempstr =[tempstr stringByAppendingString:@\"^\"];\n"
-                                                             +"\tNSString * msgInfo = (NSString *)[[[userInfo objectForKey:@\"aps\"] objectForKey:@\"alert\"]objectForKey:@\"body\"];\n"
-                                                             +"\ttempstr =[tempstr stringByAppendingString:msgInfo];\n"
                                                              +"\tNSLog(@\"broadcast info：%@\",tempstr);\n" 
-                                                             +"\tNSString * userinfoStr =(NSString *)userInfo;\n" 
-                                                             +"\tNSLog(@\"broadcast userinfoStr：%@\",userinfoStr);\n" 
+                                                             +"\t//NSString * userinfoStr =(NSString *)userInfo;\n" 
+                                                             +"\t//NSLog(@\"broadcast userinfoStr：%@\",userinfoStr);\n" 
+                                                             +"\t//UnitySendMessage( \"GoogleSdk\", \"ReceiveTSHMsg\", [userinfoStr UTF8String]  );\n" 
                                                              +"\tUnitySendMessage( \"GoogleSdk\", \"ReceiveBroadcast\", [tempstr UTF8String]  );\n" 
+                                                             +"\t}\n" 
                                                              +"\t}\n" 
                                                              + "\tif ([IGGTSHybrid.sharedInstance didReceiveRemoteNotifications:userInfo]) {\n"
                                                              + "\t\tUIAlertController *alert = [UIAlertController alertControllerWithTitle:@\"客服\" message:@\"收到一条客服回复，是否现在去查看(游戏由运营决定可选接入、是否弹窗)\"\n"
@@ -243,9 +243,9 @@ namespace GameFramework
                                                              + "\n"
                                                              + "\t\t\t}];"
                                                              + "\t\t}]];\n"
-                                                             + "\t\t[alert addAction:[UIAlertAction actionWithTitle:@\"取消\" style:UIAlertActionStyleCancel handler:nil]];\n"
+                                                             + "\t\t[alert addAction:[UIAlertAction actionWithTitle:@\"Cancel\" style:UIAlertActionStyleCancel handler:nil]];\n"
                                                              + "\t\t[self.window.rootViewController presentViewController:alert animated:true completion:nil];\n"
-                                                             + "\t}\n");
+                                                             + "\t}\n"); 
                     }
 
                     // index = str.IndexOf("[[IGGPushNotification sharedInstance] application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];");

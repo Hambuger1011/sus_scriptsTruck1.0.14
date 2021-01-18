@@ -49,14 +49,7 @@ public class MainDownForm : BaseUIForm
             this.on.SetActiveEx(false);
             this.off.SetActiveEx(true);
             this.On_text.transform.localPosition = new Vector3(0, -46, 0);
-            if (uiid != UIFormName.Ofertas)
-            {
-                uiform = CUIManager.Instance.GetForm(uiid);
-                if(uiform != null)
-                {
-                    uiform.Hide();
-                }
-            }
+          
         }
 
         public void SetOn(bool isOn)
@@ -70,34 +63,11 @@ public class MainDownForm : BaseUIForm
 
             if (isOn)
             {
-                if (uiid != UIFormName.Ofertas)
-                {
-                    if (uiform == null)
-                    {
-                        uiform = CUIManager.Instance.OpenForm(uiid);
-                    }
-                    uiform.Appear();
-                }
-                else
-                {
-                    var luaenv = XLuaManager.Instance.GetLuaEnv();
-                    var res = luaenv.DoString(@"uiLuaFile:Creat()");
-                }
+              
             }
             else
             {
-                if (uiid != UIFormName.Ofertas)
-                {
-                    if (uiform != null)
-                    {
-                        uiform.Hide();
-                    }
-                }
-                else
-                {
-                    var luaenv = XLuaManager.Instance.GetLuaEnv();
-                    var res = luaenv.DoString(@"uiLuaFile:Destroy()");
-                }
+              
             }
 
             if (m_lastOn &&  !isOn)
@@ -246,19 +216,7 @@ public class MainDownForm : BaseUIForm
         ShowButtonType((int)MainDownButtonType.Category);
     }
 
-    private void BriefButtonOn(PointerEventData data)
-    {
-        if (UserDataManager.Instance.GuidStupNum == (int)CatGuidEnum.CatButtonGuid)
-        {
-            EventDispatcher.Dispatch(EventEnum.CatGuidCanvasGroupOFF);  //隐藏猫引导界面
-            UserDataManager.Instance.GuidStupNum += 1;
-
-            GameHttpNet.Instance.UserpetguideChange(UserDataManager.Instance.GuidStupNum, UserpetguideChangeCall);
-        }
-        ShowButtonType((int)MainDownButtonType.Brief);
-
-       
-    }
+  
 
     private void InboxButtonOn(PointerEventData data)
     {

@@ -51,7 +51,7 @@ public class PublicNotice : BaseUIForm
     }
     private void CloseButtonOnclicke(PointerEventData data)
     {
-        CUIManager.Instance.CloseForm(UIFormName.PublicNotice);
+ 
 
         //CUIManager.Instance.OpenForm(UIFormName.ChargeTipsForm);
         //ChargeTipsForm tipForm = CUIManager.Instance.GetForm<ChargeTipsForm>(UIFormName.ChargeTipsForm);

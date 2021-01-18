@@ -160,7 +160,7 @@ public class GuideForm : BaseUIForm
 #else
         DialogDisplaySystem.Instance.PrepareReading();
 #endif
-            CUIManager.Instance.CloseForm(UIFormName.GuideForm);
+          
         }
         else
         {

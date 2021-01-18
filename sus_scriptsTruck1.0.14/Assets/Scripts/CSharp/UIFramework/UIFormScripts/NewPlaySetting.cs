@@ -136,25 +136,16 @@ public class NewPlaySetting : BaseUIForm
 
     private void HelpHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Help");
+     
     }
 
     private void TermsHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Terms");
+     
     }
     private void PrivacyHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Privacy");
+       
     }
 
     private void InputChangeHandler(string vStr)
@@ -459,7 +450,7 @@ public class NewPlaySetting : BaseUIForm
         CUIManager.Instance.CloseForm(UIFormName.SettingForm);
         if (UserDataManager.Instance.userInfo.data.userinfo.firstplay == 0)
         {
-            CUIManager.Instance.OpenForm(UIFormName.GuideForm/*, useFormPool: true*/);
+          
         }
         else
         {
@@ -557,8 +548,8 @@ public class NewPlaySetting : BaseUIForm
                 UserDataManager.Instance.LogOutDelLocalInfo();
 
                 LoadingButtonShow();
-                CUIManager.Instance.CloseForm(UIFormName.SettingNav);
-                CUIManager.Instance.OpenForm(UIFormName.HwLoginForm);
+
+                // CUIManager.Instance.OpenForm(UIFormName.HwLoginForm);
             }
             else if (UserDataManager.Instance.LoginInfo.LastLoginChannel == 0 || UserDataManager.Instance.LoginInfo.LastLoginChannel == 4)
             {

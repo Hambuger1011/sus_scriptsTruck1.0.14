@@ -185,7 +185,7 @@ public class SettingForm : BaseUIForm
 
     private void CloseButtonOn(PointerEventData data)
     {
-        CUIManager.Instance.CloseForm(UIFormName.SettingNav);
+
     }
 
     private void LoadingButtonShow()
@@ -538,26 +538,17 @@ public class SettingForm : BaseUIForm
 
     private void HelpHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Help");
+
     }
 
     private void TermsHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Terms");
+      
     }
 
     private void PrivacyHandler(PointerEventData data)
     {
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.HelpSupportForm);
-        var view = CUIManager.Instance.GetForm<HelpSupportForm>(UIFormName.HelpSupportForm);
-        view.TexteShow("Privacy");
+      
     }
 
     private void LoginSuccHandler(string vUserID,string vToken)
@@ -628,8 +619,8 @@ public class SettingForm : BaseUIForm
                 UserDataManager.Instance.LogOutDelLocalInfo();
 
                 LoadingButtonShow();
-                CUIManager.Instance.CloseForm(UIFormName.SettingNav);
-                CUIManager.Instance.OpenForm(UIFormName.HwLoginForm);
+ 
+               //CUIManager.Instance.OpenForm(UIFormName.HwLoginForm);
             }
             else if (UserDataManager.Instance.LoginInfo.LastLoginChannel == 0 || UserDataManager.Instance.LoginInfo.LastLoginChannel == 4)
             {
@@ -776,10 +767,10 @@ public class SettingForm : BaseUIForm
     {
 
         CUIManager.Instance.CloseForm(UIFormName.SettingForm);
-        CUIManager.Instance.CloseForm(UIFormName.SettingNav);
+
         if (UserDataManager.Instance.userInfo.data.userinfo.firstplay == 0)
         {
-            CUIManager.Instance.OpenForm(UIFormName.GuideForm/*, useFormPool: true*/);
+
         }
         else
         {
@@ -864,11 +855,7 @@ public class SettingForm : BaseUIForm
                         int bookId = UserDataManager.Instance.receiveInviteResult.data.bookid;
                         if (bookId > 0 && UserDataManager.Instance.UserData.bookList.IndexOf(bookId) == -1)
                         {
-                            UserDataManager.Instance.UserData.bookList.Add(bookId);
-                            CUIManager.Instance.OpenForm(UIFormName.InviteGiftBag);
-                            InvitGiftBag tem = CUIManager.Instance.GetForm<InvitGiftBag>(UIFormName.InviteGiftBag);
-                            if (tem != null)
-                                tem.Inite(bookId);
+                          
                         }
 
                         //UIAlertMgr.Instance.Show("TIPS", "Invitation Code Used Successfully，get 1 diamond");

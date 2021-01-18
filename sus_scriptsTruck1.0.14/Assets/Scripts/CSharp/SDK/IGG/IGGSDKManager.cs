@@ -2141,6 +2141,11 @@ return tempItem.GetPurchase().GetPlatformPriceCurrencyCode() + tempItem.GetPurch
     /// </summary>
     public string GetGameId()
     {
+#if UNITY_ANDROID
+        GameId = "11050102021";
+#else
+        GameId = "11050103031";
+#endif
         return GameId;
     }
 

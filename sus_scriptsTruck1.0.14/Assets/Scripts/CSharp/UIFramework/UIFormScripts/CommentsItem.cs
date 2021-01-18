@@ -263,8 +263,7 @@ public class CommentsItem : MonoBehaviour {
     {
         LOG.Info("点击了查看更多评论");
         CUIManager.Instance.GetForm<MainTopSprite>(UIFormName.MainFormTop).UIOpent(8);
-        CUIManager.Instance.OpenForm(UIFormName.ReplyForDetalls);
-        CUIManager.Instance.GetForm<ReplyForDetallsForm>(UIFormName.ReplyForDetalls).Init(commentlist);
+
     }
     #endregion
 
@@ -272,8 +271,7 @@ public class CommentsItem : MonoBehaviour {
 
     private void newRCRformButtonOn(PointerEventData data)
     {
-        CUIManager.Instance.OpenForm(UIFormName.newRCRform);
-        CUIManager.Instance.GetForm<NewRCRform>(UIFormName.newRCRform).NewReplyInit(commentlist);
+      
     }
     #endregion
   

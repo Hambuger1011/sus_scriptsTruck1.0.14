@@ -84,13 +84,7 @@ public class ReplyCommentItem : MonoBehaviour {
 
     private void FeeBackButtonOn(PointerEventData data)
     {
-        CUIManager.Instance.OpenForm(UIFormName.newRCRform);
-        if (IsInit)
-        {
-            NewRCRform NewRCRform = CUIManager.Instance.GetForm<NewRCRform>(UIFormName.newRCRform);
-            NewRCRform.ReplyForInit(commentlists);
-            NewRCRform.ReplyCommentItemInit(gameObject.GetComponent<ReplyCommentItem>());
-        }   
+     
     }
     #region Reply按钮回复功能
     private bool isReplyCommentItemSend = false;

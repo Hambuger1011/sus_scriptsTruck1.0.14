@@ -69,6 +69,10 @@ function UIMainDownForm:OnClose()
 
     GameController.MainFormControl:ClearTimer()
 
+    --【销毁红点定时器】
+    GameController.MainFormControl:ClearTimer();
+
+
     --按钮监听
     logic.cs.UIEventListener.RemoveOnClickListener(self.HomeToggle.gameObject,function(data) self:HomeToggleClick(data) end);
     logic.cs.UIEventListener.RemoveOnClickListener(self.SearchToggle.gameObject,function(data) self:SearchToggleClick(data) end);

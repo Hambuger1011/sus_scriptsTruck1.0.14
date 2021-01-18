@@ -165,10 +165,20 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
         Debug.Log("====ReceiveBroadcast===>>"+vInfo);
         if (!string.IsNullOrEmpty(vInfo))
         {
+            
             string[] strArr = vInfo.Split('^');
             if (strArr != null && strArr.Length > 1)
             {
                 UserDataManager.Instance.OnReceiveBroadcast(strArr[0],strArr[1]);
+            }
+            else
+            {
+                vInfo = vInfo.Replace("'", "\"");
+                Dictionary<string,string> resultDic = JsonHelper.JsonToObject<Dictionary<string,string>>(vInfo);
+                if (resultDic != null && resultDic.ContainsKey("msg"))
+                {
+                    UserDataManager.Instance.OnReceiveBroadcast(vInfo,resultDic["msg"]);
+                }
             }
         }
     }

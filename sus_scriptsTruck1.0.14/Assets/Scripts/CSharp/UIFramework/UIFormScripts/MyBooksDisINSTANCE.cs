@@ -84,8 +84,7 @@ public class MyBooksDisINSTANCE
     public void VideoUI(int vBuyType = 2)
     {
 
-        CUIManager.Instance.OpenForm(UIFormName.PublicNotice);
-        CUIManager.Instance.GetForm<PublicNotice>(UIFormName.PublicNotice).Inite(1,vBuyType);     
+      
     }
 
     #endregion

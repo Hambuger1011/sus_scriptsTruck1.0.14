@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.3.3'
 **BUILD_SCRIPT_DEPS**}
 }
 
@@ -42,7 +42,16 @@ allprojects {
     project.repositories {
         def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
         maven {
-            url "https://dl.google.com/dl/android/maven2/"
+            url "https://maven.google.com"
+        }
+        maven {
+            url (unityProjectPath + "/Assets/GeneratedLocalRepo/Firebase/m2repository") // Assets/Firebase/Editor/AnalyticsDependencies.xml:18, Assets/Firebase/Editor/AppDependencies.xml:22, Assets/Firebase/Editor/CrashlyticsDependencies.xml:20
+        }
+        maven {
+            url "https://jcenter.bintray.com/" // Assets/GoogleMobileAds/Editor/FacebookMediationDependencies.xml:7, Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:8
+        }
+        maven {
+            url "https://maven.google.com/" // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
         }
         mavenLocal()
         jcenter()
@@ -58,6 +67,11 @@ dependencies {
     
    implementation 'com.google.guava:guava:27.0.1-android'
 
+   		implementation 'com.facebook.android:facebook-core:[8.0, 9)'
+		implementation 'com.facebook.android:facebook-applinks:[8.0, 9)'
+		implementation 'com.facebook.android:facebook-login:[8.0, 9)'
+        implementation 'com.facebook.android:facebook-share:[8.0, 9)'
+		implementation 'com.facebook.android:facebook-gamingservices:[8.0, 9)'
 
 
 		implementation ('com.google.android.gms:play-services-base:17.3.0') {
@@ -68,14 +82,10 @@ dependencies {
              exclude group: 'com.android.support'
          }
 		
-         implementation ('com.google.android.gms:play-services-ads:19.4.0') {
+         implementation ('com.google.android.gms:play-services-ads:19.5.0') {
               exclude group: 'com.android.support'
          }
          
-         implementation ('com.google.android.gms:play-services-games:17.0.0') {
-            exclude group: 'com.android.support'
-         }
-
          implementation ('com.google.android.gms:play-services-games:17.0.0') {
             exclude group: 'com.android.support'
          }
@@ -88,59 +98,70 @@ dependencies {
              exclude group: 'com.android.support'
          }
     
-        implementation 'com.google.firebase:firebase-messaging:20.3.0'
     
         implementation ('com.amazonaws:aws-android-sdk-kinesis:2.12.6') {
             exclude group: 'com.google.code.gson'
         }
 
-		implementation ('com.google.ads.mediation:unity:3.4.8.0') {
+		implementation ('com.google.ads.mediation:unity:3.6.0.0') {
             exclude group: 'com.android.support'
         }
 		
-		implementation ('com.google.ads.mediation:facebook:6.1.0.0') {
+		implementation ('com.google.ads.mediation:facebook:6.2.0.0') {
             exclude group: 'com.android.support'
         }
 
-		implementation ('com.google.android.ads:mediation-test-suite:1.4.0') {
+		implementation ('com.google.android.ads:mediation-test-suite:1.5.0') {
          exclude group: 'com.google.code.gson'
        }
 
+	   implementation 'com.google.firebase:firebase-messaging:20.3.0'
+       implementation 'com.google.firebase:firebase-analytics:18.0.0' // Assets/Firebase/Editor/AppDependencies.xml:15
+       implementation 'com.google.firebase:firebase-crashlytics:17.2.2' // Assets/Firebase/Editor/AppDependencies.xml:15
+       implementation 'com.google.firebase:firebase-common:19.3.1' // Assets/Firebase/Editor/AppDependencies.xml:13
 
-       implementation 'com.google.firebase:firebase-analytics:17.4.1'
-	   implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
-	   implementation 'com.google.firebase:firebase-common:19.3.0'
     
-    
-    
-    implementation 'androidx.multidex:multidex:2.0.1'
+     implementation 'androidx.multidex:multidex:2.0.1'
 
 	//facebook sdk
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-	implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.browser:browser:1.0.0'//customtabs
-	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+     implementation 'androidx.appcompat:appcompat:1.1.0'
+     implementation 'androidx.cardview:cardview:1.0.0'
+     implementation 'androidx.browser:browser:1.2.0' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+     implementation 'androidx.legacy:legacy-support-v4:1.0.0' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+  
 	
-    //implementation 'com.android.billingclient:billing:2.0.3'
-	
-// Android Resolver Dependencies Start
-    implementation 'com.facebook.android:facebook-applinks:[6.2.0, 7)' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:6
-    implementation 'com.facebook.android:facebook-core:[6.2.0, 7)' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:5
-    implementation 'com.facebook.android:facebook-gamingservices:[6.2.0, 7)' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:9
-    implementation 'com.facebook.android:facebook-login:[6.2.0, 7)' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:7
-    implementation 'com.facebook.android:facebook-share:[6.2.0, 7)' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:8
-    implementation 'com.parse.bolts:bolts-android:1.4.0' // Assets/Plugins/SDK/Static/Facebook/FacebookSDK/Plugins/Editor/Dependencies.xml:4
-// Android Resolver Dependencies End
-
-    implementation "com.android.support:multidex:1.0.3"  // 打 apk 包需要
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.20" //kotlin runningtime
 
+// Android Resolver Dependencies Start
+    implementation 'com.android.support:appcompat-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+    implementation 'com.android.support:cardview-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+    implementation 'com.android.support:customtabs:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+    implementation 'com.android.support:support-v4:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
+    implementation 'com.facebook.android:facebook-applinks:[8.0, 9)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:6
+    implementation 'com.facebook.android:facebook-core:[8.0, 9)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:5
+    implementation 'com.facebook.android:facebook-gamingservices:[8.0, 9)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:9
+    implementation 'com.facebook.android:facebook-login:[8.0, 9)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:7
+    implementation 'com.facebook.android:facebook-share:[8.0, 9)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:8
+    implementation 'com.google.ads.mediation:facebook:6.2.0.0' // Assets/GoogleMobileAds/Editor/FacebookMediationDependencies.xml:7
+    implementation 'com.google.ads.mediation:unity:3.6.0.0' // Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:8
+    implementation 'com.google.android.gms:play-services-ads:19.5.0' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
+    implementation 'com.google.android.gms:play-services-base:17.5.0' // Assets/Firebase/Editor/AppDependencies.xml:17
+    implementation 'com.google.firebase:firebase-analytics:18.0.0' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:15
+    implementation 'com.google.firebase:firebase-analytics-unity:7.0.2' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
+    implementation 'com.google.firebase:firebase-app-unity:7.0.2' // Assets/Firebase/Editor/AppDependencies.xml:22
+    implementation 'com.google.firebase:firebase-common:19.3.1' // Assets/Firebase/Editor/AppDependencies.xml:13
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:13
+    implementation 'com.google.firebase:firebase-crashlytics-unity:7.0.2' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:20
+    implementation 'com.parse.bolts:bolts-android:1.4.0' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:4
+// Android Resolver Dependencies End
 **DEPS**}
+
+
 
 // Android Resolver Exclusions Start
 android {
   packagingOptions {
+      exclude ('/lib/arm64-v8a/*' + '*')
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
@@ -180,9 +201,10 @@ android {
         javaMaxHeapSize "4g"
 	}
 	
-    aaptOptions {
-        noCompress = ['.unity3d', '.ress', '.resource', '.obb']
+     aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb'**STREAMING_ASSETS**]
     }**SIGN**
+
 
     buildTypes {
         debug {

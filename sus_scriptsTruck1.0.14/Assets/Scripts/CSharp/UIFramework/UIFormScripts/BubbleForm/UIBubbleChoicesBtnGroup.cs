@@ -227,13 +227,7 @@ public class UIBubbleChoicesBtnGroup : MonoBehaviour
             int type = MyBooksDisINSTANCE.Instance.GameOpenUItype();
             if (type == 1)
             {
-                if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                 UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                {
-                    CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                    CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                    return;
-                }
+            
             }
             else if (type == 2)
             {
@@ -528,13 +522,7 @@ public class UIBubbleChoicesBtnGroup : MonoBehaviour
                     if (type == 1)
                     {
 
-                        if (UserDataManager.Instance.userInfo != null && UserDataManager.Instance.userInfo.data != null &&
-                            UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1)
-                        {
-                            CUIManager.Instance.OpenForm(UIFormName.FirstGigtGroup);
-                            CUIManager.Instance.GetForm<FirstGigtGroup>(UIFormName.FirstGigtGroup).GetType(1);
-                            return;
-                        }
+                   
                     }
                     else if (type == 2)
                     {

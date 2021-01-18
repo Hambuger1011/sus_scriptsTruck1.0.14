@@ -8,32 +8,24 @@ using UnityEngine;
 
 
 [XLua.LuaCallCSharp]
-public class AppsFlyerManager : Singleton<AppsFlyerManager>
+public class AppsFlyerManager
 {
-    public string _IGGid = "";
-    // //AF事件记录*安装时间记录Install
-    // AppsFlyerManager.Instance.OnInstall();
+    private static AppsFlyerManager _Instance;
 
-    /// <summary>
-    /// 安装事件 √
-    /// </summary>
-    public void OnInstall()
+    public static AppsFlyerManager Instance
     {
-        int isIntalled = PlayerPrefs.GetInt("isIntalled");
-        if (isIntalled == 0 || isIntalled == 1)
+        get
         {
-            PlayerPrefs.SetInt("isIntalled", 2);
+            if (_Instance == null)
+            {
+                _Instance = new AppsFlyerManager();
+            }
+            return _Instance;
         }
-        else if (isIntalled == 2)
-        {
-            return;
-        }
-
-        LOG.Log("AppsFlyerManager  AD-Install");
-        Dictionary<string, object> dic = new Dictionary<string, object>();
-        Send("INSTALL", dic);
     }
 
+    private static AppsFlyerTracker AFtracker;
+    public string _IGGid = "";
 
     // 目的：统计的符合 iOS 系统要求的用户。
     // [IOS系统版本号] 的来源：系统对应的版本号，默认要求安卓最低 Android 6.0 以上， iOS 最低 10 以上，如果有的项目要求更高的系统，则根据实际情况提高事件的版本号。有特殊需求先于广告部商议。
@@ -579,15 +571,14 @@ public class AppsFlyerManager : Singleton<AppsFlyerManager>
         Send("RECEIVE_7DAY_SIGN_REWARD", dic);
     }
 
-    private AppsFlyerTracker AFtracker;
-    protected override void Init()
-    {
-        AFtracker = new AppsFlyerTracker();
-    }
-
 
     public void InitAFtracker(string customerInfo)
     {
+        if (AFtracker == null)
+        {
+            AFtracker = new AppsFlyerTracker();
+        }
+
         if (AFtracker != null)
         {
             AFtracker.Init(customerInfo);

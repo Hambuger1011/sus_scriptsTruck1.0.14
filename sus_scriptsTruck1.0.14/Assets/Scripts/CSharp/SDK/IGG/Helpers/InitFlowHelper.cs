@@ -35,14 +35,11 @@ namespace Helper.Login
         private OnInitFlowListener listener;
         private PaymentHelper.OnPayOrSubscribeToListener payOrSubscribeToListener;
 
-        // public ADTracker tracker;
-
-        private string currentGameId;
         
         private Dictionary<int,IGGGameItem> shopListMap = new Dictionary<int,IGGGameItem>();
 
 #if ENABLE_DEBUG
-        public static string appconf_name = "server_config";
+        public static string appconf_name = "test_config";
 #else
         public static string appconf_name = "server_config";
 #endif
@@ -68,9 +65,6 @@ namespace Helper.Login
                 return;
             }
             Debug.Log("start InitFlow.");
-
-            // 缓存当前gameid用于后续广告跟踪用。
-            currentGameId = gameId;
             
             // 初始化IGGSDK
             InitIGGSDK(gameId);
@@ -345,7 +339,7 @@ namespace Helper.Login
         {
             Debug.Log("AD-ShouldInitialize");
             var customInfo = new JObject();
-            customInfo.Add("g_id", currentGameId);
+            customInfo.Add("g_id", IGGSDKManager.Instance.GetGameId());
             //tracker.Init(customInfo.ToString());
 
             //初始化AF

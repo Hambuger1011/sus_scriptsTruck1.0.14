@@ -234,7 +234,7 @@ public class ProfileForm : BaseUIForm
         UIEventListener.AddOnClickListener(PersonalityMenuImg.gameObject, PerMenuClickHandler);
         UIEventListener.AddOnClickListener(CustomizeMenuImg.gameObject, CusMenuClickHandler);
 
-        addMessageListener(EventEnum.SetGuidPos, SetGuidPos);
+
         addMessageListener(EventEnum.FaceBookLoginSucc, FaceBookLoginSucc);
         addMessageListener(EventEnum.GoogleLoginSucc, GoogleLoginSuccHandler);
         addMessageListener(EventEnum.ThirdPartyLoginSucc, ThirdPartyLoginSuccHandler);
@@ -256,7 +256,7 @@ public class ProfileForm : BaseUIForm
         UIEventListener.AddOnClickListener(SignInButton.gameObject, SignInButtonOnclicke);
         UIEventListener.AddOnClickListener(Setting, SettingButton);
         UIEventListener.AddOnClickListener(FAQ, FAQButton);
-        UIEventListener.AddOnClickListener(EnterButton.gameObject, EnterButtonOnclicke);
+
 
         UIEventListener.AddOnClickListener(MusicaButton, MusicaButtonOnClicke);
         UIEventListener.AddOnClickListener(SonidosButton, SonidosButtonOnClicke);
@@ -414,7 +414,7 @@ public class ProfileForm : BaseUIForm
         UIEventListener.RemoveOnClickListener(SignInButton.gameObject, SignInButtonOnclicke);
         UIEventListener.RemoveOnClickListener(Setting, SettingButton);
         UIEventListener.RemoveOnClickListener(FAQ, FAQButton);
-        UIEventListener.RemoveOnClickListener(EnterButton.gameObject, EnterButtonOnclicke);
+
 
         UIEventListener.RemoveOnClickListener(MusicaButton, MusicaButtonOnClicke);
         UIEventListener.RemoveOnClickListener(SonidosButton, SonidosButtonOnClicke);
@@ -547,12 +547,12 @@ public class ProfileForm : BaseUIForm
 
     private void SettingButton(PointerEventData data)
     {
-        CUIManager.Instance.OpenForm(UIFormName.SettingNav);
+
     }
 
     private void FAQButton(PointerEventData data)
     {
-        CUIManager.Instance.OpenForm(UIFormName.FAQ);
+
         //CUIManager.Instance.GetForm<FAQSprite>(UIFormName.FAQ).Init();
     }
 
@@ -682,7 +682,7 @@ public class ProfileForm : BaseUIForm
 
     private void CloseHandler(PointerEventData data)
     {
-        CUIManager.Instance.CloseForm(UIFormName.InviteForm);
+
     }
 
     private void BtnOkOnclick()
@@ -1821,28 +1821,7 @@ public class ProfileForm : BaseUIForm
     #endregion
 
 
-    private void EnterButtonOnclicke(PointerEventData data)
-    {
-        if (UserDataManager.Instance.GuidStupNum == (int) CatGuidEnum.PersonalCenterCatEnter)
-        {
-            UserDataManager.Instance.isFirstCatEnt = true;
-            CUIManager.Instance.CloseForm(UIFormName.CatGuid);
-            UserDataManager.Instance.GuidStupNum += 1;
-            GameHttpNet.Instance.UserpetguideChange(UserDataManager.Instance.GuidStupNum, UserpetguideChangeCall);
-        }
-
-        if (UserDataManager.Instance.profileData.data.guide_id == (int) CatGuidEnum.PlaceHuangyuandianYes)
-        {
-            //如果是在商店放置装饰物那中断，则引导去装饰物那里
-            UserDataManager.Instance.GuidStupNum = (int) CatGuidEnum.DecorationsButtonOn;
-            UserDataManager.Instance.isFirstCatEnt = true;
-        }
-
-        AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-
-        //UINetLoadingMgr.Instance.Show();
-        GameHttpNet.Instance.PostGetSceneInfo(ProcessGetSceneInfo);
-    }
+  
 
     private void UserpetguideChangeCall(object arg)
     {
@@ -1862,52 +1841,7 @@ public class ProfileForm : BaseUIForm
         }
     }
 
-    private void ProcessGetSceneInfo(object arg)
-    {
-        string result = arg.ToString();
-        LOG.Info("----GetpetgiftinfoCallbacke---->" + result);
-
-        JsonObject jo = JsonHelper.JsonToJObject(result);
-        if (jo != null)
-        {
-            LoomUtil.QueueOnMainThread((param) =>
-            {
-                //UINetLoadingMgr.Instance.Close();
-                if (jo.code == 200)
-                {
-                    UserDataManager.Instance.SceneInfo = JsonHelper.JsonToObject<HttpInfoReturn<SceneInfo>>(result);
-
-                    GameDataMgr.Instance.table.GetCatInMapData();
-                    CUIManager.Instance.OpenForm(UIFormName.CatLoading);
-                }
-            }, null);
-        }
-    }
-
-    private void CheckCatGuide()
-    {
-        //添加引导的相关的判断
-        //1.性格是否解锁
-        //2.是否已经指引过了
-        //3.是否引导的第一步
-
-        if (UserDataManager.Instance.profileData != null)
-            LOG.Info("进入猫的指引,guide_id:" + UserDataManager.Instance.profileData.data.guide_id);
-
-        if (!UserDataManager.Instance.CheckGameFunIsOpen(2) || !UserDataManager.Instance.CheckTraitIsUnlock()) return;
-        CatEnterBg.gameObject.SetActive(UserDataManager.Instance.CheckGameFunIsOpen(2));
-
-        if (UserDataManager.Instance.profileData.data.guide_id == 2)
-        {
-            UserDataManager.Instance.isFirstCatEnt = true;
-            UserDataManager.Instance.GuidStupNum = (int) CatGuidEnum.PersonalCenterCatEnter;
-            CUIManager.Instance.OpenForm(UIFormName.CatGuid);
-            EventDispatcher.Dispatch(EventEnum.CatGuidCanvasGroupOFF);
-            LOG.Info("进入猫的指引,GuidStupNum:" + UserDataManager.Instance.GuidStupNum);
-        }
-
-        Invoke("SetPosInvoke", 0.3f);
-    }
+ 
 
     private void SetPosInvoke()
     {
@@ -1915,29 +1849,6 @@ public class ProfileForm : BaseUIForm
         EventDispatcher.Dispatch(EventEnum.DoGuidStep, UserDataManager.Instance.GuidStupNum);
     }
 
-    /// <summary>
-    /// 设置引导点击的位置
-    /// </summary>
-    /// <param name="notice"></param>
-    public void SetGuidPos(Notification notice)
-    {
-        if (UserDataManager.Instance.GuidStupNum == (int) CatGuidEnum.PersonalCenterCatEnter)
-        {
-            float SeenH = Mathf.Abs(UIMask.rect.height); //屏幕高度
-            float SeenW = Mathf.Abs(UIMask.rect.width); //屏幕宽度
-            float h1 = Mathf.Abs(Frame.offsetMax.y);
-            float h2 = Mathf.Abs(CatEnterBg.anchoredPosition.y);
-            float w1 = Mathf.Abs(CatEnterBg.anchoredPosition.x);
-            float h3 = Mathf.Abs(EnterButton.anchoredPosition.y);
-            float w2 = Mathf.Abs(EnterButton.anchoredPosition.x);
-
-            float H = SeenH - h1 - h2 - h3;
-            float W = w1 + w2;
-
-            UserDataManager.Instance.GuidPos = new Vector2(W, H); /*CatMainButton.transform.localPosition;*/
-            LOG.Info("h1:" + h1 + "--h2:" + h2 + "--w1:" + w1 + "--h3:" + h3 + "--w2:" + w2 + "--H:" + H + "--W：" + W);
-        }
-    }
 
 
     #region 新UI功能修改
@@ -2006,8 +1917,7 @@ public class ProfileForm : BaseUIForm
     private void PreguntasButton(PointerEventData data)
     {
         AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        CUIManager.Instance.OpenForm(UIFormName.FAQ);
-        //CUIManager.Instance.GetForm<FAQSprite>(UIFormName.FAQ).Init();
+     
 
         //埋点*FAQ
         GamePointManager.Instance.BuriedPoint(EventEnum.FaqList);

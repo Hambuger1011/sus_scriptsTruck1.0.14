@@ -27,7 +27,7 @@ public class NetworkAlertForm : BaseUIForm
 
     private void OnFeedbackClick()
     {
-        CUIManager.Instance.OpenForm(UIFormName.LoadingFeedBack);
+        
     }
 
     void OnConnectNetworkClick()

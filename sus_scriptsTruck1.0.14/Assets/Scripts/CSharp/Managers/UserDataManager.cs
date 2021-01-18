@@ -290,25 +290,12 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<ProfileConfigInfo> profileConfigInfo;
     public HttpInfoReturn<ProfileRefreshData> profileRefreshData;
 
-    public HttpInfoReturn<Getpetinfo> Getpetinfo;
-    public HttpInfoReturn<Getpetgiftinfo> Getpetgiftinfo;//TODO
-    public HttpInfoReturn<Getpetfoodinfo> Getpetfoodinfo;//TODO
-    public HttpInfoReturn<BuyItemResult> BuyItemResult;
-    public HttpInfoReturn<BagInfo> BagInfoContent;
-    public HttpInfoReturn<SceneInfo> SceneInfo;
-    public HttpInfoReturn<usermoney> usermoney;
-    public HttpInfoReturn<YardInfo> YardInfo;
-    public HttpInfoReturn<Getadoptpet> Getadoptpet;
-    public HttpInfoReturn<GoodsInfo> goodinfo;
-    public HttpInfoReturn<Getuserhomepet> Getuserhomepet;
-    public HttpInfoReturn<Getpetstory> Getpetstory;
-    public HttpInfoReturn<Petadopt> Petadopt;
-    public HttpInfoReturn<Getpetmsg> Getpetmsg;
+   
     public HttpInfoReturn<BookOptionSelectInfo> BookOptSelInfo;
     public HttpInfoReturn<Getrecommandmall> recommandmallInfo;
     public HttpInfoReturn<IpAdressInfo> userIpAddressInfo;
  
-    public HttpInfoReturn<AchieveguidePrice> AchieveguidePrice;
+
     public HttpInfoReturn<GameFunStateList> gameFunStateList;
     public HttpInfoReturn<SaveStep> SaveStepInfo; //进度保存数据
     public HttpInfoReturn<BooksUpdatedWeekly> BooksUpdatedWeekly;
@@ -2039,16 +2026,7 @@ public class UserDataManager : Singleton<UserDataManager> {
 
 #endregion
 
-    /// <summary>
-    /// 更新宠物货币
-    /// </summary>
-    /// <param name="dia"></param>
-    /// <param name="heart"></param>
-    public void UpdateCatGoodsCount(int dia, int heart)
-    {
-        UserDataManager.Instance.SceneInfo.data.usermoney.diamond = dia;
-        UserDataManager.Instance.SceneInfo.data.usermoney.love = heart;
-    }
+  
 
 #region 保存养猫游戏打开的所有界面顺序
     private ArrayList CatUiFormDic;
