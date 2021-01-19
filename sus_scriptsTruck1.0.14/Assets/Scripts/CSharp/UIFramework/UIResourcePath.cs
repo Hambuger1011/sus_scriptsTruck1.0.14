@@ -60,7 +60,7 @@ public class UIFormName
     public readonly static string UIBubbleSelectionItem = "Assets/Bundle/UI/BookReading/BubbleChat/UIBubbleSelectionItem.prefab";//3
     
     public readonly static string Announcement = "UI/Announcement/Canvas_Announcement";
-
+    public readonly static string StoryItems = "UI/Resident/UI/Canvas_StoryItems";//4
 }
 
 public enum UIEventMethodName

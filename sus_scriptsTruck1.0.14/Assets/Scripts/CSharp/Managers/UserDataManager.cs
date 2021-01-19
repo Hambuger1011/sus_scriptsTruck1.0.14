@@ -1501,7 +1501,7 @@ public class UserDataManager : Singleton<UserDataManager> {
 
     public void OnReceiveBroadcast(string vInfo,string vMsg)
     {
-        vInfo = vInfo.Replace("'", "\"");
+        //vInfo = vInfo.Replace("'", "\"");
         Dictionary<string,string> resultDic = JsonHelper.JsonToObject<Dictionary<string,string>>(vInfo);
         int type = 0;
         string resultStr = String.Empty;

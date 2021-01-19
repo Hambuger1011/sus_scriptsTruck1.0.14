@@ -173,7 +173,7 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
             }
             else
             {
-                vInfo = vInfo.Replace("'", "\"");
+                //vInfo = vInfo.Replace("'", "\"");
                 Dictionary<string,string> resultDic = JsonHelper.JsonToObject<Dictionary<string,string>>(vInfo);
                 if (resultDic != null && resultDic.ContainsKey("msg"))
                 {
