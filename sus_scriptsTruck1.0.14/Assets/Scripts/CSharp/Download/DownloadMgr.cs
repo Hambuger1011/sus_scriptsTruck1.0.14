@@ -664,7 +664,9 @@ public class DownloadMgr : CMonoSingleton<DownloadMgr>
     
     public Task DownloadLoadImg(string version,Action<int, UnityObjectRefCount, string> callback)
     {
-        var url = GameHttpNet.Instance.GetResourcesUrl() + "image/book_loading/0.jpg";
+        //此时还未请求getversion  待调整
+        // var url = GameHttpNet.Instance.GetResourcesUrl() + "image/book_loading/0.jpg";
+        var url = "http://193.112.66.252:8082/resources/image/book_loading/0.jpg";
         var filename = string.Format("{0}cache/book/loading/0.jpg", GameUtility.WritablePath, 0);
         var task = DownloadMgr.Instance.Download(url, filename, version, 1048576, true);
         task.AddComplete(() =>
