@@ -293,6 +293,7 @@ public class FreeKeyInfo
 public class FreeKeyApply
 {
     public int end_time;
+    public int free_key;
 }
 public class DayLoginInfo
 {

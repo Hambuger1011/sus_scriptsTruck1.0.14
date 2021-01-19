@@ -254,6 +254,11 @@ public class MainTopSprite : BaseUIForm
             {
                 if (jo.code == 200)
                 {
+                    if (UserDataManager.Instance.FreeKeyApplyInfo != null
+                        &&UserDataManager.Instance.FreeKeyApplyInfo.data != null)
+                    {
+                        UserDataManager.Instance.FreeKeyApplyInfo.data.free_key -= 1;
+                    }
                     UserDataManager.Instance.freeKeyInfo = JsonHelper.JsonToObject<HttpInfoReturn<FreeKeyInfo>>(result);
                     int award = UserDataManager.Instance.freeKeyInfo.data.bKey - UserDataManager.Instance.UserData.KeyNum;
                     if (award > 0)
@@ -355,7 +360,8 @@ public class MainTopSprite : BaseUIForm
         {
             //如果用户的钥匙小于2个，且没有下个钥匙的目标时间的话，则向服务器申请2小时免费钥匙
             if (UserDataManager.Instance.UserData.KeyNum < 2 &&
-               UserDataManager.Instance.userInfo.data.userinfo.end_time <= 0)
+               UserDataManager.Instance.userInfo.data.userinfo.end_time <= 0
+               && UserDataManager.Instance.FreeKeyApplyInfo.data.free_key > 0)
             {
                 //申请2小时免费钥匙
                 GameHttpNet.Instance.FreeKeyApply(FreeKeyApplyCallback);
