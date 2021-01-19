@@ -38,6 +38,7 @@ local UIID = {
 	Story_Guide = 'UI/Resident/UI/Canvas_Story_Guide',
 	UISignTipForm = 'UI/Resident/UI/UISignTipForm',
 	UIFirstChargeForm = 'UI/Resident/UI/UIFirstChargeForm',
+	UINewBookTipsForm = 'UI/Resident/UI/UINewBookTipsForm',
 	UIMainForm = 'UIMainForm',
 	UIMainDownForm = 'UIMainDownForm',
 	UISearchForm = 'UISearchForm',

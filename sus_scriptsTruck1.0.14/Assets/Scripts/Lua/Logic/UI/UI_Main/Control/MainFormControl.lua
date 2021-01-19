@@ -189,6 +189,7 @@ function MainFormControl:GetSelfBookInfo(result)
             end)
         end
 
+        logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
 
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then

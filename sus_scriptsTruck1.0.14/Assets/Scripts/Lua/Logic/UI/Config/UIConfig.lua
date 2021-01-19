@@ -25,6 +25,7 @@ local UIConfig = {
 	require "Logic/UI/UI_Ratinglevel/UIRatinglevelForm",
 	require "Logic/UI/UI_SignIn/UISignTipForm",
 	require "Logic/UI/UI_FirstCharge/UIFirstChargeForm",
+	require "Logic/UI/UI_NewBookTips/UINewBookTipsForm",
 	require "Logic/UI/UI_DressUp/UIDressUpForm",
 	require "Logic/UI/UI_Comuniada/UIMasForm",
 	require "Logic/UI/UI_Busqueda/UIBusquedaForm",
