@@ -46,7 +46,7 @@ public class ChargeMoneyForm : BaseUIForm
     private Sprite DiamondBGSprite;
 
     private List<ChargeItemForm> itemList;
-    private List<ChargeMoneyItemScripte> ChargeMoneyItemScripteList;
+    private List<GameObject> ChargeMoneyItemScripteList;
 
     private CanvasGroup DispalyImageCanvasGroup;
 
@@ -151,7 +151,7 @@ public class ChargeMoneyForm : BaseUIForm
             //    FirstGiftGo.SetActive(UserDataManager.Instance.userInfo.data.userinfo.newpackage_status == 1);
         }
 
-        ChargeMoneyItemScripteList = new List<ChargeMoneyItemScripte>();
+        ChargeMoneyItemScripteList = new List<GameObject>();
 
         if (!IGGSDKManager.Instance.HasProductList())
         {
@@ -457,7 +457,16 @@ public class ChargeMoneyForm : BaseUIForm
         {
             for (int i=0;i< ChargeMoneyItemScripteList.Count;i++)
             {
-                ChargeMoneyItemScripteList[i].Disposal();
+                var script = ChargeMoneyItemScripteList[i].GetComponent<ChargeMoneyItemScripte>();
+                if (script == null)
+                {
+                    var script2 = ChargeMoneyItemScripteList[i].GetComponent<ChargeMoneyFreeItemScripte>();
+                    script2.Disposal();
+                }
+                else
+                {
+                    script.Disposal();
+                }
             }
 
             ChargeMoneyItemScripteList = null;
@@ -698,7 +707,8 @@ public class ChargeMoneyForm : BaseUIForm
 
                         if (itemInfo != null)
                         {
-                            ChargeMoneyItemScripte item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyKeyItem).GetComponent<ChargeMoneyItemScripte>();
+                            GameObject itemObj = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyKeyItem);
+                            ChargeMoneyItemScripte item = itemObj.GetComponent<ChargeMoneyItemScripte>();
                             item.transform.SetParent(ScrollViewKeyContent.transform, false);
                             item.rectTransform().localPosition = Vector3.zero;
                             item.rectTransform().localScale = Vector3.one;
@@ -711,7 +721,7 @@ public class ChargeMoneyForm : BaseUIForm
                                 RecommendGamekey = item;
                                 tmepItemInfo = itemInfo;
                             }
-                            ChargeMoneyItemScripteList.Add(item);
+                            ChargeMoneyItemScripteList.Add(itemObj);
                         }
                     }
                 }
@@ -740,7 +750,8 @@ public class ChargeMoneyForm : BaseUIForm
                         ShopItemInfo itemInfo = diamondList[i];
                         if (itemInfo != null)
                         {
-                            ChargeMoneyItemScripte item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyDiamondItem).GetComponent<ChargeMoneyItemScripte>();
+                            GameObject itemObj = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyDiamondItem);
+                            ChargeMoneyItemScripte item = itemObj.GetComponent<ChargeMoneyItemScripte>();
                             item.transform.SetParent(ScrollViewDiamondContent.transform, false);
                             item.rectTransform().localPosition = Vector3.zero;
                             item.rectTransform().localScale = Vector3.one;
@@ -754,7 +765,7 @@ public class ChargeMoneyForm : BaseUIForm
                                 tmepItemInfo = itemInfo;
                             }
 
-                            ChargeMoneyItemScripteList.Add(item);
+                            ChargeMoneyItemScripteList.Add(itemObj);
                         }
                     }
                 }
@@ -886,7 +897,8 @@ public class ChargeMoneyForm : BaseUIForm
                     ShopItemInfo itemInfo = diamondList[i];
                     if (itemInfo != null)
                     {
-                        ChargeMoneyItemScripte item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyDiamondItem).GetComponent<ChargeMoneyItemScripte>();
+                        GameObject itemObj = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyDiamondItem);
+                        ChargeMoneyItemScripte item = itemObj.GetComponent<ChargeMoneyItemScripte>();
                         item.transform.SetParent(DiamanList.transform, false);
                         item.rectTransform().localPosition = Vector3.zero;
                         item.rectTransform().localScale = Vector3.one;
@@ -913,9 +925,17 @@ public class ChargeMoneyForm : BaseUIForm
                             GetuserpaymallidStatChack(null);
                         }
 
-                        ChargeMoneyItemScripteList.Add(item);
+                        ChargeMoneyItemScripteList.Add(itemObj);
                     }
                 }
+                
+                GameObject itemObj1 = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyFreeItem);
+                ChargeMoneyFreeItemScripte itemFree = itemObj1.GetComponent<ChargeMoneyFreeItemScripte>();
+                itemFree.transform.SetParent(DiamanList.transform, false);
+                itemFree.rectTransform().localPosition = Vector3.zero;
+                itemFree.rectTransform().localScale = Vector3.one;
+                itemFree.SetGameInit(len+1);
+                ChargeMoneyItemScripteList.Add(itemObj1);
             }
         }
 
@@ -933,7 +953,8 @@ public class ChargeMoneyForm : BaseUIForm
         
                     if (itemInfo != null)
                     {
-                        ChargeMoneyItemScripte item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyKeyItem).GetComponent<ChargeMoneyItemScripte>();
+                        GameObject itemObj = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyKeyItem);
+                        ChargeMoneyItemScripte item = itemObj.GetComponent<ChargeMoneyItemScripte>();
                         item.transform.SetParent(KeyList.transform, false);
                         item.rectTransform().localPosition = Vector3.zero;
                         item.rectTransform().localScale = Vector3.one;
@@ -959,7 +980,7 @@ public class ChargeMoneyForm : BaseUIForm
                             mMoneyType = 1;
                             GetuserpaymallidStatChack(null);
                         }
-                        ChargeMoneyItemScripteList.Add(item);
+                        ChargeMoneyItemScripteList.Add(itemObj);
                     }
                 }
             }

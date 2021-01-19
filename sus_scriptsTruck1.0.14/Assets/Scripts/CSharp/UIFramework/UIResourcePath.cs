@@ -40,6 +40,7 @@ public class UIFormName
     public readonly static string MainFormTop = "UI/Resident/UI/Canvas_Main_top";//7
     public static readonly string ChargeMoneyKeyItem = "UI/Resident/UI/ChargeMoneyKeyItem";
     public static readonly string ChargeMoneyDiamondItem = "UI/Resident/UI/ChargeMoneyDiamondItem";
+    public static readonly string ChargeMoneyFreeItem = "UI/Resident/UI/ChargeMoneyFreeItem";
   
     public readonly static string Navigation = "UI/Resident/UI/Canvas_Navigation";//3
     public readonly static string Activity = "UI/Resident/UI/Canvas_Activity";//3
