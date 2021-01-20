@@ -8,22 +8,22 @@ logic.BookReading.BaseDialogueComponent = require("Logic/BookReading/Component/D
 logic.DialogType =
 {
     Negative = 0,
-    Narration = 1,                  --旁白
-    EnterName = 2,				--输入名字
-    PlayerDialogue = 3,
-    OtherDialogue = 4,
-    ChangeClothes = 5,
-    ChangeSceneByBlack = 6,
-    PlayerImagineDialogue = 7,
-    OtherImagineDialogue = 8,
-    ChoiceCharacter = 9,
-    PhoneCallDialogue = 10,
-    SceneInteraction = 11,  --场景互动，即：背景图上，有互动的特效
-    ManualChangeScene = 12, --手动切换场景
-    SceneTap = 13,          --（记录一段时间内）点击屏幕的次数
+    Narration = 1,                  --展示旁白
+    EnterName = 2,				--输入角色的名字
+    PlayerDialogue = 3,         --主角对话(通常主角对话，会放在屏幕的左侧)
+    OtherDialogue = 4,          --NPC对话（通常NPC对话，会放在屏幕的右侧）
+    ChangeClothes = 5,          --觉得换衣服，这个【已经修改成】 dialog_type=20 了
+    ChangeSceneByBlack = 6,     --场景变黑  切换场景（会有场景移动）
+    PlayerImagineDialogue = 7,  --主角思考下的对话（主角心理活动）
+    OtherImagineDialogue = 8,   --NPC思考下的对话（NPC心理活动）
+    ChoiceCharacter = 9,        --这个类型暂时不用了(弃用)
+    PhoneCallDialogue = 10,     --进入或退出电话场景，无论进入或者退出电话场景，都需要配置
+    SceneInteraction = 11,      --场景互动，即：背景图上，有互动的特效
+    ManualChangeScene = 12,     --手动切换场景    trigger=1 【向左滑动场景（从左向右）】、trigger=2 【向上滑动场景（从下向上）】、trigger=3 【向右滑动场景（从右向左）】、trigger=4 【向下滑动场景（从上向下）】
+    SceneTap = 13,          --（记录一段时间内）点击屏幕的次数，可以用于制造紧张或刺激 氛围的时候使用
     Puzzle = 14,            --拼图
     ClockChangeScene = 15,  --旋转时钟的形式，来切换场景
-    EnterNPCname=16,--Npc 的名字   
+    EnterNPCname=16,--Npc 的名字的界面
     ChangeSceneByWhite = 17,--场景变白切换场景
     ChangeSceneByWave = 18,-- 水波纹切换场景
     ChangeSceneByShutter = 19,--百叶窗切换场景
@@ -42,6 +42,7 @@ logic.DialogType =
     ChoiceModel = 33, --选择头发、形象
     TitlePage = 34, --扉页
     AutoSelectClothesModel = 35, --自动帮主角选择服装(model)
+    BubblePlayerImagineDialogue =36,  --气泡-主角表述（主角心理活动）
 }
 
 local components = {}
@@ -213,9 +214,10 @@ function ComponentFactory:__init()
     local obj = class.New(index,cfg)
 		return obj
   end
-  components[logic.DialogType.BubbleNarration] = components[logic.DialogType.BubbleChat]
-  components[logic.DialogType.BubblePlayerDialog] = components[logic.DialogType.BubbleChat]
-  components[logic.DialogType.BubbleOtherPlayerDialog] = components[logic.DialogType.BubbleChat]
+    components[logic.DialogType.BubbleNarration] = components[logic.DialogType.BubbleChat]
+    components[logic.DialogType.BubblePlayerDialog] = components[logic.DialogType.BubbleChat]
+    components[logic.DialogType.BubbleOtherPlayerDialog] = components[logic.DialogType.BubbleChat]
+    components[logic.DialogType.BubblePlayerImagineDialogue] = components[logic.DialogType.BubbleChat]
   --endregion
 
   

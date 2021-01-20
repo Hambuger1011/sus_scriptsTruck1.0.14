@@ -146,7 +146,6 @@ pb.t_BookDialog =
 	next_4 = 0,                                                                                        --int32,转进对话4
 	hidden_egg4 = 0,                                                                                   --int32,彩蛋
 	modelid = 0,                                                                                       --int32,形象id
-	dialog2 = 0,                                                                                       --string,对白内容
 	sceneColor = 0,                                                                                    --string,场景颜色
 	propertyCheck = 0,                                                                                 --int32,属性检测
 }

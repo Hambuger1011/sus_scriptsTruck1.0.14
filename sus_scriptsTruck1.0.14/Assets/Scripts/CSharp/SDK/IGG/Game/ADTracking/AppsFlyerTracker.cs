@@ -29,7 +29,7 @@ namespace ADTracking
             AppsFlyer.setAppID ("1535571424");  // 由技术部提供，研发有不懂的地方可以联系技术部相关人员。
             AppsFlyer.trackAppLaunch (); // 启动事件跟踪（这边会上传安装等一些默认事件）
 #elif UNITY_ANDROID
-            AppsFlyer.setAppID ("com.igg.sdk.test"); // ！！！！请研发改成游戏对应的实际包名。
+            AppsFlyer.setAppID (SdkMgr.packageName); // ！！！！请研发改成游戏对应的实际包名。
             AppsFlyer.init("WEYqZmRBi6ZmFww2esj28Y", "AppsFlyerTrackerCallbacks"); // AppsFlyerKey由技术部提供，研发有不懂的地方可以联系技术部相关人员。另外第二个参数固定是"AppsFlyerTrackerCallbacks"
 #endif
         }

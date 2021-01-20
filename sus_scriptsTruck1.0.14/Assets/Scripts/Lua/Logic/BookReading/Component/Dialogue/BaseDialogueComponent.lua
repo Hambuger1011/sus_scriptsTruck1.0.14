@@ -206,16 +206,7 @@ end
 ---@param typertext Text @文本
 ---@param faceExpr Face @表情
 ---@param PlayerName Text @玩家名
-function BaseDialogueComponent:ShowDetails(
-    Dialogue,
-    typertext,
-    faceExpr,
-    PlayerName,
-    DialogBox,
-    DialogBoxContent,
-    isPhoneCallMode,
-    vSideType
-)
+function BaseDialogueComponent:ShowDetails(Dialogue, typertext, faceExpr, PlayerName, DialogBox, DialogBoxContent, isPhoneCallMode, vSideType,PhoneArrow)
     --logic.debug.Log(self.__cname)
 
     local showText = logic.bookReadingMgr:ReplaceChar(self.cfg.dialog)
@@ -246,6 +237,13 @@ function BaseDialogueComponent:ShowDetails(
                 )
         else
             typertext.text = ''
+            if(PhoneArrow)then
+                if(self.cfg.dialog_type == logic.DialogType.PlayerImagineDialogue)then  --PlayerImagineDialogue = 7,  --主角思考下的对话（主角心理活动）
+                    PhoneArrow.sprite = CS.ResourceManager.Instance:GetUISprite("PhoneCall/bg_chatarrow_phonecall5");
+                else
+                    PhoneArrow.sprite = CS.ResourceManager.Instance:GetUISprite("PhoneCall/bg_chatarrow_phonecall3");
+                end
+            end
         end
         
         local callback = function()

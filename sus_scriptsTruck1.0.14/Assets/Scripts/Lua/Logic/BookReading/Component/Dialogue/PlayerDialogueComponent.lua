@@ -66,8 +66,9 @@ function PlayerDialogueComponent:Play()
             self.ui.DialogBox.transform,
             self.ui.DialogBoxContent,
             self.isPhoneCallMode,
-            0
-        )
+            0,
+            self.ui.PlayerArrow
+    )
     
 end
 

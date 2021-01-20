@@ -49,6 +49,9 @@
                 case 28:
                     type1 = EBubbleType.Right;
                     break;
+                case 36:
+                    type1 = EBubbleType.Left;
+                    break;
             }
 
             this.type2 = (EBubbleBoxType)cfg.bubbleType;

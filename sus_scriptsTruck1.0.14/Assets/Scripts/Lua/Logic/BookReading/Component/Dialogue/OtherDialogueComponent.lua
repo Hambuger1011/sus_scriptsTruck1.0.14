@@ -71,7 +71,8 @@ function OtherDialogueComponent:Play()
         self.ui.DialogBox.transform,
         self.ui.DialogBoxContent,
         self.isPhoneCallMode,
-        1
+        1,
+            nil
         )
 end
 

@@ -277,6 +277,7 @@ function UI:GetPhone_PlayerDialogue()
         ui.DialogBox = logic.cs.LuaHelper.GetComponent(ui.transform,"PlayerDialogue",typeof(logic.cs.Image))
         ui.DialogText = logic.cs.LuaHelper.GetComponent(ui.transform,"PlayerDialogue/PlayerDialogueText",typeof(logic.cs.TextTyperAnimation))
         ui.PlayerName = logic.cs.LuaHelper.GetComponent(ui.transform,"PlayerDialogue/NameTitle/Name",typeof(logic.cs.Text))
+        ui.PlayerArrow = logic.cs.LuaHelper.GetComponent(ui.transform,"PlayerDialogue/PlayerArrow",typeof(logic.cs.Image))
         --ui.FaceExpr = nil
         --ui.imgBgDot = nil
         

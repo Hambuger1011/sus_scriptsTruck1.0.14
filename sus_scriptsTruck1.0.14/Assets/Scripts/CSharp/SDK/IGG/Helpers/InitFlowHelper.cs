@@ -381,11 +381,6 @@ namespace Helper.Login
         public bool OnInstall()
         {
             Debug.Log("AD-OnInstall");
-            Dictionary<string, object> trackedParams = new Dictionary<string, object>();
-            trackedParams.Add("userid", AppsFlyerManager.Instance._IGGid);
-
-            // //AF事件记录*安装时间记录Install
-            // AppsFlyerManager.Instance.Send("INSTALL", trackedParams);
             return true;
         }
 

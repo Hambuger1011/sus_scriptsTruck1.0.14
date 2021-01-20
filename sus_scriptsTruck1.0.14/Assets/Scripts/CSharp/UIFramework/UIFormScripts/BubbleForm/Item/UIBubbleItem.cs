@@ -34,7 +34,9 @@
         private Transform headGroup;
         private Text nameText;
         private Image HeadImg;
-        
+        private Image textbg;
+        private Image voicebg;
+
         public abstract Vector2 size { get; }
         
         public UIBubbleItem(EBubbleType type, UIBubbleList list, GameObject pfb)
@@ -48,10 +50,14 @@
             headGroup = this.transform.Find("head");
             HeadImg = headGroup.GetComponent<Image>();
             nameText = headGroup.Find("name").GetComponent<Text>();
-
+            nameText = headGroup.Find("name").GetComponent<Text>();
+       
             boxes[(int)EBubbleBoxType.Text] = new UIBubbleBox_Text(this,this.transform.Find("box/text"));
             boxes[(int)EBubbleBoxType.Image] = new UIBubbleBox_Image(this, this.transform.Find("box/image"));
             boxes[(int)EBubbleBoxType.Voice] = new UIBubbleBox_Voice(this, this.transform.Find("box/voice"));
+
+            textbg = this.transform.Find("box/text/bg").GetComponent<Image>();
+            voicebg = this.transform.Find("box/voice/bg").GetComponent<Image>();
         }
 
 
@@ -116,6 +122,20 @@
                 {
                     nameText.text = DialogDisplaySystem.Instance.GetRoleName(data.bookCfg.role_id, UserDataManager.Instance.UserData.CurSelectBookID);
                     HeadImg.sprite = DialogDisplaySystem.Instance.GetUITexture("UI/PhoneCallHeadIcon/" + data.bookCfg.role_id);
+
+                    Debug.LogError("dialog_type:" + data.bookCfg.dialog_type);
+
+                    if (data.bookCfg.dialog_type==36)
+                    {
+                        textbg.sprite = ResourceManager.Instance.GetUISprite("BubbleForm/bg_think");
+                        voicebg.sprite = ResourceManager.Instance.GetUISprite("BubbleForm/bg_think");
+                    }
+                    else if (data.bookCfg.dialog_type == 27)
+                    {
+                        textbg.sprite = ResourceManager.Instance.GetUISprite("BubbleForm/bg_chat_left");
+                        voicebg.sprite = ResourceManager.Instance.GetUISprite("BubbleForm/bg_chat_left");
+                    }
+           
                 }
             }
         }
