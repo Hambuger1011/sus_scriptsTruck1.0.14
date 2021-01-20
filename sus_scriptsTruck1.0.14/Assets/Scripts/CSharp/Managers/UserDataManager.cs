@@ -661,7 +661,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     //检查免费钥匙
     private void CheckFreeKeyState()
     {
-        if (userInfo != null && userInfo.data != null && m_userData.KeyNum < 2 && userInfo.data.userinfo.end_time <= 0 && FreeKeyApplyInfo.data.free_key > 0)
+        if (userInfo != null && userInfo.data != null && m_userData.KeyNum < 2 && userInfo.data.userinfo.end_time <= 0 && userInfo.data.userinfo.free_key > 0)
         {
             GameHttpNet.Instance.FreeKeyApply((object arg) =>
             {

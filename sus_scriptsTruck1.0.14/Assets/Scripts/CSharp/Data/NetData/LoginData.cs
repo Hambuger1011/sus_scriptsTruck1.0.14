@@ -267,6 +267,7 @@ public class UserInfo
     public int is_vip;
     //public List<int> booklist;      //已购买的书本列表
     //public int yardid;              //院子扩建数:1-5 默认0代表未开启宠物功能
+    public int free_key;
 }
 
 public class ThirdPartyReturnInfo
@@ -293,7 +294,6 @@ public class FreeKeyInfo
 public class FreeKeyApply
 {
     public int end_time;
-    public int free_key;
 }
 public class DayLoginInfo
 {
