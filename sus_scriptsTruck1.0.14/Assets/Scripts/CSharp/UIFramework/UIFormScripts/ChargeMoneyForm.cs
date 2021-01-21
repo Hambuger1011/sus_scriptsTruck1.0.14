@@ -536,7 +536,7 @@ public class ChargeMoneyForm : BaseUIForm
 
         GameHttpNet.Instance.GetMallAwardStatus((resultObj) => {
             string result = resultObj.ToString();
-            LOG.Info("----GetShopListCallBack---->" + result);
+            LOG.Info("----GetMallAwardStatus---->" + result);
             JsonObject jo = JsonHelper.JsonToJObject(result);
             if (jo != null)
             {

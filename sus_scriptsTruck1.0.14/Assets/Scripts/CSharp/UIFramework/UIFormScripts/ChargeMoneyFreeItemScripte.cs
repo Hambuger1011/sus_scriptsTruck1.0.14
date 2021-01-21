@@ -81,6 +81,7 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
         {
             ButtonText.text = CTextManager.Instance.GetText(463);
             StopCountDown();
+            UpdateItem();
         }
     }
     
@@ -92,6 +93,30 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
             CTimerManager.Instance.RemoveTimer(TimeSequence);
             TimeSequence = -1;
         }
+    }
+
+    private void UpdateItem()
+    {
+        
+        GameHttpNet.Instance.GetMallAwardStatus((resultObj) => {
+            string result = resultObj.ToString();
+            LOG.Info("----GetMallAwardStatus---->" + result);
+            JsonObject jo = JsonHelper.JsonToJObject(result);
+            if (jo != null)
+            {
+                LoomUtil.QueueOnMainThread((param) =>
+                {
+                    if (jo.code == 200)
+                    {
+                        UserDataManager.Instance.mallAwardStatus = JsonHelper.JsonToObject<HttpInfoReturn<MallAwardStatus>>(result);
+                        if (UserDataManager.Instance.mallAwardStatus != null)
+                        {
+                            var mallAwardStatusData = UserDataManager.Instance.mallAwardStatus.data;
+                            SetData(mallAwardStatusData.diamond,mallAwardStatusData.finish,mallAwardStatusData.countdown);
+                        }
+                    }
+                }, null);
+            } });
     }
 
     public void BuyItem(PointerEventData data)
