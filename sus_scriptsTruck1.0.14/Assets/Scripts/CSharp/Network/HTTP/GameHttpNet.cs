@@ -1337,6 +1337,40 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     }
 
     /// <summary>
+    /// 获取商城免费钻石状态
+    /// </summary>
+    public void GetMallAwardStatus(EventHandler vCallBackHandler)
+    {
+        string url = "api_getMallAwardStatus";
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+
+    /// <summary>
+    /// 获取商城免费钻石奖励
+    /// </summary>
+    /// <param name="vBookId"></param>
+    public void ReceiveMallAward(EventHandler vCallBackHandler)
+    {
+        string url = "api_receiveMallAward";
+        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        this.Post(url, parameters, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+
+    /// <summary>
     /// 生成用户充值订单
     /// </summary>
     public void GetOrderFormInfo(int vShopId, string vPaymentName, string vRefreshToken, int vsource,

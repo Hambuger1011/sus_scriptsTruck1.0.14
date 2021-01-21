@@ -391,6 +391,33 @@ public class content
     public string detail;
 }
 
+//获取商城免费钻石状态
+public class MallAwardStatus
+{
+    public int finish; //是否已完成所有奖励,0未完成,1已完成
+    public int diamond; //当前奖励钻石数量
+    public int key; //当前奖励钥匙数量
+    public int last_receive_time;
+    public int countdown; //倒计时
+}
+
+//商城免费钻石奖励列表
+public class MallAward
+{
+    public int finish; //是否已完成所有奖励,0未完成,1已完成
+    public int diamond; //当前奖励钻石数量
+    public int key; //当前奖励钥匙数量
+    public int last_receive_time;
+    public int countdown; //倒计时
+    public List<ReceiveMallAwardResultInfo> user_info; //用户信息
+}
+
+public class ReceiveMallAwardResultInfo
+{
+    public int bkey;
+    public int diamond;
+}
+
 //商店信息列表
 public class ShopListCont
 {

@@ -13,12 +13,14 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
 {
     public Image ShowImage, bgImage;
     public Text ButtonText;
+    public Text DiamondText;
     public GameObject  CollectButton;
     public RectTransform rectTransform;
     public GameObject Free;
     private bool PlayShopSucce = false;
     private ShopItemInfo mItemInfo;
-    private int Timecount = 3900;
+    private int Timecount = 0;
+    private bool CanReceive = false;
 
     void Start()
     {
@@ -32,11 +34,37 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
 
     private void Property()
     {
-        string ImagePath = "ChargeMoneyForm/shop_icon_dimand";
-        ShowImage.sprite = ResourceManager.Instance.GetUISprite(ImagePath);
-        bgImage.sprite = ResourceManager.Instance.GetUISprite("ChargeMoneyForm/bg_img");
+        // string ImagePath = "ChargeMoneyForm/shop_icon_dimand";
+        // ShowImage.sprite = ResourceManager.Instance.GetUISprite(ImagePath);
+        // bgImage.sprite = ResourceManager.Instance.GetUISprite("ChargeMoneyForm/bg_img");
+
+        var mallAwardStatusData = UserDataManager.Instance.mallAwardStatus.data;
+        SetData(mallAwardStatusData.diamond,mallAwardStatusData.finish,mallAwardStatusData.countdown);
+    }
+
+    private void SetData(int diamond , int finish , int countdown)
+    {
         
-        TimeSequence = CTimerManager.Instance.AddTimer(1000, 0, ShowFreeKeyCountDown);
+        DiamondText.text = diamond.ToString();
+        if (finish == 1)
+        {
+            ButtonText.text = "00:00 Refresh";
+            CanReceive = false;
+        }
+        else
+        {
+            if (countdown == 0)
+            {
+                ButtonText.text = "FREE";
+                CanReceive = true;
+            }
+            else
+            {
+                Timecount = countdown;
+                TimeSequence = CTimerManager.Instance.AddTimer(1000, 0, ShowFreeKeyCountDown);
+                CanReceive = false;
+            }
+        }
     }
 
     //计算剩余时间，并显示倒计时
@@ -66,7 +94,25 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
     public void BuyItem(PointerEventData data)
     {
         AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
-        
+        if (CanReceive)
+        {
+            GameHttpNet.Instance.ReceiveMallAward((resultObj) =>
+            {
+                string result = resultObj.ToString();
+                LOG.Info("----ReceiveMallAward---->" + result);
+                JsonObject jo = JsonHelper.JsonToJObject(result);
+                if (jo != null)
+                {
+                    LoomUtil.QueueOnMainThread((param) =>
+                    {
+                        if (jo.code == 200)
+                        {
+                            HttpInfoReturn<MallAward> mallAwardData = JsonHelper.JsonToObject<HttpInfoReturn<MallAward>>(result);
+                            SetData(mallAwardData.data.diamond,mallAwardData.data.finish,mallAwardData.data.countdown);
+                        }
+                    }, null);
+                } });
+        }
     }
 
     /// <summary>

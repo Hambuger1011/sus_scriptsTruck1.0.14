@@ -534,20 +534,37 @@ public class ChargeMoneyForm : BaseUIForm
             //DOTween.To(() => Scrollbar.value, (value) => Scrollbar.value = value, 1, 0.5f);
         }
 
-        if (UserDataManager.Instance.shopList == null)
-        {
-            firstEnd = true;
-            GameHttpNet.Instance.GetShopList(GetShopListCallBack);
-        }
-        else
-        {
-            if (!firstEnd)
+        GameHttpNet.Instance.GetMallAwardStatus((resultObj) => {
+            string result = resultObj.ToString();
+            LOG.Info("----GetShopListCallBack---->" + result);
+            JsonObject jo = JsonHelper.JsonToJObject(result);
+            if (jo != null)
             {
-                firstEnd = true;
-                Showstate(mMoneyType);
+                LoomUtil.QueueOnMainThread((param) =>
+                {
+                    if (jo.code == 200)
+                    {
+                        UserDataManager.Instance.mallAwardStatus = JsonHelper.JsonToObject<HttpInfoReturn<MallAwardStatus>>(result);
+                        if (UserDataManager.Instance.mallAwardStatus != null)
+                        {
+                            if (UserDataManager.Instance.shopList == null)
+                            {
+                                firstEnd = true;
+                                GameHttpNet.Instance.GetShopList(GetShopListCallBack);
+                            }
+                            else
+                            {
+                                if (!firstEnd)
+                                {
+                                    firstEnd = true;
+                                    Showstate(mMoneyType);
 
-            }
-        }
+                                }
+                            }
+                        }
+                    }
+                }, null);
+            } });
 
     }
 

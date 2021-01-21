@@ -219,6 +219,8 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<SetProgressResultInfo> setProgressResultInfo;   // 设置用户进度后的，返回的结果
     public HttpInfoReturn<BookCostChapterListCont<BookCostChapterItemInfo>> bookCostChapterList;   // 设置用户进度后的，返回的结果
     public HttpInfoReturn<ShopListCont> shopList;   // 商品列表信息，返回的结果
+    public HttpInfoReturn<MallAwardStatus> mallAwardStatus;   // 商品列表信息，返回的结果
+    public HttpInfoReturn<MallAward> mallAward;   // 商品列表信息，返回的结果
     public HttpInfoReturn<OrderFormInfo> orderFormInfo;   // 生成用户充值订单信息
     public HttpInfoReturn<OrderFormSubmitResultInfo> orderFormSubmitResultInfo;   // 充值订单提交结果信息
     public HttpInfoReturn<HwBuyResultInfo> hwBuyResultInfo;   // 充值订单提交结果信息
