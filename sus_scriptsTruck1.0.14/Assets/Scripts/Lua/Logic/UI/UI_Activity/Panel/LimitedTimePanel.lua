@@ -279,7 +279,8 @@ function LimitedTimePanel:GetRewardConfig_Response()
         local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
         Num.text = "x".. v.num;
         if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-            Icon.sprite = Cache.PropCache.SpriteData[3]
+            local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+            Icon.sprite = sprite
         else
             Icon.sprite = Cache.PropCache.SpriteData[v.id]
         end

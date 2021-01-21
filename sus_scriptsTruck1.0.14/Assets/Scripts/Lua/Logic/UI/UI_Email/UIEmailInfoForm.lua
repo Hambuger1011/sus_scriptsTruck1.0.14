@@ -30,6 +30,9 @@ function UIEmailInfoForm:OnInitView()
     self.type4 = self.uiBinding:Get('Type4').gameObject
     self.type2 = self.uiBinding:Get('Type2').gameObject
     self.gitItemBg = self.uiBinding:Get('GitItemBg').gameObject
+    self.gitItemBg2 = self.uiBinding:Get('GitItemBg2').gameObject
+    self.scrollView = self.uiBinding:Get('ScrollView').gameObject
+    self.scrollView2 = self.uiBinding:Get('ScrollView2').gameObject
     self.timeText = self.uiBinding:Get('TimeText', typeof(logic.cs.Text))
     self.bookText = self.uiBinding:Get('BookText', typeof(logic.cs.Text))
     self.bodyText = self.uiBinding:Get('BodyText', typeof(logic.cs.Text))
@@ -91,9 +94,21 @@ function UIEmailInfoForm:SetEmailData(id)
         self.type4:SetActiveEx(false)
         self.gitBg:SetActiveEx(false)
     elseif(Info.msg_type == 2)then  --2奖励信息
-
+        local ItemNum = #Info.item_list
         if (Info.price_bkey and tonumber(Info.price_bkey) > 0) then
-            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            ItemNum = ItemNum + 1
+        end
+        if (Info.price_diamond and tonumber(Info.price_diamond) > 0) then
+            ItemNum = ItemNum + 1
+        end
+        local gitItemBg = self.gitItemBg
+        if ItemNum > 5 then
+            gitItemBg = self.gitItemBg2
+        end
+        self.scrollView:SetActiveEx(not (ItemNum > 5));
+        self.scrollView2:SetActiveEx(ItemNum > 5);
+        if (Info.price_bkey and tonumber(Info.price_bkey) > 0) then
+            local item = logic.cs.GameObject.Instantiate(self.Item,gitItemBg.transform,false)
             local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
             local Icon = item:GetComponent(typeof(logic.cs.Image))
             Text.text = "x".. Info.price_bkey;
@@ -101,7 +116,7 @@ function UIEmailInfoForm:SetEmailData(id)
             item:SetActiveEx(true)
         end
         if (Info.price_diamond and tonumber(Info.price_diamond) > 0) then
-            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            local item = logic.cs.GameObject.Instantiate(self.Item,gitItemBg.transform,false)
             local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
             local Icon = item:GetComponent(typeof(logic.cs.Image))
             Text.text = "x".. Info.price_diamond;
@@ -110,12 +125,13 @@ function UIEmailInfoForm:SetEmailData(id)
         end
 
         for k, v in pairs(Info.item_list) do
-            local item = logic.cs.GameObject.Instantiate(self.Item,self.gitItemBg.transform,false)
+            local item = logic.cs.GameObject.Instantiate(self.Item,gitItemBg.transform,false)
             local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
             local Icon = item:GetComponent(typeof(logic.cs.Image))
             Text.text = "x".. v.num;
             if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-                Icon.sprite = Cache.PropCache.SpriteData[3]
+                local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                Icon.sprite = sprite
             else
                 local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
                 Icon.sprite = sprite
@@ -129,7 +145,6 @@ function UIEmailInfoForm:SetEmailData(id)
             self.receiveButton.gameObject:SetActiveEx(false);
         end
 
-        self.gitItemBg:SetActiveEx(true)
         self.gitBg:SetActiveEx(true)
 
         self.type2:SetActiveEx(true)
@@ -141,7 +156,8 @@ function UIEmailInfoForm:SetEmailData(id)
         else
             self.btnText.text = "RECEIVE";
         end
-        self.gitItemBg:SetActiveEx(false);
+        self.scrollView:SetActiveEx(false);
+        self.scrollView2:SetActiveEx(false);
         self.gitBg:SetActiveEx(true);
         self.type2:SetActiveEx(true);
         self.type4:SetActiveEx(false);

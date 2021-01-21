@@ -75,7 +75,8 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
             local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
             Num.text = "x".. v.num;
             if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-                Icon.sprite = Cache.PropCache.SpriteData[3]
+                local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                Icon.sprite = sprite
                 Icon:SetNativeSize()
                 Icon.transform.localScale = core.Vector3.New(0.4,0.4,1)
             else

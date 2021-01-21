@@ -43,7 +43,11 @@ function Q_DressUpData:GetInfoByType(_type)
     return self.typelist;
 end
 
-
+function Q_DressUpData:GetSprite(id)
+    local config_info=self:GetMapData(id);
+    local sprite = CS.ResourceManager.Instance:GetUISprite("DressUpForm/"..config_info.resources);
+    return sprite
+end
 
 
 
