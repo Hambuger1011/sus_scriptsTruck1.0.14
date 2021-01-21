@@ -23,7 +23,7 @@ end
 function Q_DressUpData:GetMapData(_id)
     local mapData = nil;
     for i, v in pairs(self.dataCacheMap) do
-        if(v.Id == _id) then
+        if(v.Id == tonumber(_id)) then
             mapData=v;
             break;
         end
