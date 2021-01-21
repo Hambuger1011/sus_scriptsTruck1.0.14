@@ -29,6 +29,8 @@ function RedDotCache:__init()
     self.first_recharge=0;
     --【邀请奖励未领取: 1.有未领取 0.没有】
     self.invite_award=0;
+    --【商城免费钻石未领取: 1.有未领取 0.没有】
+    self.mall_award=0;
 
 
 
@@ -54,6 +56,8 @@ function RedDotCache:__init()
     self.FirstRechargePoint=false;
     --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
     self.InviteAwardPoint=false;
+    --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
+    self.MallAwardPoint=false;
 end
 
 function RedDotCache:UpdateData(data)
@@ -68,6 +72,7 @@ function RedDotCache:UpdateData(data)
     self.se_move_finish=data.se_move_finish;
     self.first_recharge=data.first_recharge;
     self.invite_award=data.invite_award;
+    self.mall_award=data.mall_award;
 end
 
 

@@ -409,7 +409,7 @@ public class MallAward
     public int key; //当前奖励钥匙数量
     public int last_receive_time;
     public int countdown; //倒计时
-    public List<ReceiveMallAwardResultInfo> user_info; //用户信息
+    public ReceiveMallAwardResultInfo user_info; //用户信息
 }
 
 public class ReceiveMallAwardResultInfo

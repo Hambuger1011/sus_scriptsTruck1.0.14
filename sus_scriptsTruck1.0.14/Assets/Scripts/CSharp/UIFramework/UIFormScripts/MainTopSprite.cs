@@ -28,7 +28,7 @@ public class MainTopSprite : BaseUIForm
     public Button KeyDetailBtn, DiamondDetailBtn;
     public GameObject KeyDetail, DiamondDetail;
     public Button DetailMask;
-
+    public GameObject RedImg;
     public GameObject CloseIcon, Log;
 
 
@@ -131,6 +131,10 @@ public class MainTopSprite : BaseUIForm
         CurUI = _CurUI;
         gameOpenDim = true;
         //AddNowOpenUIList(1);
+    }
+    public void SetRedImage(bool show)
+    {
+        RedImg.SetActiveEx(show);
     }
     public void CtrlIconShow(bool value)
     {

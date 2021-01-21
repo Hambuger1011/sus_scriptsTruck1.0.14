@@ -356,6 +356,8 @@ function MainFormControl:GetRedDot(result)
         local first_recharge = Cache.RedDotCache.first_recharge;
         --【邀请奖奖励未领取: 1.有未领取 0.没有】
         local invite_award = Cache.RedDotCache.invite_award;
+        --【商城免费钻石未领取: 1.有未领取 0.没有】
+        local mall_award = Cache.RedDotCache.mall_award;
 
         local ui_downform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
 
@@ -430,6 +432,15 @@ function MainFormControl:GetRedDot(result)
         else
             --红点标识 【活动页面里】【限时活动页】【邀请奖励红点】【开关】
             Cache.RedDotCache.InviteAwardPoint=false;
+        end
+
+        --【商城免费钻石未领取: 1.有未领取 0.没有】
+        if(mall_award==1)then
+            --红点标识 【主页面】【商城免费钻石红点】【开关】
+            Cache.RedDotCache.MallAwardPoint=true;
+        else
+            --红点标识 【主页面】【商城免费钻石红点】【开关】
+            Cache.RedDotCache.MallAwardPoint=false;
         end
 
         --【第三方登录绑定奖励未领取 1已领取，0未领取】
@@ -513,6 +524,13 @@ function MainFormControl:GetRedDot(result)
         end
 
         GameController.ActivityControl:RefreshRed();
+
+        --刷新商城免费钻石红点
+        local uiform = logic.cs.CUIManager:GetForm(logic.cs.UIFormName.MainFormTop)
+        if uiform then
+            local MainTopSprite = uiform:GetComponent(typeof(CS.MainTopSprite))
+            MainTopSprite:SetRedImage(Cache.RedDotCache.MallAwardPoint);
+        end
 
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)

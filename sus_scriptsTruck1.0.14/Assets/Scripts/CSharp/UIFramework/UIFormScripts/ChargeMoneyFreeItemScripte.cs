@@ -8,12 +8,14 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Helpers;
 using pb;
+using UGUI;
 
 public class ChargeMoneyFreeItemScripte : MonoBehaviour
 {
     public Image ShowImage, bgImage;
     public Text ButtonText;
     public Text DiamondText;
+    public Text FinishText;
     public GameObject  CollectButton;
     public RectTransform rectTransform;
     public GameObject Free;
@@ -24,7 +26,7 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
 
     void Start()
     {
-        UIEventListener.AddOnClickListener(CollectButton, BuyItem);
+        UIEventListener.AddOnClickListener(bgImage.gameObject, BuyItem);
     }
     public void Counter()
     {
@@ -46,16 +48,17 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
     {
         
         DiamondText.text = diamond.ToString();
+        CollectButton.gameObject.SetActive(finish != 1);
+        FinishText.gameObject.SetActive(finish == 1);
         if (finish == 1)
         {
-            ButtonText.text = "00:00 Refresh";
             CanReceive = false;
         }
         else
         {
             if (countdown == 0)
             {
-                ButtonText.text = "FREE";
+                ButtonText.text = CTextManager.Instance.GetText(463);
                 CanReceive = true;
             }
             else
@@ -76,7 +79,7 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
         }
         else
         {
-            ButtonText.text = "FREE";
+            ButtonText.text = CTextManager.Instance.GetText(463);
             StopCountDown();
         }
     }
@@ -107,8 +110,23 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
                     {
                         if (jo.code == 200)
                         {
-                            HttpInfoReturn<MallAward> mallAwardData = JsonHelper.JsonToObject<HttpInfoReturn<MallAward>>(result);
-                            SetData(mallAwardData.data.diamond,mallAwardData.data.finish,mallAwardData.data.countdown);
+                            UserDataManager.Instance.mallAward = JsonHelper.JsonToObject<HttpInfoReturn<MallAward>>(result);
+                            var mallAwardData = UserDataManager.Instance.mallAward.data;
+                            SetData(mallAwardData.diamond,mallAwardData.finish,mallAwardData.countdown);
+                            if (mallAwardData.user_info != null)
+                            {
+                                if (mallAwardData.user_info.diamond > 0)
+                                    UserDataManager.Instance.ResetMoney(2, mallAwardData.user_info.diamond);
+                                if (mallAwardData.user_info.bkey > 0)
+                                    UserDataManager.Instance.ResetMoney(1, mallAwardData.user_info.bkey);
+                            }
+
+                            CUIForm uiform = CUIManager.Instance.GetForm(UIFormName.MainFormTop);
+                            if (uiform != null)
+                            {
+                                MainTopSprite mainTopSprite = uiform.GetComponent<MainTopSprite>();
+                                mainTopSprite.SetRedImage(false);
+                            }
                         }
                     }, null);
                 } });
@@ -121,9 +139,9 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
     public void Disposal()
     {
         StopCountDown();
+        UIEventListener.RemoveOnClickListener(bgImage.gameObject, BuyItem);
         ShowImage.sprite = null;
         bgImage.sprite = null;
-        UIEventListener.RemoveOnClickListener(CollectButton, BuyItem);
         Destroy(gameObject);
     }
 
