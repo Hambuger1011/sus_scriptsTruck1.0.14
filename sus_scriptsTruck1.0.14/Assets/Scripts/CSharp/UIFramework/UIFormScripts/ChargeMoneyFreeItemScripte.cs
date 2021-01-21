@@ -124,38 +124,47 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
         AudioManager.Instance.PlayTones(AudioTones.dialog_choice_click);
         if (CanReceive)
         {
-            GameHttpNet.Instance.ReceiveMallAward((resultObj) =>
-            {
-                string result = resultObj.ToString();
-                LOG.Info("----ReceiveMallAward---->" + result);
-                JsonObject jo = JsonHelper.JsonToJObject(result);
-                if (jo != null)
-                {
-                    LoomUtil.QueueOnMainThread((param) =>
-                    {
-                        if (jo.code == 200)
-                        {
-                            UserDataManager.Instance.mallAward = JsonHelper.JsonToObject<HttpInfoReturn<MallAward>>(result);
-                            var mallAwardData = UserDataManager.Instance.mallAward.data;
-                            SetData(mallAwardData.diamond,mallAwardData.finish,mallAwardData.countdown);
-                            if (mallAwardData.user_info != null)
-                            {
-                                if (mallAwardData.user_info.diamond > 0)
-                                    UserDataManager.Instance.ResetMoney(2, mallAwardData.user_info.diamond);
-                                if (mallAwardData.user_info.bkey > 0)
-                                    UserDataManager.Instance.ResetMoney(1, mallAwardData.user_info.bkey);
-                            }
-
-                            CUIForm uiform = CUIManager.Instance.GetForm(UIFormName.MainFormTop);
-                            if (uiform != null)
-                            {
-                                MainTopSprite mainTopSprite = uiform.GetComponent<MainTopSprite>();
-                                mainTopSprite.SetRedImage(false);
-                            }
-                        }
-                    }, null);
-                } });
+#if UNITY_EDITOR
+            ReceiveMallAward();
+#else
+            GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd_Activity((() => { ReceiveMallAward();}));
+#endif   
         }
+    }
+
+    private void ReceiveMallAward()
+    {
+        GameHttpNet.Instance.ReceiveMallAward((resultObj) =>
+        {
+            string result = resultObj.ToString();
+            LOG.Info("----ReceiveMallAward---->" + result);
+            JsonObject jo = JsonHelper.JsonToJObject(result);
+            if (jo != null)
+            {
+                LoomUtil.QueueOnMainThread((param) =>
+                {
+                    if (jo.code == 200)
+                    {
+                        UserDataManager.Instance.mallAward = JsonHelper.JsonToObject<HttpInfoReturn<MallAward>>(result);
+                        var mallAwardData = UserDataManager.Instance.mallAward.data;
+                        SetData(mallAwardData.diamond,mallAwardData.finish,mallAwardData.countdown);
+                        if (mallAwardData.user_info != null)
+                        {
+                            if (mallAwardData.user_info.diamond > 0)
+                                UserDataManager.Instance.ResetMoney(2, mallAwardData.user_info.diamond);
+                            if (mallAwardData.user_info.bkey > 0)
+                                UserDataManager.Instance.ResetMoney(1, mallAwardData.user_info.bkey);
+                        }
+
+                        CUIForm uiform = CUIManager.Instance.GetForm(UIFormName.MainFormTop);
+                        if (uiform != null)
+                        {
+                            MainTopSprite mainTopSprite = uiform.GetComponent<MainTopSprite>();
+                            mainTopSprite.SetRedImage(false);
+                        }
+                    }
+                }, null);
+            } });
     }
 
     /// <summary>
