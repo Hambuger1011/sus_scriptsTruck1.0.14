@@ -78,6 +78,11 @@ public static class IOSPostProcessBuild {
             proj.AddBuildProperty(target, "HEADER_SEARCH_PATHS", "$(SRCROOT)/Libraries/"+d);//头文件搜索路径
         }
 
+        proj.AddBuildProperty(target, "LIBRARY_SEARCH_PATHS", "$(inherited)");
+        proj.AddBuildProperty(target, "USER_HEADER_SEARCH_PATHS","$(inherited)");
+
+        proj.SetBuildProperty(target, "CLANG_ENABLE_MODULES", "YES");
+
         //禁用bitcode
         proj.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
 
