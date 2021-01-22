@@ -16,7 +16,7 @@ public static class IOSPostProcessBuild {
     public static bool s_isEnableDebug = true;
     public static string strMacro = string.Empty;
 
-    [PostProcessBuild]
+    [PostProcessBuild(2)]
     public static void OnPostprocessBuild(BuildTarget buildTarget, string projRootPath)
     {
         if (buildTarget != BuildTarget.iOS)

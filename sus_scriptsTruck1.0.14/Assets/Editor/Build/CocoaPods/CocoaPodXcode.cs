@@ -9,19 +9,11 @@ namespace GoogleMobileAds
 {
     public class CocoaPodXcode
     {
-        [PostProcessBuildAttribute(9996)]
+        [PostProcessBuild(1)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string projRootPath)
         {
-            if (buildTarget != BuildTarget.iOS)
-            {
-                return;
-            }
-            RunPodUpdate(projRootPath);
-        }
-
-        public static void RunPodUpdate(string projRootPath)
-        {
-#if !UNITY_CLOUD_BUILD
+            UnityEngine.Debug.Log(@"1111111111111111111111111111111111111111111");
+#if UNITY_IOS
             // Copy the podfile into the project.
             string podfile = "Assets/Editor/Build/CocoaPods/Podfile";
             string destPodfile = projRootPath + "/Podfile";
@@ -32,7 +24,7 @@ namespace GoogleMobileAds
                 return;
             }
 
-            UnityEngine.Debug.Log(@"locate Podfile in:\n"+podfile);
+            UnityEngine.Debug.Log(@"locate Podfile in:\n" + podfile);
             File.Copy(podfile, destPodfile, true);
 #endif
         }
