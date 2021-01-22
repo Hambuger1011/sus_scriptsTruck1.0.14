@@ -38,12 +38,10 @@ UIBookReadingElement
     public GameObject BookFree2;
 
     //道具相关
-    bool isCheckedKeyPropBtn = true;
     public Button btnKeyProp;
     public Image propImage = null;
     public GameObject objKeyPropDeleteLine;
     
-    bool isCheckedKeyPropBtn2 = true;
     public Button btnKeyProp2;
     public Image propImage2 = null;
     public GameObject objKeyPropDeleteLine2;
@@ -91,6 +89,7 @@ UIBookReadingElement
 
         UIEventListener.RemoveOnClickListener(KeyButton, KeyButtonOnclicke);
         EventDispatcher.RemoveMessageListener(EventEnum.OnKeyNumChange.ToString(), OnKeyNumChange);
+        EventDispatcher.RemoveMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
 
 
        // UIEventListener.RemoveOnClickListener(UIMask, MastClose);
@@ -118,6 +117,8 @@ UIBookReadingElement
 
         btnKeyProp.onClick.AddListener(OnClickKeyPropBtn);
         btnKeyProp2.onClick.AddListener(OnClickKeyPropBtn);
+        RefreshKeyPropBtnState();
+        EventDispatcher.AddMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
     }
 
 
@@ -195,7 +196,7 @@ UIBookReadingElement
                     PriceTitle.text = CTextManager.Instance.GetText(278) + m_curChapterID;
 
                     //ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_icon1_03");
-                    RefreshKeyPropBtnState2();
+                    RefreshKeyPropBtnState();
                 }
                 else
                 {
@@ -833,59 +834,40 @@ UIBookReadingElement
 
     private void OnClickKeyPropBtn()
     {
-        isCheckedKeyPropBtn = !isCheckedKeyPropBtn;
+        UserDataManager.Instance.is_use_prop = !UserDataManager.Instance.is_use_prop;
         RefreshKeyPropBtnState();
-        RefreshKeyPropBtnState2();
     }
-    private void OnClickKeyPropBtn2()
+    private void SetPropItemHandler(Notification vNot)
     {
-        isCheckedKeyPropBtn2 = !isCheckedKeyPropBtn2;
-        RefreshKeyPropBtnState2();
+        PropInfoItem propInfoItem = vNot.Data as PropInfoItem;
+        RefreshKeyPropBtnState(false);
     }
-    void RefreshKeyPropBtnState()
+    void RefreshKeyPropBtnState(bool needSet = true)
     {
         PropInfo info = UserDataManager.Instance.userPropInfo_Key;
         if (info == null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0)
         {
             btnKeyProp.gameObject.SetActive(false);
-            return;
-        }
-        btnKeyProp.gameObject.SetActive(true);
-        objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
-        if (isCheckedKeyPropBtn)
-            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
-        else
-            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
-        if (isCheckedKeyPropBtn)
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
-        }
-        else
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, null);
-        }
-    }
-    void RefreshKeyPropBtnState2()
-    {
-        PropInfo info = UserDataManager.Instance.userPropInfo_Key;
-        if (info == null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0)
-        {
             btnKeyProp2.gameObject.SetActive(false);
             return;
         }
+        btnKeyProp.gameObject.SetActive(true);
         btnKeyProp2.gameObject.SetActive(true);
-        objKeyPropDeleteLine2.SetActive(isCheckedKeyPropBtn);
-        if (isCheckedKeyPropBtn)
-            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
-        else
-            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
-        if (isCheckedKeyPropBtn)
+        objKeyPropDeleteLine.SetActive(UserDataManager.Instance.is_use_prop);
+        objKeyPropDeleteLine2.SetActive(UserDataManager.Instance.is_use_prop);
+        if (UserDataManager.Instance.is_use_prop)
         {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+            if (needSet)
+                UserDataManager.Instance.SetLuckyPropItem(true, info.discount_list[0]);
         }
         else
         {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, null);
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
+            propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
+            if (needSet)
+                UserDataManager.Instance.SetLuckyPropItem(false, null);
         }
     }
 }

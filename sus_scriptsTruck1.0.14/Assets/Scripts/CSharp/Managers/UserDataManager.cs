@@ -308,7 +308,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<BookBarrageCountList> BookBarrageCountList;
     public HttpInfoReturn<BookBarrageInfoList> BookBarrageInfoList;
 
-    public int is_use_prop = 0; //是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
+    public bool is_use_prop = false; //是否使用钥匙优惠价道具: 1.使用道具 0不使用（非必传，默认不使用）
     public PropInfoItem propInfoItem; //当前使用的道具信息
     public PropInfo userPropInfo_Outfit;//装扮类型道具信息
     public PropInfo userPropInfo_Choice;//选项类型道具信息
@@ -320,29 +320,31 @@ public class UserDataManager : Singleton<UserDataManager> {
     {
         if (item != null)
         {
-            is_use_prop = isUse ? 1:0;
+            is_use_prop = isUse;
             propInfoItem = item;
             SendSeq = GameHttpNet.Instance.SendSeq + 1;
         }
         else
         {
-            is_use_prop = 0;
+            is_use_prop = false;
             propInfoItem = null;
         }
+        EventDispatcher.Dispatch(EventEnum.SetPropItem, propInfoItem);
     }
     //public void UpdatePropItem()
     public void UpdatePropItemWhenServerCallback()
     {
-        if (is_use_prop == 1)
+        if (is_use_prop)
         {
             propInfoItem.prop_num--;
         }
 
         if (GameHttpNet.Instance.SendSeq == SendSeq)
         {
-            is_use_prop = 0;
+            is_use_prop = false;
             propInfoItem = null;
         }
+        EventDispatcher.Dispatch(EventEnum.SetPropItem, propInfoItem);
     }
 
 

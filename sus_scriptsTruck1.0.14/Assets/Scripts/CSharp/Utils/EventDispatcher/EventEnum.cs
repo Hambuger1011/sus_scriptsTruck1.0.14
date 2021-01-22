@@ -191,6 +191,7 @@ public class EventEnum
     public static readonly string GooglePayResultInfo = "GooglePayResultInfo";
     public static readonly string ChangeBookReadingBgEnable = "ChangeBookReadingBgEnable";
     public static readonly string ResidentMoneyInfo = "ResidentMoneyInfo";
+    public static readonly string SetPropItem = "SetPropItem";
 
     public static readonly string CheckIsCanCountDown = "CheckIsCanCountDown";
     public static readonly string GetEmailShowHint = "GetEmailShowHint";

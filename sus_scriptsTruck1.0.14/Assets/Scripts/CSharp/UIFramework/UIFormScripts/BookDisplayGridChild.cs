@@ -84,12 +84,11 @@ public class BookDisplayGridChild : MonoBehaviour {
     private GameObject CloseButton;
 
     //道具相关
-    bool isCheckedKeyPropBtn = true;
     Button btnKeyProp = null;
+    GameObject propObj = null;
     Image propImage = null;
     GameObject objKeyPropDeleteLine = null;
     //道具相关_reset
-    bool isCheckedKeyPropBtn2 = true;
     Button btnKeyProp2 = null;
     Image propImage2 = null;
     GameObject objKeyPropDeleteLine2 = null;
@@ -129,21 +128,24 @@ public class BookDisplayGridChild : MonoBehaviour {
         //BookSGame.onClick.AddListener(BookSGameOnclicke);//书本的按钮
         returns.onClick.AddListener(ReturnButtonOnclicke);//重置按钮
 
-        btnKeyProp = transform.Find("PlayButton/Image/btnKeyProp").GetComponent<Button>();
+        btnKeyProp = transform.Find("PlayButton/Image/propObj/btnKeyProp").GetComponent<Button>();
+        propObj = transform.Find("PlayButton/Image/propObj").gameObject;
         propImage = btnKeyProp.transform.Find("Image").GetComponent<Image>();
-        objKeyPropDeleteLine = transform.Find("PlayButton/Image/btnKeyProp/line_delete").gameObject;
+        objKeyPropDeleteLine = transform.Find("PlayButton/Image/propObj/btnKeyProp/line_delete").gameObject;
         btnKeyProp.gameObject.SetActive(false);
         objKeyPropDeleteLine.SetActive(false);
         btnKeyProp.onClick.AddListener(OnClickKeyPropBtn);
-        RefreshKeyPropBtnState();
 
         btnKeyProp2 = transform.Find("ReseGame/Bg/BtnResetChapter/NeedKey/btnKeyProp").GetComponent<Button>();
         propImage2 = btnKeyProp2.transform.Find("Image").GetComponent<Image>();
         objKeyPropDeleteLine2 = transform.Find("ReseGame/Bg/BtnResetChapter/NeedKey/btnKeyProp/line_delete").gameObject;
         btnKeyProp2.gameObject.SetActive(false);
         objKeyPropDeleteLine2.SetActive(false);
-        btnKeyProp2.onClick.AddListener(OnClickKeyPropBtn2);
-        RefreshKeyPropBtnState2();
+        btnKeyProp2.onClick.AddListener(OnClickKeyPropBtn);
+        
+        RefreshKeyPropBtnState();
+        
+        EventDispatcher.AddMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
 
         //UIEventListener.AddOnClickListener(ShareButton.gameObject, OnShareHandler);//分享按钮
         UIEventListener.AddOnClickListener(PlayButton.gameObject, OnPlayerHandler);
@@ -162,6 +164,11 @@ public class BookDisplayGridChild : MonoBehaviour {
 
     }
     
+    private void SetPropItemHandler(Notification vNot)
+    {
+        PropInfoItem propInfoItem = vNot.Data as PropInfoItem;
+        RefreshKeyPropBtnState(false);
+    }
 
     private void OnShareHandler(PointerEventData data)
     {
@@ -284,6 +291,7 @@ public class BookDisplayGridChild : MonoBehaviour {
         UIEventListener.RemoveOnClickListener(ReseMask, ReseMaskClose);
 
         UIEventListener.RemoveOnClickListener(CloseButton, Close);
+        EventDispatcher.RemoveMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
     }
     
 
@@ -384,6 +392,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(295);
                 PlayButtonEx.SetActive(false);
                 btnKeyProp.gameObject.SetActive(false);
+                propObj.gameObject.SetActive(false);
             }
             else
             {
@@ -391,6 +400,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(296);
                 MyBooksDisINSTANCE.Instance.chapterIDSet(ChapterId);//储存当前的章节
                 CheckChapterNeedPay();
+                propObj.gameObject.SetActive(true);
             }
         }
         else
@@ -402,6 +412,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(297);
                 PlayButtonEx.SetActive(false);
                 btnKeyProp.gameObject.SetActive(false);
+                propObj.gameObject.SetActive(false);
             }
              else
              {
@@ -409,6 +420,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                  PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(298);
                 PlayButtonEx.SetActive(false);
                 btnKeyProp.gameObject.SetActive(false);
+                propObj.gameObject.SetActive(false);
             }
         }
 
@@ -550,7 +562,7 @@ return function()
         {
             //显示钥匙
             NeedKey.SetActive(true);
-            RefreshKeyPropBtnState2();
+            RefreshKeyPropBtnState();
             //【限时活动免费读书 显示标签】
             this.Limit_time_Free();
         }
@@ -618,7 +630,6 @@ return function()
                     PlayKeyShowImage.SetActive(true);
 
                     RefreshKeyPropBtnState();
-                    RefreshKeyPropBtnState2();
 
                     //【限时活动免费读书 显示标签】
                     this.Limit_time_Free();
@@ -713,88 +724,36 @@ return function()
 
     private void OnClickKeyPropBtn()
     {
-        isCheckedKeyPropBtn = !isCheckedKeyPropBtn;
+        UserDataManager.Instance.is_use_prop = !UserDataManager.Instance.is_use_prop;
         RefreshKeyPropBtnState();
     }
-    void RefreshKeyPropBtnState()
+    void RefreshKeyPropBtnState(bool needSet = true)
     {
         PropInfo info = UserDataManager.Instance.userPropInfo_Key;
         if(info==null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0)
         {
             btnKeyProp.gameObject.SetActive(false);
-            return;
-        }
-        btnKeyProp.gameObject.SetActive(true);
-        objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
-        if (isCheckedKeyPropBtn)
-            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
-        else
-            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
-        if (isCheckedKeyPropBtn)
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, info.discount_list[0]);
-        }
-        else
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn, null);
-        }
-
-        //PropInfoItem propInfoItem = null;
-        //float max_discount = float.MinValue;
-        //foreach (var v in info.discount_list)
-        //{
-        //    float discount = float.MinValue;
-        //    if (float.TryParse(v.discount, out discount))
-        //    {
-        //        if(discount> max_discount)
-        //        {
-        //            max_discount = discount;
-        //            propInfoItem = v;
-        //        }
-        //    }
-        //}
-        //objKeyPropDeleteLine.SetActive(isCheckedKeyPropBtn);
-        //if (isCheckedKeyPropBtn)
-        //{
-        //    int continueCost = 0;
-        //    var curChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(mBookId, ChapterId);
-        //    if (curChapterPrice != null)
-        //        continueCost = curChapterPrice.chapterPay;
-        //    else
-        //        continueCost = int.Parse(mBookDetail.CharacterPricesArray[ChapterId - 1]);
-
-
-        //    PlayKeyShowImageText.text = continueCost.ToString();
-        //}
-    }
-
-    private void OnClickKeyPropBtn2()
-    {
-        isCheckedKeyPropBtn2 = !isCheckedKeyPropBtn2;
-        RefreshKeyPropBtnState2();
-    }
-    void RefreshKeyPropBtnState2()
-    {
-        PropInfo info = UserDataManager.Instance.userPropInfo_Key;
-        if (info == null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0)
-        {
             btnKeyProp2.gameObject.SetActive(false);
             return;
         }
+        btnKeyProp.gameObject.SetActive(true);
         btnKeyProp2.gameObject.SetActive(true);
-        objKeyPropDeleteLine2.SetActive(isCheckedKeyPropBtn2);
-        if (isCheckedKeyPropBtn2)
+        objKeyPropDeleteLine.SetActive(UserDataManager.Instance.is_use_prop);
+        objKeyPropDeleteLine2.SetActive(UserDataManager.Instance.is_use_prop);
+        if (UserDataManager.Instance.is_use_prop)
+        {
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
             propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
+            if (needSet)
+                UserDataManager.Instance.SetLuckyPropItem(true, info.discount_list[0]);
+        }
         else
+        {
+            propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
             propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
+            if (needSet)
+                UserDataManager.Instance.SetLuckyPropItem(false, null);
+        }
 
-        if (isCheckedKeyPropBtn2)
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn2, info.discount_list[0]);
-        }
-        else
-        {
-            UserDataManager.Instance.SetLuckyPropItem(isCheckedKeyPropBtn2, null);
-        }
     }
 }
