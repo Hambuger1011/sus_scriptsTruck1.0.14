@@ -421,6 +421,8 @@ public class UserDataManager : Singleton<UserDataManager> {
     public bool SigningIn = false;
 
     public bool FirstChargeHaveShown = false;
+    
+    public bool BookPopupHaveShown = false;
 
     public string InviteCode = String.Empty;
 

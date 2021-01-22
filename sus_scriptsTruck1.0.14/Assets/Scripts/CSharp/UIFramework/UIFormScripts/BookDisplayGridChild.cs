@@ -143,6 +143,7 @@ public class BookDisplayGridChild : MonoBehaviour {
         objKeyPropDeleteLine2.SetActive(false);
         btnKeyProp2.onClick.AddListener(OnClickKeyPropBtn);
         
+        UserDataManager.Instance.is_use_prop = true;
         RefreshKeyPropBtnState();
         
         EventDispatcher.AddMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
@@ -628,8 +629,6 @@ return function()
                     PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_jsnale_03");
                     PlayButtonText.anchoredPosition = new Vector2(-32, 3f);
                     PlayKeyShowImage.SetActive(true);
-
-                    RefreshKeyPropBtnState();
 
                     //【限时活动免费读书 显示标签】
                     this.Limit_time_Free();

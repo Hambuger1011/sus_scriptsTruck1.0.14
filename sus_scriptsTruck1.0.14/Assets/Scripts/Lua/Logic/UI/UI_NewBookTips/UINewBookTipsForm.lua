@@ -8,7 +8,7 @@ local RightPos = Vector2.New(640, 58)
 local MiddlePos = Vector2.New(4, 58)
 local ItemList = {}
 local Index = 1
-local newBookList = { 4, 5, 8, 9 }
+local newBookList = {}
 
 UINewBookTipsForm.config = {
     ID = uiid.UINewBookTipsForm,
@@ -51,12 +51,19 @@ function UINewBookTipsForm:OnInitView()
     self.Item.onClick:AddListener(function()
         self:ViewBook()
     end)
+end
 
+function UINewBookTipsForm:SetData(data)
+    newBookList = data
+    self.LeftBtn.gameObject:SetActive( #newBookList > 1)
+    self.RightBtn.gameObject:SetActive(#newBookList > 1)
     for k, v in pairs(newBookList) do
         local item = logic.cs.GameObject.Instantiate(self.Item.gameObject, self.Bg.transform, false)
         local Image = item:GetComponent(typeof(logic.cs.Image))
-        logic.cs.ABSystem.ui:DownloadBookCover(v, function(id, refCount)
-            if v ~= id then
+        local Button = item:GetComponent(typeof(logic.cs.Button))
+        local Icon = CS.DisplayUtil.GetChild(item.gameObject, "Icon")
+        logic.cs.ABSystem.ui:DownloadBookCover(v.book_id, function(id, refCount)
+            if v.book_id ~= id then
                 refCount:Release()
                 return
             end
@@ -65,11 +72,21 @@ function UINewBookTipsForm:OnInitView()
                 Image.sprite = sprite
             end
         end)
+        if tostring(v.tag) == "New" then
+            Icon:SetActive(true)
+        else
+            Icon:SetActive(false)
+        end
         if k == Index then
             item.transform.anchoredPosition = MiddlePos
         else
             item.transform.anchoredPosition = RightPos
         end
+
+        Button.onClick:RemoveAllListeners()
+        Button.onClick:AddListener(function()
+            self:ViewBook()
+        end)
         item:SetActive(true)
         table.insert(ItemList, item)
     end
@@ -99,7 +116,7 @@ end
 
 function UINewBookTipsForm:ViewBook()
     local bookinfo = {};
-    bookinfo.book_id = newBookList[Index];
+    bookinfo.book_id = newBookList[Index].book_id;
     GameHelper.BookClick(bookinfo);
     self:OnExitClick()
 end

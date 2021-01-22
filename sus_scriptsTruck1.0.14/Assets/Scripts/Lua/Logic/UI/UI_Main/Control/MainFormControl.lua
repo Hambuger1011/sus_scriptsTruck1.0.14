@@ -189,7 +189,18 @@ function MainFormControl:GetSelfBookInfo(result)
             end)
         end
 
-        logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
+        if not logic.cs.UserDataManager.BookPopupHaveShown then
+            logic.gameHttp:GetRecommendBookPopup(function(result1)
+                logic.debug.Log("----GetRecommendBookPopup---->" .. result1);
+                local json1 = core.json.Derialize(result1);
+                local code1 = tonumber(json1.code)
+                if(code1 == 200)then
+                    logic.cs.UserDataManager.BookPopupHaveShown = true
+                    local uiView = logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
+                    uiView:SetData(json1.data.book_list)
+                end
+            end)
+        end
 
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
