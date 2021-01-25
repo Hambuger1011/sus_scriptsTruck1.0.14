@@ -70,18 +70,10 @@ public class UIUpdateModule : BaseUIForm
         this.mUpdateFailPanel = DisplayUtil.GetChild(this.gameObject, "UpdateFailPanel").AddComponent<UpdateFailPanel>();
         this.mUpdateAgainPanel = DisplayUtil.GetChild(this.gameObject, "UpdateAgainPanel").AddComponent<UpdateAgainPanel>();
         this.loadImage = GameObject.Find("UIRect/BG").GetComponent<Image>();
-        this.loadImage.gameObject.SetActive(false);
-        var imgVersion = PlayerPrefs.GetString("LoadImageVersion");
         
+        var imgVersion = PlayerPrefs.GetString("LoadImageVersion");
         if (!string.IsNullOrEmpty(imgVersion))
-        {
-            DownloadMgr.Instance.DownloadLoadImg(imgVersion,DownloadOldCallBack);
-        }
-        else
-        {
-            this.loadImage.gameObject.SetActive(true);
-        }
-
+            this.loadImage.sprite = XLuaHelper.LoadSprite(string.Format("{0}cache/book/loading/0.jpg", GameUtility.WritablePath, 0));
     }
 
     public override void OnOpen()
@@ -196,16 +188,5 @@ public class UIUpdateModule : BaseUIForm
         this.mUpdateFailPanel.onClose();
         this.mUpdateAgainPanel.onClose();
     }
-    
-    private void DownloadOldCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
-    {
-        if (i != 0)
-        {
-            unityObjectRefCount.Release();
-            return;
-        }
-        this.loadImage.sprite = unityObjectRefCount.GetObject() as Sprite;
-        this.loadImage.gameObject.SetActive(true);
-    }
-    
+
 }

@@ -48,7 +48,6 @@ public class LaunchLoadingForm : BaseUIForm
     public override void OnOpen()
     {
         base.OnOpen();
-        this.LoadingBG.gameObject.SetActive(false);
 
         skeGraGo = this.transform.Find("Canvas/BG/LoadingBgAnim").gameObject;
 
@@ -350,21 +349,6 @@ public class LaunchLoadingForm : BaseUIForm
         LOG.Info("下载了新图 version="+version);
         PlayerPrefs.SetString("LoadImageVersion", version);
     }
-    private void DownloadOldCallBack(int i, UnityObjectRefCount unityObjectRefCount, string version)
-    {
-        if (i != 0)
-        {
-            unityObjectRefCount.Release();
-            return;
-        }
-        this.LoadingBG.sprite = unityObjectRefCount.GetObject() as Sprite;
-        this.LoadingBG.gameObject.SetActive(true);
-        LOG.Info("下载了旧图 version="+version);
-        if (!version.Equals(UserDataManager.Instance.ResVersion))
-        {
-            DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);
-        }
-    }
 
     IEnumerator LoadCoverImage()
     {
@@ -372,11 +356,14 @@ public class LaunchLoadingForm : BaseUIForm
         
         if (!string.IsNullOrEmpty(imgVersion))
         {
-            DownloadMgr.Instance.DownloadLoadImg(imgVersion,DownloadOldCallBack);
+            this.LoadingBG.sprite = XLuaHelper.LoadSprite(string.Format("{0}cache/book/loading/0.jpg", GameUtility.WritablePath, 0));
+            if (!imgVersion.Equals(UserDataManager.Instance.ResVersion))
+            {
+                DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);
+            }
         }
         else
         {
-            this.LoadingBG.gameObject.SetActive(true);
             DownloadMgr.Instance.DownloadLoadImg(UserDataManager.Instance.ResVersion,DownloadNewCallBack);
         }
         string url = null;
