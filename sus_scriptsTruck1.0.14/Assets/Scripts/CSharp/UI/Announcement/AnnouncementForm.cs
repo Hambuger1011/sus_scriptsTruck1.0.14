@@ -107,6 +107,7 @@ public class AnnouncementForm : BaseUIForm
     private void OnAgreeClick()
     {
         this.myForm.Close();
+        XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.WindowConfig:ShowNextWindow()");
         if (null == agreementSigningFile)
         {
             return;

@@ -81,14 +81,13 @@ public class IGGAgreementManager : Singleton<IGGAgreementManager>
                 // 代表该账号已同意过协议，游戏那边可以不用提示，Demo这边只是为了方便QA测试。
                 LOG.ShowIGGException(error);
             }
-                
-            return;
         }
         else
         {
             // 玩家上次同意协议还未超过24小时，所以就不向服务端请求该玩家的同意的协议情况。
             LOG.Error("24小时后再试或者这个场景下不需要请求协议同意情况。");
         }  
+        XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.WindowConfig:ShowNextWindow()");
     }
     
     /// <summary>

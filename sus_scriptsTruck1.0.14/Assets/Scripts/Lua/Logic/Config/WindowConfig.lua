@@ -29,8 +29,7 @@ function WindowConfig:SetWindowsList(data)
 end
 
 function WindowConfig:ShowFirstCharge()
-    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
-            and not logic.cs.IGGSDKMrg.isNewUser and FirstChargeNeedShown then
+    if  not logic.cs.IGGSDKMrg.isNewUser and FirstChargeNeedShown then
         logic.gameHttp:GetRewardConfig(function(result)
             if(string.IsNullOrEmpty(result))then return; end
             logic.debug.Log("----GetRewardConfig---->" .. result)
