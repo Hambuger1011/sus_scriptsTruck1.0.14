@@ -1036,7 +1036,7 @@ namespace cn.sharesdk.unity3d
 		 
 #elif UNITY_IPHONE
 		public string client_id = "dbe54b15-1939-4bfc-b6a0-c30a4af426a6";
-		public string redirect_uri = "ssdkmoba0b0c0d0://mob";
+		public string redirect_uri = "ssdk31c0505717a48://mob";
         public const int type = (int)PlatformType.SnapChat;
 #endif
 	}
