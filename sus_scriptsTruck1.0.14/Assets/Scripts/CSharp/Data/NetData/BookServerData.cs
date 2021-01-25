@@ -1201,7 +1201,7 @@ public class JsonDataTable
     public List<JDT_Version> version;//各个部分的版本信息
     public List<JDT_Book> book;//书本当前开放章节，总章节等
     public List<JDT_Chapter> chapter;// 某书本每个章节的起始和结束ID，章节介绍等信息
-    //public List<JDT_Skin> skin;//    肤色描述表
+    public List<JDT_Skin> skin;//    肤色描述表
     public List<JDT_ClothesPrice> clothes_price; //服装价格表
     public List<JDT_ModelPrice> model_price; //模型：头发、衣服定价表
     public List<JDT_RoleModel> role_model;//书本模型配置表

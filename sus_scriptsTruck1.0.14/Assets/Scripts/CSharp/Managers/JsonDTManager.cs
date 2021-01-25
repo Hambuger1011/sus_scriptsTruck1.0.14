@@ -119,6 +119,36 @@ public class JsonDTManager : Singleton<JsonDTManager>
         }
         #endregion
         
+        #region save skin
+        if (serJsonDataTable.skin != null)
+        {
+            int len = serJsonDataTable.skin.Count;
+            Dictionary<int,List<JDT_Skin>> itemDic = new Dictionary<int, List<JDT_Skin>>();
+            for (int i = 0; i < len; i++)
+            {
+                JDT_Skin itemJDT = serJsonDataTable.skin[i];
+                if (itemJDT != null)
+                {
+                    if (itemDic.TryGetValue(itemJDT.book_id, out List<JDT_Skin> itemList))
+                    {
+                        itemList.Add(itemJDT);
+                    }
+                    else
+                    {
+                        List<JDT_Skin> tempList = new List<JDT_Skin>();
+                        tempList.Add(itemJDT);
+                        itemDic.Add(itemJDT.book_id,tempList);
+                    }
+                }
+            }
+            foreach (var item in itemDic)
+            {
+                if (item.Value != null)
+                    SaveLocalVersionSkin(item.Key,item.Value);
+            }  
+        }
+        #endregion
+        
         #region save model_priceLocal
         if (serJsonDataTable.model_price != null)
         {
@@ -322,6 +352,44 @@ public JDT_ClothesPrice GetJDTClothesPrice(int vBookId, int vClothesId)
 public void SaveLocalVersionClothesPrice(int vBookId,List<JDT_ClothesPrice> vInfo)
 {
     SaveJDTItemToLocal(LocalVerBookClothesPriceFlag + vBookId, JsonHelper.ObjectToJson(vInfo));
+}
+
+/// <summary>
+/// 获取服装描述
+/// </summary>
+/// <param name="vBookId"></param>
+/// <param name="vClothesId"></param>
+/// <returns></returns>
+public JDT_Skin GetJDTSkin(int vBookId, int vClothesId)
+{
+    string resultStr = GetJDTItemByLocal(LocalVerBookSkinFlag + vBookId);
+    if (!string.IsNullOrEmpty(resultStr))
+    {
+        List<JDT_Skin> itemList = JsonHelper.JsonToObject<List<JDT_Skin>>(resultStr);
+        if (itemList != null)
+        {
+            int len = serJsonDataTable.skin.Count;
+            for (int i = 0; i < len; i++)
+            {
+                JDT_Skin result = serJsonDataTable.skin[i];
+                if (result != null  && result.book_id == vBookId && result.icon_id == vClothesId)
+                {
+                    return result;
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/// <summary>
+/// 保存在本地-服装描述
+/// </summary>
+/// <param name="vBookId"></param>
+/// <param name="vInfo"></param>
+public void SaveLocalVersionSkin(int vBookId,List<JDT_Skin> vInfo)
+{
+    SaveJDTItemToLocal(LocalVerBookSkinFlag + vBookId, JsonHelper.ObjectToJson(vInfo));
 }
 
 /// <summary>

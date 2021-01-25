@@ -375,7 +375,7 @@ function ChoiceWholeClothes:UpdateDetialsView()
 	if self.cfg.trigger == ChoiceType.Clothes then
 
 		local appearanceID = logic.bookReadingMgr:GetAppearanceID(bookData.PlayerDetailsID, 1, clothesID)
-		local skinCfg = logic.cs.GameDataMgr.table:GetSkinById(bookData.BookID,appearanceID)
+		local skinCfg = logic.cs.JsonDTManager:GetJDTSkin(bookData.BookID,appearanceID)
 		print("BookID:"..bookData.BookID.."==appearanceID:"..appearanceID)
 		if skinCfg==nil then
 			print("skinCfg为空")

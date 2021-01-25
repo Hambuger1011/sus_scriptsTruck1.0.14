@@ -111,18 +111,50 @@ public class BookDisplayForm : BaseUIForm
                 UserDataManager.Instance.bookJDTFormSever.data != null)
             {
                 BookJDTFormSever serverInfo = UserDataManager.Instance.bookJDTFormSever.data;
-                if(serverInfo.info != null)
-                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,serverInfo.info);
+                
+                JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(bookID);
                 if (serverInfo.book_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionBookDetail(mCurBookId,serverInfo.book_version);
+                    if(serverInfo.info != null)
+                        verInfo.book_version = serverInfo.info.book_version;
+                }
                 if (serverInfo.chapter_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionChapter(mCurBookId,serverInfo.chapter_version);
+                    if(serverInfo.info != null)
+                        verInfo.chapter_version = serverInfo.info.chapter_version;
+                }
                 if (serverInfo.clothes_price_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionClothesPrice(mCurBookId,serverInfo.clothes_price_version);
+                    if(serverInfo.info != null)
+                        verInfo.clothes_price_version = serverInfo.info.clothes_price_version;
+                }
                 if (serverInfo.model_price_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionModelPrice(mCurBookId,serverInfo.model_price_version);
+                    if(serverInfo.info != null)
+                        verInfo.model_price_version = serverInfo.info.model_price_version;
+                }
                 if (serverInfo.role_model_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionRoleModel(mCurBookId,serverInfo.role_model_version);
+                    if(serverInfo.info != null)
+                        verInfo.role_model_version = serverInfo.info.role_model_version;
+                }
+                if (serverInfo.skin_version != null)
+                {
+                    JsonDTManager.Instance.SaveLocalVersionSkin(mCurBookId,serverInfo.skin_version);
+                    if(serverInfo.info != null)
+                        verInfo.skin_version = serverInfo.info.skin_version;
+                }
+                
+                if (verInfo != null)
+                {
+                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,verInfo);
+                }
+                
             }
             
             GameHttpNet.Instance.GetBookDetailInfo(mCurBookId, GetBookDetailInfoCallBack);  //获得书本信息
@@ -1004,18 +1036,48 @@ public class BookDisplayForm : BaseUIForm
                 UserDataManager.Instance.bookJDTFormSever.data != null)
             {
                 BookJDTFormSever serverInfo = UserDataManager.Instance.bookJDTFormSever.data;
-                if(serverInfo.info != null)
-                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,serverInfo.info);
+                JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(bookID);
                 if (serverInfo.book_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionBookDetail(mCurBookId,serverInfo.book_version);
+                    if(serverInfo.info != null)
+                        verInfo.book_version = serverInfo.info.book_version;
+                }
                 if (serverInfo.chapter_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionChapter(mCurBookId,serverInfo.chapter_version);
+                    if(serverInfo.info != null)
+                        verInfo.chapter_version = serverInfo.info.chapter_version;
+                }
                 if (serverInfo.clothes_price_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionClothesPrice(mCurBookId,serverInfo.clothes_price_version);
+                    if(serverInfo.info != null)
+                        verInfo.clothes_price_version = serverInfo.info.clothes_price_version;
+                }
                 if (serverInfo.model_price_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionModelPrice(mCurBookId,serverInfo.model_price_version);
+                    if(serverInfo.info != null)
+                        verInfo.model_price_version = serverInfo.info.model_price_version;
+                }
                 if (serverInfo.role_model_version != null)
+                {
                     JsonDTManager.Instance.SaveLocalVersionRoleModel(mCurBookId,serverInfo.role_model_version);
+                    if(serverInfo.info != null)
+                        verInfo.role_model_version = serverInfo.info.role_model_version;
+                }
+                if (serverInfo.skin_version != null)
+                {
+                    JsonDTManager.Instance.SaveLocalVersionSkin(mCurBookId,serverInfo.skin_version);
+                    if(serverInfo.info != null)
+                        verInfo.skin_version = serverInfo.info.skin_version;
+                }
+                
+                if (verInfo != null)
+                {
+                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,verInfo);
+                }
             }
         }
     }
