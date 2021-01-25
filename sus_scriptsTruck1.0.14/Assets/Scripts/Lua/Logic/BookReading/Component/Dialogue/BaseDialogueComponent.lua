@@ -44,7 +44,6 @@ function BaseDialogueComponent:CollectRes(resTable)
                     roleIDs[bookData.character_id] = 1
                 end
                 for roleID, v in pairs(roleIDs) do
-                    --local roleModel = logic.bookReadingMgr.Res:GetRoleMode(self.cfg.modelid)
                     local clothGroupId = 1
                     if bookData.outfit_id and bookData.outfit_id > 0 then
                         clothGroupId = core.Mathf.Ceil(bookData.outfit_id / 4)

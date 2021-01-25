@@ -287,7 +287,7 @@ function BookReadingRes:LoadBookConfig(url,callback)
 			end
 			self.dialogItems = cfg.items
 			--logic.debug.LogError("count:"..tostring(#cfg.items))
-			self.bookDetailCfg = logic.DataManager.client:GetBookDetailByID(self.bookID)
+			self.bookDetailCfg = logic.cs.JsonDTManager:GetJDTBookDetailInfo(self.bookID)
 			callback(cfg.items)
 		end
 		
@@ -366,8 +366,8 @@ end
 
 
 function BookReadingRes:StartReading()
-	logic.bookReadingMgr.context.DescriptionColor = logic.cs.LuaHelper.ParseHtmlString("#"..self.bookDetailCfg.DescriptionColor)
-	logic.bookReadingMgr.context.DialogColor = logic.cs.LuaHelper.ParseHtmlString("#"..self.bookDetailCfg.DialogColor)
+	logic.bookReadingMgr.context.DescriptionColor = logic.cs.LuaHelper.ParseHtmlString("#424242FF")
+	logic.bookReadingMgr.context.DialogColor = logic.cs.LuaHelper.ParseHtmlString("#424242FF")
 end
 
 --endregion
@@ -434,16 +434,16 @@ function BookReadingRes:LoadRoleModelData()
 	self.roleModel = {}
 	self.roleModelData = {}
 
-	local list = logic.DataManager.client:GetCfgList('t_RoleModel')
-	for i,item in pairs(list) do
-		self.roleModel[item.model_id] = item
-	end
-	list = logic.DataManager.client:GetCfgList('t_RoleModelData')
-	for i,item in pairs(list) do
-		item.price = item.price or 0
-		local key = string.format('%d|%d|%d',item.book_id, item.type, item.item_id)
-		self.roleModelData[key] = item
-	end
+	--local list = logic.DataManager.client:GetCfgList('t_RoleModel')
+	--for i,item in pairs(list) do
+	--	self.roleModel[item.model_id] = item
+	--end
+	--list = logic.DataManager.client:GetCfgList('t_RoleModelData')
+	--for i,item in pairs(list) do
+	--	item.price = item.price or 0
+	--	local key = string.format('%d|%d|%d',item.book_id, item.type, item.item_id)
+	--	self.roleModelData[key] = item
+	--end
 end
 
 function BookReadingRes:GetRoleMode(modelID)

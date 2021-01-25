@@ -34,7 +34,7 @@ namespace BookReading
             UIEventListener.AddOnClickListener(this.EnterNameComfirm.gameObject, setPlayerName);
             this.EnterInputField.onValueChanged.AddListener(onEnterNameInputValueChange);
 
-            t_BookDetails bookDetail = GameDataMgr.Instance.table.GetBookDetailsById(DialogDisplaySystem.Instance.CurrentBookData.BookID);
+            t_BookDetails bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(DialogDisplaySystem.Instance.CurrentBookData.BookID);
 
             Color returnColor = Color.white;
             ColorUtility.TryParseHtmlString("#" + bookDetail.EnterNameColor, out returnColor);
@@ -58,7 +58,7 @@ namespace BookReading
             int leadingSex = 0;
             if(UserDataManager.Instance.UserData != null)
             {
-                t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+                t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
                 leadingSex = bookDetails.Gender;
             }
 

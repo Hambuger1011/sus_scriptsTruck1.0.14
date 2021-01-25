@@ -122,10 +122,10 @@ function BaseComponent:GetNextDialogID()
         local cfg = logic.cs.BookReadingWrapper:GetDialogById(self.cfg.ConsequenceID);
         if cfg and cfg.modelid ~= 0 then
             local outfitId = logic.bookReadingMgr.bookData.outfit_id
-            local roleModel = logic.bookReadingMgr.Res:GetRoleMode(cfg.modelid)
+            local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(bookData.BookID,cfg.modelid)
             local clothesIDs = roleModel.outfit_type3
             for k, v in pairs(clothesIDs) do
-                if v == outfitId then
+                if tonumber(v) == outfitId then
                     id = self:GetNextDialogIDBySelection(k - 1);
                     break
                 end

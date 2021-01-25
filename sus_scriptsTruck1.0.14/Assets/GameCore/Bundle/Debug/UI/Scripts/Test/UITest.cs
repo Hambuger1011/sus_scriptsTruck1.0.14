@@ -199,9 +199,9 @@ end");
     [Test("测试奖励广告")]
     void gplogin()
     {
-        SdkMgr.Instance.ads.ShowRewardBasedVideo("test", bsuc => {
-            // LOG.Error("测试奖励广告:" + bsuc);
-        });
+        // SdkMgr.Instance.ads.ShowRewardBasedVideo("test", bsuc => {
+        //     // LOG.Error("测试奖励广告:" + bsuc);
+        // });
     }
 #if CHANNEL_SPAIN
     [Test("测试广告")]

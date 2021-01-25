@@ -9,6 +9,7 @@ logic.cs.Type = CS.System.Type
 logic.cs.Application = CS.UnityEngine.Application
 
 logic.cs.UserDataManager = CS.UserDataManager.Instance
+logic.cs.JsonDTManager = CS.JsonDTManager.Instance
 logic.cs.PluginTools = CS.PluginTools.Instance
 logic.cs.GameDataMgr = CS.GameDataMgr.Instance
 logic.cs.GameMain = CS.GameFrameworkImpl.Instance

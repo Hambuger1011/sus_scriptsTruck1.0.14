@@ -9,13 +9,13 @@ function AutoSelectClothesModel:CollectRes(resTable)
 	local bookFolderPath = logic.bookReadingMgr.Res.bookFolderPath
 	local clothGroupId = 0
 	local modelId = tonumber(self.cfg.modelid)
-	local roleModel = logic.bookReadingMgr.Res:GetRoleMode(modelId)
-	local clothesID = roleModel.outfit_type3[1]
+	local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(logic.bookReadingMgr.bookData.BookID,modelId)
+	local clothesID = roleModel.outfit_type3[0]
 	if clothesID == nil then
 		logic.debug.LogError('clothesID为空')
 		return
 	end
-	clothGroupId = core.Mathf.Ceil(clothesID/4)
+	clothGroupId = core.Mathf.Ceil(tonumber(clothesID)/4)
 	if clothGroupId == 0 then
 		clothGroupId = 1
 	end
@@ -31,9 +31,9 @@ end
 
 function AutoSelectClothesModel:Play()
     local modelId = tonumber(self.cfg.modelid)
-	local roleModel = logic.bookReadingMgr.Res:GetRoleMode(modelId)
-	local clothesID = roleModel.outfit_type3[1]
-    if clothesID > 0 then
+	local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(logic.bookReadingMgr.bookData.BookID,modelId)
+	local clothesID = roleModel.outfit_type3[0]
+    if tonumber(clothesID) > 0 then
         local bookData = logic.bookReadingMgr.bookData
 		bookData.PlayerClothes = clothesID
 		bookData.outfit_id = clothesID

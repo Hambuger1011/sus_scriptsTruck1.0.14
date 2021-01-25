@@ -39,28 +39,28 @@ function ClientData:GetCfgMap(name,keyFunc)
 end
 
 function ClientData:GetBookDetailByID(id)
-    local map = self:GetCfgMap('t_BookDetails',function(cfg)
-        return cfg.id
-    end)
-    local cfg = map[id]
-    if not cfg then
-        logic.debug.LogError('获取t_BookDetails失败:ID = '..id)
-    end
-    if not cfg.strCharacterNames then
-        local json = string.gsub(cfg.BookCharacterName,'\'','\"')
-        cfg.strCharacterNames = core.json.Derialize(json)
-        if not cfg.strCharacterNames then
-            logic.debug.LogError(string.format('json解析错误:%s',json))
-        end
-    end
-    if not cfg.intChapterDivisionArray then
-        local json = string.gsub(cfg.ChapterDivision,'\'','\"')
-        cfg.intChapterDivisionArray = core.json.Derialize(json)
-        if not cfg.intChapterDivisionArray then
-            logic.debug.LogError(string.format('json解析错误:%s',json))
-        end
-    end
-    return cfg
+    --local map = self:GetCfgMap('t_BookDetails',function(cfg)
+    --    return cfg.id
+    --end)
+    --local cfg = map[id]
+    --if not cfg then
+    --    logic.debug.LogError('获取t_BookDetails失败:ID = '..id)
+    --end
+    --if not cfg.strCharacterNames then
+    --    local json = string.gsub(cfg.BookCharacterName,'\'','\"')
+    --    cfg.strCharacterNames = core.json.Derialize(json)
+    --    if not cfg.strCharacterNames then
+    --        logic.debug.LogError(string.format('json解析错误:%s',json))
+    --    end
+    --end
+    --if not cfg.intChapterDivisionArray then
+    --    local json = string.gsub(cfg.ChapterDivision,'\'','\"')
+    --    cfg.intChapterDivisionArray = core.json.Derialize(json)
+    --    if not cfg.intChapterDivisionArray then
+    --        logic.debug.LogError(string.format('json解析错误:%s',json))
+    --    end
+    --end
+    --return cfg
 end
 
 return ClientData.New()

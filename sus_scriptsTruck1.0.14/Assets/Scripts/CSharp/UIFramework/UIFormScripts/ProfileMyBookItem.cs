@@ -10,20 +10,24 @@ using UnityEngine.UI;
 public class ProfileMyBookItem : MonoBehaviour
 {
     private Image Ima;
-    private t_BookDetails m_bookDetailCfg;
+    private JDT_Book m_bookDetailCfg;
     private Text BookName;
     private Image Pross;
     public string bookTypeName = "";
     private Image BookTypeImg;
     private GameObject BookFree;
-    public void Init(t_BookDetails cfg)
+    private GameObject Tips;
+    public void Init(JDT_Book cfg)
     {
         FindGameobject();
         m_bookDetailCfg = cfg;
         Ima = transform.GetComponent<Image>();
-        Ima.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/Icon/", (cfg.BookIcon), ".png"));
 
-        BookName.text = m_bookDetailCfg.BookName.ToString();
+        Tips = DisplayUtil.GetChild(this.gameObject, "Tips");
+
+        Ima.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/Icon/", (cfg.id), ".png"));
+
+        BookName.text = m_bookDetailCfg.bookname.ToString();
         
         UIEventListener.AddOnClickListener(gameObject, OnBookClick);
 
@@ -33,9 +37,9 @@ public class ProfileMyBookItem : MonoBehaviour
 
         if (m_bookDetailCfg != null)
         {
-            int bookTypeIndex = m_bookDetailCfg.Type1Array[0];
+            int bookTypeIndex = int.Parse(m_bookDetailCfg.Type1Array[0]);
             //通过编号获取string
-            string bookTypeStr = m_bookDetailCfg.GeneroButtonName[bookTypeIndex];
+            string bookTypeStr = UserDataManager.Instance.GetBookTypeName(bookTypeIndex);
             BookTypeImg.sprite = ResourceManager.Instance.GetUISprite("Common/com_bq-" + bookTypeStr);
             BookTypeImg.gameObject.SetActive(true);
         }
@@ -74,10 +78,10 @@ public class ProfileMyBookItem : MonoBehaviour
         int lastDialogId = 2000;
         if (m_bookDetailCfg != null)
         {
-            if (m_bookDetailCfg.ChapterDivisionArray != null && m_bookDetailCfg.ChapterDivisionArray.Length > 0)
-            {
-                lastDialogId = m_bookDetailCfg.ChapterDivisionArray[m_bookDetailCfg.ChapterDivisionArray.Length - 1];
-            }
+            // if (m_bookDetailCfg.ChapterDivisionArray != null && m_bookDetailCfg.ChapterDivisionArray.Length > 0)
+            // {
+            //     lastDialogId = m_bookDetailCfg.ChapterDivisionArray[m_bookDetailCfg.ChapterDivisionArray.Length - 1];
+            // }
 
             // BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == m_bookDetailCfg.id);
             // if (bookData != null)
@@ -86,7 +90,7 @@ public class ProfileMyBookItem : MonoBehaviour
             //     Pross.fillAmount = 0;
 
             //【加载进度】
-            XLuaManager.Instance.CallFunction("GameHelper", "ShowProgress1", m_bookDetailCfg.id, Pross);
+            XLuaManager.Instance.CallFunction("GameHelper", "ShowProgress1", m_bookDetailCfg.id, Pross, Tips);
         }
     }
 

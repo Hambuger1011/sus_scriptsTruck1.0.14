@@ -151,10 +151,10 @@ function ChoiceWholeClothes:updateSelectCloths()
 	self.cost = 0
 	if self.cfg.trigger == ChoiceType.Clothes then
 		if not logic.cs.UserDataManager:CheckClothHadCost(bookData.BookID, clothesID) then
-			local priceCfg = logic.cs.GameDataMgr.table:GetClothePriceById(bookData.BookID, clothesID)
-			if priceCfg and priceCfg.ClothePrice > 0 then
-				self.buyType = priceCfg.PriceType
-				self.cost = priceCfg.ClothePrice
+			local priceCfg = logic.cs.JsonDTManager:GetJDTClothesPrice(bookData.BookID, clothesID)
+			if priceCfg and priceCfg.clotheprice > 0 then
+				self.buyType = priceCfg.pricetype
+				self.cost = priceCfg.clotheprice
 	
 				if self.buyType == BuyType.Video then
 					local seeVideoNum = logic.cs.UserDataManager:GetSeeVideoNumOfClothes(bookData.BookID, clothesID)

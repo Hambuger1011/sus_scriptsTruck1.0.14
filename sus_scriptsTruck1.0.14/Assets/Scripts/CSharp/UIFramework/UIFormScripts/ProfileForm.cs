@@ -788,11 +788,11 @@ public class ProfileForm : BaseUIForm
     {
         if (detailInfo != null)
         {
-            TxtRect1.text = GameDataMgr.Instance.table.GetPersonalityTxtById(1);
-            TxtRect2.text = GameDataMgr.Instance.table.GetPersonalityTxtById(2);
-            TxtRect3.text = GameDataMgr.Instance.table.GetPersonalityTxtById(3);
-            TxtRect4.text = GameDataMgr.Instance.table.GetPersonalityTxtById(4);
-            TxtRect5.text = GameDataMgr.Instance.table.GetPersonalityTxtById(5);
+            // TxtRect1.text = GameDataMgr.Instance.table.GetPersonalityTxtById(1);
+            // TxtRect2.text = GameDataMgr.Instance.table.GetPersonalityTxtById(2);
+            // TxtRect3.text = GameDataMgr.Instance.table.GetPersonalityTxtById(3);
+            // TxtRect4.text = GameDataMgr.Instance.table.GetPersonalityTxtById(4);
+            // TxtRect5.text = GameDataMgr.Instance.table.GetPersonalityTxtById(5);
 
             int maxValue = 0;
             if (detailInfo.mature > maxValue)
@@ -875,9 +875,9 @@ public class ProfileForm : BaseUIForm
                     else
                         perAB = perA * 10 + perB;
 
-                    t_analysisA anA = GameDataMgr.Instance.table.GetAnalysisAById(perAB);
-                    if (anA != null)
-                        PerTitleTxt.text = "  Your chart belongs to type " + anA.group + " personality";
+                    // t_analysisA anA = GameDataMgr.Instance.table.GetAnalysisAById(perAB);
+                    // if (anA != null)
+                    //     PerTitleTxt.text = "  Your chart belongs to type " + anA.group + " personality";
 
                     if (valueList != null && valueList.Length > 2)
                     {
@@ -903,11 +903,11 @@ public class ProfileForm : BaseUIForm
     //设置属性描述
     private void SetInterpretation(int vPerAB, int vPerC, int vA, int vB, int vC)
     {
-        string result = GameDataMgr.Instance.table.GetAnalysisATxtById(vPerAB, vA);
-        result += "\n\n" + GameDataMgr.Instance.table.GetAnalysisBTxtById(vPerAB, vB);
-        result += "\n\n" + GameDataMgr.Instance.table.GetAnalysisCTxtById(vPerC, vC);
+        // string result = GameDataMgr.Instance.table.GetAnalysisATxtById(vPerAB, vA);
+        // result += "\n\n" + GameDataMgr.Instance.table.GetAnalysisBTxtById(vPerAB, vB);
+        // result += "\n\n" + GameDataMgr.Instance.table.GetAnalysisCTxtById(vPerC, vC);
 
-        PerContentTxt.text = result;
+        //PerContentTxt.text = result;
         //PerContentTxt.rectTransform.sizeDelta = new Vector2(665, PerContentTxt.preferredHeight);
         //PersonInterpretationBg.rectTransform.sizeDelta = new Vector2(750, PerContentTxt.preferredHeight + 130);
 
@@ -1348,7 +1348,7 @@ public class ProfileForm : BaseUIForm
 
             ProfileMyBookItem ProfileMyBookItem = go.GetComponent<ProfileMyBookItem>();
             ProfileMyBookItem.bookTypeName = "mybookItem";
-            t_BookDetails bookDetail = GameDataMgr.Instance.table.GetBookDetailsById(myBookIDs[i]);
+            JDT_Book bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(myBookIDs[i]);
             ProfileMyBookItem.Init(bookDetail);
         }
 

@@ -12,6 +12,7 @@
     {
         readonly AbResBundle_Common bundleCommon = new AbResBundle_Common("common/");
         readonly AbResBundle_DataTable bundleDataTable = new AbResBundle_DataTable("datatable/");
+        readonly JsonRes_DataTable jsonDataTable = new JsonRes_DataTable("json/");
         //public  AbResBundle bundle = new AbResBundle("common/");
         public AbResBundle bundle(bool isDataTableAsset=false)
         {
@@ -61,12 +62,25 @@
             bool _bSuc=false;
             yield return bundleDataTable.DoLoadBundleConfig("config", (bSuc) =>
             {
+                //_bSuc = bSuc;
+                if (!bSuc)
+                {
+                    callback(bSuc);
+                }
+            }, (p) =>
+            {
+                progressCallBack(p * 0.4f + 0.5f);
+            });
+            
+            yield return jsonDataTable.DoLoadBundleConfig("config", (bSuc) =>
+            {
                 _bSuc = bSuc;
                 callback(bSuc);
             }, (p) =>
             {
-                progressCallBack(p * 0.5f + 0.5f);
+                progressCallBack(p * 0.1f + 0.9f);
             });
+            
             if (_bSuc)
             {
                 progressCallBack(1f);

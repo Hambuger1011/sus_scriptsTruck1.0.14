@@ -13,7 +13,6 @@ public class Notice : BaseUIForm
     public GameObject itemTpl,LButton,RButton,CloseButtonGa,TestScrollView,Mask;
     public Text TestCont;
 
-    private t_BulletinBoard data;
 
     public override void OnOpen()
     {
@@ -26,9 +25,7 @@ public class Notice : BaseUIForm
         UIEventListener.AddOnClickListener(RButton, MoveToR);
         UIEventListener.AddOnClickListener(CloseButtonGa, CloseButton);
         UIEventListener.AddOnClickListener(Mask, MaskClose);
-
-        data = GameDataMgr.Instance.table.GetBulletinBoardById(1);        
-        TestCont.text = data.text.ToString();
+  
         TestCont.gameObject.SetActive(true);
 
        
@@ -76,22 +73,6 @@ public class Notice : BaseUIForm
    
     public void BookRecommendReturn()
     {
-        int count = data.num;
-        for (int i = 0; i < count; i++)
-        {
-            var go = GameObject.Instantiate(itemTpl, pageView.content);
-            go.SetActiveEx(true);
-            var t = go.transform;
-            t.localPosition = Vector3.zero;
-            t.localScale = Vector3.one;
-            t.localRotation = Quaternion.identity;
-
-            go.GetComponent<NoticeTempletSprite>().Inite(data,i+1);
-        }
-
-        if (count>1)
-        {
-            pageBar.SetTipsCount(count);
-        }
+        
     }
 }

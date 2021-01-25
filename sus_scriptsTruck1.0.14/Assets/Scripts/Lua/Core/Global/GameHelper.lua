@@ -356,14 +356,14 @@ end
 --region 【展示书本标签】
 
 function GameHelper.ShowBookType(book_id,BookTypeImg)
-    local m_bookDetailCfg= CS.BookItemManage.Instance:GetBookDetails(book_id);
+    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
     if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
         local bookTypeIndex = m_bookDetailCfg.Type1Array[0];
 
         local num=bookTypeIndex-1;
         if(num<0)then return; end
         --通过编号获取string
-        local bookTypeStr = m_bookDetailCfg.GeneroButtonName[num];
+        local bookTypeStr = logic.cs.UserDataManager:GetBookTypeName(num);
         BookTypeImg.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
         BookTypeImg.gameObject:SetActive(true);
     else
@@ -377,15 +377,15 @@ end
 
 --展示书本标签2
 function GameHelper.ShowBookType2(book_id,BookTypeImg)
-    local m_bookDetailCfg= CS.BookItemManage.Instance:GetBookDetails(book_id);
+    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
     if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
-        if(m_bookDetailCfg.Type1Array.Length>1)then
-            local bookTypeIndex = m_bookDetailCfg.Type1Array[1];
+        if(m_bookDetailCfg.Type1Array ~= nil and m_bookDetailCfg.Type1Array.Count > 0)then
+            local bookTypeIndex = m_bookDetailCfg.Type1Array[0];
 
             local num=bookTypeIndex-1;
             if(num<0)then return; end
             --通过编号获取string
-            local bookTypeStr = m_bookDetailCfg.GeneroButtonName[num];
+            local bookTypeStr = logic.cs.UserDataManager:GetBookTypeName(num);
             BookTypeImg.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
             BookTypeImg.gameObject:SetActive(true);
         else
@@ -405,15 +405,19 @@ end
 
 --region 【展示书本进度条】
 
-function GameHelper.ShowProgress(book_id,ProgressBar)
+function GameHelper.ShowProgress(book_id,ProgressBar,Tips)
     local bookInfo=Cache.MainCache:GetMyBookByIndex(book_id);
     if(ProgressBar)then
         if(bookInfo==nil)then
             ProgressBar.gameObject:SetActive(false);
             ProgressBar.Value = 0;
+
+            GameHelper.ShowNewUpdate(book_id,0,Tips);
         else
             ProgressBar.gameObject:SetActive(true);
             ProgressBar.Value =bookInfo.dialogid / bookInfo.end_dialogid;
+
+            GameHelper.ShowNewUpdate(book_id,bookInfo.finish_max_chapter,Tips);
         end
     end
 end
@@ -421,17 +425,63 @@ end
 function GameHelper.ShowProgress1(obj)
     local bookid=obj[0];
     local ProgressBar=obj[1];
+    local Tips=obj[2];
     if(bookid and ProgressBar and  CS.XLuaHelper.is_Null(ProgressBar)==false)then
         local bookInfo=Cache.MainCache:GetMyBookByIndex(bookid);
         if(bookInfo==nil)then
             ProgressBar.gameObject:SetActive(false);
             ProgressBar.fillAmount = 0;
+
+            GameHelper.ShowNewUpdate(bookid,0,Tips);
         else
             ProgressBar.gameObject:SetActive(true);
             ProgressBar.fillAmount =bookInfo.dialogid / bookInfo.end_dialogid;
+
+            GameHelper.ShowNewUpdate(bookid,bookInfo.finish_max_chapter,Tips);
         end
     end
 end
+--endregion
+
+
+--region 【展示书本New、Update】
+
+function GameHelper.ShowNewUpdate(book_id,finish_max_chapter,Tips)
+    local bookinfo = logic.cs.UserDataManager:GetBookItemInfo(book_id);
+    if(bookinfo and Tips and CS.XLuaHelper.is_Null(Tips)==false)then
+
+        if(bookinfo.tag=="")then
+            Tips:SetActive(false);
+
+        else
+            if(bookinfo.chapteropen)then
+                if(finish_max_chapter>=bookinfo.chapteropen)then
+                    Tips:SetActive(false);
+                else
+                    Tips:SetActive(true);
+                    local BookTagText =CS.DisplayUtil.GetChild(Tips, "Text"):GetComponent("Text");
+
+                    if(bookinfo.tag=="New")then
+                        BookTagText.fontSize=20;
+                        BookTagText.text="NEW";
+                        return;
+                    end
+
+                    if(bookinfo.tag=="Update")then
+                        BookTagText.fontSize=16;
+                        BookTagText.text="Update";
+                        return;
+                    end
+                end
+            else
+                Tips:SetActive(false);
+            end
+        end
+    else
+        Tips:SetActive(false);
+    end
+end
+
 --endregion
 
 
@@ -462,7 +512,7 @@ end
 
 --region 【获取章节介绍】
 function GameHelper.GetChapterDiscription(book_id)
-    local m_bookDetailCfg= CS.BookItemManage.Instance:GetBookDetails(book_id);
+    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
     if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
         if(m_bookDetailCfg.ChapterDiscriptionArray and CS.XLuaHelper.is_Null(m_bookDetailCfg.ChapterDiscriptionArray)==false and m_bookDetailCfg.ChapterDiscriptionArray.Length>0)then
             return m_bookDetailCfg.ChapterDiscriptionArray[0];
@@ -481,9 +531,9 @@ end
 --region 【获取章节数量】
 
 function GameHelper.GetChapterCount(book_id)
-    local m_bookDetailCfg= CS.BookItemManage.Instance:GetBookDetails(book_id);
+    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
     if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
-        return m_bookDetailCfg.ChapterCount;
+        return m_bookDetailCfg.chaptercount;
     else
         if(book_id)then
             logic.debug.LogError("m_bookDetailCfg is Null + book_id:"..book_id);

@@ -32,14 +32,14 @@ function GotoChapter:Play()
 				if chapterid == bookData.ChapterID then	--同一章节里
 					logic.bookReadingMgr:PlayById(dialogid)
 				else
-					local bookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(bookID)
-					local chapterDivisionArray = bookDetails.ChapterDivisionArray
-					local idx = chapterid - 1
-					local beginDialogID = (idx < 1 and 1) or chapterDivisionArray[idx - 1];
+					local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid+1);
+					local beginDialogID = 1;
 					local endDialogID = beginDialogID
-					if (idx < chapterDivisionArray.Length) then
-						endDialogID = chapterDivisionArray[idx]
+					if chapterInfo ~= nil then
+						beginDialogID = chapterInfo.chapterstart
+						endDialogID = chapterInfo.chapterfinish
 					end
+					
 					if dialogid < beginDialogID then
 						dialogid = beginDialogID
 					end

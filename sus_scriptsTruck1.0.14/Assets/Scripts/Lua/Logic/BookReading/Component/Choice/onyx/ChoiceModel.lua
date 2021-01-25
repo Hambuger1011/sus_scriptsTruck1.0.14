@@ -178,9 +178,9 @@ function ChoiceModel:CollectRes(resTable)
 	resTable["Assets/Bundle/UI/BookReading/ChoiceModel.prefab"] = BookResType.UIRes
 
 	local bookFolderPath = logic.bookReadingMgr.Res.bookFolderPath
-	local roleModel = logic.bookReadingMgr.Res:GetRoleMode(self.cfg.modelid)
-	local clothesIDs = roleModel.outfit_type3
-	for k , v in pairs(clothesIDs) do
+	local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(logic.bookReadingMgr.bookData.BookID,self.cfg.modelid)
+	--local clothesIDs = roleModel.outfit_type3
+	--for k , v in pairs(clothesIDs) do
 		--local clothGroupId = math.ceil( v / 4 )
 		--if clothGroupId == 0 then
 		--	clothGroupId = 1
@@ -188,7 +188,7 @@ function ChoiceModel:CollectRes(resTable)
 		local clothGroupId = 1
 		local appearanceID = logic.bookReadingMgr:GetAppearanceID(1,0, clothGroupId)
 		resTable[bookFolderPath..'Role/'..appearanceID..'_SkeletonData.asset'] = BookResType.BookRes
-	end
+	--end
 end
 
 ---@overrider
@@ -239,10 +239,13 @@ function ChoiceModel:Play()
 	logic.bookReadingMgr.view:SetBottomActive(false)
 
 	local modelID = self.cfg.modelid
-	self.roleModel = logic.bookReadingMgr.Res:GetRoleMode(modelID)
+	self.roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(logic.bookReadingMgr.bookData.BookID,modelID)
 	skinTable={}
 	if self.roleModel and self.roleModel.character_type1 then
-		skinTable = self.roleModel.character_type1
+		for i = 0,  self.roleModel.character_type1.Count-1 do
+			--logic.debug.Log(self.roleModel.character_type1[i])
+			table.insert(skinTable,self.roleModel.character_type1[i])
+		end
 	end
 	canChoiceSkin = true
 	skinIsSelected = false
@@ -261,17 +264,17 @@ function ChoiceModel:Play()
 
 	local resetBtn = function()
 		NeedShowBtn = {}
-		if math.max(1, table.length(self.roleModel.hair_type2)) > 0 then	--头发
+		if math.max(1, self.roleModel.hair_type2.Count) > 0 then	--头发
 			table.insert(NeedShowBtn,uiView.rotateMask1)
 		else
 			uiView.rotateMask1.gameObject:SetActiveEx(false)
 		end
-		if table.length(self.roleModel.outfit_type3) > 0 then	--衣服
+		if self.roleModel.outfit_type3.Count > 0 then	--衣服
 			table.insert(NeedShowBtn,uiView.rotateMask2)
 		else
 			uiView.rotateMask2.gameObject:SetActiveEx(false)
 		end
-		if table.length(self.roleModel.character_type1) > 0 then	--皮肤
+		if self.roleModel.character_type1.Count > 0 then	--皮肤
 			table.insert(NeedShowBtn,uiView.rotateMask3)
 		else
 			uiView.rotateMask3.gameObject:SetActiveEx(false)
@@ -559,7 +562,7 @@ function ChoiceModel:OnSelectModeType(nType,isInit)
 	self.modelType = nType
 	local modelID = self.cfg.modelid
 	---@type t_RoleModel
-	self.roleModel = logic.bookReadingMgr.Res:GetRoleMode(modelID)
+	self.roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(logic.bookReadingMgr.bookData.BookID,modelID)
 	if self.roleModel == nil then
 		return
 	end
@@ -569,9 +572,9 @@ function ChoiceModel:OnSelectModeType(nType,isInit)
 	if nType == ChoiceType.Skin then	--皮肤
 		self.numOfChoice[nType] = table.length(skinTable)
 	elseif nType == ChoiceType.Clothes then	--衣服
-		self.numOfChoice[nType] = table.length(self.roleModel.outfit_type3)
+		self.numOfChoice[nType] = self.roleModel.outfit_type3.Count
 	elseif nType == ChoiceType.Hair then	--头发
-		self.numOfChoice[nType] = math.max(1, table.length(self.roleModel.hair_type2))
+		self.numOfChoice[nType] = math.max(1, self.roleModel.hair_type2.Count)
 	else
 		logic.debug.LogError("not found modelType:"..tostring(nType))
 	end
@@ -593,7 +596,7 @@ end
 
 function ChoiceModel:UpdateDetialsView(isInit)
 	local skinID = skinTable[self.selectIdx[ChoiceType.Skin]]
-	local clothesID = self.roleModel.outfit_type3[self.selectIdx[ChoiceType.Clothes]]
+	local clothesID = self.roleModel.outfit_type3[self.selectIdx[ChoiceType.Clothes]-1]
 	-- if isInit and self.modelType ~= ChoiceType.Clothes then
 	-- 	local bookData = logic.bookReadingMgr.bookData
 	-- 	local outfitId = bookData.outfit_id
@@ -602,11 +605,12 @@ function ChoiceModel:UpdateDetialsView(isInit)
 	-- 		clothesID = 1
 	-- 	end
 	-- end
-	local hairID = self.roleModel.hair_type2[self.selectIdx[ChoiceType.Hair]]
+	local hairID = self.roleModel.hair_type2[self.selectIdx[ChoiceType.Hair]-1]
 
-	local skinCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Skin,skinID)
-	local clothesCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Clothes,clothesID)
-	local hairCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Hair,hairID)
+	local curBookId = logic.bookReadingMgr.bookData.BookID
+	local skinCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Skin,tonumber(skinID))
+	local clothesCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Clothes,tonumber(clothesID))
+	local hairCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Hair,tonumber(hairID))
 	self.cost = skinCfg.price + clothesCfg.price + hairCfg.price
 
 	local choiceCost
@@ -658,7 +662,7 @@ function ChoiceModel:UpdateDetialsView(isInit)
 	uiView.ClothNumber.text= string.format("CHOICE[%d/%d]",self.selectIdx[self.modelType],self.numOfChoice[self.modelType]);
     --self:ShowPiontType(self.selectIdx[self.modelType])
 
-	if self.numOfChoice[self.modelType] > 1 then
+	if self.numOfChoice[self.modelType] > 1then
 		uiView.imgLeftArrow.gameObject:SetActiveEx(true)
 		uiView.imgRightArrow.gameObject:SetActiveEx(true)
 	else
@@ -671,15 +675,13 @@ function ChoiceModel:UpdateDetialsView(isInit)
 		self:MovePeople();
 	end
 
-	--local id = 
-	--local roleModelData = logic.bookReadingMgr.Res:GetRoleModelData(roleModel.book_id,nType,)
 
 	local skinName = 'skin'..skinID
 	local clothesName = "clothes" .. clothesID
 	local expressionName = "expression0"
 	local hair1Name	= "hair1"
 	local hair2Name	= "hair1_1"
-	if hairID > 1 then
+	if tonumber(hairID) > 1 then
 		hair1Name	= "hair"..hairID
 		hair2Name	= "hair"..hairID.."_1"
 	end
@@ -700,12 +702,13 @@ end
 
 function ChoiceModel:OnComfirmClick()
 	local skinID = skinTable[self.selectIdx[ChoiceType.Skin]]
-	local clothesID = self.roleModel.outfit_type3[self.selectIdx[ChoiceType.Clothes]]
-	local hairID = self.roleModel.hair_type2[self.selectIdx[ChoiceType.Hair]]
+	local clothesID = self.roleModel.outfit_type3[self.selectIdx[ChoiceType.Clothes]-1]
+	local hairID = self.roleModel.hair_type2[self.selectIdx[ChoiceType.Hair]-1]
 
-	local skinCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Skin,skinID)
-	local clothesCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Clothes,clothesID)
-	local hairCfg = logic.bookReadingMgr.Res:GetRoleModelData(ChoiceType.Hair,hairID)
+	local curBookId = logic.bookReadingMgr.bookData.BookID
+	local skinCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Skin,tonumber(skinID))
+	local clothesCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Clothes,tonumber(clothesID))
+	local hairCfg = logic.cs.JsonDTManager:GetJDTModelPrice(curBookId,ChoiceType.Hair,tonumber(hairID))
 
 	if self.modelType == ChoiceType.Skin then
 		logic.bookReadingMgr:SaveModel(skinID,0,0)
@@ -713,7 +716,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
 				self:OnChoicesModelNotify(result,skinID,nil,nil)
 				self:ChocieAnim()
 				skinIsSelected = true
@@ -734,7 +737,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectHair,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectHair,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
 				self:OnChoicesModelNotify(result,nil,nil,hairID)
 				self:ChocieAnim()
 				self:OnSelectModeType(ChoiceType.Clothes)
@@ -770,7 +773,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
 				logic.bookReadingMgr.bookData.PlayerClothes = clothesID
 				self:ChocieAnim()
 				

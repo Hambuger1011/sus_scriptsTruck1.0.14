@@ -87,8 +87,8 @@ function CharacterFaceExpressionChange:DoChange(appearanceId, clothId, faciaOrig
 
     local localScale = Vector3.New(1, 1, 1)
     local anchoredPosition = Vector2.New(0, -460)
-    local bookDetial = logic.cs.GameDataMgr.table:GetBookDetailsById(logic.bookReadingMgr.bookID);
-    if(bookDetial.RoleScale == 2) then
+    local bookDetial = logic.cs.JsonDTManager:GetJDTBookDetailInfo(logic.bookReadingMgr.bookID);
+    if(bookDetial.rolescale == 2) then
         localScale = Vector3.New(0.85,0.85,1)
         anchoredPosition = Vector2.New(30, -175)
     end

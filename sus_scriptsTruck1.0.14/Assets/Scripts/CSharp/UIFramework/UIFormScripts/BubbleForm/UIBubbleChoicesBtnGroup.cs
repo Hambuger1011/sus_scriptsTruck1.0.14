@@ -417,36 +417,36 @@ public class UIBubbleChoicesBtnGroup : MonoBehaviour
                             int value = int.Parse(keyValue[1]);
                             int resultValue = 0;
                             string msg = string.Empty;
-                            switch (key)
-                            {
-                                case 1:
-                                    resultValue = (int)Mathf.Round(value / 0.34f);
-                                    msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#41b1ff'>+" + resultValue + "</color>";
-                                    break;
-                                case 2:
-                                    resultValue = (int)Mathf.Round(value / 0.21f);
-                                    msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#54e778'>+" + resultValue + "</color>";
-                                    break;
-                                case 3:
-                                    resultValue = (int)Mathf.Round(value / 0.05f);
-                                    msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#f75acd'>+" + resultValue + "</color>";
-                                    break;
-                                case 4:
-                                    resultValue = (int)Mathf.Round(value / 0.25f);
-                                    msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#b555ff'>+" + resultValue + "</color>";
-                                    break;
-                                case 5:
-                                    resultValue = (int)Mathf.Round(value / 0.15f);
-                                    msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#f78686'>+" + resultValue + "</color>";
-                                    break;
-                                default:
-                                    if (key > 5)
-                                    {
-                                        UserDataManager.Instance.SetBookPropertyValue(UserDataManager.Instance.UserData.CurSelectBookID, key, value);
-                                    }
-                                    break;
-
-                            }
+                            // switch (key)
+                            // {
+                            //     case 1:
+                            //         resultValue = (int)Mathf.Round(value / 0.34f);
+                            //         msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#41b1ff'>+" + resultValue + "</color>";
+                            //         break;
+                            //     case 2:
+                            //         resultValue = (int)Mathf.Round(value / 0.21f);
+                            //         msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#54e778'>+" + resultValue + "</color>";
+                            //         break;
+                            //     case 3:
+                            //         resultValue = (int)Mathf.Round(value / 0.05f);
+                            //         msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#f75acd'>+" + resultValue + "</color>";
+                            //         break;
+                            //     case 4:
+                            //         resultValue = (int)Mathf.Round(value / 0.25f);
+                            //         msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#b555ff'>+" + resultValue + "</color>";
+                            //         break;
+                            //     case 5:
+                            //         resultValue = (int)Mathf.Round(value / 0.15f);
+                            //         msg = GameDataMgr.Instance.table.GetPersonalityTxtById(key) + " <color='#f78686'>+" + resultValue + "</color>";
+                            //         break;
+                            //     default:
+                            //         if (key > 5)
+                            //         {
+                            //             UserDataManager.Instance.SetBookPropertyValue(UserDataManager.Instance.UserData.CurSelectBookID, key, value);
+                            //         }
+                            //         break;
+                            //
+                            // }
                             UITipsMgr.Instance.ShowPopTips(msg, Input.mousePosition);//mousePosition是屏幕坐标
                         }
                     }

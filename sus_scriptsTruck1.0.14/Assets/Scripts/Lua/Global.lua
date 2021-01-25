@@ -13,8 +13,8 @@ if CS.GameUtility.isDebugMode then
         local dir = CS.System.Environment.CurrentDirectory..'/Z_Work/debugger/emmy/windows/x64/'
         if CS.CFileManager.IsDirectoryExist(dir) then
             package.cpath = package.cpath .. ";"..dir.."?.dll"
-            local dbg = require("emmy_core")
-            dbg.tcpListen("localhost", 9966)
+            --local dbg = require("emmy_core")
+            --dbg.tcpListen("localhost", 9966)
             print("debugger:"..dir)
         end
     end

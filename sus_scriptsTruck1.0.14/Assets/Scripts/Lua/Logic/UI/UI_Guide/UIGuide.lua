@@ -144,13 +144,13 @@ function UIGuide:BookOnClick(index)
                 logic.cs.BookReadingWrapper:ChangeBookDialogPath(bookID,1)
                 local chapterid= tonumber(result.data.step_info.chapterid)
                 local dialogid = tonumber(result.data.step_info.dialogid)
-                local bookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(bookID)
-                local chapterDivisionArray = bookDetails.ChapterDivisionArray
-                local idx = chapterid - 1
-                local beginDialogID = (idx < 1 and 1) or chapterDivisionArray[idx - 1];
+                
+                local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid);
+                local beginDialogID = 1;
                 local endDialogID = beginDialogID
-                if (idx < chapterDivisionArray.Length) then
-                    endDialogID = chapterDivisionArray[idx]
+                if chapterInfo ~= nil then
+                    beginDialogID = chapterInfo.chapterstart
+                    endDialogID = chapterInfo.chapterfinish
                 end
                 if dialogid < beginDialogID then
                     dialogid = beginDialogID

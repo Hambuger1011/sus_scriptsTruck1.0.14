@@ -48,9 +48,9 @@ function PlayerDialogueComponent:Play()
             self.ui.imgBgDot.sprite=CS.ResourceManager.Instance:GetUISprite("BookReadingForm/bg_think");
         end
         local t = self.ui.DialogBoxContent.transform
-        local bookDetial = logic.cs.GameDataMgr.table:GetBookDetailsById(logic.bookReadingMgr.bookID)
+        local bookDetial = logic.cs.JsonDTManager:GetJDTBookDetailInfo(logic.bookReadingMgr.bookID)
         local pos = t.anchoredPosition
-        if(bookDetial.RoleScale == 2) then
+        if(bookDetial.rolescale == 2) then
             pos.y = -2
         else
             pos.y = -0

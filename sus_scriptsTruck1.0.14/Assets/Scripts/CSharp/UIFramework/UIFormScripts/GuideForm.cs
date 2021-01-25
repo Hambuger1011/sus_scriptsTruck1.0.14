@@ -179,20 +179,20 @@ public class GuideForm : BaseUIForm
 #endif
         int index = vChapterID - 1;
         
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
-        int endDialogID = -1;
-        int beginDialogID = index - 1 < 0 ? 1 : chapterDivisionArray[index - 1];
-        if (index < chapterDivisionArray.Length)
-        {
-            endDialogID = chapterDivisionArray[index];
-        }
+        // t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
+        // int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
+        // int endDialogID = -1;
+        // int beginDialogID = index - 1 < 0 ? 1 : chapterDivisionArray[index - 1];
+        // if (index < chapterDivisionArray.Length)
+        // {
+        //     endDialogID = chapterDivisionArray[index];
+        // }
 
-#if !NOT_USE_LUA
-        BookReadingWrapper.Instance.InitByBookID(UserDataManager.Instance.UserData.CurSelectBookID, 1, dialogueID, beginDialogID, endDialogID);
-#else
-        DialogDisplaySystem.Instance.InitByBookID(UserDataManager.Instance.UserData.CurSelectBookID, 1, dialogueID, beginDialogID, endDialogID);
-#endif
+// #if !NOT_USE_LUA
+//         BookReadingWrapper.Instance.InitByBookID(UserDataManager.Instance.UserData.CurSelectBookID, 1, dialogueID, beginDialogID, endDialogID);
+// #else
+//         DialogDisplaySystem.Instance.InitByBookID(UserDataManager.Instance.UserData.CurSelectBookID, 1, dialogueID, beginDialogID, endDialogID);
+// #endif
 
       
         GameHttpNet.Instance.GetBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID, GetBookDetailInfoCallBack);
@@ -277,11 +277,11 @@ public class GuideForm : BaseUIForm
                     int countryId = UserDataManager.Instance.CountryId();
                     for (int i = 0;i< tempList.Count;i++)
                     {
-                        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(tempList[i].id);
-                        if(bookDetails != null && bookDetails.Availability == countryId)
-                        {
-                            recommendList.Add(tempList[i]);
-                        }
+                        // t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(tempList[i].id);
+                        // if(bookDetails != null && bookDetails.Availability == countryId)
+                        // {
+                        //     recommendList.Add(tempList[i]);
+                        // }
                     }
                     ShowBookIcon(recommendList);
                 }

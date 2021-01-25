@@ -11,6 +11,9 @@ function BookItem:__init(gameObject)
     self.BookTypeImg =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg"):GetComponent("Image");
     self.Tips =CS.DisplayUtil.GetChild(gameObject, "Tips");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
+    self.BookWeekBg =CS.DisplayUtil.GetChild(gameObject, "BookWeekBg"):GetComponent("Image");
+    self.BookWeekBgRect =self.BookWeekBg.gameObject:GetComponent(typeof(logic.cs.RectTransform));
+    self.BookWeekText =CS.DisplayUtil.GetChild(gameObject, "BookWeekText"):GetComponent("Text");
 
     --书本阅读进度条
     self.ProgressBar =CS.DisplayUtil.GetChild(gameObject, "ProgressBar"):GetComponent("ProgressBar");
@@ -36,31 +39,52 @@ function BookItem:SetInfo(Info)
     --【展示标签】
     GameHelper.ShowBookType(Info.book_id,self.BookTypeImg);
     --【展示书本进度条】
-    GameHelper.ShowProgress(Info.book_id,self.ProgressBar);
-    --【Tips】
-    if (CS.BookItemManage.Instance:BookIsNew(Info.book_id))then
-        self.Tips:SetActive(true);
-    else
-        self.Tips:SetActive(false);
-    end
+    GameHelper.ShowProgress(Info.book_id,self.ProgressBar,self.Tips);
+    ----【Tips】
+    --if (CS.BookItemManage.Instance:BookIsNew(Info.book_id))then
+    --    self.Tips:SetActive(true);
+    --else
+    --    self.Tips:SetActive(false);
+    --end
+
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
     --=====================================================================展示 show
 end
 
 --【显示书本 周更更新时间】
-function BookItem:ShowWeeklyUpdateTime(Info)
+function BookItem:ShowWeeklyUpdateTime(Info,nextWeekIndex)
     if(Info.update_time==nil or Info.update_time==0)then return; end
+    local BookBGRect=self.BookBG.gameObject:GetComponent(typeof(logic.cs.RectTransform));
+    BookBGRect.anchoredPosition ={x=0,y=-30};
+
+    self.BookWeekBg.gameObject:SetActive(true);
     self.BookWeek.gameObject:SetActive(true);
+    self.BookWeekText.gameObject:SetActive(true);
+    self.Tips:SetActive(false);
+
     local datetemp=CS.DateUtil.ConvertIntDateTime(Info.update_time);
     --周更新推荐   时间展示
-    self.rectTransform.sizeDelta = {x=270,y=350};
     local weekIndex = CS.DateUtil.GetWeekDay(datetemp.Year,datetemp.Month,datetemp.Day);
     if(weekIndex and weekIndex >=1 and weekIndex<=7)then
         self.BookWeek.sprite = CS.ResourceManager.Instance:GetUISprite("MainForm/main_bg_week"..weekIndex);
+        self.BookWeekBg.sprite = CS.ResourceManager.Instance:GetUISprite("MainForm/main_bg_week"..weekIndex.."_"..weekIndex);
     end
+
+    if(nextWeekIndex==nil or nextWeekIndex~=weekIndex)then
+        self.BookWeekBgRect.sizeDelta ={x=200,y=356};
+    else
+        self.BookWeekBgRect.sizeDelta ={x=260,y=356};
+    end
+
+    if(Info.start_chapter==Info.end_chapter)then
+        self.BookWeekText.text=Info.tag..": CH."..Info.start_chapter;
+    else
+        self.BookWeekText.text=Info.tag..": CH."..Info.start_chapter.." - "..Info.end_chapter;
+    end
+
     self.ProgressBarRect=self.ProgressBar.gameObject:GetComponent(typeof(logic.cs.RectTransform));
-    self.ProgressBarRect.anchoredPosition ={x=194,y=-332};
+    self.ProgressBarRect.anchoredPosition ={x=194,y=-362};
 end
 
 --【限时活动免费读书 显示标签】

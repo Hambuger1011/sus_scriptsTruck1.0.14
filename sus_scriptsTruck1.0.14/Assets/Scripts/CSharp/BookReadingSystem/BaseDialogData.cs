@@ -106,8 +106,6 @@ public class BaseDialogData {
         this.TutorialEgg = data.TutorialEgg;
         this.ConsequenceID = data.ConsequenceID;
         this.sceneAlpha = data.sceneAlpha;
-        this.propertyCheck = data.propertyCheck;
-        this.sceneColor = data.sceneColor;
         //this.bubbleType = data.bubbleType;
     }
 

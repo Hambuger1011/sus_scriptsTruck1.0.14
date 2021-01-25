@@ -340,13 +340,21 @@ function UIBookReadingView:updateReadingProgress(component)
     local bookDetailCfg = logic.bookReadingMgr.Res.bookDetailCfg
     local progress = 0
     if component.cfg.chapterID <= 1 then
-        progress = component.cfg.dialogID / bookDetailCfg.intChapterDivisionArray[1]
+        local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookDetailCfg.id,1)
+        if chapterInfo ~= nil then
+            progress = component.cfg.dialogID / chapterInfo.chapterfinish
+        end
+        
     else
-        local beginID = bookDetailCfg.intChapterDivisionArray[component.cfg.chapterID - 1]
-        local endID = bookDetailCfg.intChapterDivisionArray[component.cfg.chapterID]
-        local num = component.cfg.dialogID - beginID
-        local sum = endID - beginID
-        progress = num / sum
+        
+        local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookDetailCfg.id,component.cfg.chapterID)
+        if chapterInfo ~= nil then
+            local beginID = chapterInfo.chapterstart
+            local endID = chapterInfo.chapterfinish
+            local num = component.cfg.dialogID - beginID
+            local sum = endID - beginID
+            progress = num / sum
+        end
     end
     self.bookProgress.fillAmount = progress
 end
@@ -354,8 +362,8 @@ end
 function UIBookReadingView:NewBookTipsChange()
     local cfg = logic.bookReadingMgr.Res.bookDetailCfg
     logic.cs.MyBooksDisINSTANCE:setMyBooksFirstId(cfg.id)
-    logic.cs.PlayerPrefs.SetInt("BookChapterCount" .. cfg.id, cfg.ChapterCount)
-    logic.debug.Log("BookChapterCount:id=" .. cfg.id..",count=".. cfg.ChapterCount)
+    logic.cs.PlayerPrefs.SetInt("BookChapterCount" .. cfg.id, cfg.chaptercount)
+    logic.debug.Log("BookChapterCount:id=" .. cfg.id..",count=".. cfg.chaptercount)
 end
 
 function UIBookReadingView:GetPiexlX(x)

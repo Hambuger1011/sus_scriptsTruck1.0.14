@@ -125,7 +125,7 @@ public class ProjectTools
     public static void BuildApk()
     {
         Time.timeScale = 1;
-        EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Internal;
+        EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
         //if(EditorUserBuildSettings.androidBuildSubtarget != MobileTextureSubtarget.ETC2)
         //{
         //    EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ETC2;
@@ -292,8 +292,8 @@ public class ProjectTools
                 break;
             default:
                 {
-                    if (il2cppFlag.Equals("true"))
-                    {
+                    // if (il2cppFlag.Equals("true"))
+                    // {
                         PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.IL2CPP);
                         PlayerSettings.SetIncrementalIl2CppBuild(buildTargetGroup, true);
 #if UNITY_2018_1_OR_NEWER
@@ -302,17 +302,17 @@ public class ProjectTools
 #else
                         PlayerSettings.Android.targetDevice = AndroidTargetDevice.ARMv7;
 #endif
-                    }
-                    else
-                    {
-                        PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
-#if UNITY_2018_1_OR_NEWER
-                        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;
-#else
-                    PlayerSettings.Android.targetDevice = AndroidTargetDevice.ARMv7;
-#endif
-                    }
-                    PlayerSettings.strippingLevel = StrippingLevel.Disabled;
+                    // }
+//                     else
+//                     {
+//                         PlayerSettings.SetScriptingBackend(buildTargetGroup, ScriptingImplementation.Mono2x);
+// #if UNITY_2018_1_OR_NEWER
+//                         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;
+// #else
+//                     PlayerSettings.Android.targetDevice = AndroidTargetDevice.ARMv7;
+// #endif
+//                     }
+//                     PlayerSettings.strippingLevel = StrippingLevel.Disabled;
 
                 }
                 break;

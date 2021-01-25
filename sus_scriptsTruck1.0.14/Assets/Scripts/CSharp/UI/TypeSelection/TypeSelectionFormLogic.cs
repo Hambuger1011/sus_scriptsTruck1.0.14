@@ -176,12 +176,8 @@ public class TypeSelectionFormLogic
                     for (int i=0;i< bookNum; i++)
                     {
                         BookNotUserInfo itemInfo = UserDataManager.Instance.BookNotUserList.data.book_list[i];
-                        t_BookDetails bookDetail = GameDataMgr.Instance.table.GetBookDetailsById(itemInfo.id);
-                        if (bookDetail != null && UserDataManager.Instance.BookOpenState(bookDetail.Availability))  //判断书本所属的区域
-                        {
-                            TypeSelectionForm.TypeSelectionDB.SelectBook.Add(itemInfo);
-                            tempBookList.Add(itemInfo);
-                        }  
+                        TypeSelectionForm.TypeSelectionDB.SelectBook.Add(itemInfo);
+                        tempBookList.Add(itemInfo);
                     }
 
                     //选择对于区域的书本内容

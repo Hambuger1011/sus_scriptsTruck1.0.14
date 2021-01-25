@@ -424,12 +424,12 @@ function BookReadingMgr:GetRoleName(role_id)
     end
     ---@type pb.t_BookDetails
     local cfg = nil
-    cfg = logic.DataManager.client:GetBookDetailByID(bookData.BookID)
-    if not cfg or #cfg.strCharacterNames < role_id then
+    cfg = logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookData.BookID)
+    if not cfg or cfg.strCharacterNames.Count < role_id then
         logic.debug.LogError("角色id错误:roleID = " .. role_id .. ",role count = " .. #cfg.strCharacterNames)
         return 'NoName'
     else
-        return cfg.strCharacterNames[role_id]
+        return cfg.strCharacterNames[role_id-1]
     end
 end
 
@@ -700,15 +700,18 @@ function BookReadingMgr:GotoDialogID(id)
     end
     local bookData = logic.bookReadingMgr.bookData
     local bookID = bookData.BookID
-    local bookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(bookID)
+    local bookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookID)
     local chapterDivisionArray = bookDetails.ChapterDivisionArray
     local chapterID = 0
     local dialogID = id
-    for idx = 0,chapterDivisionArray.Length - 1 do
-        local value = chapterDivisionArray[idx]
-        if value > dialogID then
-            chapterID = idx + 1
-            break
+    for idx = 1,bookDetails.chaptercount do
+        local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,idx);
+        if chapterInfo ~= nil  then
+            local value = chapterInfo.chapterfinish;
+            if value > dialogID then
+                chapterID = idx
+                break
+            end
         end
     end
     if chapterID == 0 then
@@ -773,8 +776,6 @@ end
 
 function BookReadingMgr:DoGoBackStep(dialogID)
     local bookData = logic.bookReadingMgr.bookData
-    local bookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(bookData.BookID)
-    local chapterDivisionArray = bookDetails.ChapterDivisionArray
     local doGoto = function()
         logic.gameHttp:GoBackStep(bookData.BookID,bookData.ChapterID,dialogID, function(result)
 			--logic.cs.UINetLoadingMgr:Close()
@@ -787,11 +788,12 @@ function BookReadingMgr:DoGoBackStep(dialogID)
                 if chapterid == bookData.ChapterID then	--同一章节里
                     logic.bookReadingMgr:PlayById(dialogid)
                 else
-                    local idx = chapterid - 1
-                    local beginDialogID = (idx < 1 and 1) or chapterDivisionArray[idx - 1];
+                    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid+1);
+                    local beginDialogID = 1;
                     local endDialogID = beginDialogID
-                    if (idx < chapterDivisionArray.Length) then
-                        endDialogID = chapterDivisionArray[idx]
+                    if chapterInfo ~= nil then
+                        beginDialogID = chapterInfo.chapterstart
+                        endDialogID = chapterInfo.chapterfinish
                     end
                     if dialogid < beginDialogID then
                         dialogid = beginDialogID

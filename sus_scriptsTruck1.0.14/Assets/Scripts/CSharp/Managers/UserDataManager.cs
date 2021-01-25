@@ -296,6 +296,16 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<BookOptionSelectInfo> BookOptSelInfo;
     public HttpInfoReturn<Getrecommandmall> recommandmallInfo;
     public HttpInfoReturn<IpAdressInfo> userIpAddressInfo;
+    
+    public HttpInfoReturn<BookJDTFormSever> bookJDTFormSever;
+    public HttpInfoReturn<VersionBookDetailInfo> VersionBookDetailInfo;
+    public HttpInfoReturn<VersionChapterInfo> VersionChapterInfo;
+    public HttpInfoReturn<VersionChapterList> VersionChapterList;
+    public HttpInfoReturn<VersionDialogList> VersionDialogList;
+    public HttpInfoReturn<VersionSkinList> VersionSkinInfo;
+    public HttpInfoReturn<VersionClothesPriceList> VersionClothesPriceInfo;
+    public HttpInfoReturn<VersionRoleModelList> VersionRoleModelInfo;
+    public HttpInfoReturn<VersionModelPriceList> VersionModelPriceInfo;
  
 
     public HttpInfoReturn<GameFunStateList> gameFunStateList;
@@ -1707,26 +1717,20 @@ public class UserDataManager : Singleton<UserDataManager> {
         return true;
     }
 
-    /// <summary>
-    /// 对书本进行排序
-    /// </summary>
-    /// <param name="bookList"></param>
-    public void SortBookList(ref List<t_BookDetails> bookList)
-    {
-        int countryId = CountryId();
-        bookList.Sort((t_BookDetails book1, t_BookDetails book2) =>
-        {
-            if (book1.Availability == countryId && book2.Availability != countryId)
-            {
-                return -1;
-            }
-            else if (book2.Availability == countryId && book1.Availability != countryId)
-            {
-                return 1;
-            }
-            return 0;
-        });
-    }
+    
+    
+
+    
+
+private string[] BookTypeNameArr;
+public string GetBookTypeName(int vIndex)
+{
+    if(BookTypeNameArr == null)
+        BookTypeNameArr = new string[12] {"Romance","LGBT","Action","Youth","Adventure","Drama","Comedy","Horror","18+","Fantasy","Suspense","Others"};
+    if (vIndex < BookTypeNameArr.Length)
+        return BookTypeNameArr[vIndex];
+    return "";
+}
 
     /// <summary>
     /// 保存第三方登陆信息

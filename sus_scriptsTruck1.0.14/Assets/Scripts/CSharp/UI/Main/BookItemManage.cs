@@ -27,10 +27,10 @@ public class BookItemManage
     /// </summary>
     /// <param name="BookId"></param>
     /// <returns></returns>
-    public t_BookDetails GetBookDetails(int BookId)
+    public JDT_Book GetBookDetails(int BookId)
     {
-        t_BookDetails m_bookDetailCfg = GameDataMgr.Instance.table.GetBookDetailsById(BookId);
-        return m_bookDetailCfg;
+        JDT_Book bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(BookId);
+        return bookDetail;
     }
 
 
@@ -41,24 +41,24 @@ public class BookItemManage
     /// <returns></returns>
     public Sprite ShowIcon(int BookId)
     {
-        t_BookDetails bookDetail = GetBookDetails(BookId);
+        JDT_Book bookDetail = GetBookDetails(BookId);
         if (bookDetail == null) {
             Debug.LogError("[展示书本封面Icon报错：]  BookId:"+ BookId+" [书本配置表没有此书本Id]");
             return null;
         }
-        Sprite Icon = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("Assets/Bundle/BookPreview/Icon/", (bookDetail.BookIcon), ".png"));
+        Sprite Icon = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("Assets/Bundle/BookPreview/Icon/", (bookDetail.id), ".png"));
         return Icon;
     }
 
     public string ShowBanner(int BookId)
     {
-        t_BookDetails bookDetail = GetBookDetails(BookId);
+        JDT_Book bookDetail = GetBookDetails(BookId);
         if (bookDetail == null)
         {
             Debug.LogError("[展示书本封面Icon报错：]  BookId:" + BookId + " [书本配置表没有此书本Id]");
             return null;
         }
-        return "banner_" + (bookDetail.BookIcon - 1);
+        return "banner_" + (bookDetail.id - 1);
     }
 
     /// <summary>
@@ -68,14 +68,14 @@ public class BookItemManage
     /// <returns></returns>
     public string GetBookName(int BookId)
     {
-        t_BookDetails bookDetail = GetBookDetails(BookId);
+        JDT_Book bookDetail = GetBookDetails(BookId);
         if (bookDetail == null)
         {
             Debug.LogError("[展示书本封面Icon报错：]  BookId:" + BookId + " [书本配置表没有此书本Id]");
             return null;
         }
 
-        string Name = bookDetail.BookName.ToString();
+        string Name = bookDetail.bookname.ToString();
         return Name;
     }
 
@@ -86,7 +86,7 @@ public class BookItemManage
     /// <returns></returns>
     public float GetPross(int BookId)
     {
-        t_BookDetails bookDetail = GetBookDetails(BookId);
+        JDT_Book bookDetail = GetBookDetails(BookId);
         if (bookDetail == null)
         {
             Debug.LogError("[展示书本封面Icon报错：]  BookId:" + BookId + " [书本配置表没有此书本Id]");
@@ -96,9 +96,11 @@ public class BookItemManage
         int lastDialogId=0;
         float Press = 0.0f;
 
-        if (bookDetail.ChapterDivisionArray != null && bookDetail.ChapterDivisionArray.Length > 0)
+        JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(BookId, bookDetail.chaptercount);
+
+        if (chapterInfo != null )
         {
-            lastDialogId = bookDetail.ChapterDivisionArray[bookDetail.ChapterDivisionArray.Length - 1];
+            lastDialogId = chapterInfo.chapterfinish;
         }
 
         BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == bookDetail.id);
@@ -117,14 +119,14 @@ public class BookItemManage
     /// <returns></returns>
     public bool BookIsNew(int BookId)
     {
-        t_BookDetails bookDetail = GetBookDetails(BookId);
+        JDT_Book bookDetail = GetBookDetails(BookId);
         if (bookDetail == null)
         {
             Debug.LogError("[展示书本封面Icon报错：]  BookId:" + BookId + " [书本配置表没有此书本Id]");
             return false;
         }
 
-        bool NewBook = bookDetail.NewBook == 1 ? true : false;
+        bool NewBook = bookDetail.isNew == 1 ? true : false;
         return NewBook;
     }
 

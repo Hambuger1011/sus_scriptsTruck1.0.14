@@ -127,7 +127,7 @@ public class ServiceSelectForm : BaseUIForm
 
         ServicePath.AddOptions(ServicePathList);
         
-        ServicePath.value = 1;
+        ServicePath.value = 0;
     }
 
     /// <summary>

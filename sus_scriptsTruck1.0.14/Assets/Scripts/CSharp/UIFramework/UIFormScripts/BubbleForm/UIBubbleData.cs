@@ -16,7 +16,6 @@
         public Vector2 leftTop;
         public Vector2 size;
         public UIBubbleItem ui;
-        public t_BookChat_1 cfg;
         public BaseDialogData bookCfg;
         public int cfgType = 1;
 
@@ -24,14 +23,6 @@
         {
             this.type1 = type1;
             this.type2 = type2;
-        }
-
-        public UIBubbleData(t_BookChat_1 cfg)
-        {
-            cfgType = 1;
-            this.cfg = cfg;
-            this.type1 = (EBubbleType)cfg.type1;
-            this.type2 = (EBubbleBoxType)cfg.type2;
         }
 
         public UIBubbleData(BaseDialogData cfg)

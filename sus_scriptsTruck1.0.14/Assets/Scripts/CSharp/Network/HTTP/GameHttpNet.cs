@@ -116,7 +116,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
 #endif
                 break;
             case 1: //开发
-                _abUri = "http://192.168.0.33/resources/";
+                _abUri = "http://dev.onyxsus.com/resources/";
                 break;
             case 2: //tecent开发
                 _abUri = "http://193.112.66.252:8082/resources/";
@@ -155,7 +155,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             switch (GameDataMgr.Instance.ServiceType)
             {
                 case 1: //开发
-                    mGameUrlHead = "http://193.112.66.252:8082";
+                    mGameUrlHead = "http://dev.onyxsus.com";
                     break;
                 case 2: //tencent开发
                     mGameUrlHead = "http://193.112.66.252:8082";
@@ -3481,6 +3481,212 @@ public class GameHttpNet : CSingleton<GameHttpNet>
         });
     }
 
+
+
+
+    /// <summary>
+    /// 获取书本涉及到的相关的版本信息
+    /// </summary>
+    /// <param name="vCallBackHandler"></param>
+    public void GetBookVersionInfo(int vBookId, EventHandler vCallBackHandler, int vBookVersion = 0, int vChapterVersion = 0,int vRoleModelVersion = 0, int vModelPrice = 0, int vClothesPrice = 0, int vSkinVersion =0)
+    {
+        string url = "api_getBookVersion?book_id=" + vBookId;
+        if (vBookVersion > 0)
+            url += "&book_version=" + vBookVersion;
+        if (vChapterVersion > 0)
+            url += "&chapter_version=" + vChapterVersion;
+        if (vRoleModelVersion > 0)
+            url += "&role_model_version=" + vRoleModelVersion;
+        if (vModelPrice > 0)
+            url += "&model_price_version=" + vModelPrice;
+        if (vClothesPrice > 0)
+            url += "&clothes_price_version=" + vClothesPrice;
+        if (vSkinVersion > 0)
+            url += "&skin_version=" + vSkinVersion;
+            
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getBookVersion");
+                TalkingDataManager.Instance.RecordProtocolError("api_getBookVersion", dic);
+                return;
+            }
+
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取对应版本的书本详细信息
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionBookDetailInfo(int vBookId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionBookDetailInfo?book_id="+vBookId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionBookDetailInfo");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionBookDetailInfo", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取对应版本的书本详细信息
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionChapterInfo(int vBookId,int vChapterId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionChapterInfo?book_id="+vBookId+"&chapter_id="+vChapterId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionChapterInfo");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionChapterInfo", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取书本版本-章节列表
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vChapterId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionChapterList(int vBookId,int vChapterId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionChapterList?book_id="+vBookId+"&chapter_id="+vChapterId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionChapterList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionChapterList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取书本版本-对话列表
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vChapterId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionDialogList(int vBookId,int vChapterId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionDialogList?book_id="+vBookId+"&chapter_id="+vChapterId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionDialogList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionDialogList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+
+    /// <summary>
+    /// 获取皮肤列表
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionSkinList(int vBookId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionSkinList?book_id="+vBookId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionSkinList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionSkinList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取服装价格列表
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionClothesPriceList(int vBookId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionClothesPriceList?book_id="+vBookId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionClothesPriceList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionClothesPriceList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+    
+    /// <summary>
+    /// 获取角色形象配置列表信息
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionRoleModelList(int vBookId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionRoleModelList?book_id="+vBookId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionRoleModelList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionRoleModelList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
+
+    /// <summary>
+    /// 获取形象价格说明列表信息
+    /// </summary>
+    /// <param name="vBookId"></param>
+    /// <param name="vCallBackHandler"></param>
+    public void GetVersionModelPriceList(int vBookId,EventHandler vCallBackHandler)
+    {
+        string url = "api_getVersionModelPriceList?book_id="+vBookId;
+        this.Get(url, (responseCode, result) =>
+        {
+            if (responseCode != 200)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("ProtocolError", "api_getVersionModelPriceList");
+                TalkingDataManager.Instance.RecordProtocolError("api_getVersionModelPriceList", dic);
+                return;
+            }
+            vCallBackHandler(result);
+        });
+    }
 
     public void GetBookNotUser(int type, EventHandler vCallBackHandler)
     {

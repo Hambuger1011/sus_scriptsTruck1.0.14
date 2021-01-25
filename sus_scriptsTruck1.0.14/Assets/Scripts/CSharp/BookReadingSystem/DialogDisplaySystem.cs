@@ -166,7 +166,7 @@ public class DialogDisplaySystem : SingletonMono<DialogDisplaySystem> {
             {
                 BookID = bookID,
                 ChapterID = chapterID,
-                BookName = GameDataMgr.Instance.table.GetBookDetailsById(bookID).BookName,
+                BookName = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID).BookName,
                 DialogueID = 1,
                 PlayerName = "PLAYER",
                 PlayerDetailsID = 1,
@@ -181,7 +181,7 @@ public class DialogDisplaySystem : SingletonMono<DialogDisplaySystem> {
         LOG.Info("========curBookId========>" + bookID + "===curDialogId===>" + dialogueID);
         m_currentDialogData = GetBaseDialogDataByDialogueID(dialogueID);//加载对应的行的表的数据
 
-        mBookDetail = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
+        mBookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID);
     }
 
 
@@ -555,7 +555,7 @@ public class DialogDisplaySystem : SingletonMono<DialogDisplaySystem> {
             vDialogId = EndDialogID;
         }
         m_currentDialogData = GetBaseDialogDataByDialogueID(vDialogId);
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+        t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
         int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
         int endDialogID = -1;
         int beginDialogID = m_currentDialogData.chapterID - 1 < 0 ? 1 : chapterDivisionArray[m_currentDialogData.chapterID - 1];
@@ -1395,7 +1395,7 @@ public class DialogDisplaySystem : SingletonMono<DialogDisplaySystem> {
         if (roleId == DialogDisplaySystem.Instance.CurrentBookData.NpcId && !string.IsNullOrEmpty(DialogDisplaySystem.Instance.CurrentBookData.NpcName))
             return DialogDisplaySystem.Instance.CurrentBookData.NpcName;
 
-        var cfg = GameDataMgr.Instance.table.GetBookDetailsById(bookId);
+        var cfg = JsonDTManager.Instance.GetJDTBookDetailInfo(bookId);
         if (cfg.BookCharacterArray.Length == 0 || roleId - 1 >= cfg.BookCharacterArray.Length)
         {
             LOG.Error("角色id错误:roleID = " + roleId + ",role count = " + cfg.BookCharacterArray.Length);

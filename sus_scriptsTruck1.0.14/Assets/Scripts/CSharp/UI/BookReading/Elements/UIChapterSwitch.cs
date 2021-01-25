@@ -159,17 +159,17 @@ UIBookReadingElement
         txtRestartTip.text = CTextManager.Instance.GetText(278) + m_curChapterID;
         txtContinueTip.text = CTextManager.Instance.GetText(279);
 
-        var cfg = GameDataMgr.Instance.table.GetBookDetailsById(m_curBookID);
+        var cfg = JsonDTManager.Instance.GetJDTBookDetailInfo(m_curBookID);
         int chapterId = m_curChapterID;
-        if (cfg != null && cfg.CharacterPricesArray.Length > 0)
+        if (cfg != null )
         {
-            if (cfg.CharacterPricesArray.Length >= chapterId)
+            if (cfg.chaptercount >= chapterId)
             {
-                var curChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(m_curBookID, chapterId);
-                if (curChapterPrice != null)
-                    restartCost = curChapterPrice.chapterPay;
-                else
-                    restartCost = int.Parse(cfg.CharacterPricesArray[chapterId - 1]);
+                JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_curBookID, chapterId);
+                if (chapterInfo != null)
+                {
+                    restartCost = chapterInfo.payamount;
+                }
 
                 if (UserDataManager.Instance.CheckBookHasBuy(m_curBookID))
                     restartCost = 0;
@@ -214,15 +214,15 @@ UIBookReadingElement
 
                 int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
                 if (chapterOpenIndex == -1)
-                    chapterOpenIndex = cfg.ChapterOpen;
+                    chapterOpenIndex = cfg.chapteropen;
 
                 if (chapterId + 1 <= chapterOpenIndex)
                 {
-                    var nextChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(m_curBookID, chapterId + 1);
-                    if (nextChapterPrice != null)
-                        continueCost = nextChapterPrice.chapterPay;
-                    else
-                        continueCost = int.Parse(cfg.CharacterPricesArray[chapterId]);
+                    JDT_Chapter nextChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_curBookID, chapterId + 1);
+                    if (nextChapterInfo != null)
+                    {
+                        continueCost = nextChapterInfo.payamount;
+                    }
 
                     if (UserDataManager.Instance.CheckBookHasBuy(m_curBookID))
                         continueCost = 0;
@@ -441,14 +441,12 @@ UIBookReadingElement
 
     private void OnContinue()
     {
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(m_curBookID);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
+        JDT_Book bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(m_curBookID);
         int nextChapterId = m_curChapterID + 1;
         bool readComplete = false;   //是否章节都阅读完成
-        int chapterLen = chapterDivisionArray.Length;
         int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
         if (chapterOpenIndex == -1)
-            chapterOpenIndex = bookDetails.ChapterOpen;
+            chapterOpenIndex = bookDetails.chapteropen;
         if (nextChapterId > chapterOpenIndex)
         {
             readComplete = true;
@@ -592,9 +590,10 @@ UIBookReadingElement
 
     private void TurnToNextChapter(string bookurl)
     {
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(m_curBookID);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
         int nextChapterId = m_curChapterID + 1;
+        JDT_Chapter curChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_curBookID, m_curChapterID);
+        JDT_Chapter nextChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_curBookID, nextChapterId);
+        
         DialogDisplaySystem.Instance.ChangeBookDialogPath(m_curBookID, nextChapterId);
         DialogDisplaySystem.Instance.AddChapterzPayId(m_curBookID, nextChapterId);
 
@@ -602,10 +601,10 @@ UIBookReadingElement
 
         int dialogueID = this.m_nextDialogueID;// DialogDisplaySystem.Instance.CurrentDialogData.next;
         int endDialogID = -1;
-        int beginDialogID = m_curChapterID - 1 < 0 ? 1 : chapterDivisionArray[m_curChapterID - 1];
-        if (m_curChapterID < chapterDivisionArray.Length)
+        int beginDialogID = m_curChapterID - 1 < 0 ? 1 : curChapterInfo.chapterfinish;
+        if (nextChapterInfo != null)
         {
-            endDialogID = chapterDivisionArray[m_curChapterID];
+            endDialogID = nextChapterInfo.chapterfinish;
         }
         TalkingDataManager.Instance.onStart("ReadChapterStart_" + m_curBookID + "_" + nextChapterId);
         DialogDisplaySystem.Instance.InitByBookID(m_curBookID, nextChapterId, dialogueID, beginDialogID, endDialogID);

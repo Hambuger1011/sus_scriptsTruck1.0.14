@@ -252,7 +252,7 @@ public class TypeSelectionFormView
         if (trans != null&& index< TypeSelectionForm.TypeSelectionDB.SearchMyBook.Count)
         {
             BookNotUserInfo bookInfo = TypeSelectionForm.TypeSelectionDB.SearchMyBook[index];
-            t_BookDetails BookDetails = BookItemManage.Instance.GetBookDetails(bookInfo.id);
+            JDT_Book BookDetails = BookItemManage.Instance.GetBookDetails(bookInfo.id);
             TypeSelectionItem TypeSelectionItemgo = trans.GetComponent<TypeSelectionItem>();
             TypeSelectionItemgo.init(BookDetails, bookInfo.read_count);
         }

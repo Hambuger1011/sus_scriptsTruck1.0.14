@@ -565,7 +565,7 @@ public static class XLuaHelper
     }
 
 
-    public static BookData GetBookData(t_BookDetails m_bookDetailCfg)
+    public static BookData GetBookData(JDT_Book m_bookDetailCfg)
     {
         BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == m_bookDetailCfg.id);
         return bookData;

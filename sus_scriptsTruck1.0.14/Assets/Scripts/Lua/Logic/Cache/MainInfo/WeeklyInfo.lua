@@ -2,6 +2,8 @@ local BaseClass = core.Class
 local WeeklyInfo = BaseClass("WeeklyInfo")
 
 function WeeklyInfo:__init()
+    --
+    self.tag="";
     --书本id
     self.book_id=0;
     --书本icon
@@ -17,6 +19,7 @@ function WeeklyInfo:__init()
 end
 
 function WeeklyInfo:UpdateData(data)
+    self.tag=data.tag;
     self.book_id=data.book_id;
     self.bookname=data.bookname;
     self.bookicon=data.bookicon;
@@ -28,6 +31,7 @@ end
 
 --销毁
 function WeeklyInfo:__delete()
+    self.tag=nil;
     self.book_id=nil;
     self.bookicon=nil;
     self.start_chapter=nil;

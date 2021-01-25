@@ -10,6 +10,8 @@ function BookTypeItem:__init(gameObject)
     self.ChapterProgress =CS.DisplayUtil.GetChild(gameObject, "ChapterProgress"):GetComponent("Text");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
     self.BookName =CS.DisplayUtil.GetChild(gameObject, "BookName"):GetComponent("Text");
+    self.Tips =CS.DisplayUtil.GetChild(self.BookBG.gameObject, "Tips");
+
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.gameObject,function(data) self:BookOnclicke() end)
 
@@ -37,6 +39,13 @@ function BookTypeItem:SetInfo(Info)
     local ChapterDiscription = GameHelper.GetChapterDiscription(Info.book_id);
     self.IntroductionText.text=ChapterDiscription;
 
+    --【New和Update】【New和Update】【New和Update】
+    local bookInfo=Cache.MainCache:GetMyBookByIndex(Info.book_id);
+    if(bookInfo==nil)then
+        GameHelper.ShowNewUpdate(Info.book_id,0,self.Tips);
+    else
+        GameHelper.ShowNewUpdate(Info.book_id,bookInfo.finish_max_chapter,self.Tips);
+    end
     --=====================================================================展示 show
 
     --【限时活动免费读书 显示标签】

@@ -209,11 +209,11 @@ function UIMainForm:ResetMyBookList()
         local len=myBookIDs.Count;
         for i = 1, len do
             local _index=i-1;
-            local t_BookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(myBookIDs[_index]);
+            local t_BookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(myBookIDs[_index]);
             if(t_BookDetails and (CS.XLuaHelper.is_Null(t_BookDetails)==false))then
                 local info={};
                 info.book_id=t_BookDetails.id;
-                info.bookname=t_BookDetails.BookName;
+                info.bookname=t_BookDetails.bookname;
                 info.update_time=0;
                 table.insert(mybooks,info);
             else

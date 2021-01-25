@@ -314,7 +314,7 @@ function UIChoiceButtonGroup:CheckAddPersonalist(component)
         else
             local data = arr[key]
             resultValue = core.Mathf.Round(value / data.ratio)
-            msg = logic.cs.GameDataMgr.table:GetPersonalityTxtById(data.key) .. " <color=" .. data.color .. ">+" .. resultValue .. "</color>"
+            --msg = logic.cs.GameDataMgr.table:GetPersonalityTxtById(data.key) .. " <color=" .. data.color .. ">+" .. resultValue .. "</color>"
         end
         if not string.IsNullOrEmpty(msg) then
             --logic.cs.UITipsMgr:ShowPopTips(msg, logic.cs.Input.mousePosition)

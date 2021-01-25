@@ -38,7 +38,7 @@ public class BookDisplayForm : BaseUIForm
     int bookID;
     int openChapterCount;//开放的章节总数
     int allChapterCount;//所有的章节总数
-    t_BookDetails bookDetails;
+    JDT_Book bookDetails;
 
     protected override void Awake()
     {
@@ -80,21 +80,49 @@ public class BookDisplayForm : BaseUIForm
         mCellList = new List<ScrollViewPageCell>();
 
         //UINetLoadingMgr.Instance.Show();
-        GameHttpNet.Instance.GetBookDetailInfo(bookID, GetBookDetailInfoCallBack);  //获得书本信息
-
         GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Key }, GetPropByTypeCallBack_Key);
         GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Outfit_Discount, (int)PropType.Outfit_Coupon }, GetPropByTypeCallBack_Outfit);
         GameHttpNet.Instance.GetPropByType(new int[] { (int)PropType.Choice_Discount, (int)PropType.Choice_Coupon }, GetPropByTypeCallBack_Choice);
 
-        //if (mLastBookId == 0 || mLastBookId != bookID)
-        //{
-        //    mLastBookId = bookID;
-        //    //UINetLoadingMgr.Instance.Show();
-        //    GameHttpNet.Instance.GetBookDetailInfo(bookID, GetBookDetailInfoCallBack);  //获得书本信息
+        JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(bookID);
+        if (verInfo != null)
+        {
+            GameHttpNet.Instance.GetBookVersionInfo(bookID,GetBookVersionInfoCallBack,verInfo.book_version,verInfo.chapter_version,verInfo.role_model_version);
+        }
+        else
+        {
+            GameHttpNet.Instance.GetBookDetailInfo(bookID, GetBookDetailInfoCallBack);  //获得书本信息
+        }
+    }
 
-        //    //GameHttpNet.Instance.GetCostChapterList(bookID, GetCostChapterListCallBack);
-        //    //GameHttpNet.Instance.GetBookOptionSelList(bookID, GetBookOptionSellistHandler);
-        //}
+    private void GetBookVersionInfoCallBack(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetBookVersionInfoCallBack---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+        if (jo.code == 200)
+        {
+            UserDataManager.Instance.bookJDTFormSever = JsonHelper.JsonToObject<HttpInfoReturn<BookJDTFormSever>>(result);
+            if (UserDataManager.Instance.bookJDTFormSever != null &&
+                UserDataManager.Instance.bookJDTFormSever.data != null)
+            {
+                BookJDTFormSever serverInfo = UserDataManager.Instance.bookJDTFormSever.data;
+                if(serverInfo.info != null)
+                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,serverInfo.info);
+                if (serverInfo.book_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionBookDetail(mCurBookId,serverInfo.book_version);
+                if (serverInfo.chapter_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionChapter(mCurBookId,serverInfo.chapter_version);
+                if (serverInfo.clothes_price_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionClothesPrice(mCurBookId,serverInfo.clothes_price_version);
+                if (serverInfo.model_price_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionModelPrice(mCurBookId,serverInfo.model_price_version);
+                if (serverInfo.role_model_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionRoleModel(mCurBookId,serverInfo.role_model_version);
+            }
+            
+            GameHttpNet.Instance.GetBookDetailInfo(mCurBookId, GetBookDetailInfoCallBack);  //获得书本信息
+        }
     }
 
     private void UserOptionCostListHandler(object arg)
@@ -271,8 +299,8 @@ public class BookDisplayForm : BaseUIForm
     {
         // 获取数据
         this.bookID = bookID;
-        bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
-        openChapterCount = bookDetails.ChapterOpen; //得到开放的章节
+        bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID);
+        openChapterCount = bookDetails.chapteropen; //得到开放的章节
         allChapterCount = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;//章节总数
         if (allChapterCount == -1)
             allChapterCount = openChapterCount;
@@ -354,33 +382,37 @@ public class BookDisplayForm : BaseUIForm
             int chapterId = i+1;
             if (needRefresh)
             {
-                displayItem.Init(bookDetails,
-                    bookID,
-                    bookDetails.BookName,
-                    chapterId,
-                    string.Format("Chapter {0} / {1}", chapterId, allChapterCount),
-                    bookDetails.ChapterDiscriptionArray[i],
-                    i <= (mChapterId - 1),
-                    i < (mChapterId - 1),
-                    (i > (mChapterId - 1) && i < allChapterCount),
-                    bookDetails.ChapterRelease,
-                    UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
-                    "bg_book" + bookID,
-                    share,
-                    startReading,
-                    commingSoonButtonEvent,
-                    readCompleteEvent,
-                    back,
-                    LockHandler,
-                    ResetBookHandler,
-                    ResetChapterHandler);
+                JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId, chapterId);
+                if (chapterInfo != null)
+                {
+                    displayItem.Init(bookDetails,
+                        bookID,
+                        bookDetails.bookname,
+                        chapterId,
+                        string.Format("Chapter {0} / {1}", chapterId, allChapterCount),
+                        chapterInfo.dsc,
+                        i <= (mChapterId - 1),
+                        i < (mChapterId - 1),
+                        (i > (mChapterId - 1) && i < allChapterCount),
+                        bookDetails.chapterrelease,
+                        UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
+                        "bg_book" + bookID,
+                        share,
+                        startReading,
+                        commingSoonButtonEvent,
+                        readCompleteEvent,
+                        back,
+                        LockHandler,
+                        ResetBookHandler,
+                        ResetChapterHandler);
+                }
             }
         }
     }
 
     //private void initBookDisplayGridChild_old(int bookID, bool checkTween = false)
     //{
-    //    t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
+    //    t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID);
     //    int len = 0;
     //    if (mDisplayItemList != null)
     //        len = mDisplayItemList.Count;
@@ -559,11 +591,12 @@ public class BookDisplayForm : BaseUIForm
             bookData.ChapterID = 1;
             bookData.PlayerName = "PLAYER";
         }
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
+        JDT_Book bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(mCurBookId);
         int endDialogId = 0;
-        if (bookDetails != null && bookDetails.ChapterDivisionArray.Length > 0)
+        JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId, 1);
+        if (chapterInfo != null)
         {
-            endDialogId = bookDetails.ChapterDivisionArray[0];
+            endDialogId = chapterInfo.chapterfinish;
         }
 
         DialogDisplaySystem.Instance.InitByBookID(
@@ -580,11 +613,8 @@ public class BookDisplayForm : BaseUIForm
     private int restartCost = 0;
     private void ResetChapterHandler(int vChapterId)
     {
-        
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
         mChapterId = vChapterId;
         mIndex = vChapterId - 1;
-
        BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == mCurBookId);
        if (bookData != null && bookDetails != null)
        {
@@ -592,44 +622,28 @@ public class BookDisplayForm : BaseUIForm
            {
                 var Localization = GameDataMgr.Instance.table.GetLocalizationById(141);
                 UITipsMgr.Instance.PopupTips(Localization, false);
-
-                //UITipsMgr.Instance.PopupTips("Reset Chapter Successful.", false);
                return;
            }else if(mIndex > 0)
            {
-               int tempDialogId = bookDetails.ChapterDivisionArray[mIndex - 1];
+               JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId, mIndex);
+               int tempDialogId = chapterInfo.chapterfinish;
                if (tempDialogId == bookData.DialogueID || tempDialogId == (bookData.DialogueID + 1) || (tempDialogId + 1) == bookData.DialogueID)
                {
                     var Localization = GameDataMgr.Instance.table.GetLocalizationById(141);
                     UITipsMgr.Instance.PopupTips(Localization, false);
-
-                    //UITipsMgr.Instance.PopupTips("Reset Chapter Successful.", false);
                    return;
                }
            }
        }
-        
-        if (bookDetails != null && bookDetails.CharacterPricesArray.Length > 0)
-        {
-            if (bookDetails.CharacterPricesArray.Length >= mChapterId)
-            {
-                restartCost = int.Parse(bookDetails.CharacterPricesArray[mChapterId - 1]);
-                if (UserDataManager.Instance.CheckBookHasBuy(mCurBookId))
-                    restartCost = 0;
-                if (restartCost > 0)
-                {
-#if USE_SERVER_DATA
-                    
-#else
-        UserDataManager.Instance.CalculateKeyNum(-restartCost);
-        DoRestartChapter();
-#endif
-                }
 
-                //UINetLoadingMgr.Instance.Show();
-                GameHttpNet.Instance.ResetChapter(mCurBookId, mChapterId, ResetChapterCallBack);
-            }
+       JDT_Book bookInfo = JsonDTManager.Instance.GetJDTBookDetailInfo(mCurBookId);
+        
+        if (bookInfo.chaptercount >= mChapterId)
+        {
+            //UINetLoadingMgr.Instance.Show();
+            GameHttpNet.Instance.ResetChapter(mCurBookId, mChapterId, ResetChapterCallBack);
         }
+        
     }
 
     private void ResetChapterCallBack(object arg)
@@ -680,17 +694,18 @@ public class BookDisplayForm : BaseUIForm
 
     private void DoRestartChapter()
     {
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
-        int beginDialogID = mIndex - 1 < 0 ? 1 : chapterDivisionArray[mIndex - 1];
+        JDT_Chapter nextChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId,mIndex+1);
+        int beginDialogID = 1;
+        int endDialogID = 0;
+        if (nextChapterInfo != null)
+        {
+            beginDialogID = nextChapterInfo.chapterstart;
+            endDialogID = nextChapterInfo.chapterfinish;
+        }
+        
         if (beginDialogID != 1)
             beginDialogID = beginDialogID + 1;  //代表下一个章节的第一个id
-        int endDialogID = 0;
-        if (mIndex < chapterDivisionArray.Length)
-        {
-            endDialogID = chapterDivisionArray[mIndex];
-        }
-
+        
         DialogDisplaySystem.Instance.InitByBookID(
             mCurBookId,
             mChapterId,
@@ -727,45 +742,6 @@ public class BookDisplayForm : BaseUIForm
         LOG.Info("----StartReadChapterCallBack---->" + result);
     }
 
-
-    private void calculateGreaterIndex(int bookID)
-    {
-        //mChapterId 获得最新读到的章节是什么
-
-        BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == bookID);
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
-        if (bookData != null)
-        {
-            int saveDialogueID = bookData.DialogueID;
-            bool readComplete = true;   //是否章节都阅读完成
-            int chapterLen = chapterDivisionArray.Length;
-            for (int i = 0; i < chapterLen; i++)
-            {
-                bool flag = false;
-                if(m_switchNext)
-                {
-                    flag = chapterDivisionArray[i] - 1 > saveDialogueID;
-                }
-                else
-                {
-                    flag = chapterDivisionArray[i] > saveDialogueID;
-                }
-                if (flag)
-                {
-                    readComplete = false;
-                    mChapterId = i+1;
-                    break;
-                }
-            }
-
-            if (readComplete)
-                mChapterId = chapterLen;
-        }else
-        {
-            mChapterId = 1;
-        }
-    }
     private void startReading(int vChapterId)
     {
         Debug.Log($"lzh ===========> startReading({vChapterId})");
@@ -816,7 +792,7 @@ public class BookDisplayForm : BaseUIForm
         mChapterId = vChapterId;
         mIndex = vChapterId - 1;
         //检查章节是否付费
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
+        JDT_Book bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(mCurBookId);
         if (bookDetails != null)
         {
             if (bookData != null)
@@ -825,7 +801,7 @@ public class BookDisplayForm : BaseUIForm
                 bool readComplete = false;   //是否章节都阅读完成
                 int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
                 if (chapterOpenIndex == -1)
-                    chapterOpenIndex = bookDetails.ChapterOpen;
+                    chapterOpenIndex = bookDetails.chapteropen;
                 if (mChapterId > chapterOpenIndex)
                 {
                     readComplete = true;
@@ -839,15 +815,15 @@ public class BookDisplayForm : BaseUIForm
                 }
             }
 
-            if (bookDetails.CharacterPricesArray.Length > 0 && bookDetails.CharacterPricesArray.Length >= mChapterId)
+            if (bookDetails.chaptercount >= mChapterId)
             {
                 continueCost = 0;
-                var curChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(mCurBookId, mChapterId);
-                if (curChapterPrice != null)
-                    continueCost = curChapterPrice.chapterPay;
-                else
-                    continueCost = int.Parse(bookDetails.CharacterPricesArray[mIndex]);
-
+                JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId, mChapterId);
+                if (chapterInfo != null)
+                {
+                    continueCost = chapterInfo.payamount;
+                }
+                
                 if (UserDataManager.Instance.CheckBookHasBuy(mCurBookId))
                     continueCost = 0;
 
@@ -942,13 +918,13 @@ public class BookDisplayForm : BaseUIForm
     {       
         int dialogueID = 1;
         BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == mCurBookId);
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mCurBookId);
-        int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
+        JDT_Chapter nextChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mCurBookId,mIndex + 1);
         int endDialogID = -1;
-        int beginDialogID = mIndex - 1 < 0 ? 1 : chapterDivisionArray[mIndex - 1];
-        if (mIndex < chapterDivisionArray.Length)
+        int beginDialogID = 1;
+        if (nextChapterInfo != null)
         {
-            endDialogID = chapterDivisionArray[mIndex];
+            beginDialogID = nextChapterInfo.chapterstart;
+            endDialogID = nextChapterInfo.chapterfinish;
         }
         if (bookData != null)
         {

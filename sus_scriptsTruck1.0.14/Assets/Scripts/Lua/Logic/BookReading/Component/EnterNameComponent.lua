@@ -55,22 +55,22 @@ function EnterNameComponent:Play()
 	end
 
 
-	local color = logic.cs.LuaHelper.ParseHtmlString('#'..detailCfg.EnterNameColor)
+	local color = logic.cs.LuaHelper.ParseHtmlString('#424242FF')
 	ui.inName.textComponent.color = color
 	ui.txtDesc.color = color
 	ui.gameObject:SetActiveEx(true)
 	ui.inName.text = ""
 	self:OnEnterNameInputValueChange('')
 
-	print("是否为中文："..detailCfg.Availability)
+	--print("是否为中文："..detailCfg.Availability)
 	if self.isNpc then
-        if detailCfg.Availability==2 then
-			ui.txtDesc.text = "输入你的伴侣的名字"
-			ui.ComfirmButtonText.text="确定"
-		else
+        --if detailCfg.Availability==2 then
+		--	ui.txtDesc.text = "输入你的伴侣的名字"
+		--	ui.ComfirmButtonText.text="确定"
+		--else
 			ui.txtDesc.text = "Enter your partner's name"
 			ui.ComfirmButtonText.text="Confirm"
-		end
+		--end
 
 		
 		local randomName = ''
@@ -83,13 +83,13 @@ function EnterNameComponent:Play()
 		end
 		ui.inName.text = randomName
 	else
-		if detailCfg.Availability==2 then
-			ui.txtDesc.text = "输入你的名字"
-			ui.ComfirmButtonText.text="确定"
-		else
+		--if detailCfg.Availability==2 then
+		--	ui.txtDesc.text = "输入你的名字"
+		--	ui.ComfirmButtonText.text="确定"
+		--else
 			ui.txtDesc.text = "Enter your name"
 			ui.ComfirmButtonText.text="Confirm"
-		end
+		--end
 		
 		--if string.IsNullOrEmpty(logic.cs.UserDataManager.UserData.bookNickName) then
 			local randomName = logic.cs.GameDataMgr.table:GetNameByType(leadingSex);

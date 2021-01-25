@@ -1,5 +1,4 @@
-local BaseClass = core.Class
-local MainBookList = BaseClass("MainBookList")
+local MainBookList = core.Class("MainBookList")
 
 local BookItem = require('Logic/UI/UI_Main/Item/BookItem');
 
@@ -69,8 +68,21 @@ function MainBookList:UpdateList(InfoList,TitleName,_BuriedPoint_bookType)
 
         --如果是周更列表
         if(_BuriedPoint_bookType==BuriedPoint_bookType.WeeklyUpdate)then
+
+            ----------------------------【下本书 更新日期（周几）】
+            local nextIndex=i+1;
+            if(nextIndex>len)then
+                nextIndex=nil;
+            end
+            local Nextdatetemp=nil;
+            local nextWeekIndex=nil;
+            if(nextIndex)then
+                 Nextdatetemp=CS.DateUtil.ConvertIntDateTime(InfoList[nextIndex].update_time);
+                 nextWeekIndex= CS.DateUtil.GetWeekDay(Nextdatetemp.Year,Nextdatetemp.Month,Nextdatetemp.Day);
+            end
+            ----------------------------【下本书 更新日期（周几）】
             --显示周更时间
-            item:ShowWeeklyUpdateTime(InfoList[i]);
+            item:ShowWeeklyUpdateTime(InfoList[i],nextWeekIndex);
         end
     end
     self.TitleTxt.text =TitleName;

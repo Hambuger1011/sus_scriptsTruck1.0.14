@@ -101,7 +101,8 @@ public class BookItemInfo
     public int chaptercount;
     public int chapteropen;
     public string version;
-    
+    public string tag;
+    public int chapter_update_num;
 }
 
 // 游戏进度保存的结果信息的结果信息
@@ -1194,6 +1195,297 @@ public class BusquedaBookInfo
     }
 }
 
+
+public class JsonDataTable
+{
+    public List<JDT_Version> version;//各个部分的版本信息
+    public List<JDT_Book> book;//书本当前开放章节，总章节等
+    public List<JDT_Chapter> chapter;// 某书本每个章节的起始和结束ID，章节介绍等信息
+    //public List<JDT_Skin> skin;//    肤色描述表
+    public List<JDT_ClothesPrice> clothes_price; //服装价格表
+    public List<JDT_ModelPrice> model_price; //模型：头发、衣服定价表
+    public List<JDT_RoleModel> role_model;//书本模型配置表
+}
+
+public class BookJDTFormSever
+{
+    public JDT_Version info;// 当前书本的各部分，版本信息
+    public JDT_Book book_version;// 书本版本信息
+    public List<JDT_Chapter> chapter_version;    //当前书本的每个章节的起始和结束ID，章节介绍等信息
+    public List<JDT_Dialog> dialog_version;      //书本对话
+    public List<JDT_Skin> skin_version;    //皮肤描述表
+    public List<JDT_ClothesPrice> clothes_price_version; //服装价格表
+    public List<JDT_ModelPrice> model_price_version; //模型：头发、衣服定价表
+    public List<JDT_RoleModel> role_model_version;//书本模型配置表
+}
+
+#region JDT data
+public class JDT_Version
+{
+    public int book_id = 0;
+    public int book_version = 0;
+    public int chapter_version = 0;
+    public int dialog_version = 0;
+    public int skin_version = 0;
+    public int clothes_price_version = 0;
+    public int model_price_version = 0;
+    public int role_model_version = 0;
+    public int create_time = 0;
+    public int update_time = 0;
+}
+
+public class JDT_Book
+{
+    public int id = 0;
+    public string bookname = "";
+    public string booktypename = "";
+    public string type1 = "";
+    public int chaptercount = 0;
+    public int chapteropen = 0;
+    public string bookcharactername = "";
+    public string version = "";
+    public int chapterrelease = 0;
+    public int rolescale = 0;
+    public int isNew = 0;
+    public int releaseday = 0;
+
+    public List<string> strCharacterNames;
+
+    public List<string> Type1Array;
+
+    public void Init()
+    {
+        if (strCharacterNames == null)
+        {
+            strCharacterNames = new List<string>();
+            if (!string.IsNullOrEmpty(bookcharactername))
+            {
+                string[] tempArr = JsonHelper.JsonToObject<string[]>(bookcharactername);
+                //string[] tempArr = bookcharactername.Split(',');
+                for (int i = 0; i < tempArr.Length; i++)
+                {
+                    strCharacterNames.Add(tempArr[i]);
+                }
+            }
+        }
+        
+        if (Type1Array == null )
+        {
+            Type1Array = new List<string>();
+            if (!string.IsNullOrEmpty(type1))
+            {
+                string[] tempArr = type1.Split(',');
+                for (int i = 0; i < tempArr.Length; i++)
+                {
+                    Type1Array.Add(tempArr[i]);
+                }
+            }
+        }
+    }
+}
+
+public class JDT_Chapter
+{
+    public int bookid = 0;
+    public int chapter = 0;
+    public int chapterstart = 0;
+    public int chapterfinish = 0;
+    public string chaptername ="";
+    public string dsc ="";
+    public int payamount = 0;
+    public int rewardamount = 0;
+}
+
+
+public class JDT_Dialog
+{
+    public int bookid = 0;
+    public int chapter = 0;
+    public int dialogid = 0;
+    public int role_id = 0;
+    public int dialog_type = 0;
+    public int trigger = 0;
+    public int next = 0;
+    public int selection_num = 0;
+    public int modelid = 0;
+    public int requirement1 = 0;
+    public int requirement2 = 0;
+    public int requirement3 = 0;
+    public int requirement4 = 0;
+    public int next_1 = 0;
+    public int next_2 = 0;
+    public int next_3 = 0;
+    public int next_4 = 0;
+    public string selection_1 ="";
+    public string selection_2 ="";
+    public string selection_3 ="";
+    public string selection_4 ="";
+}
+
+public class JDT_Skin
+{
+    public int id = 0;
+    public int book_id = 0;
+    public int icon_id = 0;
+    public string dec ="";
+}
+
+public class JDT_ClothesPrice
+{
+    public int id = 0;
+    public int bookid = 0;
+    public int clotheid = 0;
+    public int clotheprice = 0;
+    public int pricetype = 0;
+}
+
+public class JDT_ModelPrice
+{
+    public int id = 0;
+    public int book_id = 0;
+    public int type = 0;
+    public int item_id = 0;
+    public int price = 0;
+    public string description ="";
+}
+
+public class JDT_RoleModel
+{
+    public int id = 0;
+    public int book_id = 0;
+    public string character_list ="";
+    public string hair_list ="";
+    public string outfit_list ="";
+    public string remark ="";
+    
+    public List<string> character_type1;
+    public List<string> hair_type2;
+    public List<string> outfit_type3;
+
+    public void Init()
+    {
+        if (character_type1 == null)
+        {
+            character_type1 = new List<string>();
+            if (!string.IsNullOrEmpty(character_list))
+            {
+                string[] tempArr = character_list.Split(',');
+                for (int i = 0; i < tempArr.Length; i++)
+                {
+                    character_type1.Add(tempArr[i]);
+                }
+            }
+        }
+        
+        if (hair_type2 == null)
+        {
+            hair_type2 = new List<string>();
+            if (!string.IsNullOrEmpty(hair_list))
+            {
+                string[] tempArr =hair_list.Split(',');
+                for (int i = 0; i < tempArr.Length; i++)
+                {
+                    hair_type2.Add(tempArr[i]);
+                }
+            }
+        }
+        
+        if (outfit_type3 == null)
+        {
+            outfit_type3 = new List<string>();
+            if (!string.IsNullOrEmpty(outfit_list))
+            {
+                string[] tempArr =  outfit_list.Split(',');
+                for (int i = 0; i < tempArr.Length; i++)
+                {
+                    outfit_type3.Add(tempArr[i]);
+                }
+            }
+        }
+    }
+}
+
+/// <summary>
+/// 服务端返回的书本版本-书本详情
+/// </summary>
+public class VersionBookDetailInfo
+{
+    public string key ="";
+    public int version = 0;
+    public JDT_Book info;
+}
+
+/// <summary>
+/// 服务端返回的书本版本-章节信息
+/// </summary>
+public class VersionChapterInfo
+{
+    public string key ="";
+    public int version = 0;
+    public JDT_Chapter info;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-章节列表
+/// </summary>
+public class VersionChapterList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_Chapter> list;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-对话列表
+/// </summary>
+public class VersionDialogList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_Dialog> list;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-皮肤列表
+/// </summary>
+public class VersionSkinList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_Skin> list;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-服装价格列表
+/// </summary>
+public class VersionClothesPriceList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_ClothesPrice> list;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-角色形象配置列表信息
+/// </summary>
+public class VersionRoleModelList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_RoleModel> list;
+}
+    
+/// <summary>
+/// 服务端返回的书本版本-形象价格说明列表信息
+/// </summary>
+public class VersionModelPriceList
+{
+    public string key ="";
+    public int version = 0;
+    public List<JDT_ModelPrice> list;
+}
+
+#endregion 
 
 
 

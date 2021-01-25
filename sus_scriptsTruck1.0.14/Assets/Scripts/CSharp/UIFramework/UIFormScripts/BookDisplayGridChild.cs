@@ -72,7 +72,7 @@ public class BookDisplayGridChild : MonoBehaviour {
     private Action<int> startReadingEvent;
     private bool mIsSubcribe = false;
 
-    private t_BookDetails mBookDetail;
+    private JDT_Book mBookDetail;
 
     private int OnclickType = 1;// 1 代表重置章节  2 代表重置书本
     private int mReleaseState = 0;  //0：连载中，1：完结
@@ -82,6 +82,10 @@ public class BookDisplayGridChild : MonoBehaviour {
     private GameObject NeedKey;
     private GameObject ReseMask;
     private GameObject CloseButton;
+
+
+    private GameObject BookTag;
+    private Text BookTagText;
 
     //道具相关
     Button btnKeyProp = null;
@@ -162,6 +166,9 @@ public class BookDisplayGridChild : MonoBehaviour {
         //ReseGame.DOAnchorPosY(100, 0.1f);
         UIEventListener.AddOnClickListener(CloseButton, Close);
         this.StarToogleButton.onValueChanged.AddListener(BookJoinToShelf);
+
+        this.BookTag = DisplayUtil.GetChild(this.gameObject, "BookTag");
+        this.BookTagText = DisplayUtil.GetChild(this.BookTag, "BookTagText").GetComponent<Text>();
 
     }
     
@@ -296,7 +303,7 @@ public class BookDisplayGridChild : MonoBehaviour {
     }
     
 
-    public void Init(t_BookDetails vBookDetails, int vBookID, string bookTitle, int vChapterId, string chapterText, 
+    public void Init(JDT_Book vBookDetails, int vBookID, string bookTitle, int vChapterId, string chapterText, 
         string chapterDiscription, bool chapterIsOpen, bool isComplete,bool isLock, 
         int vReleaseState,int vCommentCount,
         string bookChapterBGSpriteName, UIVoidPointerEvent shareButtonEvent,
@@ -429,6 +436,39 @@ public class BookDisplayGridChild : MonoBehaviour {
         CheckBookOpenState();
 
         showCloseBtn();
+        this.BookTag.SetActive(false);
+        string _booktag =UserDataManager.Instance.GetBookItemInfo(mBookId).tag;
+        if (_booktag=="")
+        {
+            this.BookTag.SetActive(false);
+        }
+        else
+        {
+            if (_booktag == "New")
+            {
+                if (isComplete == false)
+                {
+                    this.BookTag.SetActive(true);
+                    this.BookTagText.text = "New";
+                }
+            }
+            else if (_booktag == "Update")
+            {
+                if (isComplete == false)
+                {
+                    int _open = UserDataManager.Instance.GetBookItemInfo(mBookId).chapteropen;
+                    int _updateNum = UserDataManager.Instance.GetBookItemInfo(mBookId).chapter_update_num;
+
+                    if (vChapterId > _open - _updateNum)
+                    {
+                        this.BookTag.SetActive(true);
+                        this.BookTagText.text = "Update";
+                    }
+                }
+            }
+        }
+
+
     }
 
     private void showCloseBtn()
@@ -479,15 +519,15 @@ public class BookDisplayGridChild : MonoBehaviour {
     {
         if(mBookDetail != null)
         {
-            bool bookIsOpen = mBookDetail.IsOpen == 0;//=0是开放，反人类
+            //bool bookIsOpen = mBookDetail.IsOpen == 0;//=0是开放，反人类
 
 #if !CHANNEL_SPAIN
             //ShareButton.gameObject.SetActive(bookIsOpen);
 #endif
-            StarToogleButton.gameObject.SetActive(bookIsOpen);
-            ReturnGamesBtn.gameObject.SetActive(bookIsOpen);
+            //StarToogleButton.gameObject.SetActive(bookIsOpen);
+           // ReturnGamesBtn.gameObject.SetActive(bookIsOpen);
             //ReadNumGroup.gameObject.SetActive(bookIsOpen);
-            PlayButton.gameObject.SetActive(bookIsOpen);
+            //PlayButton.gameObject.SetActive(bookIsOpen);
             //SubscribeBtn.gameObject.SetActive(!bookIsOpen);
             //SubscribeDescTxt.gameObject.SetActive(!bookIsOpen);
 
@@ -557,9 +597,8 @@ return function()
         ReseGame.gameObject.SetActive(true);
      
         //显示是否需要扣费的钥匙
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(mBookId);
-        int restartCost = int.Parse(bookDetails.CharacterPricesArray[ChapterId - 1]);
-        if (restartCost > 0)
+        JDT_Chapter bookChapter = JsonDTManager.Instance.GetJDTChapterInfo(mBookId,ChapterId);
+        if (bookChapter.payamount > 0)
         {
             //显示钥匙
             NeedKey.SetActive(true);
@@ -613,15 +652,11 @@ return function()
     {
         if (mChapterIsOpen && !mIsComplete)
         {
-            if (mBookDetail.CharacterPricesArray.Length > 0 && mBookDetail.CharacterPricesArray.Length >= ChapterId)
+            JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mBookId, ChapterId);
+            if (chapterInfo != null)
             {
-                int continueCost = 0;
-                var curChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(mBookId, ChapterId);
-                if (curChapterPrice != null)
-                    continueCost = curChapterPrice.chapterPay;
-                else
-                    continueCost = int.Parse(mBookDetail.CharacterPricesArray[ChapterId - 1]);
-
+                int continueCost = chapterInfo.payamount;
+                
                 PlayKeyShowImageText.text = continueCost.ToString();
                 if (continueCost > 0&& UserDataManager.Instance.bookDetailInfo.data.cost_max_chapter< ChapterId)
                 {
@@ -638,38 +673,6 @@ return function()
                     PlayButtonText.anchoredPosition = new Vector2(2f, 3f);
                     PlayKeyShowImage.SetActive(false);
                 }
-
-                //if (!UserDataManager.Instance.CheckBookHasBuy(mBookId) && !DialogDisplaySystem.Instance.CheckHasPayChapter(mBookId, ChapterId))
-                //{
-                //    int continueCost = 0;
-                //    var curChapterPrice = GameDataMgr.Instance.table.GetChapterDivedeById(mBookId, ChapterId);
-                //    if (curChapterPrice != null)
-                //        continueCost = curChapterPrice.chapterPay;
-                //    else
-                //        continueCost = int.Parse(mBookDetail.CharacterPricesArray[ChapterId - 1]);
-
-                //    PlayKeyShowImageText.text =continueCost.ToString();
-                //    if (continueCost > 0)
-                //    {
-                //        //play付费显示
-
-                //        PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_jsnale_03");
-                //        PlayButtonText.anchoredPosition = new Vector2(-32, 5.6f);
-                //        PlayKeyShowImage.SetActive(true);
-                //    }
-                //    else
-                //    {
-                //        PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_jsnale_03");
-                //        PlayButtonText.anchoredPosition = new Vector2(1.7f, 5.6f);
-                //        PlayKeyShowImage.SetActive(false);
-                //    }
-                //}
-                //else
-                //{
-                //    PlayButton.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_jsnale_03");
-                //    PlayButtonText.anchoredPosition = new Vector2(1.7f, 5.6f);
-                //    PlayKeyShowImage.SetActive(false);
-                //}
             }
         }
     } 

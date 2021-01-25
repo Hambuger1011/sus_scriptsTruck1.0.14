@@ -31,27 +31,6 @@ public class NoticeTempletSprite : MonoBehaviour {
         }
     }
 
-    public void Inite(t_BulletinBoard data,int type)
-    {
-        switch (type)
-        {
-            case 1:
-                IniteGame(data.type1,data.idtype1,data.picture1);
-                break;
-            case 2:
-                IniteGame(data.type2, data.idtype2, data.picture2);
-                break;
-            case 3:
-                IniteGame(data.type3, data.idtype3, data.picture3);
-                break;
-            case 4:
-                IniteGame(data.type4, data.idtype4, data.picture4);
-                break;
-            case 5:
-                IniteGame(data.type5, data.idtype5, data.picture5);
-                break;
-        }
-    }
 
     private void OnDestroy()
     {

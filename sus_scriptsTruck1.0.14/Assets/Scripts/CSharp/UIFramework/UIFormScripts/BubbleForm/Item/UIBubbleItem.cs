@@ -114,7 +114,7 @@
             this.curBox.RefreshUI();
             if(nameText != null)
             {
-                if(data.cfgType == 1 && data.cfg != null)
+                if(data.cfgType == 1)
                 {
 
                 }

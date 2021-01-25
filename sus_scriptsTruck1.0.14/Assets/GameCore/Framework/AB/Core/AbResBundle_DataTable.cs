@@ -16,7 +16,16 @@
         static readonly string preview_prefix = "assets/bundle/bookpreview";
         public static bool IsDataTableAsset(string assetName)
         {
-            bool isDataTableAsset = assetName.ToLower().Contains(assetname_prefix) || assetName.ToLower().Contains(preview_prefix);
+            bool isDataTableAsset = false;
+            if (!string.IsNullOrEmpty(assetName))
+            {
+                isDataTableAsset= assetName.ToLower().Contains(assetname_prefix) || assetName.ToLower().Contains(preview_prefix);
+            }
+            else
+            {
+                LOG.Error("--资源为空---->"+assetName);
+            }
+            
             return isDataTableAsset;
         }
 

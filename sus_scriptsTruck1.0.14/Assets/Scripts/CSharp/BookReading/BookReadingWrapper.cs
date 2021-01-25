@@ -68,7 +68,7 @@ public class BookReadingWrapper : CSingleton<BookReadingWrapper>
             {
                 BookID = bookID,
                 ChapterID = chapterID,
-                BookName = GameDataMgr.Instance.table.GetBookDetailsById(bookID).BookName,
+                BookName = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID).bookname,
                 DialogueID = 1,
             
                 PlayerName = PlayerNameReturn(),
@@ -86,7 +86,7 @@ public class BookReadingWrapper : CSingleton<BookReadingWrapper>
         LOG.Info("========curBookId========>" + bookID + "===chapterID===>" + chapterID +"===curDialogId===>" + dialogueID);
         //m_currentDialogData = GetBaseDialogDataByDialogueID(dialogueID);//加载对应的行的表的数据
 
-        //mBookDetail = GameDataMgr.Instance.table.GetBookDetailsById(bookID);
+        //mBookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID);
     }
 
     private string PlayerNameReturn()

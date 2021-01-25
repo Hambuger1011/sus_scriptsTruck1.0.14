@@ -12,7 +12,7 @@ public class NextUpBookItem : BaseUIForm
     public Image bookIcon;
     public Text txtBookName;
     public GameObject newImage,sexImage;
-    private t_BookDetails bookDetail;
+    private JDT_Book bookDetail;
     private int bookCount;
     private GameObject ChapterSwitch;
     //List<t_BookDetails> m_bookDetailList = new List<t_BookDetails>();
@@ -22,13 +22,13 @@ public class NextUpBookItem : BaseUIForm
 
         this.ChapterSwitch = ChapterSwitch;
 
-        bookDetail = GameDataMgr.Instance.table.GetBookDetailsById(bookid);
-        bookCount = bookDetail.ChapterCount;
+        bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(bookid);
+        bookCount = bookDetail.chaptercount;
 
        // LOG.Info("推荐书本id:"+bookDetail.id);
 
         bookIcon.sprite = ABSystem.ui.GetUITexture(AbTag.Global,string.Concat("Assets/Bundle/BookPreview/Icon/", bookDetail.id, ".png"));
-        txtBookName.text = bookDetail.BookName;
+        txtBookName.text = bookDetail.bookname;
 
        
 
@@ -51,7 +51,7 @@ public class NextUpBookItem : BaseUIForm
     private void TipsState()
     {
 
-        if (bookDetail.NewBook==1)
+        if (bookDetail.isNew==1)
         {
             newImage.SetActive(true);
         }else
@@ -59,13 +59,13 @@ public class NextUpBookItem : BaseUIForm
             newImage.SetActive(false);
         }
 
-        if (bookDetail.GayBook==1)
-        {
-            sexImage.SetActive(true);
-        }else
-        {
-            sexImage.SetActive(false);
-        }
+        // if (bookDetail.isLGBT==1)
+        // {
+        //     sexImage.SetActive(true);
+        // }else
+        // {
+        //     sexImage.SetActive(false);
+        // }
         //if (PlayerPrefs.GetInt("BookChapterCount" + bookDetail.id) == bookCount)
         //{
         //    newImage.SetActive(false);

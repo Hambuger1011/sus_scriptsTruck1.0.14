@@ -12,7 +12,7 @@ using System;
 public class TypeSelectionItem : MonoBehaviour
 {
     private Image bookIcon;
-    private t_BookDetails m_bookDetailCfg;
+    private JDT_Book m_bookDetailCfg;
     private Text name;
     private Image progress;
     private Text Chapter;
@@ -27,7 +27,7 @@ public class TypeSelectionItem : MonoBehaviour
     /// <summary>
     /// 这个是挑选出来的书本初始化
     /// </summary>
-    public void init(t_BookDetails BookDetails,int readcount=0)
+    public void init(JDT_Book BookDetails,int readcount=0)
     {
         m_bookDetailCfg = BookDetails;
         bookIcon = transform.Find("icon").GetComponent<Image>();
@@ -70,13 +70,13 @@ public class TypeSelectionItem : MonoBehaviour
         if (m_bookDetailCfg == null) return;
         if (m_bookDetailCfg != null)
         {
-            name.text = m_bookDetailCfg.BookName;         
-            bookIcon.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/Icon/", (m_bookDetailCfg.BookIcon), ".png"));
+            name.text = m_bookDetailCfg.bookname;         
+            bookIcon.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/Icon/", (m_bookDetailCfg.id), ".png"));
 
             ToUpDateProgress();
 
-            Chapter.text = string.Format("Chapter:{0}", m_bookDetailCfg.ChapterCount);
-            Content.text = m_bookDetailCfg.ChapterDiscriptionArray[0];
+            Chapter.text = string.Format("Chapter:{0}", m_bookDetailCfg.chaptercount);
+            //Content.text = m_bookDetailCfg.ChapterDiscriptionArray[0];
 
         }
         else
@@ -94,9 +94,12 @@ public class TypeSelectionItem : MonoBehaviour
         int lastDialogId = 2000;
         if (m_bookDetailCfg != null)
         {
-            if (m_bookDetailCfg.ChapterDivisionArray != null && m_bookDetailCfg.ChapterDivisionArray.Length > 0)
+            JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_bookDetailCfg.id,m_bookDetailCfg.chaptercount);
+            if (chapterInfo !=  null)
             {
-                lastDialogId = m_bookDetailCfg.ChapterDivisionArray[m_bookDetailCfg.ChapterDivisionArray.Length - 1];
+                lastDialogId = chapterInfo.chapterfinish;
+                if (lastDialogId == 0)
+                    lastDialogId = 1;
             }
 
             BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == m_bookDetailCfg.id);

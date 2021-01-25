@@ -314,14 +314,12 @@ function ChoiceWholeClothes:Play()
 	self:SpwanClothPiont(self.numOfClothes)
 	self:ShowPiontType(1)
 
-	local bookDetails = logic.cs.GameDataMgr.table:GetBookDetailsById(logic.bookReadingMgr.bookID)
-
-
+	local bookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(logic.bookReadingMgr.bookID)
 	--（RoleScale == 1）是 坐标  scaleX = 1.15   scaleY = 1,15
 	--（RoleScale == 2）是 坐标  scaleX = 1.05   scaleY = 1,05
 	local localScale = Vector3.New(1.15, 1.15, 1)
 	local localSpinePos = Vector3.New(uiView.roleSpine.transform.localPosition.x,-308,0)
-	if bookDetails.RoleScale == 2 then
+	if bookDetails.rolescale == 2 then
 		localScale = Vector3.New(1.05, 1.05, 1)
 		localSpinePos = Vector3.New(uiView.roleSpine.transform.localPosition.x,-20,0)
 	end
@@ -387,10 +385,10 @@ function ChoiceWholeClothes:UpdateDetialsView()
 		end
 		
 		if not logic.cs.UserDataManager:CheckClothHadCost(bookData.BookID, clothesID) then
-			local priceCfg = logic.cs.GameDataMgr.table:GetClothePriceById(bookData.BookID, clothesID)
-			if priceCfg and priceCfg.ClothePrice > 0 then
-				self.buyType = priceCfg.PriceType
-				self.cost = priceCfg.ClothePrice
+			local priceCfg = logic.cs.JsonDTManager:GetJDTClothesPrice(bookData.BookID, clothesID)
+			if priceCfg and priceCfg.clotheprice > 0 then
+				self.buyType = priceCfg.pricetype
+				self.cost = priceCfg.clotheprice
 	
 				if self.buyType == BuyType.Video then
 					local seeVideoNum = logic.cs.UserDataManager:GetSeeVideoNumOfClothes(bookData.BookID, clothesID)

@@ -96,7 +96,6 @@ public class BookReadingForm : BaseUIForm
     private bool isTweening = false;
     private float m_fScreenAdapterScale;
     private UIBookReadingElement[] elements;
-    private t_BookDetails bookDetail;
     private bool mStopCalOpertionTime = false;  //停止计算操作手势提示的时间
     private Transform mNormalDialogTrans;
 
@@ -409,7 +408,7 @@ public class BookReadingForm : BaseUIForm
             e.ResetUI();
         }
 
-        bookDetail = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+        bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
 
         Color returnColor = Color.white;
         ColorUtility.TryParseHtmlString("#" + bookDetail.DescriptionColor, out returnColor);
@@ -852,7 +851,7 @@ public class BookReadingForm : BaseUIForm
         //Debug.Log("dialogData.chapterID:" + dialogData.chapterID);
         //Debug.Log("dialogData.dialogID:" + dialogData.dialogID);
 
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+        t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
         int chapterDivisionArray = bookDetails.ChapterDivisionArray[0];
 
         //Debug.Log("章节结束：" + chapterDivisionArray);
@@ -898,7 +897,7 @@ public class BookReadingForm : BaseUIForm
     //刷新这本书是否是新内容的状态
     private void NewBookTipsChange()
     {
-        t_BookDetails cfg = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+        t_BookDetails cfg = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
         int bookid = cfg.id;
         int bookCount = cfg.ChapterCount;
 

@@ -144,8 +144,7 @@ public class BookReadingFormTopBarController : CUIComponent
             }
 #if ENABLE_DEBUG || UNITY_EDITOR
 #if !NOT_USE_LUA
-            t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
-            if (bookDetails != null && bookDetails.ChapterDivisionArray.Length > 0 && BookReadingWrapper.Instance.CurrentBookData != null)
+            if ( BookReadingWrapper.Instance.CurrentBookData != null)
             {
                 int tempChapterId = BookReadingWrapper.Instance.CurrentBookData.ChapterID;
                 if (BookReadingWrapper.Instance.CurrentBookData.ChapterID > 0)
@@ -153,8 +152,8 @@ public class BookReadingFormTopBarController : CUIComponent
 
                 if(tempChapterId - 1 > -1)
                 {
-                    int chapterStartDialogId = bookDetails.ChapterDivisionArray[tempChapterId - 1];
-                   if(tempDialogId < chapterStartDialogId)
+                    JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(UserDataManager.Instance.UserData.CurSelectBookID,tempChapterId);
+                   if( chapterInfo != null &&  tempDialogId < chapterInfo.chapterstart)
                     {
                         BookReadingWrapper.Instance.DoTurnDialog(tempDialogId,true);
                         return;

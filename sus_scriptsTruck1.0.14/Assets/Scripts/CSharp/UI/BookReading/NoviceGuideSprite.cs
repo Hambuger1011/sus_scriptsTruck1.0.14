@@ -21,7 +21,6 @@ public class NoviceGuideSprite : BaseUIForm
 
 
     private TextTyperAnimation PlyerTextTyperAnimation, OtherTextTextTyperAnimation;
-    private t_BookTutorial m_currentDialogData;
     private bool iscantouch = false,iscanmove=false,iscanendManiUI=false;
     private float BGvalue;
     private int dialog_type = 0;
@@ -429,7 +428,7 @@ public class NoviceGuideSprite : BaseUIForm
         DialogDisplaySystem.Instance.ChangeBookDialogPath(UserDataManager.Instance.UserData.CurSelectBookID, vChapterID);
         int index = vChapterID;
         BookData bookData = UserDataManager.Instance.UserData.BookDataList.Find((bookdata) => bookdata.BookID == UserDataManager.Instance.UserData.CurSelectBookID);
-        t_BookDetails bookDetails = GameDataMgr.Instance.table.GetBookDetailsById(UserDataManager.Instance.UserData.CurSelectBookID);
+        t_BookDetails bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(UserDataManager.Instance.UserData.CurSelectBookID);
         int[] chapterDivisionArray = bookDetails.ChapterDivisionArray;
         int endDialogID = -1;
         int beginDialogID = index - 1 < 0 ? 1 : chapterDivisionArray[index - 1];

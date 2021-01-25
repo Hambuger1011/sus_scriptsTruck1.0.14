@@ -11,7 +11,6 @@ public class noviceGuideChoceChild : BaseUIForm
     public NoviceGuideSprite NoviceGuideSprite;
     public Text text;
 
-    private t_BookTutorial m_currentDialogData;
     private int Numtype;
 
 #if NOT_USE_LUA

@@ -260,7 +260,7 @@ public class CharacterFaceExpressionChange : MonoBehaviour
         }
 
         var t = RoleSkeGraphic.rectTransform();
-        var bookDetial = GameDataMgr.Instance.table.GetBookDetailsById(BookReadingWrapper.Instance.BookID);
+        var bookDetial = JsonDTManager.Instance.GetJDTBookDetailInfo(BookReadingWrapper.Instance.BookID);
         if(bookDetial.RoleScale == 2)
         {
             t.localScale = new Vector3(0.85f,0.85f,1);

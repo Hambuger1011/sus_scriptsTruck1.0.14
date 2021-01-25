@@ -122,7 +122,6 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         self.BtnOK2.gameObject:SetActiveEx(false);
         self.feedbackInput.gameObject:SetActiveEx(false);
 
-        local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
         self.MoneyText.text="x20";
 
         --self.Diamonbg:SetActiveEx(true);
@@ -145,7 +144,7 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
 
         self.MoneyRect.gameObject:SetActiveEx(false);
 
-        --local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(5);
+        --local cmisc =  logic.cs.JsonDTManager:GetJDTBookDetailInfo(5);
         --self.MoneyText.text="x2";
         --self.Diamonbg:SetActiveEx(false);
         --self.Keybg:SetActiveEx(true);
@@ -162,7 +161,7 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         self.feedbackInput.gameObject:SetActiveEx(false);
         self.Star:SetActiveEx(false);
 
-        --local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
+        --local cmisc =  logic.cs.JsonDTManager:GetJDTBookDetailInfo(4);
         --self.MoneyText.text="x2";
         --self.Diamonbg:SetActiveEx(false);
         --self.Keybg:SetActiveEx(true);
@@ -177,7 +176,7 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         self.BtnCancel.gameObject:SetActiveEx(false);
         self.BtnOK2.gameObject:SetActiveEx(true);
 
-        --local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
+        --local cmisc =  logic.cs.JsonDTManager:GetJDTBookDetailInfo(4);
         --self.MoneyText.text="x2";
         --self.Diamonbg:SetActiveEx(false);
         --self.Keybg:SetActiveEx(true);
@@ -200,7 +199,7 @@ function UIRatinglevelForm:SetEnumRatinglevel(_enum)
         -- self.Title.gameObject:SetActiveEx(true);
         self.MoneyRect.anchoredPosition={x=0,y=-36};
 
-        --local cmisc =  logic.cs.GameDataMgr.table:GetBookDetailsById(4);
+        --local cmisc =  logic.cs.JsonDTManager:GetJDTBookDetailInfo(4);
         --self.MoneyText.text="x2";
         --self.Diamonbg:SetActiveEx(false);
         --self.Keybg:SetActiveEx(true);

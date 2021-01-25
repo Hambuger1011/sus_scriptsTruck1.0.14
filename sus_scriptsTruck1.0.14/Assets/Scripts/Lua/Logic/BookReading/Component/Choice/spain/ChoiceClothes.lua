@@ -154,10 +154,10 @@ function ChoiceClothes:updateSelectCloths()
 		self.buyType = BuyType.Free
 		logic.debug.Log('已经购买过:BookID='..bookData.BookID..',clothesID='..clothesID)
     else
-        local priceCfg = logic.cs.GameDataMgr.table:GetClothePriceById(bookData.BookID, clothesID)
+        local priceCfg = logic.cs.JsonDTManager:GetJDTClothesPrice(bookData.BookID, clothesID)
 		if priceCfg then
-			self.buyType = priceCfg.PriceType
-			self.cost = priceCfg.ClothePrice
+			self.buyType = priceCfg.pricetype
+			self.cost = priceCfg.clotheprice
 
 			if self.buyType == BuyType.Video then
 				local seeVideoNum = logic.cs.UserDataManager:GetSeeVideoNumOfClothes(bookData.BookID, clothesID)

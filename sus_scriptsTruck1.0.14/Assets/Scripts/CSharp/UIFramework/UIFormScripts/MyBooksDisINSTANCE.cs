@@ -131,7 +131,7 @@ public class MyBooksDisINSTANCE
     private Dictionary<int, int> NoviceGuideInfoChoceDic;
 
     private ArrayList type1List;
-    private t_BookDetails BookDetailsMax;
+    private JDT_Book BookDetailsMax;
     private ArrayList paytotalTypeList;
     private int chapterID = 0;//记录当前阅读是是第几个章节
     private bool isPlaying = false;
@@ -234,7 +234,7 @@ public class MyBooksDisINSTANCE
             LOG.Info("分析得出最喜爱的书本类型是："+NoviceGuiBookDetailstype);
         }
         
-        t_BookDetails mBookDetail = GameDataMgr.Instance.table.GetBookDetailsById(NoviceGuiBookDetailsId);
+        JDT_Book mBookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(NoviceGuiBookDetailsId);
 
         //Debug.Log("mBookDetail:" + mBookDetail+ "--NoviceGuiBookDetailsId:"+ NoviceGuiBookDetailsId);
         if (mBookDetail == null)
@@ -247,30 +247,30 @@ public class MyBooksDisINSTANCE
             return BookDetailsMax.id;
         }
 
-        string Type = mBookDetail.Type1;
+        string Type = mBookDetail.type1;
         //LOG.Info("mBookDetail.Type1:"+Type);
         if (Type.Length==1)
         {
             //只有一个类型
             int type1 = int.Parse(Type);
 
-            if (type1== NoviceGuiBookDetailstype)
-            {
-                int TypeTotal = int.Parse(mBookDetail.TypeTotal);
-                if (TypeTotal > NoviceGuiBookMax)
-                {
-                    NoviceGuiBookMax = TypeTotal;
-                    BookDetailsMax = mBookDetail;
-                    NoviceGuideToBooke();
-                }else
-                {
-                    NoviceGuideToBooke();
-                }
-            }
-            else
-            {
-                NoviceGuideToBooke();
-            }
+            // if (type1== NoviceGuiBookDetailstype)
+            // {
+            //     int TypeTotal = int.Parse(mBookDetail.TypeTotal);
+            //     if (TypeTotal > NoviceGuiBookMax)
+            //     {
+            //         NoviceGuiBookMax = TypeTotal;
+            //         BookDetailsMax = mBookDetail;
+            //         NoviceGuideToBooke();
+            //     }else
+            //     {
+            //         NoviceGuideToBooke();
+            //     }
+            // }
+            // else
+            // {
+            //     NoviceGuideToBooke();
+            // }
         }
         else if(Type.Length >1)
         {
@@ -288,7 +288,7 @@ public class MyBooksDisINSTANCE
                 if (type1Va== NoviceGuiBookDetailstype)
                 {
                     //该行数据中有这个类型的数据
-                    string[] TypeTotalsVa = mBookDetail.TypeTotal.Split(',');
+                    string[] TypeTotalsVa = mBookDetail.type1.Split(',');
                     int TypeTotalVa = int.Parse(TypeTotalsVa[i]);
 
                     if (TypeTotalVa> NoviceGuiBookMax)
