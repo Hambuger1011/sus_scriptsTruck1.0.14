@@ -92,10 +92,7 @@ end
 
 --析构函数
 function WindowConfig:__delete()
-    if GameController.WindowConfig.NeedShowNextWindow then
-        GameController.WindowConfig.NeedShowNextWindow = false
-        GameController.WindowConfig:ShowNextWindow()
-    end
+    
 end
 
 
