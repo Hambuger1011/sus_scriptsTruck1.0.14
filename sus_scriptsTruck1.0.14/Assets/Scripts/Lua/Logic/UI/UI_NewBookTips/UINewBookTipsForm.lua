@@ -30,6 +30,7 @@ function UINewBookTipsForm:OnInitView()
     self.Bg.onClick:RemoveAllListeners()
     self.Bg.onClick:AddListener(function()
         self:OnExitClick()
+        GameController.WindowConfig:ShowNextWindow()
     end)
 
     self.LeftBtn.onClick:RemoveAllListeners()
@@ -119,6 +120,7 @@ function UINewBookTipsForm:ViewBook()
     bookinfo.book_id = newBookList[Index].book_id;
     GameHelper.BookClick(bookinfo);
     self:OnExitClick()
+    GameController.WindowConfig.NeedShowNextWindow = true
 end
 
 function UINewBookTipsForm:OnOpen()

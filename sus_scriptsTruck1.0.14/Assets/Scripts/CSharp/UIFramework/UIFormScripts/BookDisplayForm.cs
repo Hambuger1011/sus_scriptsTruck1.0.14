@@ -70,6 +70,10 @@ public class BookDisplayForm : BaseUIForm
         //CUIManager.Instance.GetForm<MainTopSprite>(UIFormName.MainFormTop).displayFormClose();
         GameDataMgr.Instance.userData.RemoveCollectChange(mCurBookId);
         mLastBookId = 0;
+        XLuaManager.Instance.GetLuaEnv().DoString(@"if GameController.WindowConfig.NeedShowNextWindow then
+            GameController.WindowConfig.NeedShowNextWindow = false
+            GameController.WindowConfig:ShowNextWindow()
+        end");
     }
     public void InitByBookID(int bookID, bool switchNext = false)
     {
@@ -975,6 +979,45 @@ public class BookDisplayForm : BaseUIForm
         DialogDisplaySystem.Instance.PrepareReading(false);
 
         GetBarrageByChapter();
+        GetModelAndClothesPrice();
+    }
+
+    private void GetModelAndClothesPrice()
+    {
+        JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(bookID);
+        if (verInfo != null)
+        {
+            GameHttpNet.Instance.GetBookVersionInfo(bookID,GetModelAndClothesPriceCallBack,0,0,verInfo.role_model_version,
+                verInfo.model_price_version,verInfo.clothes_price_version,verInfo.skin_version);
+        }
+    }
+    
+    private void GetModelAndClothesPriceCallBack(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetModelAndClothesPriceCallBack---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+        if (jo.code == 200)
+        {
+            UserDataManager.Instance.bookJDTFormSever = JsonHelper.JsonToObject<HttpInfoReturn<BookJDTFormSever>>(result);
+            if (UserDataManager.Instance.bookJDTFormSever != null &&
+                UserDataManager.Instance.bookJDTFormSever.data != null)
+            {
+                BookJDTFormSever serverInfo = UserDataManager.Instance.bookJDTFormSever.data;
+                if(serverInfo.info != null)
+                    JsonDTManager.Instance.SaveLocalJDTVersionInfo(mCurBookId,serverInfo.info);
+                if (serverInfo.book_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionBookDetail(mCurBookId,serverInfo.book_version);
+                if (serverInfo.chapter_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionChapter(mCurBookId,serverInfo.chapter_version);
+                if (serverInfo.clothes_price_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionClothesPrice(mCurBookId,serverInfo.clothes_price_version);
+                if (serverInfo.model_price_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionModelPrice(mCurBookId,serverInfo.model_price_version);
+                if (serverInfo.role_model_version != null)
+                    JsonDTManager.Instance.SaveLocalVersionRoleModel(mCurBookId,serverInfo.role_model_version);
+            }
+        }
     }
 
     private void GetBarrageByChapter()

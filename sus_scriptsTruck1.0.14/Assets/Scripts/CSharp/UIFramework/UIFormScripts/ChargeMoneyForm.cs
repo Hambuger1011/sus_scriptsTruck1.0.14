@@ -473,6 +473,11 @@ public class ChargeMoneyForm : BaseUIForm
         }
 
         EventDispatcher.Dispatch(EventEnum.TopMainFT.ToString());
+        
+        XLuaManager.Instance.GetLuaEnv().DoString(@"if GameController.WindowConfig.NeedShowNextWindow then
+            GameController.WindowConfig.NeedShowNextWindow = false
+            GameController.WindowConfig:ShowNextWindow()
+        end");
     }
 
     private void GetShopListCallBack(object arg)

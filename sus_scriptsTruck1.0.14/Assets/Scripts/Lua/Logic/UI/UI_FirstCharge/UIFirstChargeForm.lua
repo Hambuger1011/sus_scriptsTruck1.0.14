@@ -113,6 +113,7 @@ function UIFirstChargeForm:OnInitView()
     self.Close.onClick:RemoveAllListeners()
     self.Close.onClick:AddListener(function()
         self:OnExitClick()
+        GameController.WindowConfig:ShowNextWindow()
     end)
 
     self:PlayAnim();
@@ -150,6 +151,7 @@ end
 
 function UIFirstChargeForm:OnGoBtn()
     self:OnExitClick()
+    GameController.WindowConfig.NeedShowNextWindow = true
     local uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.ChargeMoneyForm)
     local tapForm = uiform:GetComponent(typeof(CS.ChargeMoneyForm))
     tapForm:SetFormStyle(2);

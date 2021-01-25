@@ -34,8 +34,12 @@ function UISignTipForm:OnInitView()
 
     self.Close.onClick:AddListener(function()
         self:OnExitClick()
+        GameController.WindowConfig:ShowNextWindow()
     end)
-    logic.cs.UIEventListener.AddOnClickListener(self.UIMask,function(data) self:OnExitClick() end)
+    logic.cs.UIEventListener.AddOnClickListener(self.UIMask,function(data) 
+        self:OnExitClick()
+        GameController.WindowConfig:ShowNextWindow()
+    end)
 
     --刷新展示
     self:UpdateShow(get,root);
@@ -52,7 +56,10 @@ end
 
 function UISignTipForm:OnClose()
     UIView.OnClose(self)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.UIMask,function(data) self:OnExitClick() end)
+    logic.cs.UIEventListener.RemoveOnClickListener(self.UIMask,function(data)
+        self:OnExitClick()
+        GameController.WindowConfig:ShowNextWindow()
+    end)
     self.SignInBtn.onClick:RemoveAllListeners()
     self.Close.onClick:RemoveAllListeners()
 
@@ -132,6 +139,7 @@ function UISignTipForm:OnSignBtn()
             CS.AppsFlyerManager.Instance:SIGN();
            --关闭界面
             self:OnExitClick();
+            GameController.WindowConfig:ShowNextWindow()
         end
     end)
 

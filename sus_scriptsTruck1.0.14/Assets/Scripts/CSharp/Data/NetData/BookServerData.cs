@@ -1260,8 +1260,8 @@ public class JDT_Book
             strCharacterNames = new List<string>();
             if (!string.IsNullOrEmpty(bookcharactername))
             {
-                string[] tempArr = JsonHelper.JsonToObject<string[]>(bookcharactername);
-                //string[] tempArr = bookcharactername.Split(',');
+                //string[] tempArr = JsonHelper.JsonToObject<string[]>(bookcharactername);
+                string[] tempArr = bookcharactername.Split(',');
                 for (int i = 0; i < tempArr.Length; i++)
                 {
                     strCharacterNames.Add(tempArr[i]);
