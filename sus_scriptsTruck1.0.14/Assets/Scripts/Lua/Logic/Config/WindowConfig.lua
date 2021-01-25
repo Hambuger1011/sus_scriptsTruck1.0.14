@@ -42,7 +42,12 @@ function WindowConfig:ShowNewBookTips()
     end
 end
 
-
+function WindowConfig:ShowSignTip()
+    if(Cache.SignInCache.activity_login.is_receive==0)then
+        logic.UIMgr:Open(logic.uiid.UISignTipForm);
+        CS.AppsFlyerManager.Instance:GetFirstActionLog();
+    end
+end
 
 --析构函数
 function WindowConfig:__delete()

@@ -42,12 +42,6 @@ function UIGuide:OnInitView()
         logic.cs.talkingdata:OpenApp("OpenMainForm")
         --logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainForm)
         logic.UIMgr:Open(logic.uiid.UIMainForm);
-        if(Cache.SignInCache.activity_login.is_receive==0)then
-            logic.UIMgr:Open(logic.uiid.UISignTipForm);
-        end
-
-        --【AF事件 请求服务器 记录第一次数据】
-        CS.AppsFlyerManager.Instance:GetFirstActionLog();
     end)
     
     self.switchBtn = self.uiBinding:Get('switchBtn' , typeof(logic.cs.Button))

@@ -469,14 +469,6 @@ function BookReadingMgr:BackToMainClick()
     logic.UIMgr:Open(logic.uiid.UIMainForm);
     logic.UIMgr:Close(logic.uiid.BookReading)
 
-    --是否自动签到
-    if(Cache.SignInCache.activity_login.is_receive==0)then
-        logic.UIMgr:Open(logic.uiid.UISignTipForm);
-
-        --【AF事件 请求服务器 记录第一次数据】
-        CS.AppsFlyerManager.Instance:GetFirstActionLog();
-    end
-
     logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.BookProgressUpdate)
     logic.cs.AudioManager:CleanClip()
     self:Reset()

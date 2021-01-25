@@ -215,7 +215,7 @@ function LoadingScene:DoEnter()
             logic.cs.CUIManager:CloseForm(logic.cs.UIFormName.UIUpdateModule)
         else
             logic.UIMgr:Close(logic.uiid.Loading)
-            self:isShowSignIn()
+            GameController.WindowConfig:ShowSignTip()
         end
         --【AF事件 请求服务器 记录第一次数据】
         CS.AppsFlyerManager.Instance:GetFirstActionLog();
@@ -226,15 +226,6 @@ function LoadingScene:DoEnter()
 
     logic.cs.PurchaseRecordManager:CheckRecordByLocal()
     logic.DataManager:DoEnter()
-end
-
---是否自动签到
-function LoadingScene:isShowSignIn()
-
-    if(Cache.SignInCache.activity_login.is_receive==0)then
-        logic.UIMgr:Open(logic.uiid.UISignTipForm);
-    end
-
 end
 
 
