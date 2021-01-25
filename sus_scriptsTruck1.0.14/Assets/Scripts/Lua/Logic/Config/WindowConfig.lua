@@ -2,13 +2,27 @@ local BaseClass = core.Class
 local WindowConfig = BaseClass("WindowConfig", core.Singleton)
 local FirstChargeNeedShown = true
 local BookPopupNeedShown = true
+local WindowIndex = 0
 
 --region【构造函数】
 function WindowConfig:__init()
-    self.m_curPage=0;
-    self.m_maxPage=1;
 end
 --endregion
+
+function WindowConfig:SetWindowsList(data)
+    self.WindowsList = {}
+    for k, v in pairs(data) do
+        if tonumber(v.id) == 1 then
+            table.insert(self.WindowsList,self.ShowFirstCharge)
+        elseif tonumber(v.id) == 3 then
+            table.insert(self.WindowsList,self.ShowNewBookTips)
+        elseif tonumber(v.id) == 4 then
+            table.insert(self.WindowsList,self.ShowSignTip)
+        elseif tonumber(v.id) == 5 then
+            table.insert(self.WindowsList,self.ShowAgreement)
+        end
+    end
+end
 
 function WindowConfig:ShowFirstCharge()
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
@@ -46,6 +60,20 @@ function WindowConfig:ShowSignTip()
     if(Cache.SignInCache.activity_login.is_receive==0)then
         logic.UIMgr:Open(logic.uiid.UISignTipForm);
         CS.AppsFlyerManager.Instance:GetFirstActionLog();
+    end
+end
+
+function WindowConfig:ShowAgreement()
+    if logic.cs.IGGSDKMrg.isNewUser then else
+        logic.cs.IGGAgreementMrg:OnRequestStatusCustomClick()
+    end
+end
+
+function WindowConfig:ShowNextWindow()
+    WindowIndex = WindowIndex + 1
+    local nextWindow = self.WindowsList[WindowIndex]
+    if nextWindow then
+        nextWindow()
     end
 end
 

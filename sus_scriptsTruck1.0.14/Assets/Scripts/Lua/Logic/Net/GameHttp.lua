@@ -367,6 +367,10 @@ function GameHttp:GetShopList(callback)
     self:Get(self, "api_getmall", nil, callback, nil, nil, true)
 end
 
+function GameHttp:GetWindowConfig(callback)
+    self:Get(self, "api_getWindowConfig", nil, callback, nil, nil, true)
+end
+
 --领取任务奖励
 function GameHttp:ReceiveTaskPrize(task_id, callback)
     local param = {

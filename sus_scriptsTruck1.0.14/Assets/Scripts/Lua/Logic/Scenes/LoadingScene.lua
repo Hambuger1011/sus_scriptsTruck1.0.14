@@ -215,7 +215,6 @@ function LoadingScene:DoEnter()
             logic.cs.CUIManager:CloseForm(logic.cs.UIFormName.UIUpdateModule)
         else
             logic.UIMgr:Close(logic.uiid.Loading)
-            GameController.WindowConfig:ShowSignTip()
         end
         --【AF事件 请求服务器 记录第一次数据】
         CS.AppsFlyerManager.Instance:GetFirstActionLog();

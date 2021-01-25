@@ -69,21 +69,21 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
         ////}
     }
 
-    // private void OnGUI()
-    // {
-    //     if (GUI.Button(new Rect(400, 100f, 200f, 200f), "测试"))
-    //     {
-    //         // OnKeyBoardBack("");
-    //         
-    //         // XLuaManager.Instance.GetLuaEnv().DoString(@"GameHelper.Test()");
-    //
-    //         // GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd_Activity();
-    //
-    //         // PlayerPrefs.DeleteAll();
-    //
-    //        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIDressUpForm);");
-    //     }
-    // }
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(400, 100f, 200f, 200f), "测试"))
+        {
+            // OnKeyBoardBack("");
+            
+            // XLuaManager.Instance.GetLuaEnv().DoString(@"GameHelper.Test()");
+    
+            // GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd_Activity();
+    
+            // PlayerPrefs.DeleteAll();
+    
+           XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.WindowConfig:ShowNextWindow()");
+        }
+    }
 
     public void OnQueryPurchase(string json)
     {

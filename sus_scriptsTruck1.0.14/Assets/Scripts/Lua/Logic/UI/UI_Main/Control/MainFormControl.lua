@@ -171,12 +171,9 @@ function MainFormControl:GetSelfBookInfo(result)
         end
 
         --endregion
-
-
-        GameController.WindowConfig:ShowFirstCharge()
-
-        GameController.WindowConfig:ShowNewBookTips()
-
+        
+        logic.gameHttp:GetWindowConfig(function(result) self:GetWindowConfigCallBack(result) end)
+        
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
             GameController.ActivityControl:UpdateActivityBanner();
@@ -185,6 +182,16 @@ function MainFormControl:GetSelfBookInfo(result)
 
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+    end
+end
+
+function MainFormControl:GetWindowConfigCallBack(result)
+    logic.debug.Log("----GetWindowConfigCallBack---->" .. result)
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if code == 200 then
+        GameController.WindowConfig:SetWindowsList(json.data.window_list)
+        GameController.WindowConfig:ShowNextWindow()
     end
 end
 

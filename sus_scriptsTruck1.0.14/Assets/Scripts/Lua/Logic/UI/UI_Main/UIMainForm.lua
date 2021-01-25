@@ -111,9 +111,6 @@ function UIMainForm:OnOpen()
     --埋点*打开主界面
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.HomePage)
 
-    if logic.cs.IGGSDKMrg.isNewUser then else
-        logic.cs.IGGAgreementMrg:OnRequestStatusCustomClick()
-    end
 
     self:Limit_time_Free();
 
