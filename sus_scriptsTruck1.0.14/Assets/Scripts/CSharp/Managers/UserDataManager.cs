@@ -344,7 +344,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     //public void UpdatePropItem()
     public void UpdatePropItemWhenServerCallback()
     {
-        if (is_use_prop)
+        if (is_use_prop && propInfoItem != null)
         {
             propInfoItem.prop_num--;
         }
@@ -429,10 +429,6 @@ public class UserDataManager : Singleton<UserDataManager> {
     public bool isMoveCode = false;//账号迁移标识
 
     public bool SigningIn = false;
-
-    public bool FirstChargeHaveShown = false;
-    
-    public bool BookPopupHaveShown = false;
 
     public string InviteCode = String.Empty;
 

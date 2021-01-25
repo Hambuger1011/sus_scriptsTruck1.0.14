@@ -116,7 +116,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
 #endif
                 break;
             case 1: //开发
-                _abUri = "http://dev.onyxsus.com/resources/";
+                _abUri = "http://dev.sus.com/resources/";
                 break;
             case 2: //tecent开发
                 _abUri = "http://193.112.66.252:8082/resources/";
@@ -155,7 +155,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             switch (GameDataMgr.Instance.ServiceType)
             {
                 case 1: //开发
-                    mGameUrlHead = "http://dev.onyxsus.com";
+                    mGameUrlHead = "http://dev.sus.com";
                     break;
                 case 2: //tencent开发
                     mGameUrlHead = "http://193.112.66.252:8082";

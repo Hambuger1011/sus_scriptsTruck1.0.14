@@ -173,34 +173,9 @@ function MainFormControl:GetSelfBookInfo(result)
         --endregion
 
 
-        if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
-                and not logic.cs.IGGSDKMrg.isNewUser and not logic.cs.UserDataManager.FirstChargeHaveShown then
-            logic.gameHttp:GetRewardConfig(function(result)
-                if(string.IsNullOrEmpty(result))then return; end
-                logic.debug.Log("----GetRewardConfig---->" .. result)
-                local json = core.json.Derialize(result);
-                local code = tonumber(json.code);
-                if(code == 200)then
-                    --缓存奖励数据
-                    Cache.ActivityCache:UpdatedRewardConfig(json.data);
-                    logic.cs.UserDataManager.FirstChargeHaveShown = true
-                    logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
-                end
-            end)
-        end
+        GameController.WindowConfig:ShowFirstCharge()
 
-        if not logic.cs.UserDataManager.BookPopupHaveShown then
-            logic.gameHttp:GetRecommendBookPopup(function(result1)
-                logic.debug.Log("----GetRecommendBookPopup---->" .. result1);
-                local json1 = core.json.Derialize(result1);
-                local code1 = tonumber(json1.code)
-                if(code1 == 200)then
-                    logic.cs.UserDataManager.BookPopupHaveShown = true
-                    local uiView = logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
-                    uiView:SetData(json1.data.book_list)
-                end
-            end)
-        end
+        GameController.WindowConfig:ShowNewBookTips()
 
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
