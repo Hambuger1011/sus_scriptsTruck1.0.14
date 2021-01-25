@@ -937,11 +937,12 @@ public class GameHttpNet : CSingleton<GameHttpNet>
 
         bool is_use_prop = UserDataManager.Instance.is_use_prop;//是否使用道具: 1.使用道具 0.不使用（非必传，默认不使用）
         int use_prop = is_use_prop ? 1 : 0;
-        parameters.Add("is_use_prop", use_prop.ToString());
         if (use_prop == 1)
         {
-            parameters.Add("discount", UserDataManager.Instance.propInfoItem.discount.ToString());
+            if (UserDataManager.Instance.propInfoItem == null) LOG.Warn("[send]使用道具信息异常"); 
+            else parameters.Add("discount", UserDataManager.Instance.propInfoItem.discount.ToString());
         }
+        parameters.Add("is_use_prop", use_prop.ToString());
 
         this.Post("api_saveStep", parameters, (responseCode, result) =>
         {

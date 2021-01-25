@@ -408,6 +408,11 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButton.transform.GetChild(0).GetComponent<Text>().text = CTextManager.Instance.GetText(296);
                 MyBooksDisINSTANCE.Instance.chapterIDSet(ChapterId);//储存当前的章节
                 CheckChapterNeedPay();
+                PropInfo info = UserDataManager.Instance.userPropInfo_Key;
+                if (!(info==null || info.discount_list.Count == 0 || info.discount_list[0].prop_num <= 0))
+                {
+                    btnKeyProp.gameObject.SetActive(true);
+                }
                 propObj.gameObject.SetActive(true);
             }
         }
@@ -736,6 +741,7 @@ return function()
         {
             btnKeyProp.gameObject.SetActive(false);
             btnKeyProp2.gameObject.SetActive(false);
+            UserDataManager.Instance.is_use_prop = false;
             return;
         }
         btnKeyProp.gameObject.SetActive(true);

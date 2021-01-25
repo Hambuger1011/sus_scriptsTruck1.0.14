@@ -344,9 +344,10 @@ public class UserDataManager : Singleton<UserDataManager> {
     //public void UpdatePropItem()
     public void UpdatePropItemWhenServerCallback()
     {
-        if (is_use_prop && propInfoItem != null)
+        if (is_use_prop)
         {
-            propInfoItem.prop_num--;
+            if (propInfoItem == null)LOG.Warn("[recv]使用道具信息异常"); 
+            else propInfoItem.prop_num--;
         }
 
         if (GameHttpNet.Instance.SendSeq == SendSeq)

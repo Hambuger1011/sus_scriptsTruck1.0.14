@@ -196,7 +196,6 @@ UIBookReadingElement
                     PriceTitle.text = CTextManager.Instance.GetText(278) + m_curChapterID;
 
                     //ResourceManager.Instance.GetUISprite("BookDisplayForm/bg_icon1_03");
-                    RefreshKeyPropBtnState();
                 }
                 else
                 {
@@ -243,7 +242,6 @@ UIBookReadingElement
                         ContinueTitle.gameObject.SetActive(false);
                         txtContinueTip.gameObject.SetActive(true);
 
-                        RefreshKeyPropBtnState();
                     }
                     else
                     {
@@ -281,6 +279,8 @@ UIBookReadingElement
             }
         }
 
+        UserDataManager.Instance.is_use_prop = true;
+        RefreshKeyPropBtnState();
     }
 
 
@@ -848,6 +848,7 @@ UIBookReadingElement
         {
             btnKeyProp.gameObject.SetActive(false);
             btnKeyProp2.gameObject.SetActive(false);
+            UserDataManager.Instance.is_use_prop = false;
             return;
         }
         btnKeyProp.gameObject.SetActive(true);
