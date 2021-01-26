@@ -6,15 +6,29 @@ function TopBookView:__init(gameObject)
     self.TopBookBg =CS.DisplayUtil.GetChild(gameObject, "TopBookBg"):GetComponent("Image");
     self.TopBookContent =CS.DisplayUtil.GetChild(gameObject, "TopBookContent");
     self.Scrollbar =CS.DisplayUtil.GetChild(gameObject, "Scrollbar Horizontal"):GetComponent("Scrollbar");
+    self.PointBg =CS.DisplayUtil.GetChild(gameObject, "PointBg");
+    self.PointContent =CS.DisplayUtil.GetChild(gameObject, "PointContent");
 
     --事件监听
     logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.GotoRead,function() self:OpenRead() end)
 
+    self.Scrollbar.onValueChanged:AddListener(function(value)
+        self:OnScrollbarChanged(value)
+    end)
+
     self.bookList = {}
+    self.pointList = {}
     self.selectIndex = 1
 end
 
-
+--点击打开书本
+function TopBookView:OnScrollbarChanged(value)
+    local v = value * (#self.pointList - 1) + 1
+    v = math.floor(v + 0.5)
+    for i = 1, #self.pointList do
+        self.pointList[i]:SetActiveEx(i == tonumber(v))
+    end
+end
 
 --点击打开书本
 function TopBookView:OpenRead()
@@ -34,6 +48,7 @@ function TopBookView:OnPlayClick()
 end
 
 function TopBookView:ShowTopBook(book_ids)
+    book_ids = "72,100,8,82"
     self.bookList = string.split(book_ids, ",")
     for i = 1, #self.bookList do
         self.bookList[i] = tonumber(self.bookList[i])
@@ -57,6 +72,14 @@ function TopBookView:ShowTopBook(book_ids)
             TopBookItem:DOFade(1, 0.2):SetEase(core.tween.Ease.Flash):Play();
         end)
         TopBookItem.gameObject:SetActiveEx(true)
+
+        if #self.bookList > 1 then
+            local PointItem = logic.cs.GameObject.Instantiate(self.PointBg,self.PointContent.transform)
+            local PointImg = PointItem.transform:Find('PointImg').gameObject
+            PointImg:SetActiveEx(k == self.selectIndex)
+            table.insert(self.pointList,PointImg)
+            PointItem.gameObject:SetActiveEx(true)
+        end
     end
     self.Scrollbar.numberOfSteps = #self.bookList
 end
