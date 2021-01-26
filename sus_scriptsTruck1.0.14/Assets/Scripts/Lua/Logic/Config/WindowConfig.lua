@@ -20,6 +20,7 @@ function WindowConfig:SetWindowsList(data)
             table.insert(WindowsList,this.ShowFirstCharge)
         elseif tonumber(v.id) == 3 then
             table.insert(WindowsList,this.ShowNewBookTips)
+            this.NewBookList = v.book_list
         elseif tonumber(v.id) == 4 then
             table.insert(WindowsList,this.ShowSignTip)
         elseif tonumber(v.id) == 5 then
@@ -29,7 +30,8 @@ function WindowConfig:SetWindowsList(data)
 end
 
 function WindowConfig:ShowFirstCharge()
-    if  not logic.cs.IGGSDKMrg.isNewUser and FirstChargeNeedShown then
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
+            and not logic.cs.IGGSDKMrg.isNewUser and not FirstChargeNeedShown then
         logic.gameHttp:GetRewardConfig(function(result)
             if(string.IsNullOrEmpty(result))then return; end
             logic.debug.Log("----GetRewardConfig---->" .. result)
@@ -48,16 +50,9 @@ end
 
 function WindowConfig:ShowNewBookTips()
     if BookPopupNeedShown then
-        logic.gameHttp:GetRecommendBookPopup(function(result1)
-            logic.debug.Log("----GetRecommendBookPopup---->" .. result1);
-            local json = core.json.Derialize(result1);
-            local code = tonumber(json.code)
-            if(code == 200)then
-                BookPopupNeedShown = false
-                local uiView = logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
-                uiView:SetData(json.data.book_list)
-            end
-        end)
+        BookPopupNeedShown = false
+        local uiView = logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
+        uiView:SetData(this.NewBookList)
     else
         this:ShowNextWindow()
     end

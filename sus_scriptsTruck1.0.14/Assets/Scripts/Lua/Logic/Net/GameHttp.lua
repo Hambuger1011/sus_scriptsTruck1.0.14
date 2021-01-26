@@ -1056,17 +1056,6 @@ function GameHttp:GetbookRanking(callback)
     end, nil, nil, true)
 end
 
---获取推荐书本弹窗数据
-function GameHttp:GetRecommendBookPopup(callback)
-    local param = {
-        ProtocolError = "api_getRecommendBookPopup",
-        TOKEN = logic.cs.GameHttpNet.TOKEN,
-    }
-    self:Get(self, "api_getRecommendBookPopup", param, function(result)
-        callback(result)
-    end, nil, nil, true)
-end
-
 --进入主页 获取自己书架的书本
 function GameHttp:GetSelfBookInfo(callback)
     local param = {
