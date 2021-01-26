@@ -34,6 +34,12 @@ function UIChoiceButtonItem:__init(gameObject)
     self.itemPropList = {}
     self.luckItemProp = nil
 
+    self.MsgListener = function(propInfoItem)
+        if not logic.IsNull(self.gameObject) then
+            self:OnClcikPropItem(propInfoItem,true)
+        end
+    end
+    logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.SetPropItem, self.MsgListener)
 end
 
 function UIChoiceButtonItem:__delete()
@@ -227,23 +233,27 @@ function UIChoiceButtonItem:AddItemProp(data)
     table.insert(self.itemPropList, item)
     return item
 end
-function UIChoiceButtonItem:OnClcikPropItem(propItem)
-	for i,v in ipairs(self.itemPropList) do
-		v:fucShowCheck(v==propItem)
-	end
+function UIChoiceButtonItem:OnClcikPropItem(propItem,noSet)
 	self.luckItemProp = propItem
 	local isUser = true
-	if propItem.data==nil then
+    local itemData = propItem.data or propItem.Data
+	if itemData==nil then
 		isUser = false
 	end
-    logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
+    if not noSet then
+        for i,v in ipairs(self.itemPropList) do
+            v:fucShowCheck(v==propItem)
+        end
+        logic.cs.UserDataManager:SetLuckyPropItem(isUser, itemData)
+    end
 
     --refresh ui
     self.textKeyProp.gameObject:SetActive(isUser)
+    self.cost = self.cost or 0
     if isUser then
         self.textKeyProp.text = tostring(self.cost)
-        self.DiscountText.text = propItem.data.discount_string
-        local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(propItem.data.discount)
+        self.DiscountText.text = itemData.discount_string
+        local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(itemData.discount)
         newCost = math.floor(newCost)
         self.txtCost.text = tostring(newCost)
         self.PropImage.sprite = Cache.PropCache.SpriteData[6];

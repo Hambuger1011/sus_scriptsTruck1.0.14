@@ -502,8 +502,11 @@ function BookReadingMgr:SaveProgress(callback)
         logic.debug.Log(string.format( "[+]保存进度:%d",self.playingComponent.cfg.dialogID))
         local is_use_prop = logic.cs.UserDataManager.is_use_prop
         local discount = "0"
-        if is_use_prop==1 then
+        if is_use_prop then
             discount = logic.cs.UserDataManager.propInfoItem.discount
+            is_use_prop = 1
+        else
+            is_use_prop = 0
         end
         logic.gameHttp:SendPlayerProgress(
             self.bookID,
