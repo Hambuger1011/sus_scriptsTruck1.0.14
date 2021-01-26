@@ -401,6 +401,7 @@ public class BookDisplayGridChild : MonoBehaviour {
                 PlayButtonEx.SetActive(false);
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
+                PlayKeyShowImage.SetActive(false);
             }
             else
             {
@@ -435,7 +436,22 @@ public class BookDisplayGridChild : MonoBehaviour {
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
             }
+            
+            JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mBookId, ChapterId);
+            if (chapterInfo != null)
+            {
+                PlayKeyShowImageText.text = chapterInfo.payamount.ToString();
+                if (chapterInfo.payamount > 0&& UserDataManager.Instance.bookDetailInfo.data.cost_max_chapter< ChapterId)
+                {
+                    PlayKeyShowImage.SetActive(true);
+                }
+                else { 
+                    PlayKeyShowImage.SetActive(false);
+                }
+            }
         }
+        
+        
 
         UpdateReadNum();
         CheckBookOpenState();

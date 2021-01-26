@@ -32,23 +32,28 @@ function BookTypeList:UpdateList(InfoList)
     local InfoCount = table.length(InfoList);
 
     for i = 1, InfoCount do
-        local item;
-        if (itemCount > i)then
-            item = self.ItemList[i];
-        else
-            local go = logic.cs.GameObject.Instantiate(self.BookTypeItemObj, self.BookScrollRect.content.transform);
-            go.transform.localPosition = core.Vector3.zero;
-            go.transform.localScale = core.Vector3.one;
-            go:SetActive(true);
-            item =BookTypeItem.New(go);
-            table.insert(self.ItemList,item);
+        local infoItem = InfoList[i]
+        if infoItem ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(infoItem.book_id) ~=nil then
+                local item;
+                if (itemCount > i)then
+                    item = self.ItemList[i];
+                else
+                    local go = logic.cs.GameObject.Instantiate(self.BookTypeItemObj, self.BookScrollRect.content.transform);
+                    go.transform.localPosition = core.Vector3.zero;
+                    go.transform.localScale = core.Vector3.one;
+                    go:SetActive(true);
+                    item =BookTypeItem.New(go);
+                    table.insert(self.ItemList,item);
+                end
+                item:SetInfo(InfoList[i]);
         end
-        item:SetInfo(InfoList[i]);
+        
     end
+    
     if (showIndex ~= -1)then
         self.ScrollRectTransform.anchoredPosition ={x=-(showIndex * 200),y=0,z=0};
     end
-
+    
     if(InfoCount<=0)then
         self.Book_Empty_Pfb:SetActive(true);
     end

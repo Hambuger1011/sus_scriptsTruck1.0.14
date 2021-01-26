@@ -54,35 +54,39 @@ function MainBookList:UpdateList(InfoList,TitleName,_BuriedPoint_bookType)
 
     local len = table.length(InfoList);
     for i = 1, len do
-        local go = logic.cs.GameObject.Instantiate(self.bookItemObj, self.ScrollRect.content.transform);
-        go.transform.localPosition = core.Vector3.zero;
-        go.transform.localScale = core.Vector3.one;
-        go:SetActive(true);
+        
+        local infoItem = InfoList[i]
+        if infoItem ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(infoItem.book_id) ~= nil then
+            local go = logic.cs.GameObject.Instantiate(self.bookItemObj, self.ScrollRect.content.transform);
+            go.transform.localPosition = core.Vector3.zero;
+            go.transform.localScale = core.Vector3.one;
+            go:SetActive(true);
 
-        local item =BookItem.New(go);
-        table.insert(self.ItemList,item);
+            local item =BookItem.New(go);
+            table.insert(self.ItemList,item);
 
-        item._index = i;
-        item.BuriedPoint_bookType = self.BuriedPoint_bookType;
-        item:SetInfo(InfoList[i]);
+            item._index = i;
+            item.BuriedPoint_bookType = self.BuriedPoint_bookType;
+            item:SetInfo(InfoList[i]);
 
-        --如果是周更列表
-        if(_BuriedPoint_bookType==BuriedPoint_bookType.WeeklyUpdate)then
+            --如果是周更列表
+            if(_BuriedPoint_bookType==BuriedPoint_bookType.WeeklyUpdate)then
 
-            ----------------------------【下本书 更新日期（周几）】
-            local nextIndex=i+1;
-            if(nextIndex>len)then
-                nextIndex=nil;
+                ----------------------------【下本书 更新日期（周几）】
+                local nextIndex=i+1;
+                if(nextIndex>len)then
+                    nextIndex=nil;
+                end
+                local Nextdatetemp=nil;
+                local nextWeekIndex=nil;
+                if(nextIndex)then
+                    Nextdatetemp=CS.DateUtil.ConvertIntDateTime(InfoList[nextIndex].update_time);
+                    nextWeekIndex= CS.DateUtil.GetWeekDay(Nextdatetemp.Year,Nextdatetemp.Month,Nextdatetemp.Day);
+                end
+                ----------------------------【下本书 更新日期（周几）】
+                --显示周更时间
+                item:ShowWeeklyUpdateTime(InfoList[i],nextWeekIndex);
             end
-            local Nextdatetemp=nil;
-            local nextWeekIndex=nil;
-            if(nextIndex)then
-                 Nextdatetemp=CS.DateUtil.ConvertIntDateTime(InfoList[nextIndex].update_time);
-                 nextWeekIndex= CS.DateUtil.GetWeekDay(Nextdatetemp.Year,Nextdatetemp.Month,Nextdatetemp.Day);
-            end
-            ----------------------------【下本书 更新日期（周几）】
-            --显示周更时间
-            item:ShowWeeklyUpdateTime(InfoList[i],nextWeekIndex);
         end
     end
     self.TitleTxt.text =TitleName;

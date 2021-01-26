@@ -346,10 +346,22 @@ public class BookDisplayForm : BaseUIForm
         // 生成cell
         for (int i = 0; i < len; i++)
         {
-            GameObject go = Instantiate(ItemCellPrefab, BookDisplayGridChildContent);
-            ScrollViewPageCell cell = go.AddComponent<ScrollViewPageCell>();
-            go.SetActive(true);
-            mCellList.Add(cell);
+            ScrollViewPageCell cell= null;
+            if (mCellList == null || mCellList.Count - 1 < i)
+            {
+                GameObject go = Instantiate(ItemCellPrefab, BookDisplayGridChildContent);
+                cell = go.AddComponent<ScrollViewPageCell>();
+                cell.hasCell = false;
+                go.SetActive(true);
+                mCellList.Add(cell);
+            }
+            else
+            {
+                cell = mCellList[i];
+            }
+
+            if (cell != null)
+                cell.hasCell = false;
         }
 
         // init scroll viwe page

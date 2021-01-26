@@ -203,12 +203,20 @@ function UIStoryEditorMgr:SaveStoryEditorData(storyDetial,chapterID,storyTable,u
     }
     local File = logic.cs.CFileManager
 
-    local path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'.json'
-    local json = core.json.Serialize(roleData)
-    File.WriteFileString(path,json)
+    logic.StoryEditorMgr:SaveStoryEditorRoleData(storyDetial)
 
     path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'_'..chapterID..'.json'
     json = core.json.Serialize(storyData)
+    File.WriteFileString(path,json)
+end
+
+
+function UIStoryEditorMgr:SaveStoryEditorRoleData(storyDetial)
+    local roleData = storyDetial.roleTable:ToTable()
+    local File = logic.cs.CFileManager
+
+    local path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'.json'
+    local json = core.json.Serialize(roleData)
     File.WriteFileString(path,json)
 end
 
@@ -344,6 +352,9 @@ function UIStoryEditorMgr:EnterBookDetials(bookID, callback)
                 end
             end
             storyDetial:UpdateTags()
+            
+            logic.StoryEditorMgr:SaveStoryEditorRoleData(storyDetial)
+            
             callback(storyDetial)
         else
             logic.cs.UIAlertMgr:Show("TIPS",json.msg)

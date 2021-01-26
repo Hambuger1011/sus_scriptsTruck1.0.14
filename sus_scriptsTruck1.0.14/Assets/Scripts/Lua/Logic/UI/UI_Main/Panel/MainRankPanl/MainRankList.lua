@@ -72,7 +72,7 @@ function MainRankList:UpdateRankList(list,titleName,_type)
     local bookInfo1=  Cache.MainCache:GetRankByIndex(list,1);
     local item1 =BookRankItem.New(self.RankBookItem1_Obj);
     self.RankBookItem1_Obj:SetActive(true);
-    if(bookInfo1)then
+    if(bookInfo1 ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo1.book_id) ~= nil  )then
         item1:SetInfo(bookInfo1,_type,1);
         table.insert(self.ItemList,item1);
     end
@@ -80,7 +80,7 @@ function MainRankList:UpdateRankList(list,titleName,_type)
     local bookInfo2=  Cache.MainCache:GetRankByIndex(list,2);
     local item2 =BookRankItem.New(self.RankBookItem2_Obj);
     self.RankBookItem2_Obj:SetActive(true);
-    if(bookInfo2)then
+    if(bookInfo2  ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo2.book_id) ~= nil  )then
         item2:SetInfo(bookInfo2,_type,2);
         table.insert(self.ItemList,item2);
     end
@@ -88,7 +88,7 @@ function MainRankList:UpdateRankList(list,titleName,_type)
     local bookInfo3=  Cache.MainCache:GetRankByIndex(list,3);
     local item3 =BookRankItem.New(self.RankBookItem3_Obj);
     self.RankBookItem3_Obj:SetActive(true);
-    if(bookInfo3)then
+    if(bookInfo3   ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo3.book_id) ~= nil  )then
         item3:SetInfo(bookInfo3,_type,3);
         table.insert(self.ItemList,item3);
     end

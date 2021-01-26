@@ -1340,16 +1340,19 @@ public class ProfileForm : BaseUIForm
         List<int> myBookIDs = GameDataMgr.Instance.userData.GetMyBookIds();
         for (int i = 0; i < myBookIDs.Count; ++i)
         {
-            GameObject go = Instantiate(MyBooksItem);
-            go.transform.SetParent(MyBooksContent);
-            go.SetActive(true);
-            //go.transform.SetSiblingIndex(0);
-            MyBookInitsGo.Add(go);
-
-            ProfileMyBookItem ProfileMyBookItem = go.GetComponent<ProfileMyBookItem>();
-            ProfileMyBookItem.bookTypeName = "mybookItem";
             JDT_Book bookDetail = JsonDTManager.Instance.GetJDTBookDetailInfo(myBookIDs[i]);
-            ProfileMyBookItem.Init(bookDetail);
+            if (bookDetail != null)
+            {
+                GameObject go = Instantiate(MyBooksItem);
+                go.transform.SetParent(MyBooksContent);
+                go.SetActive(true);
+                //go.transform.SetSiblingIndex(0);
+                MyBookInitsGo.Add(go);
+
+                ProfileMyBookItem ProfileMyBookItem = go.GetComponent<ProfileMyBookItem>();
+                ProfileMyBookItem.bookTypeName = "mybookItem";
+                ProfileMyBookItem.Init(bookDetail);
+            }
         }
 
         if (myBookIDs.Count <= 0)

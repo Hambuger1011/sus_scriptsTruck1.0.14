@@ -24,19 +24,22 @@ function RankList:UpdateList(InfoList,_type)
     local InfoCount = table.length(InfoList);
 
     for i = 1, InfoCount do
-        local item;
-        if (itemCount > i)then
-            item = ItemList[i];
-        else
-            local go = logic.cs.GameObject.Instantiate(self.RankBookItemObj, self.BookScrollRect.content.transform);
-            go.transform.localPosition = core.Vector3.zero;
-            go.transform.localScale = core.Vector3.one;
-            go:SetActive(true);
-            item =BookRankItem.New(go);
-            table.insert(ItemList,item);
+        local infoItem = InfoList[i]
+        if infoItem ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(infoItem.book_id) ~= nil then
+            local item;
+            if (itemCount > i)then
+                item = ItemList[i];
+            else
+                local go = logic.cs.GameObject.Instantiate(self.RankBookItemObj, self.BookScrollRect.content.transform);
+                go.transform.localPosition = core.Vector3.zero;
+                go.transform.localScale = core.Vector3.one;
+                go:SetActive(true);
+                item =BookRankItem.New(go);
+                table.insert(ItemList,item);
+            end
+            item._index = i;
+            item:SetInfo(InfoList[i],_type);
         end
-        item._index = i;
-        item:SetInfo(InfoList[i],_type);
     end
     if (showIndex ~= -1)then
         self.ScrollRectTransform.anchoredPosition ={x=-(showIndex * 200),y=0,z=0};
