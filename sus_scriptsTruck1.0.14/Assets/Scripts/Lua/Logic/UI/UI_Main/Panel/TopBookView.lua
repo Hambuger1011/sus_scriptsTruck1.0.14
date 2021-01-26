@@ -4,14 +4,14 @@ local TopBookView = BaseClass("TopBookView")
 function TopBookView:__init(gameObject)
     self.gameObject=gameObject;
     self.TopBookBg =CS.DisplayUtil.GetChild(gameObject, "TopBookBg"):GetComponent("Image");
-    self.TopBookItemObj =CS.DisplayUtil.GetChild(gameObject, "TopBookItemObj");
+    self.TopBookContent =CS.DisplayUtil.GetChild(gameObject, "TopBookContent");
+    self.Scrollbar =CS.DisplayUtil.GetChild(gameObject, "Scrollbar Horizontal"):GetComponent("Scrollbar");
 
-    --按钮监听
-    logic.cs.UIEventListener.AddOnClickListener(self.TopBookBg.gameObject,function(data) self:OnPlayClick() end)
     --事件监听
     logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.GotoRead,function() self:OpenRead() end)
 
-    self.infos=nil;
+    self.bookList = {}
+    self.selectIndex = 1
 end
 
 
@@ -23,49 +23,45 @@ end
 
 --点击打开书本
 function TopBookView:OnPlayClick()
-    if(self.infos)then
-        GameHelper.BookClick(self.infos);
+    if(self.bookList and self.bookList[self.selectIndex])then
+        local bookinfo={};
+        bookinfo.book_id=self.bookList[self.selectIndex];
+        GameHelper.BookClick(bookinfo);
        --埋点*继续阅读模块
-        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectBook,"home_1", "1" ,tostring(self.infos.book_id));
+        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectBook,"home_1", "1" ,tostring(bookinfo.book_id));
     end
 
 end
 
-function TopBookView:ShowTopBook(info)
-    self.infos=info;
-    if(info)then
-        local BookId = info.book_id;
-        GameHelper.CurBookId=BookId;
-        self.TopBookBg.sprite = CS.ResourceManager.Instance:GetUISprite("BookDisplayForm/bg_picture");
-
-        logic.cs.ABSystem.ui:DownloadBanner(BookId,function(id,refCount)
-
-            if(self.TopBookBg==nil)then
-                refCount:Release();
-                return;
-            end
-
-            if (BookId ~=id)then
-                refCount:Release();
-                return;
-            end
-            self.TopBookBg:DOFade(0, 0):SetEase(core.tween.Ease.Flash):Play();
-            self.TopBookBg.sprite = refCount:GetObject();
-            self.TopBookBg:DOFade(1, 0.2):SetEase(core.tween.Ease.Flash):Play();
-        end)
-    else
-        logic.debug.LogError("数据里没有final_book_info");
+function TopBookView:ShowTopBook(book_ids)
+    self.bookList = string.split(book_ids, ",")
+    for i = 1, #self.bookList do
+        self.bookList[i] = tonumber(self.bookList[i])
     end
-
+    GameHelper.CurBookId=self.bookList[1];
+    for k, v in pairs(self.bookList) do
+        local TopBookItem = logic.cs.GameObject.Instantiate(self.TopBookBg.gameObject,self.TopBookContent.transform):GetComponent("Image");
+        TopBookItem.sprite = CS.ResourceManager.Instance:GetUISprite("BookDisplayForm/bg_picture");
+        logic.cs.UIEventListener.AddOnClickListener(TopBookItem.gameObject,function(data) self:OnPlayClick() end)
+        logic.cs.ABSystem.ui:DownloadBanner(v,function(id,refCount)
+            if(TopBookItem==nil)then
+                refCount:Release();
+                return;
+            end
+            if (v ~=id)then
+                refCount:Release();
+                return;
+            end
+            TopBookItem:DOFade(0, 0):SetEase(core.tween.Ease.Flash):Play();
+            TopBookItem.sprite = refCount:GetObject();
+            TopBookItem:DOFade(1, 0.2):SetEase(core.tween.Ease.Flash):Play();
+        end)
+        TopBookItem.gameObject:SetActiveEx(true)
+    end
+    self.Scrollbar.numberOfSteps = #self.bookList
 end
 
 function TopBookView:__delete()
-
-    local On_PlayClick = function(data)
-        self:OnPlayClick()
-    end
-
-    logic.cs.UIEventListener.RemoveOnClickListener(self.TopBookBg.gameObject,On_PlayClick);
 
     logic.cs.EventDispatcher.RemoveMessageListener(logic.cs.EventEnum.GotoRead,function() self:OpenRead() end);
 
@@ -74,10 +70,7 @@ function TopBookView:__delete()
     end
 
     self.gameObject = nil;
-    self.button = nil;
     self.TopBookBg = nil;
-    self.TopBookItemObj = nil;
-
 end
 
 return TopBookView

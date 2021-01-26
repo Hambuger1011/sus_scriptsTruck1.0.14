@@ -71,6 +71,7 @@ function DressUpCache:ResetLogin()
     GameController.ActivityControl:SetFreeBG()
     -- 【请求我的书本】
     GameController.MainFormControl:GetSelfBookInfoRequest();
+    GameController.MainFormControl:GetIndexScrollListRequest();
 end
 
 

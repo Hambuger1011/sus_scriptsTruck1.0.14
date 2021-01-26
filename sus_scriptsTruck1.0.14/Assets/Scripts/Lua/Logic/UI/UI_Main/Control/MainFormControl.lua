@@ -34,6 +34,7 @@ function MainFormControl:RefreshBooks(isRefreshAll)
 
     --region 【请求我的书本】
     self:GetSelfBookInfoRequest();
+    self:GetIndexScrollListRequest();
     --endregion
 
     --region 【请求获取特殊限时活动状态】【彩蛋】【转盘】【全书免费】
@@ -71,6 +72,27 @@ function MainFormControl:GetSelfBookInfoRequest()
 end
 --endregion
 
+--region 【获取首页顶部滚动栏书本】
+function MainFormControl:GetIndexScrollListRequest()
+    logic.gameHttp:GetIndexScrollList(function(result) self:GetIndexScrollListCallBack(result); end)
+end
+--endregion
+
+--region 【获取首页顶部滚动栏书本响应】
+--请求我的书本
+function MainFormControl:GetIndexScrollListCallBack(result)
+    logic.debug.Log("----GetIndexScrollListCallBack---->" .. result);
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if(code == 200)then
+        UIMainForm.TopBookView:ShowTopBook(json.data.book_ids);
+        --刷新我的书本
+        self:ResetMyBookList()
+    else
+        logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+    end
+end
+--endregion
 
 --region 【周更新列表*推荐列表 响应】
 function MainFormControl:OnGetbooksUpdatedWeekly(result)
@@ -121,8 +143,6 @@ function MainFormControl:GetbookRanking(result)
     end
 end
 
-local TopBook=nil;
-
 --endregion
 
 
@@ -142,19 +162,6 @@ function MainFormControl:GetSelfBookInfo(result)
         --c# 记录玩家书本阅读的进度
         logic.cs.UserDataManager:InitRecordServerBookData()
         logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.BookProgressUpdate)
-
-        local mybookList_Len=table.length(Cache.MainCache.mybook_list);
-        if(UIMainForm and mybookList_Len>0 and Cache.MainCache.final_book_info)then
-            TopBook = UIMainForm.TopBookView:ShowTopBook(Cache.MainCache.final_book_info);
-            --刷新我的书本
-            self:ResetMyBookList()
-        else
-            local bookinfo={};
-            bookinfo.book_id=36;
-            if(UIMainForm)then
-                TopBook = UIMainForm.TopBookView:ShowTopBook(bookinfo);
-            end
-        end
 
         --region【请求刷新周更新列表*刷新推荐列表】
 

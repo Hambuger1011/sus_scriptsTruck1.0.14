@@ -1081,6 +1081,12 @@ function GameHttp:GetIndexBookList(_type, callback)
     end, nil, nil, true)
 end
 
+--获取首页顶部滚动栏书本
+function GameHttp:GetIndexScrollList(callback)
+    local param = {
+    }
+    self:Get(self, "api_getIndexScrollList", param, callback, nil, nil, true)
+end
 
 --获取搜索分类的书本
 function GameHttp:GetSearchBookList(_type, callback)

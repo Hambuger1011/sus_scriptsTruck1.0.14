@@ -9,6 +9,7 @@ local MiddlePos = Vector2.New(4, 58)
 local ItemList = {}
 local Index = 1
 local newBookList = {}
+local isShow = false
 
 UINewBookTipsForm.config = {
     ID = uiid.UINewBookTipsForm,
@@ -69,7 +70,7 @@ function UINewBookTipsForm:SetData(data)
                 return
             end
             local sprite = refCount:GetObject()
-            if not IsNull(sprite) then
+            if sprite ~= nil and isShow then
                 Image.sprite = sprite
             end
         end)
@@ -124,10 +125,12 @@ function UINewBookTipsForm:ViewBook()
 end
 
 function UINewBookTipsForm:OnOpen()
+    isShow = true
     UIView.OnOpen(self)
 end
 
 function UINewBookTipsForm:OnClose()
+    isShow = false
     UIView.OnClose(self)
 end
 
