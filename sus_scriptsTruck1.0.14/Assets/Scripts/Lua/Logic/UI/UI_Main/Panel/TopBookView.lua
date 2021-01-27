@@ -6,6 +6,7 @@ function TopBookView:__init(gameObject)
     self.TopBookBg =CS.DisplayUtil.GetChild(gameObject, "TopBookBg"):GetComponent("Image");
     self.TopBookContent =CS.DisplayUtil.GetChild(gameObject, "TopBookContent");
     self.Scrollbar =CS.DisplayUtil.GetChild(gameObject, "Scrollbar Horizontal"):GetComponent("Scrollbar");
+    self.ScrollRect =CS.DisplayUtil.GetChild(gameObject, "Scroll View"):GetComponent(typeof(logic.cs.ScrollRect));
     self.PointBg =CS.DisplayUtil.GetChild(gameObject, "PointBg");
     self.PointContent =CS.DisplayUtil.GetChild(gameObject, "PointContent");
 
@@ -21,10 +22,26 @@ function TopBookView:__init(gameObject)
     self.selectIndex = 1
 end
 
---点击打开书本
+function TopBookView:ShowNext()
+    if #self.bookList > 1 then
+        coroutine.stop(self.co)
+        self.co = coroutine.start(function()
+            coroutine.wait(self.waitTime)
+            self:ShowNext()
+        end)
+    end
+    local nextIndex = self.selectIndex
+    if self.selectIndex == #self.bookList then
+        self.selectIndex = 1
+        nextIndex = 0
+    end
+    self.ScrollRect.horizontalNormalizedPosition=nextIndex / (#self.bookList - 1);
+end
+
 function TopBookView:OnScrollbarChanged(value)
     local v = value * (#self.pointList - 1) + 1
     v = math.floor(v + 0.5)
+    self.selectIndex = v
     for i = 1, #self.pointList do
         self.pointList[i]:SetActiveEx(i == tonumber(v))
     end
@@ -48,8 +65,9 @@ function TopBookView:OnPlayClick()
 end
 
 function TopBookView:ShowTopBook(book_ids)
-    book_ids = "72,100,8,82"
+    --book_ids = "72,100,8,82"
     self.bookList = string.split(book_ids, ",")
+    self.waitTime = 5
     for i = 1, #self.bookList do
         self.bookList[i] = tonumber(self.bookList[i])
     end
@@ -82,6 +100,12 @@ function TopBookView:ShowTopBook(book_ids)
         end
     end
     self.Scrollbar.numberOfSteps = #self.bookList
+    if #self.bookList > 1 then
+        self.co = coroutine.start(function()
+            coroutine.wait(self.waitTime)
+            self:ShowNext()
+        end)
+    end
 end
 
 function TopBookView:__delete()
@@ -90,6 +114,11 @@ function TopBookView:__delete()
 
     if(CS.XLuaHelper.is_Null(self.gameObject)==false)then
         logic.cs.GameObject.Destroy(self.gameObject)
+    end
+
+    if self.co then
+        coroutine.stop(self.co)
+        self.co = nil
     end
 
     self.gameObject = nil;
