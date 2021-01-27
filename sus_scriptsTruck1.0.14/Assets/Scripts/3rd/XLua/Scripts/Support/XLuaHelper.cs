@@ -587,6 +587,11 @@ public static class XLuaHelper
         {
             isBoo = false;
         }
+
+        if (obj == "null")
+        {
+            isBoo = false;
+        }
         return isBoo;
     }
 

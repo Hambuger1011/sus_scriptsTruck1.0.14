@@ -70,6 +70,13 @@ function UIBookReadingView:OnInitView()
     self.bookProgress = get(root,'Frame/Layer/Pass/Image',typeof(logic.cs.Image))
     self.chapterSwitch = ChapterSwitch.New(root:Find('Frame/Layer/ChapterSwitch'))
     self.tipsImage = get(root,'Frame/Layer/TipsImage',typeof(CS.BookReading.UITipsImage))
+    self.BookTitle =CS.DisplayUtil.GetChild(self.topBar.gameObject, "BookTitle"):GetComponent("Text");
+
+    local bookDetailCfg = logic.bookReadingMgr.Res.bookDetailCfg
+    if(bookDetailCfg)then
+        self.BookTitle.text=bookDetailCfg.bookname;
+    end
+
 
     logic.cs.MyBooksDisINSTANCE:BarrageInit()
     self.topBar:Init()

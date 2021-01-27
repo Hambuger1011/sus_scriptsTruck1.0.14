@@ -352,6 +352,25 @@ end
 
 --endregion
 
+--region【展示书本背景】
+
+function GameHelper.ShowChapterBG(book_id,BookBG)
+    logic.cs.ABSystem.ui:DownloadBookCover(book_id,function(id,refCount)
+        if(BookBG==nil or (CS.XLuaHelper.is_Null(BookBG)==true))then
+            refCount:Release();
+            return;
+        end
+        if(book_id ~= id)then
+            refCount:Release();
+            return;
+        end
+        local sprite = refCount:GetObject();
+        BookBG.sprite = sprite;
+    end)
+end
+
+--endregion
+
 
 --region 【展示书本标签】
 

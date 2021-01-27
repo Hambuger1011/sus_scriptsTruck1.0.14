@@ -66,6 +66,7 @@ end
 
 --endregion【刷新全部书本】
 
+
 --region 【请求我的书本】
 function MainFormControl:GetSelfBookInfoRequest()
     logic.gameHttp:GetSelfBookInfo(function(result) self:GetSelfBookInfo(result); end)
@@ -197,8 +198,11 @@ function MainFormControl:GetWindowConfigCallBack(result)
     local json = core.json.Derialize(result)
     local code = tonumber(json.code)
     if code == 200 then
-        GameController.WindowConfig:SetWindowsList(json.data.window_list)
-        GameController.WindowConfig:ShowNextWindow()
+        --【存入缓存数据】
+        Cache.PopWindowCache:UpdateList(json.data);
+
+        GameController.WindowConfig:SetWindowsList();
+        GameController.WindowConfig:ShowNextWindow();
     end
 end
 

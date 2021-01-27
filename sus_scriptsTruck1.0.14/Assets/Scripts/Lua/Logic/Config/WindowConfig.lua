@@ -1,32 +1,23 @@
-local BaseClass = core.Class
-local WindowConfig = BaseClass("WindowConfig", core.Singleton)
+local WindowConfig = core.Class("WindowConfig", core.Singleton)
+
 local this = WindowConfig
 local FirstChargeNeedShown = true
 local BookPopupNeedShown = true
 local WindowIndex = 0
-local WindowsList = {}
 
 --region【构造函数】
 function WindowConfig:__init()
 end
 --endregion
 
-function WindowConfig:SetWindowsList(data)
-    WindowsList = {}
+function WindowConfig:SetWindowsList()
     WindowIndex = 0
     this.NeedShowNextWindow = false
-    for k, v in pairs(data) do
-        if tonumber(v.id) == 1 then
-            table.insert(WindowsList,this.ShowFirstCharge)
-        elseif tonumber(v.id) == 3 then
-            table.insert(WindowsList,this.ShowNewBookTips)
-            this.NewBookList = v.book_list
-        elseif tonumber(v.id) == 4 then
-            table.insert(WindowsList,this.ShowSignTip)
-        elseif tonumber(v.id) == 5 then
-            table.insert(WindowsList,this.ShowAgreement)
-        end
+    local info3=Cache.PopWindowCache:GetInfoById(3);
+    if(info3 and info3.book_list)then
+        this.NewBookList =info3.book_list;
     end
+
 end
 
 function WindowConfig:ShowFirstCharge()
@@ -58,6 +49,32 @@ function WindowConfig:ShowNewBookTips()
     end
 end
 
+local daypassIndex=0;
+function WindowConfig:ShowDayPass()
+    daypassIndex=daypassIndex+1;
+    local info2=Cache.PopWindowCache:GetInfoById(2);
+    if(info2)then
+        local list=info2.book_list;
+        if(GameHelper.islistHave(list)==true)then
+            local uiform = logic.UIMgr:GetView2(logic.uiid.UIDayPassForm);
+            if(uiform==nil)then
+                uiform = logic.UIMgr:Open(logic.uiid.UIDayPassForm);
+                uiform:SetInfo(info2)
+            else
+                uiform.uiform:Appear();
+                uiform:SetInfo(info2)
+            end
+            CS.AppsFlyerManager.Instance:GetFirstActionLog();
+        else
+            logic.UIMgr:Close(logic.uiid.UIDayPassForm);
+            this:ShowNextWindow()
+        end
+    else
+        logic.UIMgr:Close(logic.uiid.UIDayPassForm);
+        this:ShowNextWindow()
+    end
+end
+
 function WindowConfig:ShowSignTip()
     if(Cache.SignInCache.activity_login.is_receive==0)then
         logic.UIMgr:Open(logic.uiid.UISignTipForm);
@@ -77,10 +94,23 @@ function WindowConfig:ShowAgreement()
 end
 
 function WindowConfig:ShowNextWindow()
-    WindowIndex = WindowIndex + 1
-    local nextWindow = WindowsList[WindowIndex]
-    if nextWindow then
-        nextWindow()
+    WindowIndex = WindowIndex + 1;
+    local windowlist=Cache.PopWindowCache.window_list;
+    if(windowlist)then
+        local len=table.length(windowlist);
+        if(len>0 and WindowIndex<=len)then
+            if(windowlist[WindowIndex].id==1)then
+                self:ShowFirstCharge();
+            elseif(windowlist[WindowIndex].id==2)then
+                self:ShowDayPass();
+            elseif(windowlist[WindowIndex].id==3)then
+                self:ShowNewBookTips();
+            elseif(windowlist[WindowIndex].id==4)then
+                self:ShowSignTip();
+            elseif(windowlist[WindowIndex].id==5)then
+                self:ShowAgreement();
+            end
+        end
     end
 end
 
