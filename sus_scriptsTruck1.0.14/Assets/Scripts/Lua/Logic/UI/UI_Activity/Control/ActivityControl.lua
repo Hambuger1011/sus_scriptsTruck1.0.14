@@ -598,124 +598,33 @@ function ActivityControl:GetActivityList(result)
     local json = core.json.Derialize(result);
     local code = tonumber(json.code);
     if(code == 200)then
-
-        --【刷新开关】
-        local Egg_isUpdate=false;
-        local Spin_isUpdate=false;
-        local Free_isUpdate=false;
-
         if(json.data==nil or #json.data==0)then return; end
 
-        for i = 1, #json.data do
-            --【彩蛋活动】
-            if(json.data[i].id==EnumActivity.ColoredEgg)then
-                --【彩蛋活动是否开启, 1开启,  0或false关闭】
-                if(Cache.LimitTimeActivityCache.ColoredEgg.is_open~=json.data[i].is_open)then
-                    --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                    Egg_isUpdate=true;
-                end
+        --*****【全书免费】【刷新开关】
+        local Free_isUpdate=self:IsUpdateFreeKey(json.data);
 
-                --【Lua】【缓存最新数据】
-                Cache.LimitTimeActivityCache:UpdateEggInfo(json.data[i]);
+        --【Lua】【缓存最新数据】
+        Cache.LimitTimeActivityCache:UpdateActivityList(json.data);
 
-                --如果状态改变了 【定时器开启】
-                GameController.ActivityBannerControl:Timer_ColoredEggRequest();
-            end
+        --*****【免费钥匙】【C#开关】
+        self:FreeKeycCsharp(Free_isUpdate);
 
-            --【旋转抽奖】
-            if(json.data[i].id==EnumActivity.SpinDraw)then
-                --【旋转抽奖活动是否开启, 1开启,  0或false关闭】
-                if(Cache.LimitTimeActivityCache.SpinDraw.is_open~=json.data[i].is_open)then
-                    --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                    Spin_isUpdate=true;
-                end
+        --*****【免费钥匙】【刷新界面】
+        self:UpdateFreeKeyUI(Free_isUpdate)
 
-                --【Lua】【缓存最新数据】
-                Cache.LimitTimeActivityCache:UpdateSpinDrawInfo(json.data[i]);
+        --如果状态改变了 【定时器开启】
+        GameController.ActivityBannerControl:TimerRequest();
 
-                --如果状态改变了 【定时器开启】
-                GameController.ActivityBannerControl:Timer_SpinDrawRequest();
-            end
-
-            --【旋转抽奖】
-            if(json.data[i].id==EnumActivity.FreeKey)then
-                --【免费钥匙活动是否开启, 1开启,  0或false关闭】
-                if(Cache.LimitTimeActivityCache.FreeKey.is_open~=json.data[i].is_open)then
-                    --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                    Free_isUpdate=true;
-
-                    --C#开关
-                    CS.XLuaHelper.LimitTimeActivity=json.data[i].is_open;
-                end
-
-                --【Lua】【缓存最新数据】
-                Cache.LimitTimeActivityCache:UpdateFreeKeyInfo(json.data[i]);
-
-                --如果状态改变了 【定时器开启】
-                GameController.ActivityBannerControl:Timer_FreeKeyRequest();
-            end
-        end
-
-
-        if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1 or Cache.LimitTimeActivityCache.SpinDraw.is_open==1 or Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+        --【如果有活动开启】【打开Banner界面】
+        if(Cache.LimitTimeActivityCache:IsOpen()==true)then
             --【刷新UIActivityBannerForm】
             self:UpdateActivityBanner();
         else
             GameController.MainFormControl:MoveBanner() --把主界面偏移 收回
         end
-
-        --region**************************************【彩蛋】【刷新界面】
-        if(Egg_isUpdate==true)then
-
-        end
-        --endregion**************************************【彩蛋】【刷新界面】
-
-        --region**************************************【旋转抽奖】【刷新界面】
-        if(Spin_isUpdate==true)then
-
-        end
-        --endregion**************************************【旋转抽奖】【刷新界面】
-
-        --region**************************************【免费钥匙】【刷新界面】
-        if(Free_isUpdate==true)then
-            --如果数据改变了  需要刷新状态
-            --【刷新主界面】【推荐列表】【周更】【我的书本】【排行榜】
-            GameController.MainFormControl:Limit_time_Free();
-
-
-            --【书本详情页面刷新】
-            local BookDisplayFormobj = logic.cs.CUIManager:GetForm(logic.cs.UIFormName.BookDisplayForm)
-            if(BookDisplayFormobj and CS.XLuaHelper.is_Null(BookDisplayFormobj)==false)then
-                local BookDisplayForm=BookDisplayFormobj:GetComponent(typeof(CS.BookDisplayForm));
-                if(BookDisplayForm)then
-                    BookDisplayForm:Limit_time_Free();
-                end
-            end
-
-            --【章节完成界面】
-            local BookReading = logic.UIMgr:GetView2(logic.uiid.BookReading);
-            if(BookReading)then
-                --【限时活动免费读书 显示标签】
-                BookReading.chapterSwitch:Limit_time_Free();
-            end
-
-            --【限时活动界面】
-            local activityForm = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);
-            if(activityForm and activityForm.LimitedTimePanel)then
-                --【限时活动免费读书 显示标签】
-                GameHelper.Limit_time_Free(activityForm.LimitedTimePanel.FreeBG);
-            end
-
-            --【主界面 Banner条】
-
-
-
-
-        end
-        --endregion**************************************【免费钥匙】【刷新界面】
-
     end
 end
+
 --endregion
 
 
@@ -733,87 +642,21 @@ function ActivityControl:GetActivityInfo(result)
     local json = core.json.Derialize(result);
     local code = tonumber(json.code);
     if(code == 200)then
+        --*****【全书免费】【刷新开关】
+        local Free_isUpdate=self:IsUpdateFreeKey(json.data);
 
-        --【彩蛋】
-        if(json.data.id==EnumActivity.ColoredEgg)then
-            --【刷新开关】
-            local Egg_isUpdate=false;
-            --【彩蛋活动是否开启, 1开启,  0或false关闭】
-            if(Cache.LimitTimeActivityCache.ColoredEgg.is_open~=json.data.is_open)then
-                --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                Egg_isUpdate=true;
-            end
-            --【Lua】【缓存最新数据】
-            Cache.LimitTimeActivityCache:UpdateEggInfo(json.data);
-            --region**************************************【彩蛋】【刷新界面】
-            self:UpdateActivityBanner();
-            --endregion**************************************【彩蛋】【刷新界面】
-
-        --【转盘】
-        elseif(json.data.id==EnumActivity.SpinDraw)then
-            --【刷新开关】
-            local Spin_isUpdate=false;
-            --【旋转抽奖活动是否开启, 1开启,  0或false关闭】
-            if(Cache.LimitTimeActivityCache.SpinDraw.is_open~=json.data.is_open)then
-                --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                Spin_isUpdate=true;
-            end
-            --【Lua】【缓存最新数据】
-            Cache.LimitTimeActivityCache:UpdateSpinDrawInfo(json.data);
-            --region**************************************【旋转抽奖】【刷新界面】
-            self:UpdateActivityBanner();
-            --endregion**************************************【旋转抽奖】【刷新界面】
-
-        --【免费钥匙】
-        elseif(json.data.id==EnumActivity.FreeKey)then
-            --【刷新开关】
-            local Free_isUpdate=false;
-            --【免费钥匙活动是否开启, 1开启,  0或false关闭】
-            if(Cache.LimitTimeActivityCache.FreeKey.is_open~=json.data.is_open)then
-                --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
-                Free_isUpdate=true;
-
-                --C#开关
-                CS.XLuaHelper.LimitTimeActivity=json.data.is_open;
-            end
-            --【Lua】【缓存最新数据】
-            Cache.LimitTimeActivityCache:UpdateFreeKeyInfo(json.data);
+        --【刷新保存一组数据】
+        Cache.LimitTimeActivityCache:SetActivityInfo(json.data);
 
 
-            --region**************************************【免费钥匙】【刷新界面】
-            if(Free_isUpdate==true)then
-                --如果数据改变了  需要刷新状态
-                --【刷新主界面】【推荐列表】【周更】【我的书本】【排行榜】
-                GameController.MainFormControl:Limit_time_Free();
-
-                --【书本详情页面刷新】
-                local BookDisplayFormobj = logic.cs.CUIManager:GetForm(logic.cs.UIFormName.BookDisplayForm)
-                if(BookDisplayFormobj and CS.XLuaHelper.is_Null(BookDisplayFormobj)==false)then
-                    local BookDisplayForm=BookDisplayFormobj:GetComponent(typeof(CS.BookDisplayForm));
-                    if(BookDisplayForm)then
-                        BookDisplayForm:Limit_time_Free();
-                    end
-                end
-
-                --【章节完成界面】
-                local BookReading = logic.UIMgr:GetView2(logic.uiid.BookReading);
-                if(BookReading)then
-                    --【限时活动免费读书 显示标签】
-                    BookReading.chapterSwitch:Limit_time_Free();
-                end
-
-                --【限时活动界面】
-                local activityForm = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);
-                if(activityForm and activityForm.LimitedTimePanel)then
-                    --【限时活动免费读书 显示标签】
-                    GameHelper.Limit_time_Free(activityForm.LimitedTimePanel.FreeBG);
-                end
-
-            end
-            self:UpdateActivityBanner();
-            --endregion**************************************【免费钥匙】【刷新界面】
+        if(json.data.id==EnumActivity.FreeKey)then
+            --*****【免费钥匙】【刷新界面】
+            self:UpdateFreeKeyUI(Free_isUpdate);
         end
 
+        --【刷新UIActivityBannerForm】
+        self:UpdateActivityBanner();
+        GameController.MainFormControl:MoveBanner() --把主界面偏移 收回
     end
 end
 --endregion
@@ -823,9 +666,8 @@ end
 
 function ActivityControl:UpdateActivityBanner()
     --搜索界面
-
     local uimainform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-    if(uimainform==nil)then return; end
+    if(uimainform==nil or uimainform.oldToggleName==nil or uimainform.oldToggleName~="HomeToggle")then return; end
 
     local uiform = logic.UIMgr:GetView2(logic.uiid.UIActivityBannerForm);
     if(uiform==nil)then
@@ -839,6 +681,87 @@ function ActivityControl:UpdateActivityBanner()
 end
 
 --endregion
+
+
+--region***【免费钥匙】【C#开关】
+function ActivityControl:FreeKeycCsharp(Free_isUpdate)
+    --=======================================================【全书免费】【特殊活动】
+    if(Free_isUpdate==true)then
+        local FreeKeyInfo1=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+        if(FreeKeyInfo1)then
+            --C#开关
+            CS.XLuaHelper.LimitTimeActivity=FreeKeyInfo1.is_open;
+        end
+    end
+    --=======================================================【全书免费】【特殊活动】
+end
+--endregion***【免费钥匙】【C#开关】
+
+
+
+--region***【免费钥匙】【判断是否刷新界面】
+function ActivityControl:IsUpdateFreeKey(data)
+    --=======================================================【全书免费】【特殊活动】
+    --【全书免费】【刷新开关】
+    local Free_isUpdate=false;
+    --【全书免费】【信息】
+    local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+    if(FreeKeyInfo)then
+        for i = 1, #data do
+            --【旋转抽奖】
+            if(data[i].id==EnumActivity.FreeKey)then
+                --【免费钥匙活动是否开启, 1开启,  0或false关闭】
+                if(FreeKeyInfo.is_open~=data[i].is_open)then
+                    --如果之前缓存的数据   跟  服务器最新数据不一样   就刷新所有界面
+                    Free_isUpdate=true;
+                end
+            end
+        end
+    else
+        Free_isUpdate=true;
+    end
+    return Free_isUpdate;
+    --=======================================================【全书免费】【特殊活动】
+end
+--endregion***【免费钥匙】【判断是否刷新界面】
+
+
+
+--region***【免费钥匙】【刷新界面】
+function ActivityControl:UpdateFreeKeyUI(Free_isUpdate)
+
+    if(Free_isUpdate==true)then
+        --如果数据改变了  需要刷新状态
+        --【刷新主界面】【推荐列表】【周更】【我的书本】【排行榜】
+        GameController.MainFormControl:Limit_time_Free();
+
+        --【书本详情页面刷新】
+        local BookDisplayFormobj = logic.cs.CUIManager:GetForm(logic.cs.UIFormName.BookDisplayForm)
+        if(BookDisplayFormobj and CS.XLuaHelper.is_Null(BookDisplayFormobj)==false)then
+            local BookDisplayForm=BookDisplayFormobj:GetComponent(typeof(CS.BookDisplayForm));
+            if(BookDisplayForm)then
+                BookDisplayForm:Limit_time_Free();
+            end
+        end
+
+        --【章节完成界面】
+        local BookReading = logic.UIMgr:GetView2(logic.uiid.BookReading);
+        if(BookReading)then
+            --【限时活动免费读书 显示标签】
+            BookReading.chapterSwitch:Limit_time_Free();
+        end
+
+        --【限时活动界面】
+        local activityForm = logic.UIMgr:GetView2(logic.uiid.UIActivityForm);
+        if(activityForm and activityForm.LimitedTimePanel)then
+            --【限时活动免费读书 显示标签】
+            GameHelper.Limit_time_Free(activityForm.LimitedTimePanel.FreeBG);
+        end
+
+        --【主界面 Banner条】
+    end
+end
+--endregion***【免费钥匙】【刷新界面】
 
 
 --region【刷新广告CD开始】

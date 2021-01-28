@@ -1,28 +1,45 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using GoogleMobileAds.Api;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// Activity 界面 广告位;
 /// </summary>
-public class ActivityRewardedAd
+public class MyRewardedAd
 {
-    //激励视频广告  【活动页面】 广告位
-    private RewardedAd activity_rewardedAd;
 
-    //【活动页面】广告位ID
+    //激励视频广告 广告位
+    private RewardedAd mRewardedAd;
+
+    private EnumAds enumAds = EnumAds.Acitity;
+
+    //广告位ID
 #if UNITY_EDITOR
-    string activity_adUnitId = "unused";
+        string adUnitId = "unused";
 #elif UNITY_ANDROID
-        string activity_adUnitId = "ca-app-pub-9883228183528023/4970055849";
+        string adUnitId = "ca-app-pub-9883228183528023/4970055849";
 #elif UNITY_IPHONE
-        string activity_adUnitId = "ca-app-pub-9883228183528023/7610507536";
+        string adUnitId = "ca-app-pub-9883228183528023/7610507536";
 #else
-        string activity_adUnitId = "unexpected_platform";
+        string adUnitId = "unexpected_platform";
 #endif
+
+    public MyRewardedAd(EnumAds _AdsEnum, string _android,string _ios)
+    {
+        enumAds = _AdsEnum;
+
+        //广告位ID
+#if UNITY_EDITOR
+         adUnitId = "unused";
+#elif UNITY_ANDROID
+         adUnitId = _android;
+#elif UNITY_IPHONE
+         adUnitId = _ios;
+#else
+         adUnitId = "unexpected_platform";
+#endif
+
+    }
 
     private Action CallBack;
 
@@ -31,8 +48,8 @@ public class ActivityRewardedAd
     /// </summary>
     public void Initialize()
     {
-        //【活动页面】激励视频广告  创建并加载
-        this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
+        //激励视频广告  创建并加载
+        this.mRewardedAd = this.CreateAndLoadRewardedAd(adUnitId);
     }
 
 
@@ -99,7 +116,7 @@ public class ActivityRewardedAd
     private void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
         Debug.LogError("HandleRewardedAdFailedToLoad event received with message: " + args.Message+ "  TYPE: " + args.GetType()+ "  HASH CODE: " + args.GetHashCode()+ "  SENDER - TO STRING: " + sender.ToString());
-        this.activity_rewardedAd = null;
+        this.mRewardedAd = null;
 
         if (trycount > 10)
         {
@@ -125,8 +142,8 @@ public class ActivityRewardedAd
         if (trycount <= 10)
         {
             trycount++;
-            //【活动页面】激励视频广告  创建并加载
-            this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
+            //激励视频广告  创建并加载
+            this.mRewardedAd = this.CreateAndLoadRewardedAd(adUnitId);
         }
         else
         {
@@ -196,11 +213,16 @@ public class ActivityRewardedAd
     private void HandleRewardedAdClosed(object sender, EventArgs args)
     {
         _lock = false;
-        //【活动页面】激励视频广告  创建并加载  【请求另一个激励广告】【请求另一个激励广告】【请求另一个激励广告】
-        this.activity_rewardedAd = this.CreateAndLoadRewardedAd(activity_adUnitId);
+        //激励视频广告  创建并加载  【请求另一个激励广告】【请求另一个激励广告】【请求另一个激励广告】
+        this.mRewardedAd = this.CreateAndLoadRewardedAd(adUnitId);
 
         Debug.LogError("HandleRewardedAdClosed  event received");
-        XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
+
+        if (enumAds == EnumAds.Acitity)
+        {
+            //如果是活动页广告
+            XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
+        }
 
         if (CallBack != null && isReward==true)
         {
@@ -211,16 +233,16 @@ public class ActivityRewardedAd
 
     private bool _lock = false;
     /// <summary>
-    ///【活动页面】显示播放激励视频广告
+    ///显示播放激励视频广告
     /// </summary>
-    public void ShowRewardedAd_Activity(Action vCallBack)
+    public void ShowRewardedAd(Action vCallBack)
     {
         CallBack = vCallBack;
-        if (this.activity_rewardedAd != null)
+        if (this.mRewardedAd != null)
         {
-            if (this.activity_rewardedAd.IsLoaded() && _lock==false)
+            if (this.mRewardedAd.IsLoaded() && _lock==false)
             {
-                this.activity_rewardedAd.Show();
+                this.mRewardedAd.Show();
                 _lock = true;
             }
             else

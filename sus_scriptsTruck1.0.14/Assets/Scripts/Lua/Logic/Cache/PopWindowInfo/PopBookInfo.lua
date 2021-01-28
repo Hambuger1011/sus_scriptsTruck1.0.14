@@ -9,6 +9,8 @@ function PopBookInfo:__init()
     self.bookicon=nil;
     --该书本免费倒计时
     self.countdown=nil;
+    --是否已经打开过
+    self.isOpened=false;
 end
 
 function PopBookInfo:UpdateData(data)

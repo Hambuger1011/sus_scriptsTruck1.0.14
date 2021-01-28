@@ -321,15 +321,14 @@ end
 
 --region【限时活动顶部栏】
 function UIMainForm:Limit_time_Free()
-
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1 or Cache.LimitTimeActivityCache.SpinDraw.is_open==1 or Cache.LimitTimeActivityCache.FreeKey.is_open==1 or Cache.MainCache.migration.migration_web_switch==1)then
+    --if(Cache.LimitTimeActivityCache:IsOpen()==true or Cache.MainCache.migration.migration_web_switch==1)then
+    if(Cache.LimitTimeActivityCache:IsOpen()==true)then
         -- 1.图片的Top设置为100（偏移的Max是负数）
         self.MainScrollViewRect.offsetMax ={x=self.MainScrollViewRect.offsetMax.x,y=-200};
     else
         -- 1.图片的Top设置为100（偏移的Max是负数）
         self.MainScrollViewRect.offsetMax ={x=self.MainScrollViewRect.offsetMax.x,y=-100};
     end
-
 end
 --endregion
 

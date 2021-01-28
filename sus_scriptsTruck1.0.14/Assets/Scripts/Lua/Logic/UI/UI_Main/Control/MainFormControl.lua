@@ -73,11 +73,13 @@ function MainFormControl:GetSelfBookInfoRequest()
 end
 --endregion
 
+
 --region 【获取首页顶部滚动栏书本】
 function MainFormControl:GetIndexScrollListRequest()
     logic.gameHttp:GetIndexScrollList(function(result) self:GetIndexScrollListCallBack(result); end)
 end
 --endregion
+
 
 --region 【获取首页顶部滚动栏书本响应】
 --请求我的书本
@@ -87,13 +89,13 @@ function MainFormControl:GetIndexScrollListCallBack(result)
     local code = tonumber(json.code)
     if(code == 200)then
         UIMainForm.TopBookView:ShowTopBook(json.data.book_ids);
-        --刷新我的书本
-        self:ResetMyBookList()
+
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
     end
 end
 --endregion
+
 
 --region 【周更新列表*推荐列表 响应】
 function MainFormControl:OnGetbooksUpdatedWeekly(result)
@@ -164,6 +166,9 @@ function MainFormControl:GetSelfBookInfo(result)
         logic.cs.UserDataManager:InitRecordServerBookData()
         logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.BookProgressUpdate)
 
+        --刷新我的书本
+        self:ResetMyBookList()
+
         --region【请求刷新周更新列表*刷新推荐列表】
 
         --获取周更列表长度
@@ -180,7 +185,7 @@ function MainFormControl:GetSelfBookInfo(result)
 
         --endregion
         
-        logic.gameHttp:GetWindowConfig(function(result) self:GetWindowConfigCallBack(result) end)
+        self:GetWindowConfigRequest();
         
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
@@ -193,6 +198,12 @@ function MainFormControl:GetSelfBookInfo(result)
     end
 end
 
+
+function MainFormControl:GetWindowConfigRequest()
+    logic.gameHttp:GetWindowConfig(function(result) self:GetWindowConfigCallBack(result) end)
+end
+
+
 function MainFormControl:GetWindowConfigCallBack(result)
     logic.debug.Log("----GetWindowConfigCallBack---->" .. result)
     local json = core.json.Derialize(result)
@@ -203,6 +214,7 @@ function MainFormControl:GetWindowConfigCallBack(result)
 
         GameController.WindowConfig:SetWindowsList();
         GameController.WindowConfig:ShowNextWindow();
+        GameController.DayPassController:DayPassUpdate();
     end
 end
 
@@ -311,7 +323,7 @@ function MainFormControl:RedTimerUpdate()
     refresh_count=refresh_count+1;
 
 
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1 or Cache.LimitTimeActivityCache.SpinDraw.is_open==1 or Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+    if(Cache.LimitTimeActivityCache:IsOpen()==true)then
         if(refresh_count%30==0)then
             --【获取通用活动列表】
             GameController.ActivityControl:GetActivityListRequest();
@@ -319,6 +331,9 @@ function MainFormControl:RedTimerUpdate()
 
         --刷新Banner图 倒计时
         GameController.ActivityBannerControl:UpdateCountdown();
+
+        --刷新DayPass 倒计时
+        GameController.DayPassController:UpdateCountdown();
     end
 
 end
@@ -483,7 +498,8 @@ function MainFormControl:GetRedDot(result)
         end
 
         --限时全书免费
-        if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+        local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+        if(FreeKeyInfo and FreeKeyInfo.is_open==1)then
             --每日首次红点
             local DailyfirstRedPoint_Free = logic.cs.PlayerPrefs.GetInt("FreeRedPoint");
             if (DailyfirstRedPoint_Free == 0 or DailyfirstRedPoint_Free == 1)then
@@ -583,6 +599,22 @@ function MainFormControl:Limit_time_Free()
         UIMainForm.MyBookList:Limit_time_Free();
         --排行榜
         UIMainForm.BookRanksList:Limit_time_Free();
+    end
+end
+--endregion
+
+
+--region【刷新DayPass】
+function MainFormControl:DayPass()
+    if(UIMainForm)then
+        --刷新列表
+        UIMainForm.RecommendList:DayPass();
+        --刷新列表
+        UIMainForm.WeeklyUpdateList:DayPass();
+        --刷新列表
+        UIMainForm.MyBookList:DayPass();
+        --排行榜
+        UIMainForm.BookRanksList:DayPass();
     end
 end
 --endregion

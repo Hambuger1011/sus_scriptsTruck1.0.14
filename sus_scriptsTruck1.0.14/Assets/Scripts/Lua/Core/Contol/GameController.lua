@@ -20,6 +20,8 @@ function GameController.Init()
     GameController.EmailControl=require("Logic/UI/UI_Email/Control/EmailControl");
     GameController.ChatControl=require("Logic/UI/UI_Chat/Control/ChatControl");
     GameController.WindowConfig=require("Logic/Config/WindowConfig");
+    GameController.DayPassController=require("Logic/UI/UI_DayPass/Control/DayPassController");
+
 
     isInit = true
 end

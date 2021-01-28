@@ -77,11 +77,9 @@ function MainBookList:UpdateList(InfoList,TitleName,_BuriedPoint_bookType)
                 if(nextIndex>len)then
                     nextIndex=nil;
                 end
-                local Nextdatetemp=nil;
                 local nextWeekIndex=nil;
                 if(nextIndex)then
-                    Nextdatetemp=CS.DateUtil.ConvertIntDateTime(InfoList[nextIndex].update_time);
-                    nextWeekIndex= CS.DateUtil.GetWeekDay(Nextdatetemp.Year,Nextdatetemp.Month,Nextdatetemp.Day);
+                    nextWeekIndex = CS.DateUtil.GetWeekDay(InfoList[nextIndex].update_time);
                 end
                 ----------------------------【下本书 更新日期（周几）】
                 --显示周更时间
@@ -98,6 +96,16 @@ function MainBookList:Limit_time_Free()
     local len = table.length(self.ItemList);
     for i = 1, len do
         self.ItemList[i]:Limit_time_Free();
+    end
+end
+
+
+--【DayPass】
+function MainBookList:DayPass()
+    if(self.ItemList==nil)then return; end
+    local len = table.length(self.ItemList);
+    for i = 1, len do
+        self.ItemList[i]:DayPass();
     end
 end
 

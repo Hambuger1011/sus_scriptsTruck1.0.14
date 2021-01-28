@@ -760,10 +760,37 @@ public static class XLuaHelper
     }
 
 
+    //预设对象
+    public static Object bookrank_prefab = null;
+    public static Object GetBookRankItem()
+    {
+        if (bookrank_prefab == null)
+        {
+            bookrank_prefab = Resources.Load("UI/BookItem/RankBookItem");
+        }
+        return bookrank_prefab;
+    }
+
+
 
     //限时活动开关
     public static int LimitTimeActivity = 0;
 
+    public static Dictionary<int,string> DayPassDic = new Dictionary<int,string>();
+
+    public static void DayPassAdd(int BookId,string timeStr)
+    {
+        string timeTxt = "";
+        if (!DayPassDic.TryGetValue(BookId,out timeTxt))
+        {
+            DayPassDic[BookId] = timeStr;
+        }
+    }
+
+    public static void DayPassRemoveAll()
+    {
+        DayPassDic.Clear();
+    }
 
     public static void DebugLog(string str)
     {

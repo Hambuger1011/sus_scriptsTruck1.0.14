@@ -6,7 +6,8 @@ function RankItem:__init(gameObject)
 
     self.BookBG =CS.DisplayUtil.GetChild(gameObject, "BookBG"):GetComponent("Image");
     self.BookName =CS.DisplayUtil.GetChild(gameObject, "BookName"):GetComponent("Text");
-    self.BookTypeImg =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg"):GetComponent("Image");
+    self.BookTypeImg1 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg1"):GetComponent("Image");
+    self.BookTypeImg2 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg2"):GetComponent("Image");
     self.LookNumber =CS.DisplayUtil.GetChild(gameObject, "LookNumber"):GetComponent("Image");
     self.LookNumberText =CS.DisplayUtil.GetChild(gameObject, "LookNumberText"):GetComponent("Text");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
@@ -29,10 +30,20 @@ function RankItem:SetInfo(Info,_type)
     GameHelper.ShowLookNumber(Info.read_count,self.LookNumberText);
 
     --展示标签
-    GameHelper.ShowBookType(Info.book_id,self.BookTypeImg);
+    GameHelper.ShowBookType(Info.book_id,self.BookTypeImg1);
+    GameHelper.ShowBookType2(Info.book_id,self.BookTypeImg2);
 
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
+
+
+    if(_type==RankType.Platform)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_trending");
+    elseif(_type==RankType.Newbook)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_commented");
+    elseif(_type==RankType.Popularity)then
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_popular");
+    end
 end
 
 --【限时活动免费读书 显示标签】

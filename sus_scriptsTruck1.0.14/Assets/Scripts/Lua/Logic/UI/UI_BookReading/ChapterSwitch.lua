@@ -4,9 +4,10 @@ local ChapterSwitch = Class("ChapterSwitch")
 function ChapterSwitch:__init(root)
     self.ui = root:GetComponent(typeof(CS.UIChapterSwitch))
 
+    self.DayPassBg = CS.DisplayUtil.GetChild(self.ui.btnContinue.gameObject, "DayPassBg");
+
     --【请求获取限时活动状态】
     GameController.ActivityControl:GetActivityInfoRequest(EnumActivity.FreeKey);
-
 end
 
 function ChapterSwitch:__delete()
@@ -39,7 +40,16 @@ function ChapterSwitch:Limit_time_Free()
     end
 end
 
-
+function ChapterSwitch:DayPass(bookId);
+    local bookData = logic.bookReadingMgr.bookData
+    if(bookData)then
+        if(bookData.BookID==bookId)then
+            self.DayPassBg:SetActive(true);
+        else
+            self.DayPassBg:SetActive(false);
+        end
+    end
+end
 
 
 function ChapterSwitch:Hide()

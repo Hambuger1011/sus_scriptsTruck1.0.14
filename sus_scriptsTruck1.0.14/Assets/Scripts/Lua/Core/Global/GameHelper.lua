@@ -398,8 +398,8 @@ end
 function GameHelper.ShowBookType2(book_id,BookTypeImg)
     local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
     if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
-        if(m_bookDetailCfg.Type1Array ~= nil and m_bookDetailCfg.Type1Array.Count > 0)then
-            local bookTypeIndex = m_bookDetailCfg.Type1Array[0];
+        if(m_bookDetailCfg.Type1Array ~= nil and m_bookDetailCfg.Type1Array.Count > 1)then
+            local bookTypeIndex = m_bookDetailCfg.Type1Array[1];
 
             local num=bookTypeIndex-1;
             if(num<0)then return; end
@@ -418,6 +418,53 @@ function GameHelper.ShowBookType2(book_id,BookTypeImg)
         end
     end
 end
+
+--展示书本标签【多个】
+function GameHelper.ShowBookTypeX(book_id,BookTypeImg1,BookTypeImg2,BookTypeImg3,BookTypeImg4,BookTypeImg5)
+    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
+    if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
+        if(m_bookDetailCfg.Type1Array ~= nil and m_bookDetailCfg.Type1Array.Count > 0)then
+
+
+            for i = 1, m_bookDetailCfg.Type1Array.Count do
+
+                local index=i-1;
+
+                local bookTypeIndex = m_bookDetailCfg.Type1Array[index];
+                local num=bookTypeIndex-1;
+                if(num<0)then return; end
+                --通过编号获取string
+                local bookTypeStr = logic.cs.UserDataManager:GetBookTypeName(num);
+                if(i==1)then
+                    BookTypeImg1.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
+                    BookTypeImg1.gameObject:SetActive(true);
+                elseif(i==2)then
+                    BookTypeImg2.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
+                    BookTypeImg2.gameObject:SetActive(true);
+                elseif(i==3)then
+                    BookTypeImg3.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
+                    BookTypeImg3.gameObject:SetActive(true);
+                elseif(i==4)then
+                    BookTypeImg4.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
+                    BookTypeImg4.gameObject:SetActive(true);
+                elseif(i==5)then
+                    BookTypeImg5.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_bq-"..bookTypeStr);
+                    BookTypeImg5.gameObject:SetActive(true);
+                end
+            end
+
+        end
+    else
+        if(book_id)then
+            logic.debug.LogError("m_bookDetailCfg is Null + book_id:"..book_id);
+        else
+            logic.debug.LogError("book_id is Null");
+        end
+    end
+end
+
+
+
 
 --endregion
 
@@ -485,7 +532,6 @@ function GameHelper.ShowNewUpdate(book_id,finish_max_chapter,Tips)
                         BookTagText.text="NEW";
                         return;
                     end
-
                     if(bookinfo.tag=="Update")then
                         BookTagText.fontSize=16;
                         BookTagText.text="Update";
@@ -681,7 +727,8 @@ end
 
 --region【限时活动免费读书 显示标签】
 function GameHelper.Limit_time_Free(obj)
-    if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+    local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+    if(FreeKeyInfo and FreeKeyInfo.is_open==1)then
         if(obj and CS.XLuaHelper.is_Null(obj)==false)then
             obj:SetActive(true);
         end
@@ -693,11 +740,28 @@ function GameHelper.Limit_time_Free(obj)
 end
 --endregion
 
+--region【DayPass 显示标签】
+function GameHelper.DayPass(obj)
+    if(obj and CS.XLuaHelper.is_Null(obj)==false)then
+        obj:SetActive(true);
+    else
+        obj:SetActive(false);
+    end
+end
+
+--region【C#调用 限时活动免费读书 显示标签】
+function GameHelper.DayPass1(obj)
+    local bookId=obj[0];
+    GameController.DayPassController:SetDayPass(bookId);
+end
+--endregion
+
 
 --region【C#调用 限时活动免费读书 显示标签】
 function GameHelper.ShowFree(obj)
     local BookFree=obj[0];
-    if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+    local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+    if(FreeKeyInfo and FreeKeyInfo.is_open==1)then
         if(BookFree)then
             BookFree:SetActive(true);
         end
@@ -954,4 +1018,29 @@ function GameHelper.ShowLookNumber(read_count,LookNumberText)
         LookNumberText.text =tostring(readcount);
     end
 end
+--endregion
+
+
+local oldSpriteList= {};
+--【临时】【临时】
+function GameHelper.ShowNetImage_Banner(_type,_url,picture)
+    if(_url and picture and CS.XLuaHelper.is_Null(picture)==false)then
+        local oldImg = table.trygetvalue(oldSpriteList,_type);
+        if(oldImg)then
+            picture.sprite = oldImg;
+        else
+            logic.cs.ABSystem.ui:DownloadImage(_url, function(url, refCount)
+                if _url ~= url then
+                    refCount:Release();
+                    return;
+                end
+                local sprite = refCount:GetObject();
+                picture.sprite = sprite;
+                oldSpriteList[_type]=sprite;
+            end)
+        end
+    end
+end
+
+
 --endregion

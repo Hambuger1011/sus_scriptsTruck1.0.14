@@ -5,6 +5,9 @@ local PopWindowCache = core.Class("PopWindowCache", core.Singleton)
 function PopWindowCache:__init()
      --弹窗列表，数组顺序为弹窗顺序
     self.window_list= {};
+
+    --[临时缓存]【key  bookid】 【value  isShow】
+    self.daypassList={};
 end
 
 --更新 列表
@@ -35,6 +38,22 @@ function PopWindowCache:GetInfoById(id)
     end
     return nil;
 end
+function PopWindowCache:IsDayPassShow(bookId)
+    if(GameHelper.islistHave(self.window_list)==true)then
+        local len=table.length(self.window_list);
+        for i = 1, len do
+            if(self.window_list[i].id==2)then
+                local isHave=self.window_list[i]:IsDayPassShow(bookId);
+                return isHave;
+            end
+        end
+    end
+    return false;
+end
+
+
+
+
 
 function PopWindowCache:__delete()
     self.window_list=nil;

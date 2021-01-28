@@ -49,20 +49,19 @@ function WindowConfig:ShowNewBookTips()
     end
 end
 
-local daypassIndex=0;
+
 function WindowConfig:ShowDayPass()
-    daypassIndex=daypassIndex+1;
     local info2=Cache.PopWindowCache:GetInfoById(2);
     if(info2)then
-        local list=info2.book_list;
-        if(GameHelper.islistHave(list)==true)then
+        local daypassInfo= info2:GetDayPassShow()
+        if(daypassInfo)then
             local uiform = logic.UIMgr:GetView2(logic.uiid.UIDayPassForm);
             if(uiform==nil)then
                 uiform = logic.UIMgr:Open(logic.uiid.UIDayPassForm);
-                uiform:SetInfo(info2)
+                uiform:SetInfo(daypassInfo)
             else
                 uiform.uiform:Appear();
-                uiform:SetInfo(info2)
+                uiform:SetInfo(daypassInfo)
             end
             CS.AppsFlyerManager.Instance:GetFirstActionLog();
         else
@@ -113,6 +112,8 @@ function WindowConfig:ShowNextWindow()
         end
     end
 end
+
+
 
 --析构函数
 function WindowConfig:__delete()

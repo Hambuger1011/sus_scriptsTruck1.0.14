@@ -9,10 +9,13 @@ function MainRankList:__init(gameObject)
     self.TitleTxt =CS.DisplayUtil.GetChild(gameObject, "TitleTxt"):GetComponent("Text");
     self.GridList =CS.DisplayUtil.GetChild(gameObject, "GridList");
     self.SeeAllBtn =CS.DisplayUtil.GetChild(gameObject, "SeeAllBtn");
+    self.GridList =CS.DisplayUtil.GetChild(gameObject, "GridList");
 
-    self.RankBookItem1_Obj =CS.DisplayUtil.GetChild(self.GridList, "RankBookItem1");
-    self.RankBookItem2_Obj =CS.DisplayUtil.GetChild(self.GridList, "RankBookItem2");
-    self.RankBookItem3_Obj =CS.DisplayUtil.GetChild(self.GridList, "RankBookItem3");
+
+    --获取预设体 prefab
+    self.RankBookItem1_Obj =CS.XLuaHelper.GetBookRankItem();
+    self.RankBookItem2_Obj =CS.XLuaHelper.GetBookRankItem();
+    self.RankBookItem3_Obj =CS.XLuaHelper.GetBookRankItem();
 
     logic.cs.UIEventListener.AddOnClickListener(self.SeeAllBtn,function(data) self:OnSeeAll() end)
     self.ItemList=nil;
@@ -69,25 +72,38 @@ function MainRankList:UpdateRankList(list,titleName,_type)
     if(_len<3)then return; end
 
 
+
+    local go1 = logic.cs.GameObject.Instantiate(self.RankBookItem1_Obj, self.GridList.transform);
+    go1.transform.localPosition = core.Vector3.zero;
+    go1.transform.localScale = core.Vector3.one;
+    go1:SetActive(true);
     local bookInfo1=  Cache.MainCache:GetRankByIndex(list,1);
-    local item1 =BookRankItem.New(self.RankBookItem1_Obj);
-    self.RankBookItem1_Obj:SetActive(true);
+    local item1 =BookRankItem.New(go1);
     if(bookInfo1 ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo1.book_id) ~= nil  )then
         item1:SetInfo(bookInfo1,_type,1);
         table.insert(self.ItemList,item1);
     end
 
+
+    local go2 = logic.cs.GameObject.Instantiate(self.RankBookItem2_Obj, self.GridList.transform);
+    go2.transform.localPosition = core.Vector3.zero;
+    go2.transform.localScale = core.Vector3.one;
+    go2:SetActive(true);
+
     local bookInfo2=  Cache.MainCache:GetRankByIndex(list,2);
-    local item2 =BookRankItem.New(self.RankBookItem2_Obj);
-    self.RankBookItem2_Obj:SetActive(true);
+    local item2 =BookRankItem.New(go2);
     if(bookInfo2  ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo2.book_id) ~= nil  )then
         item2:SetInfo(bookInfo2,_type,2);
         table.insert(self.ItemList,item2);
     end
 
+    local go3 = logic.cs.GameObject.Instantiate(self.RankBookItem3_Obj, self.GridList.transform);
+    go3.transform.localPosition = core.Vector3.zero;
+    go3.transform.localScale = core.Vector3.one;
+    go3:SetActive(true);
+
     local bookInfo3=  Cache.MainCache:GetRankByIndex(list,3);
-    local item3 =BookRankItem.New(self.RankBookItem3_Obj);
-    self.RankBookItem3_Obj:SetActive(true);
+    local item3 =BookRankItem.New(go3);
     if(bookInfo3   ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookInfo3.book_id) ~= nil  )then
         item3:SetInfo(bookInfo3,_type,3);
         table.insert(self.ItemList,item3);
@@ -104,7 +120,14 @@ function MainRankList:Limit_time_Free()
     end
 end
 
-
+--【刷新DayPass 显示标签】
+function MainRankList:DayPass()
+    if(self.ItemList==nil)then return; end
+    local len = table.length(self.ItemList);
+    for i = 1, len do
+        self.ItemList[i]:DayPass()
+    end
+end
 
 function MainRankList:ClearList()
     if (self.ItemList)then

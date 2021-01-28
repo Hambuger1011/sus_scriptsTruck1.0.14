@@ -15,6 +15,9 @@ function BookItem:__init(gameObject)
     self.BookWeekBgRect =self.BookWeekBg.gameObject:GetComponent(typeof(logic.cs.RectTransform));
     self.BookWeekText =CS.DisplayUtil.GetChild(gameObject, "BookWeekText"):GetComponent("Text");
 
+    self.DayPassBg =CS.DisplayUtil.GetChild(gameObject, "DayPassBg");
+
+
     --书本阅读进度条
     self.ProgressBar =CS.DisplayUtil.GetChild(gameObject, "ProgressBar"):GetComponent("ProgressBar");
 
@@ -49,6 +52,8 @@ function BookItem:SetInfo(Info)
 
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
+    --【DayPass】
+    self:DayPass();
     --=====================================================================展示 show
 end
 
@@ -63,9 +68,8 @@ function BookItem:ShowWeeklyUpdateTime(Info,nextWeekIndex)
     self.BookWeekText.gameObject:SetActive(true);
     self.Tips:SetActive(false);
 
-    local datetemp=CS.DateUtil.ConvertIntDateTime(Info.update_time);
     --周更新推荐   时间展示
-    local weekIndex = CS.DateUtil.GetWeekDay(datetemp.Year,datetemp.Month,datetemp.Day);
+    local weekIndex = CS.DateUtil.GetWeekDay(Info.update_time);
     if(weekIndex and weekIndex >=1 and weekIndex<=7)then
         self.BookWeek.sprite = CS.ResourceManager.Instance:GetUISprite("MainForm/main_bg_week"..weekIndex);
         self.BookWeekBg.sprite = CS.ResourceManager.Instance:GetUISprite("MainForm/main_bg_week"..weekIndex.."_"..weekIndex);
@@ -90,6 +94,20 @@ end
 --【限时活动免费读书 显示标签】
 function BookItem:Limit_time_Free()
     GameHelper.Limit_time_Free(self.BookFree);
+end
+
+--【DayPass】
+function BookItem:DayPass()
+    self.DayPassBg:SetActive(false);
+    local daypasslist=Cache.PopWindowCache.daypassList;
+    if(GameHelper.islistHave(daypasslist)==true)then
+        local len=table.length(daypasslist);
+        for i = 1, len do
+            if(daypasslist[i]==self.BookInfo.book_id)then
+                GameHelper.DayPass(self.DayPassBg);
+            end
+        end
+    end
 end
 
 

@@ -28,8 +28,30 @@ function PopWindowInfo:UpdateData(data)
             table.insert(self.book_list,info);
         end
     end
+end
 
+function PopWindowInfo:GetDayPassShow()
+    if(GameHelper.islistHave(self.book_list)==true)then
+        local len=table.length(self.book_list);
+        for i = 1,len do
+            if(self.book_list[i].isOpened==false)then
+                return self.book_list[i];
+            end
+        end
+    end
+    return nil;
+end
 
+function PopWindowInfo:IsDayPassShow(bookId)
+    if(GameHelper.islistHave(self.book_list)==true)then
+        local len=table.length(self.book_list);
+        for i = 1,len do
+            if(self.book_list[i].book_id==bookId)then
+                return true;
+            end
+        end
+    end
+    return false;
 end
 
 --销毁

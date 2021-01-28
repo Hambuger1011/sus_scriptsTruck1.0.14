@@ -6,12 +6,18 @@ function BookRankItem:__init(gameObject)
 
     self.BookBG =CS.DisplayUtil.GetChild(gameObject, "BookBG"):GetComponent("Image");
     self.BookName =CS.DisplayUtil.GetChild(gameObject, "BookName"):GetComponent("Text");
-    self.BookTypeImg1 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg1"):GetComponent("Image");
-    self.BookTypeImg2 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg2"):GetComponent("Image");
     self.LookNumber =CS.DisplayUtil.GetChild(gameObject, "LookNumber"):GetComponent("Image");
     self.LookNumberText =CS.DisplayUtil.GetChild(gameObject, "LookNumberText"):GetComponent("Text");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
     logic.cs.UIEventListener.AddOnClickListener(self.gameObject,function(data) self:OnBookClick() end)
+    self.DayPassBg =CS.DisplayUtil.GetChild(gameObject, "DayPassBg");
+
+    self.BookTypeImg1 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg1"):GetComponent("Image");
+    self.BookTypeImg2 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg2"):GetComponent("Image");
+    self.BookTypeImg3 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg3"):GetComponent("Image");
+    self.BookTypeImg4 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg4"):GetComponent("Image");
+    self.BookTypeImg5 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg5"):GetComponent("Image");
+    self.BookTypeImg6 =CS.DisplayUtil.GetChild(gameObject, "BookTypeImg6"):GetComponent("Image");
 
     --书本配置表
     self.m_bookDetailCfg=nil;
@@ -34,10 +40,8 @@ function BookRankItem:SetInfo(Info,_type,_index);
     --【观看次数】【观看次数】【观看次数】
     GameHelper.ShowLookNumber(Info.read_count,self.LookNumberText);
 
-    --展示标签1
-    GameHelper.ShowBookType(Info.book_id,self.BookTypeImg1);
-    --展示标签2
-    GameHelper.ShowBookType2(Info.book_id,self.BookTypeImg2);
+    --展示标签 【多个】
+    GameHelper.ShowBookTypeX(Info.book_id,self.BookTypeImg1,self.BookTypeImg2,self.BookTypeImg3,self.BookTypeImg4,self.BookTypeImg5)
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
 
@@ -70,11 +74,22 @@ function BookRankItem:Limit_time_Free()
     GameHelper.Limit_time_Free(self.BookFree);
 end
 
-
+--【DayPass 显示标签】
+function BookRankItem:DayPass()
+    self.DayPassBg:SetActive(false);
+    local daypasslist=Cache.PopWindowCache.daypassList;
+    if(GameHelper.islistHave(daypasslist)==true)then
+        local len=table.length(daypasslist);
+        for i = 1, len do
+            if(daypasslist[i]==self.BookInfo.book_id)then
+                GameHelper.DayPass(self.DayPassBg);
+            end
+        end
+    end
+end
 
 --销毁
 function BookRankItem:__delete()
-
     if(self.gameObject)then logic.cs.UIEventListener.RemoveOnClickListener(self.gameObject,function(data) self:OnBookClick() end) end
     self.BookBG =nil;
     self.BookName  =nil;

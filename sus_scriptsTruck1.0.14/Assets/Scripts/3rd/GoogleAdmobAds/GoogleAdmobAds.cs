@@ -8,6 +8,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+
+public enum EnumAds
+{
+    //活动页面
+    Acitity,
+    //章节通关界面
+    Chapter
+}
+
+
+
 public class GoogleAdmobAds : MonoBehaviour
 {
     #region 单例
@@ -26,44 +37,13 @@ public class GoogleAdmobAds : MonoBehaviour
     #endregion
 
     //激励视频广告  【活动页面】 广告位
-    public ActivityRewardedAd acitityRewardedAd;
+    public MyRewardedAd acitityRewardedAd;
     //激励视频广告  【章节通关界面广告】 广告位
-    public ChpterRewardedAd chapterRewardedAd;
+    public MyRewardedAd chapterRewardedAd;
 
     public void Start()
     {
-        //         MobileAds.SetiOSAppPauseOnBackground(true);
-        //
-        //         List<String> deviceIds = new List<String>() { AdRequest.TestDeviceSimulator };
-        //
-        //         // Add some test device IDs (replace with your own device IDs).
-        //         //添加一些测试设备ID（替换为您自己的设备ID）
-        // #if UNITY_IPHONE
-        //         deviceIds.Add("96e23e80653bb28980d3f40beb58915c");
-        // #elif UNITY_ANDROID
-        //         deviceIds.Add("75EF8D155528C04DACBBA6F36F433035");
-        // #endif
-        //
-        //         // Configure TagForChildDirectedTreatment and test device IDs.
-        //         //配置 TagForChildDirectedTreatment 并测试设备ID。
-        //         RequestConfiguration requestConfiguration =
-        //             new RequestConfiguration.Builder()
-        //             .SetTagForChildDirectedTreatment(TagForChildDirectedTreatment.Unspecified)
-        //             .SetTestDeviceIds(deviceIds).build();
-        //
-        //         //设置配置
-        //         MobileAds.SetRequestConfiguration(requestConfiguration);
-
-        //【初始化 google Admob聚合广告】
-        // Initialize the Google Mobile Ads SDK.
-        // Debug.LogError("Initialize the Google Mobile Ads SDK");
-        // MobileAds.Initialize(HandleInitCompleteAction);
-
         this.InitSDK();
-
-
-        //  UnityAds.SetGDPRConsentMetaData(true);
-       
     }
 
 
@@ -77,10 +57,6 @@ public class GoogleAdmobAds : MonoBehaviour
         {
             // //初始化成功
             Debug.Log("AdmobAdsManager Initialization complete");
-
-            //【初始化 激励视频广告】
-            // this.InitRewardedAd();
-
         });
     }
 
@@ -90,22 +66,21 @@ public class GoogleAdmobAds : MonoBehaviour
         // main thread.
         // In this example we use MobileAdsEventExecutor to schedule these calls on
         // the next Update() loop.
-
-
-    
     }
 
+    //【初始化 激励视频广告】
     public void InitRewardedAd()
     {
         Debug.Log("RewardedAdManager Initialization start");
 
         //初始化 【活动页面】 广告位
-        acitityRewardedAd = new ActivityRewardedAd();
+        acitityRewardedAd = new MyRewardedAd(EnumAds.Acitity,"ca-app-pub-9883228183528023/4970055849", "ca-app-pub-9883228183528023/7610507536");
         acitityRewardedAd.Initialize();
-    
-        // //初始化 【活动页面】 广告位
-        // chapterRewardedAd = new ChpterRewardedAd();
-        // chapterRewardedAd.Initialize();
+
+        //初始化 【章节通关界面广告】 广告位
+        chapterRewardedAd = new MyRewardedAd(EnumAds.Chapter,"ca-app-pub-9883228183528023/9674737555", "ca-app-pub-9883228183528023/3096547452");
+        chapterRewardedAd.Initialize();
+
     }
 
 

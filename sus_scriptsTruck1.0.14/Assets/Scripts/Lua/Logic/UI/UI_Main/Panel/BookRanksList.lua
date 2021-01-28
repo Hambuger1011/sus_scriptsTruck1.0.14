@@ -51,6 +51,13 @@ function BookRanksList:Limit_time_Free()
     self.PopularityRankList:Limit_time_Free()
 end
 
+--【限时活动免费读书 显示标签】
+function BookRanksList:DayPass();
+    self.PlatformRankList:DayPass();
+    self.NewbookRankList:DayPass();
+    self.PopularityRankList:DayPass();
+end
+
 --销毁
 function BookRanksList:__delete()
 

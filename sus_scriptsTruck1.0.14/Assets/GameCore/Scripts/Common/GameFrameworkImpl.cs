@@ -86,12 +86,6 @@ namespace Framework
             CTimerManager.Instance.Update();
             CGameObjectPool.Instance.Update();
 
-#if CHANNEL_ONYX|| CHANNEL_SPAIN
-            if (SdkMgr.Instance != null && SdkMgr.Instance.appsFlyer != null)
-            {
-                SdkMgr.Instance.appsFlyer.OnUpdate();
-            }
-#endif
 
             //if (Input.GetKeyDown(KeyCode.Keypad1))
             //{

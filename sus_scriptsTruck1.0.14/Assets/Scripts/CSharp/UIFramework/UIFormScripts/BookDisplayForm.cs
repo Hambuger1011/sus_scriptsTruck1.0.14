@@ -567,6 +567,37 @@ public class BookDisplayForm : BaseUIForm
         }
     }
 
+    /// <summary>
+    /// 【限时活动免费读书 显示标签】
+    /// </summary>
+    public void DayPass(int bookId)
+    {
+        if (mDisplayItemList != null)
+        {
+            if (mDisplayItemList.Count > 0)
+            {
+                foreach (var item in mDisplayItemList)
+                {
+                    (item as BookDisplayGridChild).DayPass(bookId);
+                }
+            }
+        }
+    }
+
+    public void UpdateCountdown(int bookId, string _time)
+    {
+        if (mDisplayItemList != null)
+        {
+            if (mDisplayItemList.Count > 0)
+            {
+                foreach (var item in mDisplayItemList)
+                {
+                    (item as BookDisplayGridChild).UpdateCountdown(bookId, _time);
+                }
+            }
+        }
+    }
+
 
     private void ResetBookCallBack(object arg)
     {

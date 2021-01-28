@@ -55,7 +55,6 @@ public class SdkMgr : CSingleton<SdkMgr>
 
     public GoogleSdk google { get; private set; }
 
-    public AppsFlyerSdk appsFlyer { get; private set; }
 #endif
 
 #if CHANNEL_ONYX
@@ -93,7 +92,6 @@ public class SdkMgr : CSingleton<SdkMgr>
 
 #if CHANNEL_ONYX || CHANNEL_SPAIN
         google = new GoogleSdk();
-        appsFlyer = new AppsFlyerSdk();
 #endif
 
 #if CHANNEL_ONYX
@@ -116,7 +114,6 @@ public class SdkMgr : CSingleton<SdkMgr>
     {
 #if CHANNEL_ONYX || CHANNEL_SPAIN
         google.Start();
-        appsFlyer.Start();
         ads.Start();
 #endif
 #if CHANNEL_HUAWEI

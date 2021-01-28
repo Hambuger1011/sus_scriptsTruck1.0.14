@@ -1,22 +1,17 @@
-local BaseClass = core.Class
-local ActivityBannerControl = BaseClass("ActivityBannerControl", core.Singleton)
+local ActivityBannerControl = core.Class("ActivityBannerControl", core.Singleton)
 
+--【UI界面】
 local UIActivityBannerForm=nil;
-local ColoredEgg_Timer=nil;
-local SpinDraw_Timer=nil;
-local FreeKey_Timer=nil;
-
 -- 构造函数
 function ActivityBannerControl:__init()
+    self.TimerList={};
 end
 
 function ActivityBannerControl:SetData(uiactivitybanner)
     UIActivityBannerForm=uiactivitybanner;
 
     if(uiactivitybanner==nil)then
-        if(ColoredEgg_Timer)then ColoredEgg_Timer:Stop(); ColoredEgg_Timer = nil end
-        if(SpinDraw_Timer)then SpinDraw_Timer:Stop(); SpinDraw_Timer = nil end
-        if(FreeKey_Timer)then FreeKey_Timer:Stop(); FreeKey_Timer = nil end
+        self:ClearTimer();--【销毁所有计时器】
     end
 end
 
@@ -24,59 +19,39 @@ end
 --region【刷新计时器】
 local isFirst=false;
 function ActivityBannerControl:UpdateCountdown()
+    if(GameHelper.islistHave(Cache.LimitTimeActivityCache.ActivityList)==true)then
+        local len=table.length(Cache.LimitTimeActivityCache.ActivityList);
+        for i = 1, len do
+            --如果本活动开启
+            if(Cache.LimitTimeActivityCache.ActivityList[i].is_open==1)then
+                --剩余倒计时大于0
+                if(Cache.LimitTimeActivityCache.ActivityList[i].countdown>0)then
+                    if(isFirst==true)then
+                        Cache.LimitTimeActivityCache.ActivityList[i].countdown=Cache.LimitTimeActivityCache.ActivityList[i].countdown-120;
+                    end
 
-    --local num=0;
-
-    --【彩蛋 活动开启】【刷新展示Banner 倒计时】
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.ColoredEgg.countdown>0)then
-
-            if(isFirst==true)then
-                Cache.LimitTimeActivityCache.ColoredEgg.countdown=Cache.LimitTimeActivityCache.ColoredEgg.countdown-120;
-            end
-
-            if(Cache.LimitTimeActivityCache.ColoredEgg.countdown<0)then
-                Cache.LimitTimeActivityCache.ColoredEgg.countdown=0;
-            end
-        end
-        --num=num+1;
-    end
-
-    --【旋转抽奖 活动开启】【刷新展示Banner 倒计时】
-    if(Cache.LimitTimeActivityCache.SpinDraw.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.SpinDraw.countdown>0)then
-
-            if(isFirst==true)then
-                Cache.LimitTimeActivityCache.SpinDraw.countdown=Cache.LimitTimeActivityCache.SpinDraw.countdown-120;
-            end
-            if(Cache.LimitTimeActivityCache.SpinDraw.countdown<0)then
-                Cache.LimitTimeActivityCache.SpinDraw.countdown=0;
+                    if(Cache.LimitTimeActivityCache.ActivityList[i].countdown<0)then
+                        Cache.LimitTimeActivityCache.ActivityList[i].countdown=0;
+                    end
+                end
             end
         end
-        --num=num+1;
     end
-
-    --【免费钥匙 活动开启】【刷新展示Banner 倒计时】
-    if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.FreeKey.countdown>0)then
-
-            if(isFirst==true)then
-                Cache.LimitTimeActivityCache.FreeKey.countdown=Cache.LimitTimeActivityCache.FreeKey.countdown-120;
-            end
-
-            if(Cache.LimitTimeActivityCache.FreeKey.countdown<0)then
-                Cache.LimitTimeActivityCache.FreeKey.countdown=0;
-            end
-        end
-        --num=num+1;
-    end
-
     self:DefaultCountDown();
-
     isFirst=true;
+end
+
+--【刷新展示】【刷新计时器】
+function ActivityBannerControl:UpdateShow()
+    --if(Cache.LimitTimeActivityCache:IsOpen()==true or Cache.MainCache.migration.migration_web_switch==1)then  --如果有活动
+    if(Cache.LimitTimeActivityCache:IsOpen()==true)then  --如果有活动
+        --【打开活动Banner】
+        GameController.ActivityControl:UpdateActivityBanner();
+        --【刷新展示计时器】
+        self:DefaultCountDown()
+    else
+        self:CloseUI();
+    end
 end
 
 
@@ -88,128 +63,85 @@ function ActivityBannerControl:DefaultCountDown()
 end
 
 
+function ActivityBannerControl:CloseUI()
+    --【关闭计时器】
+    self:ClearTimer()
+    --【关闭销毁界面】
+    if(UIActivityBannerForm)then
+        UIActivityBannerForm:OnExitClick();
+    end
+    --【主界面banner 位置刷新】
+    GameController.MainFormControl:MoveBanner();
+end
+
+
 
 --endregion
 
 
 --region 【定时请求】【活动】【彩蛋】
-
-function ActivityBannerControl:Timer_ColoredEggRequest()
+function ActivityBannerControl:TimerRequest()
     --【销毁计时器】
-    self:Clear_ColoredEggTimer();
-    --【彩蛋 活动开启】
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.ColoredEgg.countdown>0)then
-            --延迟10秒
-            local countdown=Cache.LimitTimeActivityCache.ColoredEgg.countdown+10;
-            if(countdown>3600)then  --如果剩余时间大于 1小时   不开启定时器
-                return;
+    self:ClearTimer();
+
+    if(GameHelper.islistHave(Cache.LimitTimeActivityCache.ActivityList)==true)then
+        local len=table.length(Cache.LimitTimeActivityCache.ActivityList);
+        for i = 1, len do
+            --是否添加
+            local isAdd=true;
+            --如果本活动开启
+            if(Cache.LimitTimeActivityCache.ActivityList[i].is_open==1)then
+                --剩余倒计时大于0
+                if(Cache.LimitTimeActivityCache.ActivityList[i].countdown>0)then
+                    --延迟10秒
+                    local countdown=Cache.LimitTimeActivityCache.ActivityList[i].countdown+10;
+                    if(countdown>3600)then  --如果剩余时间大于 1小时   不开启定时器
+                        isAdd=false;
+                    end
+
+                    if(isAdd==true)then
+                        local _id=Cache.LimitTimeActivityCache.ActivityList[i].id;
+                        --【取出定时器】
+                        local _Timer = table.trygetvalue(self.TimerList,_id);
+                        if(_Timer==nil)then --【如果没有缓存】
+                            _Timer = core.Timer.New(function()
+
+                                --【销毁计时器】
+                                _Timer:Stop();
+                                self.TimerList[_id]=nil;
+                                --【请求数据】【刷新计时】
+                                GameController.ActivityControl:GetActivityInfoRequest(_id);
+
+                            end,countdown,-1);   --【生成一个新的】
+
+                            self.TimerList[_id]=_Timer; --【缓存定时器】
+                        end
+                        if(_Timer)then
+                            _Timer:Start();  --【开启定时器】
+                        end
+                    end
+                end
             end
-            ColoredEgg_Timer = core.Timer.New(function() self:Timer_ColoredEggCallBack(); end,countdown,-1);
-            ColoredEgg_Timer:Start();
         end
     end
 end
-
-function ActivityBannerControl:Timer_ColoredEggCallBack()
-    --【销毁计时器】
-    self:Clear_ColoredEggTimer();
-   --【请求彩蛋】
-   GameController.ActivityControl:GetActivityInfoRequest(EnumActivity.ColoredEgg);
-end
-
 --endregion
 
 
---region 【定时请求】【活动】【转盘抽奖】
-
-function ActivityBannerControl:Timer_SpinDrawRequest()
-    --【销毁计时器】
-    self:Clear_SpinDrawTimer();
-    --【旋转抽奖 活动开启】【刷新展示Banner 倒计时】
-    if(Cache.LimitTimeActivityCache.SpinDraw.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.SpinDraw.countdown>0)then
-            --延迟10秒
-            local countdown=Cache.LimitTimeActivityCache.SpinDraw.countdown+10;
-            if(countdown>3600)then  --如果剩余时间大于 1小时   不开启定时器
-                return;
+--region【销毁计时器】
+function ActivityBannerControl:ClearTimer()
+    if(self.TimerList)then
+        for i, v in pairs(self.TimerList) do
+            if(v)then
+                v:Stop();
+                v=nil;
             end
-            SpinDraw_Timer = core.Timer.New(function() self:Timer_SpinDrawCallBack(); end,countdown,-1);
-            SpinDraw_Timer:Start();
         end
-    end
-end
-
-function ActivityBannerControl:Timer_SpinDrawCallBack()
-    --【销毁计时器】
-    self:Clear_SpinDrawTimer();
-    --【请求彩蛋】
-    GameController.ActivityControl:GetActivityInfoRequest(EnumActivity.SpinDraw);
-end
-
---endregion
-
-
---region 【定时请求】【活动】【转盘抽奖】【全书免费】
-
-function ActivityBannerControl:Timer_FreeKeyRequest()
-    --【销毁计时器】
-    self:Clear_FreeKeyTimer();
-    --【免费钥匙 活动开启】【刷新展示Banner 倒计时】
-    if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
-        --剩余倒计时大于0
-        if(Cache.LimitTimeActivityCache.FreeKey.countdown>0)then
-            --延迟10秒
-            local countdown=Cache.LimitTimeActivityCache.FreeKey.countdown+10;
-            if(countdown>3600)then  --如果剩余时间大于 1小时   不开启定时器
-                return;
-            end
-            FreeKey_Timer = core.Timer.New(function() self:Timer_FreeKeyCallBack(); end,countdown,-1);
-            FreeKey_Timer:Start();
-        end
-    end
-end
-
-function ActivityBannerControl:Timer_FreeKeyCallBack()
-    --【销毁计时器】
-    self:Clear_FreeKeyTimer();
-    --【请求彩蛋】
-    GameController.ActivityControl:GetActivityInfoRequest(EnumActivity.FreeKey);
-end
-
---endregion
-
-
---region【销毁计时器】【彩蛋】
-function ActivityBannerControl:Clear_ColoredEggTimer()
-    if(ColoredEgg_Timer)then
-        ColoredEgg_Timer:Stop();
-        ColoredEgg_Timer = nil
+        self.TimerList={};
     end
 end
 --endregion
 
-
---region【销毁计时器】【彩蛋】
-function ActivityBannerControl:Clear_SpinDrawTimer()
-    if(SpinDraw_Timer)then
-        SpinDraw_Timer:Stop();
-        SpinDraw_Timer = nil
-    end
-end
---endregion
-
-
---region【销毁计时器】【彩蛋】
-function ActivityBannerControl:Clear_FreeKeyTimer()
-    if(FreeKey_Timer)then
-        FreeKey_Timer:Stop();
-        FreeKey_Timer = nil
-    end
-end
---endregion
 
 --析构函数
 function ActivityBannerControl:__delete()

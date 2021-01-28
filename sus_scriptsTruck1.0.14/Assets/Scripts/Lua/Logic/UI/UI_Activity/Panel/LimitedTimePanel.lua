@@ -121,8 +121,10 @@ function LimitedTimePanel:__init(gameObject)
     self.LimitTimeText =CS.DisplayUtil.GetChild(self.FreeBG, "LimitTimeText"):GetComponent("Text");
     self.FreeRedPoint = CS.DisplayUtil.GetChild(self.FreeBG, "RedPoint");
 
-    if(Cache.LimitTimeActivityCache.FreeKey.end_date)then
-        self.LimitTimeText.text=Cache.LimitTimeActivityCache.FreeKey.end_date;
+
+    local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+    if(FreeKeyInfo and FreeKeyInfo.end_date)then
+        self.LimitTimeText.text=FreeKeyInfo.end_date;
     end
 
     logic.cs.UIEventListener.AddOnClickListener(self.GoBtn,function(data) self:GoBtnClick() end);
@@ -378,7 +380,8 @@ end
 function LimitedTimePanel:SetFreeBG()
     if(self.FreeBG)then
         --限时全书免费
-        if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
+        local FreeKeyInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.FreeKey);
+        if(FreeKeyInfo and FreeKeyInfo.is_open==1)then
             self.FreeBG:SetActiveEx(true);
         else
             self.FreeBG:SetActiveEx(false);
@@ -386,6 +389,7 @@ function LimitedTimePanel:SetFreeBG()
     end
 end
 --endregion
+
 
 
 --region【GO点击 去读书】

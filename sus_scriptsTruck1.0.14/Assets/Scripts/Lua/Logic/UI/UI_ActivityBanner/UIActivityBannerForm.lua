@@ -17,6 +17,7 @@ function UIActivityBannerForm:OnInitView()
     UIView.OnInitView(self)
     this=self.uiform;
 
+    --【第一個Banner容器】
     self.ActivityBanner1 =CS.DisplayUtil.GetChild(this.gameObject, "ActivityBanner1"):GetComponent("Image");
     self.Titile1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "Titile1"):GetComponent("Text");
     self.Content1 =CS.DisplayUtil.GetChild(self.ActivityBanner1.gameObject, "Content1"):GetComponent("Text");
@@ -25,6 +26,17 @@ function UIActivityBannerForm:OnInitView()
     self.TextCanvas1=CS.DisplayUtil.GetChild(this.gameObject, "TextCanvas1"):GetComponent("RectTransform");
     self.Banner1Rect=self.ActivityBanner1:GetComponent("RectTransform");
 
+    self.Text1=CS.DisplayUtil.GetChild(self.TimeObj1, "Text");
+    self.Image1=CS.DisplayUtil.GetChild(self.TimeObj1, "Image");
+    self.TimeLeftText1Rect=self.TimeLeftText1.gameObject:GetComponent("RectTransform");
+
+    self.Titile1.gameObject:SetActive(false);
+    self.Content1.gameObject:SetActive(false);
+    self.Text1.gameObject:SetActive(false);
+    self.Image1.gameObject:SetActive(false);
+    self.TimeLeftText1Rect.anchoredPosition={x=300,y=-58};
+
+    --【第二個Banner容器】
     self.ActivityBanner2 =CS.DisplayUtil.GetChild(this.gameObject, "ActivityBanner2"):GetComponent("Image");
     self.Titile2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "Titile2"):GetComponent("Text");
     self.Content2 =CS.DisplayUtil.GetChild(self.ActivityBanner2.gameObject, "Content2"):GetComponent("Text");
@@ -34,19 +46,26 @@ function UIActivityBannerForm:OnInitView()
     self.TextCanvas2=CS.DisplayUtil.GetChild(this.gameObject, "TextCanvas2"):GetComponent("RectTransform");
     self.Banner2Rect=self.ActivityBanner2:GetComponent("RectTransform");
 
+    self.Text2=CS.DisplayUtil.GetChild(self.TimeObj2, "Text");
+    self.Image2=CS.DisplayUtil.GetChild(self.TimeObj2, "Image");
+    self.TimeLeftText2Rect=self.TimeLeftText2.gameObject:GetComponent("RectTransform");
+
+    self.Titile2.gameObject:SetActive(false);
+    self.Content2.gameObject:SetActive(false);
+    self.Text2.gameObject:SetActive(false);
+    self.Image2.gameObject:SetActive(false);
+    self.TimeLeftText2Rect.anchoredPosition={x=300,y=-58};
+
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.ActivityBanner1.gameObject,function(data) self:ActivityBanner1Click() end)
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.ActivityBanner2.gameObject,function(data) self:ActivityBanner2Click() end)
 
-    self._state1=0;
-    self._state2=0;
+    self._Info1=nil;
+    self._Info2=nil;
+
     self.showlist={};
-
     self.AllCount=0;
-
-    self.MoveSprite=nil;
-
 end
 --endregion
 
@@ -110,10 +129,6 @@ end
 function UIActivityBannerForm:OnOpen()
     UIView.OnOpen(self)
     GameController.ActivityBannerControl:SetData(self);
-
-
-
-
 end
 
 --endregion
@@ -150,13 +165,19 @@ function UIActivityBannerForm:OnClose()
     self.Titile2 = nil;
     self.TimeLeftText2  = nil;
     self.Banner2Rect = nil;
-    self._state1=nil;
-    self._state2=nil;
+    self._Info1=nil;
+    self._Info2=nil;
     self.showlist =nil;
     self.AllCount=nil;
     self.gameObject = nil;
 
     GameController.MainFormControl:MoveBanner() --把主界面偏移 收回
+
+    twer1=nil
+    twer2=nil
+    num=0;
+    target1=0;
+    target2=0;
 end
 
 --endregion
@@ -170,27 +191,25 @@ function UIActivityBannerForm:SetInfo()
     self.showlist={};
     self.AllCount=0;
 
-    --【临时】【临时】
-    if(Cache.MainCache.migration.migration_web_switch==1)then
-        table.insert(self.showlist,EnumActivity.MoveCode);
-    end
-    --【临时】【临时】
-
-    if(Cache.LimitTimeActivityCache.ColoredEgg.is_open==1)then
-        table.insert(self.showlist,EnumActivity.ColoredEgg);
-    end
-    if(Cache.LimitTimeActivityCache.SpinDraw.is_open==1)then
-        table.insert(self.showlist,EnumActivity.SpinDraw);
-    end
-    if(Cache.LimitTimeActivityCache.FreeKey.is_open==1)then
-        table.insert(self.showlist,EnumActivity.FreeKey);
-    end
+    ----【临时】【临时】
+    --if(Cache.MainCache.migration.migration_web_switch==1)then
+    --    table.insert(self.showlist,EnumActivity.MoveCode);
+    --end
+    ----【临时】【临时】
 
 
+    if(GameHelper.islistHave(Cache.LimitTimeActivityCache.ActivityList)==true)then
+        local len=table.length(Cache.LimitTimeActivityCache.ActivityList);
+        for i = 1, len do
+            --如果本活动开启
+            if(Cache.LimitTimeActivityCache.ActivityList[i].is_open==1)then
+                table.insert(self.showlist,Cache.LimitTimeActivityCache.ActivityList[i].id);
+            end
+        end
+    end
     local len=table.length(self.showlist);
-
     if(len==0)then
-        self:OnExitClick();
+        GameController.ActivityBannerControl:CloseUI();
     elseif(len==1)then
         self:SetView(self.showlist[1]);
     elseif(len==2)then
@@ -206,84 +225,50 @@ function UIActivityBannerForm:SetInfo()
         GameHelper.MainBannerTimer(function() self:Anima() end)
     end
 
-
     GameController.MainFormControl:MoveBanner();
-
-    --【设置层级】【设置层级】
-    local animaTimer=self.TimeObj1.transform:DOLocalMoveX(1, 1):SetAutoKill(true):SetEase(core.tween.Ease.Flash)
-
-    animaTimer:OnComplete(function()
-        --设置层级
-        if(self.uiform:GetSortingOrder()>3090)then
-            --设置层级
-            self.uiform:SetDisplayOrder(8);
-
-            if(self.uiform:GetSortingOrder()>3090)then
-                animaTimer:Play();
-            end
-        end
-    end)
-    animaTimer:Play();
-
 end
 
 
 function UIActivityBannerForm:SetView(state)
     self.TimeObj1:SetActive(true);
-    self.Content1.gameObject:SetActive(false);
     self.TextCanvas1.anchoredPosition={x=375,y=50};
 
-    self._state1=state;
-    if(state== EnumActivity.ColoredEgg)then    --彩蛋
-        self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_eggs");
-        self.Titile1.text="Hunt Mystery Eggs to win!"
-        self:Countdown1(Cache.LimitTimeActivityCache.ColoredEgg.countdown);
-    elseif(state== EnumActivity.SpinDraw)then   --转盘抽奖
-        self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_rotary");
-        self.Titile1.text="Spin to get Keys & Diamonds!"
-        self:Countdown1(Cache.LimitTimeActivityCache.SpinDraw.countdown);
-    elseif(state== EnumActivity.FreeKey)then   --全书免费
-        self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_fete1");
-        self.Titile1.text="Key-Free Reading Carnival!"
-        self:Countdown1(Cache.LimitTimeActivityCache.FreeKey.countdown);
-    elseif(state== EnumActivity.MoveCode)then   --迁移
-        self.ActivityBanner1.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
+    if(state== EnumActivity.MoveCode)then --【如果是迁移活动】
         --【临时】【临时】
         --显示图片
         self.TimeObj1:SetActive(false);
-        self.Content1.gameObject:SetActive(true);
         self.TextCanvas1.anchoredPosition={x=270,y=50};
-        self.Titile1.text=Cache.MainCache.migration.migration_banner_title;
-        self.Content1.text=Cache.MainCache.migration.migration_banner_content;
+        GameHelper.ShowNetImage_Banner(state,Cache.MainCache.migration.migration_banner_img,self.ActivityBanner1);
+        self._Info1={};
+        self._Info1.type=0;
+    else
+        local Info=Cache.LimitTimeActivityCache:GetActivityInfo(state);
+        if(Info)then
+            self._Info1=Info;
+            GameHelper.ShowNetImage_Banner(state,Info.img_src,self.ActivityBanner1);
+            self:Countdown1(Info.countdown);
+        end
     end
 end
 
 function UIActivityBannerForm:SetView2(state)
     self.TimeObj2:SetActive(true);
-    self.Content2.gameObject:SetActive(false);
     self.TextCanvas2.anchoredPosition={x=375,y=50};
 
-    self._state2=state;
-    if(state== EnumActivity.ColoredEgg)then    --彩蛋
-        self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_eggs");
-        self.Titile2.text="Hunt Mystery Eggs to win!"
-        self:Countdown2(Cache.LimitTimeActivityCache.ColoredEgg.countdown);
-    elseif(state== EnumActivity.SpinDraw)then   --转盘抽奖
-        self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_rotary");
-        self.Titile2.text="Spin to get Keys & Diamonds!"
-        self:Countdown2(Cache.LimitTimeActivityCache.SpinDraw.countdown);
-    elseif(state== EnumActivity.FreeKey)then   --全书免费
-        self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_bg_fete1");
-        self.Titile2.text="Key-Free Reading Carnival!"
-        self:Countdown2(Cache.LimitTimeActivityCache.FreeKey.countdown);
-    elseif(state== EnumActivity.MoveCode)then   --迁移
-        self.ActivityBanner2.sprite = CS.ResourceManager.Instance:GetUISprite("ActivityBanner/act_img_smg");
+    if(state== EnumActivity.MoveCode)then --【如果是迁移活动】
         --【临时】【临时】
         self.TimeObj2:SetActive(false);
-        self.Content2.gameObject:SetActive(true);
         self.TextCanvas2.anchoredPosition={x=270,y=50};
-        self.Titile2.text=Cache.MainCache.migration.migration_banner_title;
-        self.Content2.text=Cache.MainCache.migration.migration_banner_content;
+        GameHelper.ShowNetImage_Banner(state,Cache.MainCache.migration.migration_banner_img,self.ActivityBanner2);
+        self._Info2={};
+        self._Info2.type=0;
+    else
+        local Info=Cache.LimitTimeActivityCache:GetActivityInfo(state);
+        if(Info)then
+            self._Info2=Info;
+            GameHelper.ShowNetImage_Banner(state,Info.img_src,self.ActivityBanner2);
+            self:Countdown2(Info.countdown);
+        end
     end
 end
 --endregion
@@ -291,69 +276,78 @@ end
 
 --region 【点击ActivityBanner1横条图】
 function UIActivityBannerForm:ActivityBanner1Click()
-    if(self._state1== EnumActivity.ColoredEgg)then    --彩蛋
-        --界面
-        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-        if(uiform)then
-            uiform.RwardToggle:Set(true);
-            uiform:RwardToggleClick(nil,3);
+    if(self._Info1==nil)then return; end
+    --【跳转位置类型 ：1.跳转外部链接（跳到jump_url）， 2.跳到events界面， 3.跳到News界面 4.打开最后书本的书本弹窗】
+    if(self._Info1.type== 0)then
+        if(Cache.MainCache.migration.migration_web_url)then
+            local _url=Cache.MainCache.migration.migration_web_url.."?token="..string.encodeURI(logic.cs.GameHttpNet.TOKEN);
+            logic.cs.Application.OpenURL(_url);
         end
-
-    elseif(self._state1== EnumActivity.SpinDraw)then   --转盘抽奖
-        --界面
-        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-        if(uiform)then
-            uiform.RwardToggle:Set(true);
-            uiform:RwardToggleClick(nil,3);
+    elseif(self._Info1.type== 1)then
+        if(self._Info1.jump_url)then
+            logic.cs.Application.OpenURL(self._Info1.jump_url);
         end
-    elseif(self._state1== EnumActivity.FreeKey)then   --转盘抽奖
+    elseif(self._Info1.type== 2)then
         --界面
         local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
         if(uiform)then
             uiform.RwardToggle:Set(true);
             uiform:RwardToggleClick(nil,1);
         end
-    elseif(self._state1== EnumActivity.MoveCode)then   --迁移
-        --【临时】【临时】
-        if(Cache.MainCache.migration.migration_web_url)then
-            local _url=Cache.MainCache.migration.migration_web_url.."?token="..string.encodeURI(logic.cs.GameHttpNet.TOKEN);
-            logic.cs.Application.OpenURL(_url);
+    elseif(self._Info1.type== 3)then
+        --界面
+        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
+        if(uiform)then
+            uiform.RwardToggle:Set(true);
+            uiform:RwardToggleClick(nil,3);
         end
+    elseif(self._Info1.type== 4)then
+        if(GameHelper.CurBookId and GameHelper.CurBookId>0)then
+            local bookinfo={};
+            bookinfo.book_id=GameHelper.CurBookId;
+            GameHelper.BookClick(bookinfo);
 
+            --埋点*点击前往阅读
+            logic.cs.GamePointManager:BuriedPoint("activity_cumulative_read_go");
+        end
     end
+
 end
 --endregion
 
 
 --region 【点击ActivityBanner2横条图】
 function UIActivityBannerForm:ActivityBanner2Click()
-    if(self._state2== EnumActivity.ColoredEgg)then    --彩蛋
-        --界面
-        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-        if(uiform)then
-            uiform.RwardToggle:Set(true);
-            uiform:RwardToggleClick(nil,3);
+    if(self._Info2==nil)then return; end
+    --【跳转位置类型 ：1.跳转外部链接（跳到jump_url）， 2.跳到events界面， 3.跳到News界面 4.打开最后书本的书本弹窗】
+    if(self._Info2.type== 0)then
+        if(Cache.MainCache.migration.migration_web_url)then
+            local _url=Cache.MainCache.migration.migration_web_url.."?token="..string.encodeURI(logic.cs.GameHttpNet.TOKEN);
+            logic.cs.Application.OpenURL(_url);
         end
-
-    elseif(self._state2== EnumActivity.SpinDraw)then   --转盘抽奖
-        --界面
-        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-        if(uiform)then
-            uiform.RwardToggle:Set(true);
-            uiform:RwardToggleClick(nil,3);
+    elseif(self._Info2.type== 1)then
+        if(self._Info2.jump_url)then
+            logic.cs.Application.OpenURL(self._Info2.jump_url);
         end
-    elseif(self._state2== EnumActivity.FreeKey)then   --转盘抽奖
+    elseif(self._Info2.type== 2)then
         --界面
         local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
         if(uiform)then
             uiform.RwardToggle:Set(true);
             uiform:RwardToggleClick(nil,1);
         end
-    elseif(self._state2== EnumActivity.MoveCode)then   --迁移
-        --【临时】【临时】
-        if(Cache.MainCache.migration.migration_web_url)then
-            local _url=Cache.MainCache.migration.migration_web_url.."?token="..string.encodeURI(logic.cs.GameHttpNet.TOKEN);
-            logic.cs.Application.OpenURL(_url);
+    elseif(self._Info2.type== 3)then
+        --界面
+        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
+        if(uiform)then
+            uiform.RwardToggle:Set(true);
+            uiform:RwardToggleClick(nil,3);
+        end
+    elseif(self._Info1.type== 4)then
+        if(GameHelper.CurBookId and GameHelper.CurBookId>0)then
+            local bookinfo={};
+            bookinfo.book_id=GameHelper.CurBookId;
+            GameHelper.BookClick(bookinfo);
         end
     end
 end
@@ -395,18 +389,18 @@ function UIActivityBannerForm:DefaultCountDown()
     if(self.showlist==nil)then return; end
     local len=table.length(self.showlist);
 
-    if(len==1)then
+    if(len==0)then
+        GameController.ActivityBannerControl:CloseUI();
+    elseif(len==1)then
         self:SetView(self.showlist[1]);
     elseif(len==2)then
         self:SetView(self.showlist[1]);
         self:SetView2(self.showlist[2]);
-
     elseif(len==3)then
         self:SetView(self.showlist[1]);
         self:SetView2(self.showlist[2]);
         self.AllCount=2;
     end
-
     GameController.MainFormControl:MoveBanner();
 end
 --endregion

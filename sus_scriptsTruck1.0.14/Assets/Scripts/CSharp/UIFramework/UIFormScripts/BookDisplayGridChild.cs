@@ -116,7 +116,9 @@ public class BookDisplayGridChild : MonoBehaviour {
     }
 
     private GameObject BookFree2;
-
+    private GameObject DayPassBg;
+    private GameObject PlayButton2;
+    private Text TimeText;
     void Awake()
     {
 #if CHANNEL_SPAIN
@@ -146,14 +148,24 @@ public class BookDisplayGridChild : MonoBehaviour {
         btnKeyProp2.gameObject.SetActive(false);
         objKeyPropDeleteLine2.SetActive(false);
         btnKeyProp2.onClick.AddListener(OnClickKeyPropBtn);
-        
+
         UserDataManager.Instance.is_use_prop = true;
         RefreshKeyPropBtnState();
+
+
+
+        this.BookTag = DisplayUtil.GetChild(this.gameObject, "BookTag");
+        this.BookTagText = DisplayUtil.GetChild(this.BookTag, "BookTagText").GetComponent<Text>();
+        this.PlayButton2 = DisplayUtil.GetChild(this.gameObject, "PlayButton2");
+        this.DayPassBg = transform.Find("ReseGame/Bg/BtnResetChapter/DayPassBg").gameObject;
+        this.TimeText = DisplayUtil.GetChild(this.PlayButton2, "TimeText").GetComponent<Text>();
+
         
         EventDispatcher.AddMessageListener(EventEnum.SetPropItem, SetPropItemHandler);
 
         //UIEventListener.AddOnClickListener(ShareButton.gameObject, OnShareHandler);//分享按钮
         UIEventListener.AddOnClickListener(PlayButton.gameObject, OnPlayerHandler);
+        UIEventListener.AddOnClickListener(PlayButton2.gameObject, OnPlayerHandler);
         UIEventListener.AddOnClickListener(BackButton.gameObject, OnBackHandler);
         UIEventListener.AddOnClickListener(ResetBookBtn.gameObject, OnResetBookHandler);
         UIEventListener.AddOnClickListener(ResetChapterBtn.gameObject, OnResetChapterHandler);
@@ -167,8 +179,6 @@ public class BookDisplayGridChild : MonoBehaviour {
         UIEventListener.AddOnClickListener(CloseButton, Close);
         this.StarToogleButton.onValueChanged.AddListener(BookJoinToShelf);
 
-        this.BookTag = DisplayUtil.GetChild(this.gameObject, "BookTag");
-        this.BookTagText = DisplayUtil.GetChild(this.BookTag, "BookTagText").GetComponent<Text>();
 
     }
     
@@ -290,6 +300,7 @@ public class BookDisplayGridChild : MonoBehaviour {
 
         //UIEventListener.RemoveOnClickListener(ShareButton.gameObject, OnShareHandler);//分享按钮
         UIEventListener.RemoveOnClickListener(PlayButton.gameObject, OnPlayerHandler);
+        UIEventListener.RemoveOnClickListener(PlayButton2.gameObject, OnPlayerHandler);
         UIEventListener.RemoveOnClickListener(BackButton.gameObject, OnBackHandler);
         UIEventListener.RemoveOnClickListener(ResetBookBtn.gameObject, OnResetBookHandler);
         UIEventListener.RemoveOnClickListener(ResetChapterBtn.gameObject, OnResetChapterHandler);
@@ -315,7 +326,9 @@ public class BookDisplayGridChild : MonoBehaviour {
         mBookDetail = vBookDetails;
         mBookId = vBookID;
         BookTitle.text = bookTitle;
-        
+
+
+
 
         if (vCommentCount >= 1000000)
         {
@@ -381,7 +394,7 @@ public class BookDisplayGridChild : MonoBehaviour {
             }
             if (mBookId != id)
             {
-                refCount.Release();
+                refCount.Release(); 
                 return;
             }
             cacheImage = refCount;
@@ -402,6 +415,8 @@ public class BookDisplayGridChild : MonoBehaviour {
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
                 PlayKeyShowImage.SetActive(false);
+                this.DayPassBg.SetActive(false);
+                this.PlayButton2.SetActive(false);
             }
             else
             {
@@ -415,6 +430,11 @@ public class BookDisplayGridChild : MonoBehaviour {
                     btnKeyProp.gameObject.SetActive(true);
                 }
                 propObj.gameObject.SetActive(true);
+
+                //【DayPass】
+                this.DayPass(vBookID);
+                //【DayPass】【刷新时间】
+                this.UpdateCountdown2();
             }
         }
         else
@@ -436,7 +456,9 @@ public class BookDisplayGridChild : MonoBehaviour {
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
             }
-            
+            this.DayPassBg.SetActive(false);
+            this.PlayButton2.SetActive(false);
+
             JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mBookId, ChapterId);
             if (chapterInfo != null)
             {
@@ -631,6 +653,7 @@ return function()
         {
             NeedKey.SetActive(false);
         }
+
     }
 
     /// <summary>
@@ -663,6 +686,71 @@ return function()
             XLuaManager.Instance.CallFunction("GameHelper", "ShowFree", this.BookFree2);
         }
     }
+
+
+    /// <summary>
+    /// 【限时活动免费读书 显示标签】
+    /// </summary>
+    public void DayPass(int bookId)
+    {
+        bool boo = false;
+        if (XLuaHelper.DayPassDic.Count <= 0){return;}
+
+        foreach (var item in XLuaHelper.DayPassDic)
+        {
+            if (item.Key == bookId)
+            {
+                boo = true;
+                break;
+            }
+            
+        }
+
+        if (boo==true)
+        {
+            if (this.DayPassBg != null)
+            {
+                this.DayPassBg.SetActive(true);
+            }
+            if (this.PlayButton2 != null)
+            {
+                this.PlayButton2.SetActive(true);
+            }
+        }
+        else
+        {
+            if (this.DayPassBg != null)
+            {
+                this.DayPassBg.SetActive(false);
+            }
+            if (this.PlayButton2 != null)
+            {
+                this.PlayButton2.SetActive(false);
+            }
+        }
+    }
+
+
+    public void UpdateCountdown2()
+    {
+        if (XLuaHelper.DayPassDic.Count <= 0) { return; }
+
+        string timestr = "";
+        if (XLuaHelper.DayPassDic.TryGetValue(mBookId,out timestr))
+        {
+            if (timestr != "")
+            {
+                this.TimeText.text = timestr;
+            }
+        }
+    }
+
+
+    public void UpdateCountdown(int bookId, string _time)
+    {
+        this.TimeText.text = _time;
+    }
+
 
 
 

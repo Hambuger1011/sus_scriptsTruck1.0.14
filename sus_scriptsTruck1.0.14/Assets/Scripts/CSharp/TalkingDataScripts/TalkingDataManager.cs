@@ -295,12 +295,13 @@ public class TalkingDataManager : Singleton<TalkingDataManager>
                 appFlyerDic.Add(kv.Key, kv.Value.ToString());
             }
 
-#if CHANNEL_ONYX
-        if (SdkMgr.Instance.appsFlyer != null && vSendToAppsflyer)
-            SdkMgr.Instance.appsFlyer.LogAppEvent(actionId, appFlyerDic);
-#endif
+//#if CHANNEL_ONYX
+//        if (SdkMgr.Instance.appsFlyer != null && vSendToAppsflyer)
+//            SdkMgr.Instance.appsFlyer.LogAppEvent(actionId, appFlyerDic);
+//#endif
             
-        }catch(System.Exception ex){
+        }catch(System.Exception ex)
+        {
             LOG.Error(actionId+"\n"+ex);
         }
     }
@@ -504,10 +505,10 @@ public class TalkingDataManager : Singleton<TalkingDataManager>
     /// </summary>
     public void GameCharge(string vProductName)
     {
-#if CHANNEL_ONYX
-        if (SdkMgr.Instance.appsFlyer != null)
-            SdkMgr.Instance.appsFlyer.PurchaseStart(vProductName);
-#endif
+//#if CHANNEL_ONYX
+//        if (SdkMgr.Instance.appsFlyer != null)
+//            SdkMgr.Instance.appsFlyer.PurchaseStart(vProductName);
+//#endif
     }
 
     /// <summary>

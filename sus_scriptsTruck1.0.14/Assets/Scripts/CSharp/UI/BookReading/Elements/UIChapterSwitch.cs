@@ -279,6 +279,10 @@ UIBookReadingElement
             }
         }
 
+        //【DayPass】
+        XLuaManager.Instance.CallFunction("GameHelper", "DayPass1", vBookId);
+
+
         UserDataManager.Instance.is_use_prop = true;
         RefreshKeyPropBtnState();
     }

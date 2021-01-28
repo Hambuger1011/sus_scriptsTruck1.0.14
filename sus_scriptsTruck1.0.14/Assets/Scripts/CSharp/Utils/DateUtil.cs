@@ -228,12 +228,10 @@ public sealed  class DateUtil
     /// </summary>
     /// <param name="d">double 型数字</param>
     /// <returns>DateTime</returns>
-    public static System.DateTime ConvertIntDateTime(double d)
+    public static DateTime ConvertIntDateTime(long d)
     {
-        System.DateTime time = System.DateTime.MinValue;
-        System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0));
-        Debug.Log(startTime);
-        time = startTime.AddSeconds(d);
+        DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+        DateTime time = startTime.AddSeconds(d);
         return time;
     }
 
@@ -285,49 +283,14 @@ public sealed  class DateUtil
         return start.AddSeconds(timestamp);
     }
 
-    public static string GetEnglishWeek(DateTime _time)
-    {
-        string str = "";
-        int weeks = DateUtil.GetWeekDay(_time.Year, _time.Month, _time.Day);
-        switch (weeks)
-        {
-            case 1:
-                str = "Monday";
-                break;
-            case 2:
-                str = "Tuesday";
-                break;
-            case 3:
-                str = "Wednesday";
-                break;
-            case 4:
-                str = "Thursday";
-                break;
-            case 5:
-                str = "Friday";
-                break;
-            case 6:
-                str = "Saturday";
-                break;
-            case 7:
-                str = "Sunday";
-                break;
-        }
-        return str;
-    }
 
 
     /// <summary>根据日期，获得星期几</summary>
-    /// <param name="y">年</param>
-    /// <param name="m">月</param>
-    /// <param name="d">日</param>
-    /// <returns>星期几，1代表星期一；7代表星期日</returns>
-    public static int GetWeekDay(int y, int m, int d)
+    public static int GetWeekDay(long timestamp)
     {
-        if (m == 1) m = 13;
-        if (m == 2) m = 14;
-        int week = (d + 2 * m + 3 * (m + 1) / 5 + y + y / 4 - y / 100 + y / 400) % 7 + 1;
-        return week;
+        DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
+        DateTime time = startTime.AddSeconds(timestamp);
+        return (int) time.GetDayOfWeek();
     }
 
 }

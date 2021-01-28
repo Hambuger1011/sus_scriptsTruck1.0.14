@@ -54,17 +54,14 @@ end
 
 --endregion
 
-function UIDayPassForm:SetInfo(info2)
+function UIDayPassForm:SetInfo(daypassInfo)
     --显示书本背景
-    if(info2)then
-        local poplist=info2.book_list;
-        if(GameHelper.islistHave(poplist)==true)then
-            GameHelper.ShowChapterBG(poplist[1].book_id,self.Bookbg);
-            self.BookInfo=poplist[1];
-            table.remove(info2.book_list,1);
-        else
-            self:OnExitClick()
-        end
+    if(daypassInfo)then
+        GameHelper.ShowChapterBG(daypassInfo.book_id,self.Bookbg);
+        self.BookInfo=daypassInfo;
+        daypassInfo.isOpened=true;
+    else
+        self:OnExitClick()
     end
     --显示书本背景
 end
