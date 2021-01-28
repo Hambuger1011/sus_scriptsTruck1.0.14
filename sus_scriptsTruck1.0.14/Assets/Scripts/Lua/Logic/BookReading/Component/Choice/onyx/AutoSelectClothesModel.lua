@@ -61,9 +61,9 @@ function AutoSelectClothesModel:SetProgressHandler(result)
 	end
 end
 
-function AutoSelectClothesModel:GetNextDialogID()
-    local id = self:GetNextDialogIDBySelection(0);
-    return id
-end
+--function AutoSelectClothesModel:GetNextDialogID()
+--    local id = self:GetNextDialogIDBySelection(0);
+--    return id
+--end
 
 return AutoSelectClothesModel
