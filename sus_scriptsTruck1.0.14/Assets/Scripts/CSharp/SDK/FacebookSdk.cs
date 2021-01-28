@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Facebook.Unity;
 
 public class FacebookSdk
 {
@@ -260,38 +261,38 @@ public class FacebookSdk
     private void FBShareLink(Uri uri, string contentTitle, string contentDesc, Uri picUri, OnFBShareLinkSucced onFBShareLinkSucced = null, OnFBShareLinkFaild onFBShareLinkFaild = null)
     {
 
-        //FB.ShareLink(uri, contentTitle, contentDesc, picUri, (result) =>
-        //{
+        FB.ShareLink(uri, contentTitle, contentDesc, picUri, (result) =>
+        {
 
-        //    if (result.Cancelled || !String.IsNullOrEmpty(result.Error))
-        //    {
+            if (result.Cancelled || !String.IsNullOrEmpty(result.Error))
+            {
 
-        //        LOG.Info("ShareLink Faild");
+                LOG.Info("ShareLink Faild");
 
-        //        if (onFBShareLinkFaild != null)
-        //        {
+                if (onFBShareLinkFaild != null)
+                {
 
-        //            onFBShareLinkFaild(result.Cancelled, result.Error);
+                    onFBShareLinkFaild(result.Cancelled, result.Error);
 
-        //        }
+                }
 
-        //    }
+            }
 
-        //    else
-        //    {
+            else
+            {
 
-        //        LOG.Info("ShareLink success!");
+                LOG.Info("ShareLink success!");
 
-        //        if (onFBShareLinkSucced != null)
-        //        {
+                if (onFBShareLinkSucced != null)
+                {
 
-        //            onFBShareLinkSucced(String.IsNullOrEmpty(result.PostId) ? "" : result.PostId);
+                    onFBShareLinkSucced(String.IsNullOrEmpty(result.PostId) ? "" : result.PostId);
 
-        //        }
+                }
 
-        //    }
+            }
 
-        //});
+        });
 
     }
 

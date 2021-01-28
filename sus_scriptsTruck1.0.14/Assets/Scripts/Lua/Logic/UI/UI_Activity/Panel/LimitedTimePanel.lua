@@ -416,7 +416,7 @@ function LimitedTimePanel:ReceiveBindRewards()
     end
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                   --【请求领取第三方登录绑定的奖励】---【限时活动】【账号绑定奖励】
-        uicollect:SetData(awardNum,0,false,function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end);
+        uicollect:SetData(awardNum,0,"CLAIM",function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end);
     end
 end
 --endregion
@@ -426,7 +426,7 @@ end
 function LimitedTimePanel:ReceiveRewards()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                            --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
-        uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,false,
+        uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,"CLAIM",
                 function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end);
     end
 end
@@ -437,7 +437,7 @@ end
 function LimitedTimePanel:CLAIMButtonOnClick()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                            --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
-        uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,false,
+        uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,"CLAIM",
                 function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end);
     end
 end
@@ -461,7 +461,7 @@ function LimitedTimePanel:ClaimFirstchargeOnClick()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then
         local firstRecharge = Cache.ActivityCache.first_recharge;
-        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,false,
+        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,"CLAIM",
                 function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,
                 Cache.ActivityCache.first_recharge.item_list);
     end

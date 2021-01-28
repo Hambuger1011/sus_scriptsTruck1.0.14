@@ -92,6 +92,7 @@ namespace IGGUtils
                 var aToken = Facebook.Unity.AccessToken.CurrentAccessToken;
                 Debug.Log("Facebook token:" + aToken.TokenString);
                 successDelegate?.Invoke(aToken.TokenString);
+                FB.LogOut();
             }
             else
             {

@@ -5,7 +5,6 @@ local UICollectForm = BaseClass("UICollectForm", UIView)
 local uiid = logic.uiid
 local diamondsNum,keysNum
 local needX2 = false
-local CLAIMCallback
 local PosList = {
     {core.Vector2.New(375,-300)},
     {core.Vector2.New(280,-300),core.Vector2.New(470,-300)},
@@ -40,13 +39,16 @@ function UICollectForm:OnInitView()
     self.Item =CS.DisplayUtil.GetChild(this.gameObject, "Item")
     self.LayoutGroup =CS.DisplayUtil.GetChild(this.gameObject, "Layout Group").transform
     self.CLAIM =CS.DisplayUtil.GetChild(this.gameObject, "CLAIM")
-    self.CLAIMx2 =CS.DisplayUtil.GetChild(this.gameObject, "CLAIMx2")
+    self.CLAIMText = CS.DisplayUtil.GetChild(this.gameObject, "CLAIMText"):GetComponent(typeof(logic.cs.Text))
+    self.CLAIMAd =CS.DisplayUtil.GetChild(this.gameObject, "CLAIMAd")
+    self.CLAIMAdText = CS.DisplayUtil.GetChild(this.gameObject, "CLAIMAdText"):GetComponent(typeof(logic.cs.Text))
+    self.CLAIMShare =CS.DisplayUtil.GetChild(this.gameObject, "CLAIMShare")
+    self.CLAIMShareText = CS.DisplayUtil.GetChild(this.gameObject, "CLAIMShareText"):GetComponent(typeof(logic.cs.Text))
+    self.CloseButton = CS.DisplayUtil.GetChild(this.gameObject, "CloseButton"):GetComponent(typeof(logic.cs.Button))
     self.Title =CS.DisplayUtil.GetChild(this.gameObject, "Title")
 end
 
-local CLAIMCallback=nil;
-function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
-                               _itemData)
+function UICollectForm:SetData(_diamondsNum,_keysNum,_CLAIMBtnText,_CLAIMCallback, _itemData, _AdBtnText, _AdBtnCallBack, _ShareBtnText, _ShareBtnCallBack)
     RewardTrans = {}
     if(_diamondsNum and tonumber(_diamondsNum) > 0)then
         local item = logic.cs.GameObject.Instantiate(self.Item,self.LayoutGroup,false)
@@ -87,9 +89,64 @@ function UICollectForm:SetData(_diamondsNum,_keysNum,_needX2,_CLAIMCallback,
             table.insert(RewardTrans,item)
         end
     end
-    self.CLAIMx2.gameObject:SetActiveEx(_needX2);
-    CLAIMCallback = _CLAIMCallback
+    
+    if _CLAIMBtnText  then
+        logic.cs.UIEventListener.AddOnClickListener(self.CLAIM,function(data)
+            _CLAIMCallback();
+            self:OnExitClick();
+        end)
+        self.CLAIMText.text = tostring(_CLAIMBtnText)
+        self.CLAIM.gameObject:SetActiveEx(true);
+    else
+        self.CLAIM.gameObject:SetActiveEx(false);
+    end
+    
+    if _AdBtnText  then
+        logic.cs.UIEventListener.AddOnClickListener(self.CLAIMAd,function(data)
+            _AdBtnCallBack();
+            self:OnExitClick();
+        end)
+        self.CLAIMAdText.text = tostring(_AdBtnText)
+        self.CLAIMAd.gameObject:SetActiveEx(true);
+    else
+        self.CLAIMAd.gameObject:SetActiveEx(false);
+    end
+    
+    if _ShareBtnText then
+        logic.cs.UIEventListener.AddOnClickListener(self.CLAIMShare,function(data)
+            _ShareBtnCallBack();
+            self:OnExitClick();
+        end)
+        self.CLAIMShareText.text = tostring(_ShareBtnText)
+        self.CLAIMShare.gameObject:SetActiveEx(true);
+    else
+        self.CLAIMShare.gameObject:SetActiveEx(false);
+    end
+
+    self.CloseButton.onClick:RemoveAllListeners()
+    self.CloseButton.onClick:AddListener(function()
+        self:OnExitClick()
+    end)
+    
     self:PlayAnim()
+end
+
+function UICollectForm:CsRewardedAd_Chapter()
+    local chapterSwitch = logic.UIMgr:GetView2(logic.uiid.BookReading).chapterSwitch.ui.gameObject:GetComponent("UIChapterSwitch");
+    self:SetData(1,0,nil,nil,nil,
+            "CLAIM",function ()
+                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd_Activity(function()
+                    chapterSwitch:LookVideoComplete();
+                end);
+            end,
+            "CLAIM",function ()
+                local linkUrl = "https://play.google.com/store/apps/details?id=" .. CS.SdkMgr.packageName
+                if core.config.os == OS.iOS then
+                    linkUrl = "https://www.facebook.com/Scripts-Untold-Secrets-107729237761206/"
+                end
+                local picUrl = logic.cs.GameHttpNet:GetResourcesUrl() .. "image/book_banner/" .. logic.bookReadingMgr.bookData.BookID .. ".jpg";
+                chapterSwitch:FBShareLink(linkUrl, "Scripts: Untold Secrets", "Welcome to Scripts", picUrl)
+            end)
 end
 
 function UICollectForm:PlayAnim()
@@ -102,13 +159,7 @@ function UICollectForm:PlayAnim()
     --coroutine.start(function()
     --    coroutine.wait(0.5) 
     --    self.Title.transform:DORotate( core.Vector3(0,0,0),1)
-        logic.cs.UIEventListener.AddOnClickListener(self.CLAIM,function(data) self:CLAIMOnClick() end)
     --end)
-end
-
-function UICollectForm:CLAIMOnClick()
-    CLAIMCallback();
-    self:OnExitClick();
 end
 
 function UICollectForm:OnOpen()

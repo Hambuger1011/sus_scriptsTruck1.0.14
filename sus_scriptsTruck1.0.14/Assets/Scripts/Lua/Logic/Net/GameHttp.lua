@@ -429,6 +429,16 @@ function GameHttp:ReceiveDailyAdAward(callback)
     self:Post(self, "api_receiveDailyAdAward", param, callback, nil, nil, true)
 end
 
+--领取活动广告奖励
+function GameHttp:GetChapterAdsReward(bookid,chapterid,callback)
+    local param = {
+        phoneimei = logic.cs.GameHttpNet.UUID,
+        bookid = bookid,
+        chapterid = chapterid,
+    }
+    self:Post(self, "api_chapterEndAdReward", param, callback, nil, nil, true)
+end
+
 --领取登录宝箱奖励
 function GameHttp:ReceiveActivityBoxAward(boxId, callback)
     local param = {

@@ -195,7 +195,7 @@ public class BookReadingFormTopBarController : CUIComponent
 
                     if (!CUIManager.Instance.GetForm(UIFormName.ChargeMoneyForm))
                     {
-                        var icon = this.MiddleBar.Find("DimanondImage").GetComponent<Image>();
+                        var icon = this.MiddleBar.Find("DimanondBg/DimanondImage").GetComponent<Image>();
                         UITween.AddDiamond(icon, this.DiamondTxt, oldNum, newNum);
                     }else
                     {

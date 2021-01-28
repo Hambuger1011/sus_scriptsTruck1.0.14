@@ -659,10 +659,17 @@ UIBookReadingElement
                     if (adFlag)
                     {
                         LOG.Info("需要看广告");
-                        //SdkMgr.Instance.ShowAds(LookVideoComplete);
+                        // SdkMgr.Instance.ShowAds(LookVideoComplete);
 
-                        //【过场广告先屏蔽关闭】
-                        //GoogleAdmobAds.Instance.chapterRewardedAd.ShowRewardedAd_Chapter(LookVideoComplete);
+                        // 【过场广告先屏蔽关闭】
+                        // GoogleAdmobAds.Instance.chapterRewardedAd.ShowRewardedAd_Chapter(LookVideoComplete);
+                        
+                        XLuaManager.Instance.GetLuaEnv().DoString(@"
+                        local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
+                        if(uicollect)then
+                            local firstRecharge = Cache.ActivityCache.first_recharge;
+                            uicollect:CsRewardedAd_Chapter();
+                        end");
                     }
                     else
                     {
@@ -829,6 +836,27 @@ UIBookReadingElement
                 }
             }
         }, null);
+    }
+
+    public void FBShareLink(string uri, string contentTitle, string contentDesc, string picUri)
+    {
+        SdkMgr.Instance.facebook.FBShareLink(uri,contentTitle,contentDesc,picUri,FBShareLinkSucced,FBShareLinkFaild);
+    } 
+
+    public void FBShareLinkSucced(string postId)
+    {
+        LOG.Info("--ShareSucc--->postId:" + postId);
+
+        var Localization = GameDataMgr.Instance.table.GetLocalizationById(142);
+        UITipsMgr.Instance.PopupTips(Localization, false);
+        LookVideoComplete();
+    } 
+
+    public void FBShareLinkFaild(bool isCancel, string errorInfo)
+    {
+        var Localization = GameDataMgr.Instance.table.GetLocalizationById(143);
+        UITipsMgr.Instance.PopupTips(Localization, false);
+
     }
 
     private void OnClickKeyPropBtn()
