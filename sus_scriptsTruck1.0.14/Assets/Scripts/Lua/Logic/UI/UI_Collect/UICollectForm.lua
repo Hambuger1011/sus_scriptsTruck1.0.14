@@ -135,7 +135,7 @@ function UICollectForm:CsRewardedAd_Chapter()
     local chapterSwitch = logic.UIMgr:GetView2(logic.uiid.BookReading).chapterSwitch.ui.gameObject:GetComponent("UIChapterSwitch");
     self:SetData(1,0,nil,nil,nil,
             "CLAIM",function ()
-                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd_Activity(function()
+                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
                     chapterSwitch:LookVideoComplete();
                 end);
             end,

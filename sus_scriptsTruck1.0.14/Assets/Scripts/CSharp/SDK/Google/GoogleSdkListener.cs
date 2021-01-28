@@ -77,7 +77,7 @@ public class GoogleSdkListener : MonoBehaviour,ILisenter
     //         
     //         // XLuaManager.Instance.GetLuaEnv().DoString(@"GameHelper.Test()");
     //
-    //         // GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd_Activity();
+    //         // GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd();
     //
     //         // PlayerPrefs.DeleteAll();
     //

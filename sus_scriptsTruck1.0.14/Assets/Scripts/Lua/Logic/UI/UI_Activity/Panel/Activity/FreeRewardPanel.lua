@@ -41,7 +41,7 @@ function FreeRewardPanel:WatchBtnClick()
             self:AdAwardRequest();
         else
             --播放活动页面 激励视频广告
-            CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd_Activity(function() self:AdAwardRequest(); end);
+            CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function() self:AdAwardRequest(); end);
         end
     end
 end

@@ -248,7 +248,7 @@ public class MyRewardedAd
             else
             {
                 UITipsMgr.Instance.PopupTips("There's no video to watch yet.Wait patiently", false);
-                Debug.LogError("ShowRewardedAd_Activity 播放视频广告，视频没有加载完毕");
+                Debug.LogError("ShowRewardedAd 播放视频广告，视频没有加载完毕");
             }
         }
         else
