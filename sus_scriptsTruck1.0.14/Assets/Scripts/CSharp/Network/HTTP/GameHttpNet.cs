@@ -793,7 +793,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     /// <param name="vCallBackHandler"></param>
     public void GetSelfBookInfo(EventHandler vCallBackHandler)
     {
-        string url = "api_getIndexData";
+        string url = "api_getIndexData?is_newer=" + (IGGSDKManager.Instance.isNewUser?1:0).ToString();
         this.Get(url, (responseCode, result) =>
         {
             if (responseCode != 200)

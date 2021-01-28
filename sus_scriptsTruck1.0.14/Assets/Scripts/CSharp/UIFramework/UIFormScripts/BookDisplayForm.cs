@@ -70,10 +70,12 @@ public class BookDisplayForm : BaseUIForm
         //CUIManager.Instance.GetForm<MainTopSprite>(UIFormName.MainFormTop).displayFormClose();
         GameDataMgr.Instance.userData.RemoveCollectChange(mCurBookId);
         mLastBookId = 0;
-        XLuaManager.Instance.GetLuaEnv().DoString(@"if GameController.WindowConfig.NeedShowNextWindow then
+        XLuaManager.Instance.GetLuaEnv().DoString(@"
+        if GameController.WindowConfig.NeedShowNextWindow then
             GameController.WindowConfig.NeedShowNextWindow = false
             GameController.WindowConfig:ShowNextWindow()
-        end");
+        end
+        GameController.MainFormControl:StartTopBookMove()");
     }
     public void InitByBookID(int bookID, bool switchNext = false)
     {

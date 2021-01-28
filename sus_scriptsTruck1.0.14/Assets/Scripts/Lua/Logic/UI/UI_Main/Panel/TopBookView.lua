@@ -24,7 +24,9 @@ end
 
 function TopBookView:ShowNext()
     if #self.bookList > 1 then
-        coroutine.stop(self.co)
+        if self.co then
+            coroutine.stop(self.co)
+        end
         self.co = coroutine.start(function()
             coroutine.wait(self.waitTime)
             self:ShowNext()
@@ -36,6 +38,26 @@ function TopBookView:ShowNext()
         nextIndex = 0
     end
     self.ScrollRect.horizontalNormalizedPosition=nextIndex / (#self.bookList - 1);
+end
+
+function TopBookView:StopMove()
+    if #self.bookList > 1 then
+        if self.co then
+            coroutine.stop(self.co)
+        end
+    end
+end
+
+function TopBookView:StartMove()
+    if #self.bookList > 1 then
+        if self.co then
+            coroutine.stop(self.co)
+        end
+        self.co = coroutine.start(function()
+            coroutine.wait(self.waitTime)
+            self:ShowNext()
+        end)
+    end
 end
 
 function TopBookView:OnScrollbarChanged(value)
@@ -75,7 +97,10 @@ function TopBookView:ShowTopBook(book_ids)
     for k, v in pairs(self.bookList) do
         local TopBookItem = logic.cs.GameObject.Instantiate(self.TopBookBg.gameObject,self.TopBookContent.transform):GetComponent("Image");
         TopBookItem.sprite = CS.ResourceManager.Instance:GetUISprite("BookDisplayForm/bg_picture");
-        logic.cs.UIEventListener.AddOnClickListener(TopBookItem.gameObject,function(data) self:OnPlayClick() end)
+        logic.cs.UIEventListener.AddOnClickListener(TopBookItem.gameObject,function(data)
+            self:OnPlayClick()
+            self:StopMove()
+        end)
         logic.cs.ABSystem.ui:DownloadBanner(v,function(id,refCount)
             if(TopBookItem==nil)then
                 refCount:Release();

@@ -343,6 +343,8 @@ public class BookDisplayGridChild : MonoBehaviour {
             CommentNum.text = vCommentCount.ToString();
         }
 
+        PluginTools.Instance.ContentSizeFitterRefresh(CommentNum.transform);
+
         BookName = bookTitle;////////
        
         mChapterIsOpen = chapterIsOpen;

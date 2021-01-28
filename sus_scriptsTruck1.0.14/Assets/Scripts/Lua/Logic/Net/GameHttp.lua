@@ -334,6 +334,7 @@ end
 
 function GameHttp:GetSelfBookInfo(callback)
     local param = {
+        is_newer = logic.cs.IGGSDKMrg.isNewUser and 1 or 0,
     }
     self:Get(self, "api_getIndexData", param, callback, nil, nil, true)
 end
@@ -1073,6 +1074,7 @@ function GameHttp:GetSelfBookInfo(callback)
         UUID = logic.cs.GameHttpNet.UUID,
         TOKEN = logic.cs.GameHttpNet.TOKEN,
         jpushid = logic.cs.UserDataManager.UserData.JPushId,
+        is_newer = logic.cs.IGGSDKMrg.isNewUser and 1 or 0,
     }
     self:Get(self, "api_getIndexData", param, function(result)
         callback(result)

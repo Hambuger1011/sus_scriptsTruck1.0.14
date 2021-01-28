@@ -628,10 +628,21 @@ function MainFormControl:MoveBanner()
 end
 --endregion
 
+--region【停止顶部轮播】
+function MainFormControl:StopTopBookMove()
+    if(UIMainForm)then
+        UIMainForm.TopBookView:StopMove();
+    end
+end
+--endregion
 
-
-
-
+--region【开始顶部轮播】
+function MainFormControl:StartTopBookMove()
+    if(UIMainForm)then
+        UIMainForm.TopBookView:StartMove();
+    end
+end
+--endregion
 
 
 --析构函数
