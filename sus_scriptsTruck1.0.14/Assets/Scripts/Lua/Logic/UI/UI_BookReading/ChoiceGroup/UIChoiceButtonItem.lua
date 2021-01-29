@@ -245,6 +245,14 @@ function UIChoiceButtonItem:OnClcikPropItem(propItem,noSet)
             v:fucShowCheck(v==propItem)
         end
         logic.cs.UserDataManager:SetLuckyPropItem(isUser, itemData)
+    else
+        for i,v in ipairs(self.itemPropList) do
+            local isShow = v.data and propItem.Data and v.data.discount==propItem.Data.discount
+            if not(v.data or propItem.Data) then
+                isShow = true
+            end
+            v:fucShowCheck(isShow)
+        end
     end
 
     --refresh ui

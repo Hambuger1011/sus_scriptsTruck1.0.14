@@ -14,7 +14,9 @@ public enum EnumAds
     //活动页面
     Acitity,
     //章节通关界面
-    Chapter
+    Chapter,
+    //商城免费钻石
+    Mall
 }
 
 
@@ -79,6 +81,10 @@ public class GoogleAdmobAds : MonoBehaviour
 
         //初始化 【章节通关界面广告】 广告位
         chapterRewardedAd = new MyRewardedAd(EnumAds.Chapter,"ca-app-pub-9883228183528023/9674737555", "ca-app-pub-9883228183528023/3096547452");
+        chapterRewardedAd.Initialize();
+
+        //初始化 【商城免费钻石】 广告位
+        chapterRewardedAd = new MyRewardedAd(EnumAds.Mall,"ca-app-pub-9883228183528023/7564323733", "ca-app-pub-9883228183528023/1291200058");
         chapterRewardedAd.Initialize();
 
     }
