@@ -76,92 +76,16 @@ function TopBookView:OpenRead()
     self:OnPlayClick();
 end
 
---点击打开书本章节页面
+--点击打开书本
 function TopBookView:OnPlayClick()
     if(self.bookList and self.bookList[self.selectIndex])then
         local bookinfo={};
         bookinfo.book_id=self.bookList[self.selectIndex];
         GameHelper.BookClick(bookinfo);
+       --埋点*继续阅读模块
         logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectBook,"home_1", "1" ,tostring(bookinfo.book_id));
     end
 
-end
-
---点击阅读书本
-function TopBookView:ReadBook()
-    local bookID = self.bookList[self.selectIndex]
-    logic.cs.UserDataManager.UserData.CurSelectBookID = bookID
-    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
-        local json = core.json.Derialize(result)
-        local code = tonumber(json.code)
-        if code == 200 then
-            logic.cs.UserDataManager.bookDetailInfo = json
-            local chapterId = logic.cs.UserDataManager.bookDetailInfo.data.finish_max_chapter + 1
-            if (chapterId > logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount) then
-                chapterId = logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount
-            end
-            logic.cs.GameHttpNet:BuyChapter(tonumber(bookID),chapterId,function(result)
-                if result.code == 200 then
-                    logic.cs.UserDataManager:SetBuyChapterResultInfo(bookID,result)
-                    logic.cs.TalkingDataManager:SelectBooksInEnter(bookID)
-                    logic.cs.GameDataMgr.userData:AddMyBookId(bookID)
-
-                    logic.cs.BookReadingWrapper:ChangeBookDialogPath(bookID,chapterId)
-                    local chapterid= tonumber(result.data.step_info.chapterid)
-                    local dialogid = tonumber(result.data.step_info.dialogid)
-
-                    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid);
-                    local beginDialogID = 1
-                    local endDialogID = 0
-                    if chapterInfo ~= nil then
-                        beginDialogID = chapterInfo.chapterstart
-                        endDialogID = chapterInfo.chapterfinish
-                    end
-                    if dialogid < beginDialogID then
-                        dialogid = beginDialogID
-                    end
-                    if dialogid > endDialogID then
-                        dialogid = endDialogID
-                    end
-                    logic.bookReadingMgr.isReading = false
-                    logic.cs.BookReadingWrapper:InitByBookID(
-                            bookID,
-                            chapterId,
-                            dialogid,
-                            beginDialogID,
-                            endDialogID
-                    )
-                    logic.cs.BookReadingWrapper:PrepareReading(true)
-
-                    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
-                        local json = core.json.Derialize(result)
-                        local code = tonumber(json.code)
-                        if code == 200 then
-                            logic.cs.UserDataManager.bookDetailInfo = json
-                        elseif code == 277 then
-                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-                        end
-                    end)
-                    logic.cs.GameHttpNet:GetBookBarrageCountList(tonumber(bookID),chapterId,function(result)
-                        local json = core.json.Derialize(result)
-                        local code = tonumber(json.code)
-                        if code == 200 then
-                            logic.cs.UserDataManager.BookBarrageCountList = json
-                        elseif code == 277 then
-                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-                        end
-                    end)
-
-                    logic.cs.UserDataManager.isReadNewerBook = true
-                    self:__Close()
-                elseif code == 277 then
-                    logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-                end
-            end)
-        elseif code == 277 then
-            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-        end
-    end)
 end
 
 function TopBookView:ShowTopBook(book_ids)
@@ -176,8 +100,7 @@ function TopBookView:ShowTopBook(book_ids)
         local TopBookItem = logic.cs.GameObject.Instantiate(self.TopBookBg.gameObject,self.TopBookContent.transform):GetComponent("Image");
         TopBookItem.sprite = CS.ResourceManager.Instance:GetUISprite("BookDisplayForm/bg_picture");
         logic.cs.UIEventListener.AddOnClickListener(TopBookItem.gameObject,function(data)
-            --self:OnPlayClick()
-            self:ReadBook()
+            self:OnPlayClick()
             self:StopMove()
         end)
         logic.cs.ABSystem.ui:DownloadBanner(v,function(id,refCount)

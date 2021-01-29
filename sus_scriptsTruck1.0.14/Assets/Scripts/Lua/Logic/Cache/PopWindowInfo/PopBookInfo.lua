@@ -11,6 +11,8 @@ function PopBookInfo:__init()
     self.countdown=nil;
     --是否已经打开过
     self.isOpened=false;
+    --跳转类型 1.打开书本预览  2.进入书本剧情内
+    self.jump_type=0;
 end
 
 function PopBookInfo:UpdateData(data)
@@ -18,6 +20,7 @@ function PopBookInfo:UpdateData(data)
     self.bookname=data.bookname;
     self.bookicon=data.bookicon;
     self.countdown=data.countdown;
+    self.jump_type=data.jump_type;
 end
 
 --销毁
@@ -26,6 +29,7 @@ function PopBookInfo:__delete()
     self.bookname=nil;
     self.bookicon=nil;
     self.countdown=nil;
+    self.jump_type=nil;
 end
 
 

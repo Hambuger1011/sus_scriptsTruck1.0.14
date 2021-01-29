@@ -48,15 +48,13 @@ function UINewBookTipsForm:OnInitView()
     self.ViewBtn.onClick:AddListener(function()
         self:ViewBook()
     end)
-
-    self.Item.onClick:RemoveAllListeners()
-    self.Item.onClick:AddListener(function()
-        self:ViewBook()
-    end)
+    
+    self:SetData()
 end
 
-function UINewBookTipsForm:SetData(data)
-    newBookList = data
+function UINewBookTipsForm:SetData()
+    local info3=Cache.PopWindowCache:GetInfoById(3);
+    newBookList = info3.book_list
     self.LeftBtn.gameObject:SetActive( #newBookList > 1)
     self.RightBtn.gameObject:SetActive(#newBookList > 1)
     for k, v in pairs(newBookList) do
@@ -117,11 +115,95 @@ function UINewBookTipsForm:ShowNextItem()
 end
 
 function UINewBookTipsForm:ViewBook()
+    if newBookList[Index].jump_type and newBookList[Index].jump_type == 1 then
+        self:ShowBook()
+    else
+        self:ReadBook()
+    end
+end
+
+function UINewBookTipsForm:ShowBook()
     local bookinfo = {};
     bookinfo.book_id = newBookList[Index].book_id;
     GameHelper.BookClick(bookinfo);
     self:OnExitClick()
     GameController.WindowConfig.NeedShowNextWindow = true
+end
+
+function UINewBookTipsForm:ReadBook()
+    local bookID = newBookList[Index].book_id
+    logic.cs.UserDataManager.UserData.CurSelectBookID = bookID
+    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
+        local json = core.json.Derialize(result)
+        local code = tonumber(json.code)
+        if code == 200 then
+            logic.cs.UserDataManager.bookDetailInfo = json
+            local chapterId = logic.cs.UserDataManager.bookDetailInfo.data.finish_max_chapter + 1
+            if (chapterId > logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount) then
+                chapterId = logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount
+            end
+            logic.cs.GameHttpNet:BuyChapter(tonumber(bookID),chapterId,function(result)
+                if result.code == 200 then
+                    logic.cs.UserDataManager:SetBuyChapterResultInfo(bookID,result)
+                    logic.cs.TalkingDataManager:SelectBooksInEnter(bookID)
+                    logic.cs.GameDataMgr.userData:AddMyBookId(bookID)
+
+                    logic.cs.BookReadingWrapper:ChangeBookDialogPath(bookID,chapterId)
+                    local chapterid= tonumber(result.data.step_info.chapterid)
+                    local dialogid = tonumber(result.data.step_info.dialogid)
+
+                    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid);
+                    local beginDialogID = 1
+                    local endDialogID = 0
+                    if chapterInfo ~= nil then
+                        beginDialogID = chapterInfo.chapterstart
+                        endDialogID = chapterInfo.chapterfinish
+                    end
+                    if dialogid < beginDialogID then
+                        dialogid = beginDialogID
+                    end
+                    if dialogid > endDialogID then
+                        dialogid = endDialogID
+                    end
+                    logic.bookReadingMgr.isReading = false
+                    logic.cs.BookReadingWrapper:InitByBookID(
+                            bookID,
+                            chapterId,
+                            dialogid,
+                            beginDialogID,
+                            endDialogID
+                    )
+                    logic.cs.BookReadingWrapper:PrepareReading(true)
+
+                    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
+                        local json = core.json.Derialize(result)
+                        local code = tonumber(json.code)
+                        if code == 200 then
+                            logic.cs.UserDataManager.bookDetailInfo = json
+                        elseif code == 277 then
+                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                        end
+                    end)
+                    logic.cs.GameHttpNet:GetBookBarrageCountList(tonumber(bookID),chapterId,function(result)
+                        local json = core.json.Derialize(result)
+                        local code = tonumber(json.code)
+                        if code == 200 then
+                            logic.cs.UserDataManager.BookBarrageCountList = json
+                        elseif code == 277 then
+                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                        end
+                    end)
+
+                    logic.cs.UserDataManager.isReadNewerBook = true
+                    self:__Close()
+                elseif code == 277 then
+                    logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                end
+            end)
+        elseif code == 277 then
+            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+        end
+    end)
 end
 
 function UINewBookTipsForm:OnOpen()

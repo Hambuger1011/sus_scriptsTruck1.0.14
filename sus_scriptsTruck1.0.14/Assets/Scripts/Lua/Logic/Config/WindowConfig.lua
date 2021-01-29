@@ -13,11 +13,6 @@ end
 function WindowConfig:SetWindowsList()
     WindowIndex = 0
     this.NeedShowNextWindow = false
-    local info3=Cache.PopWindowCache:GetInfoById(3);
-    if(info3 and info3.book_list)then
-        this.NewBookList =info3.book_list;
-    end
-
 end
 
 function WindowConfig:ShowFirstCharge()
@@ -43,7 +38,6 @@ function WindowConfig:ShowNewBookTips()
     if BookPopupNeedShown then
         BookPopupNeedShown = false
         local uiView = logic.UIMgr:Open(logic.uiid.UINewBookTipsForm);
-        uiView:SetData(this.NewBookList)
     else
         this:ShowNextWindow()
     end
