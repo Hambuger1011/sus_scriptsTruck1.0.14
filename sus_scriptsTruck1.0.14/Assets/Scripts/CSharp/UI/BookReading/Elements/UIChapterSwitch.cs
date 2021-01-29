@@ -693,9 +693,9 @@ UIBookReadingElement
         // CUIManager.Instance.OpenForm(UIFormName.MainForm/*, useFormPool: true*/);
         //打开主界面
         XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Open(logic.uiid.UIMainForm);");
-        CUIManager.Instance.OpenForm(UIFormName.BookDisplayForm);
-        var view = CUIManager.Instance.GetForm<BookDisplayForm>(UIFormName.BookDisplayForm);
-        view.InitByBookID(m_curBookID, true);
+        // CUIManager.Instance.OpenForm(UIFormName.BookDisplayForm);
+        // var view = CUIManager.Instance.GetForm<BookDisplayForm>(UIFormName.BookDisplayForm);
+        // view.InitByBookID(m_curBookID, true);
         this.gameObject.SetActiveEx(false);
         EventDispatcher.Dispatch(EventEnum.BookProgressUpdate);
 
