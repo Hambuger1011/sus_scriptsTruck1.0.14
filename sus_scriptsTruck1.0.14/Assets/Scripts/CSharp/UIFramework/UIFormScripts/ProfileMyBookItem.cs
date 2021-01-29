@@ -17,6 +17,7 @@ public class ProfileMyBookItem : MonoBehaviour
     private Image BookTypeImg;
     private GameObject BookFree;
     private GameObject Tips;
+    private GameObject DayPassBg;
     public void Init(JDT_Book cfg)
     {
         FindGameobject();
@@ -28,7 +29,10 @@ public class ProfileMyBookItem : MonoBehaviour
         Ima.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/Icon/", (cfg.id), ".png"));
 
         BookName.text = m_bookDetailCfg.bookname.ToString();
-        
+
+        DayPassBg = DisplayUtil.GetChild(this.gameObject, "DayPassBg");
+
+
         UIEventListener.AddOnClickListener(gameObject, OnBookClick);
 
         ToUpDateProgress();
@@ -49,6 +53,8 @@ public class ProfileMyBookItem : MonoBehaviour
         }
         //【限时活动免费读书 显示标签】
         this.Limit_time_Free(this.BookFree);
+        
+        this.DayPass(cfg.id);
     }
 
 
@@ -63,6 +69,33 @@ public class ProfileMyBookItem : MonoBehaviour
             XLuaManager.Instance.CallFunction("GameHelper", "ShowFree", obj);
         }
     }
+
+    public void DayPass(int bookId)
+    {
+        bool boo = false;
+        if (XLuaHelper.DayPassDic.Count <= 0) { return; }
+
+        foreach (var item in XLuaHelper.DayPassDic)
+        {
+            if (item.Key == bookId)
+            {
+                boo = true;
+                break;
+            }
+
+        }
+
+        if (boo == true)
+        {
+            this.DayPassBg.SetActive(true);
+        }
+        else
+        {
+            this.DayPassBg.SetActive(false);
+        }
+    }
+
+
 
 
     private void FindGameobject()

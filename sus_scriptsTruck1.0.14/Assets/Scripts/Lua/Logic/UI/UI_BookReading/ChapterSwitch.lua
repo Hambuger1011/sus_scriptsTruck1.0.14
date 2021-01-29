@@ -46,7 +46,11 @@ function ChapterSwitch:DayPass(bookId);
     if(bookData)then
         if(bookData.BookID==bookId)then
             self.DayPassBg:SetActive(true);
-            self.DayPassBg2:SetActive(true);
+            if(self.ui.restartCost>0)then
+                self.DayPassBg2:SetActive(true);
+            else
+                self.DayPassBg2:SetActive(false);
+            end
             self.ui.restartKeyIcon:SetActive(false);
             self.ui.continueKeyIcon:SetActive(false);
         else

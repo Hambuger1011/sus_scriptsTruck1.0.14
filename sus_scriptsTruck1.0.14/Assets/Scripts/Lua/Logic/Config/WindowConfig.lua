@@ -15,6 +15,11 @@ function WindowConfig:SetWindowsList()
     this.NeedShowNextWindow = false
 end
 
+function WindowConfig:ResetStatus()
+    FirstChargeNeedShown = true
+    BookPopupNeedShown = true
+end
+
 function WindowConfig:ShowFirstCharge()
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
             and not logic.cs.IGGSDKMrg.isNewUser and not FirstChargeNeedShown then
@@ -50,7 +55,7 @@ function WindowConfig:ShowDayPass()
         local daypassInfo= info2:GetDayPassShow()
         if(daypassInfo)then
             local uiform = logic.UIMgr:GetView2(logic.uiid.UIDayPassForm);
-            if(Cache.PopWindowCache:IsHaveDayPass2(daypassInfo.book_id)==false)then
+            if(Cache.PopWindowCache:IsHaveDayPass2(daypassInfo.book_id)==false and daypassInfo.is_show==0)then
                 if(uiform==nil)then
                     uiform = logic.UIMgr:Open(logic.uiid.UIDayPassForm);
                     uiform:SetInfo(daypassInfo)

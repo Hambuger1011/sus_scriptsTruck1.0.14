@@ -70,7 +70,13 @@ function UIBookReadingView:OnInitView()
     self.bookProgress = get(root,'Frame/Layer/Pass/Image',typeof(logic.cs.Image))
     self.chapterSwitch = ChapterSwitch.New(root:Find('Frame/Layer/ChapterSwitch'))
     self.tipsImage = get(root,'Frame/Layer/TipsImage',typeof(CS.BookReading.UITipsImage))
-    self.BookTitle =CS.DisplayUtil.GetChild(self.topBar.gameObject, "BookTitle"):GetComponent("Text");
+
+    self.BookTitleBg =CS.DisplayUtil.GetChild(self.topBar.gameObject, "BookTitleBg"):GetComponent("RectTransform");
+    self.BookTitle =CS.DisplayUtil.GetChild(self.BookTitleBg.gameObject, "BookTitle"):GetComponent("Text");
+
+    --【屏幕适配】
+     local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, self.BookTitleBg, 750, 81);
+
 
     local bookDetailCfg = logic.bookReadingMgr.Res.bookDetailCfg
     if(bookDetailCfg)then

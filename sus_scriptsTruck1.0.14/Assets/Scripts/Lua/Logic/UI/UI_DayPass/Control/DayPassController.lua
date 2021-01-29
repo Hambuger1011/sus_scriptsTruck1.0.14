@@ -31,18 +31,20 @@ function DayPassController:DayPassUpdate()
                         local _time= daypasslist[i].countdown;
                         local str="";
                         --【倒计时 显示】
+                        --【倒计时 显示】
+                        local day =  math.modf( _time / 86400 )
+                        _time=math.fmod(_time, 86400);
                         local hour =  math.modf( _time / 3600 );
                         local minute = math.fmod( math.modf(_time / 60), 60 );
                         --local second = math.fmod(_time, 60 );
                         --str = string.format("%02d:%02d", hour, minute);
-                        str = hour.."h:"..minute.."m";
+                        str = day.."d:"..hour.."h:"..minute.."m";
                         --【倒计时 显示】
                         --【给C#缓存】
                         CS.XLuaHelper.DayPassAdd(daypasslist[i].book_id,str);
                         self.daypassDic[daypasslist[i].book_id]=str;
                     end
-                end
-                self:DayPassShow();
+                end self:DayPassShow();
             end
         end
     end
@@ -111,11 +113,13 @@ function DayPassController:UpdateCountdown()
                             local str="";
                             if(_time and _time>0)then
                                 --【倒计时 显示】
+                                local day =  math.modf( _time / 86400 )
+                                _time=math.fmod(_time, 86400);
                                 local hour =  math.modf( _time / 3600 );
                                 local minute = math.fmod( math.modf(_time / 60), 60 );
                                 --local second = math.fmod(_time, 60 );
                                 --str = string.format("%02d:%02d", hour, minute);
-                                 str = hour.."h:"..minute.."m";
+                                 str = day.."d:"..hour.."h:"..minute.."m";
                             end
 
                             --【书本详情页面刷新】
@@ -214,8 +218,8 @@ end
 
 
 --region 【设置用户day pass某本书今天已弹出缓存  请求请求】
-function DayPassController:PopUpDayPassBookRequest()
-    logic.gameHttp:PopUpDayPassBook(function(result) self:PopUpDayPassBook(result); end)
+function DayPassController:PopUpDayPassBookRequest(book_id)
+    logic.gameHttp:PopUpDayPassBook(book_id,function(result) self:PopUpDayPassBook(result); end)
 end
 
 --endregion

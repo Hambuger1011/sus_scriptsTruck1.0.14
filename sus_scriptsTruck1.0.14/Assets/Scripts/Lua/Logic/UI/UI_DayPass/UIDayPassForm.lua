@@ -76,11 +76,14 @@ function UIDayPassForm:SetInfo(daypassInfo)
     local _time= daypassInfo.countdown;
     local str="";
     if(_time and _time>0)then
+        --【倒计时 显示】
+        local day =  math.modf( _time / 86400 )
+        _time=math.fmod(_time, 86400);
         local hour =  math.modf( _time / 3600 );
         local minute = math.fmod( math.modf(_time / 60), 60 );
         --local second = math.fmod(_time, 60 );
         --str = string.format("%02d:%02d", hour, minute);
-         str = hour.."h:"..minute.."m";
+        str = day.."d:"..hour.."h:"..minute.."m";
         if(str)then
             self.TimeText.text=str;
         end
@@ -90,7 +93,7 @@ function UIDayPassForm:SetInfo(daypassInfo)
     end
 
     if(daypassInfo.show_type==1)then
-      GameController.DayPassController:PopUpDayPassBookRequest()
+      GameController.DayPassController:PopUpDayPassBookRequest(daypassInfo.book_id);
     end
 
     --【显示New标签】

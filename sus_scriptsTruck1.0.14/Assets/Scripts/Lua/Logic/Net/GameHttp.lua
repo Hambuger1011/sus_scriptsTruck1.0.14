@@ -1474,8 +1474,9 @@ function GameHttp:ReadPrivateLetterTeam(_ids,callback)
 end
 
 --【设置用户day pass某本书今天已弹出缓存】
-function GameHttp:PopUpDayPassBook(callback)
+function GameHttp:PopUpDayPassBook(book_id,callback)
     local param = {
+        book_id=book_id;
     }
     self:Post(self, "api_popUpDayPassBook", param, function(result)
         callback(result)

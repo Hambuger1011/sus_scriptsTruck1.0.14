@@ -113,11 +113,10 @@ public class BookReadingFormTopBarController : CUIComponent
 #endif
 
 
-
         //【屏幕适配】
-        float offect = XLuaHelper.UnSafeAreaNotFit(this.myForm, TopRect.rectTransform(), 750, 81);
+        offectY = XLuaHelper.UnSafeAreaNotFit(this.myForm, null, 750, 81);
+        this.onRangeValueChange();
 
-     
     }
 
     private void TurnToHandler()
@@ -328,15 +327,10 @@ public class BookReadingFormTopBarController : CUIComponent
           
     }
 
+    private float offectY = 0;
     private void onRangeValueChange()
     {
-        TopGB.anchoredPosition = new Vector3(0/*LeftBar.anchoredPosition.y*/, Mathf.Lerp(230, 0, m_fRange));
-
-
-        //LeftBar.anchoredPosition = new Vector3(Mathf.Lerp(-leftBarWidth, 0, m_fRange), LeftBar.anchoredPosition.y, 0);
-        // MiddleBar.anchoredPosition = new Vector3(Mathf.Lerp(middleBarWidth, 0, m_fRange), MiddleBar.anchoredPosition.y, 0);
-
-
+        TopGB.anchoredPosition = new Vector3(0/*LeftBar.anchoredPosition.y*/, Mathf.Lerp(230, -offectY, m_fRange));
     }
 
     private enum TopBarState

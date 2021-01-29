@@ -11,6 +11,7 @@ function BookTypeItem:__init(gameObject)
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
     self.BookName =CS.DisplayUtil.GetChild(gameObject, "BookName"):GetComponent("Text");
     self.Tips =CS.DisplayUtil.GetChild(self.BookBG.gameObject, "Tips");
+    self.DayPassBg =CS.DisplayUtil.GetChild(gameObject, "DayPassBg");
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.gameObject,function(data) self:BookOnclicke() end)
@@ -50,12 +51,29 @@ function BookTypeItem:SetInfo(Info)
 
     --【限时活动免费读书 显示标签】
     self:Limit_time_Free();
+
+    --【DayPass】
+    self:DayPass();
 end
 
 
 --【限时活动免费读书 显示标签】
 function BookTypeItem:Limit_time_Free()
     GameHelper.Limit_time_Free(self.BookFree);
+end
+
+--【DayPass】
+function BookTypeItem:DayPass()
+    self.DayPassBg:SetActive(false);
+    local daypasslist=Cache.PopWindowCache.daypassList;
+    if(GameHelper.islistHave(daypasslist)==true)then
+        local len=table.length(daypasslist);
+        for i = 1, len do
+            if(daypasslist[i]==self.BookInfo.book_id)then
+                GameHelper.DayPass(self.DayPassBg);
+            end
+        end
+    end
 end
 
 

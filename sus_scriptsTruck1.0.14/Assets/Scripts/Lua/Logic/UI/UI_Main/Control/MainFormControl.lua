@@ -207,6 +207,9 @@ function MainFormControl:GetWindowConfigRequest()
     logic.gameHttp:GetWindowConfig(function(result) self:GetWindowConfigCallBack(result) end)
 end
 
+function MainFormControl:ResetWindowConfigStatus()
+    GameController.WindowConfig:ResetStatus();
+end
 
 function MainFormControl:GetWindowConfigCallBack(result)
     logic.debug.Log("----GetWindowConfigCallBack---->" .. result)

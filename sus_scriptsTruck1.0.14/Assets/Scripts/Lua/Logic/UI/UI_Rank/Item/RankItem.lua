@@ -40,7 +40,7 @@ function RankItem:SetInfo(Info,_type)
     if(_type==RankType.Platform)then
         self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_trending");
     elseif(_type==RankType.Newbook)then
-        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_commented");
+        self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_new");
     elseif(_type==RankType.Popularity)then
         self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_popular");
     end

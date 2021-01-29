@@ -51,7 +51,7 @@ UIBookReadingElement
     private int m_curChapterID;
     private int m_nextDialogueID;
 
-    private int restartCost;
+    public int restartCost;
     private int continueCost;
 
 

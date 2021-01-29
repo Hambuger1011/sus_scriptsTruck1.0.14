@@ -15,6 +15,8 @@ function PopBookInfo:__init()
     self.show_type="";
     --跳转类型 1.打开书本预览  2.进入书本剧情内
     self.jump_type="";
+    --day pass书本是否已经显示 1已显示 0未显示
+    self.is_show=0;
 
 
     ---day pass 是否已经打开过
@@ -29,6 +31,7 @@ function PopBookInfo:UpdateData(data)
     self.tag=data.tag;
     self.show_type=data.show_type;
     self.jump_type=data.jump_type;
+    self.is_show=data.is_show;
 end
 
 --销毁
@@ -40,6 +43,7 @@ function PopBookInfo:__delete()
     self.tag=nil;
     self.show_type=nil;
     self.jump_type=nil;
+    self.is_show=nil;
 end
 
 
