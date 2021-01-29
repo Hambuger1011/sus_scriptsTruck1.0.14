@@ -136,7 +136,7 @@ function UICollectForm:CsRewardedAd_Chapter()
     local bookData = logic.bookReadingMgr.bookData
     self:SetData(1,0,nil,nil,nil,
             "CLAIM",function ()
-                --CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
+                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
                     logic.gameHttp:GetChapterAdsReward(
                             bookData.BookID,
                             bookData.ChapterID,
@@ -154,7 +154,7 @@ function UICollectForm:CsRewardedAd_Chapter()
                                     end
                                 end
                             end);
-                --end);
+                end);
             end,
             "CLAIM",function ()
                 local linkUrl = "https://play.google.com/store/apps/details?id=" .. CS.SdkMgr.packageName
