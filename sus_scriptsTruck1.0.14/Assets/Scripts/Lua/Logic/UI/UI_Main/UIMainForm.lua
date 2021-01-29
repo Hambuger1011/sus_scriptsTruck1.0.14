@@ -270,12 +270,25 @@ end
 
 --region 【活动礼包按钮点击】
 function UIMainForm:GiftButtonOnClick()
-    local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
-    if(uiform)then
-        --点击活动按钮
-        uiform:RwardToggleClick(nil);
-        uiform.HomeToggle.isOn=false;
-        uiform.RwardToggle.isOn=true;
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1 then
+        logic.gameHttp:GetRewardConfig(function(result)
+            if(string.IsNullOrEmpty(result))then return; end
+            logic.debug.Log("----GetRewardConfig---->" .. result)
+            local json = core.json.Derialize(result);
+            local code = tonumber(json.code);
+            if(code == 200)then
+                Cache.ActivityCache:UpdatedRewardConfig(json.data);
+                logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
+            end
+        end)
+    else
+        local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
+        if(uiform)then
+            --点击活动按钮
+            uiform:RwardToggleClick(nil);
+            uiform.HomeToggle.isOn=false;
+            uiform.RwardToggle.isOn=true;
+        end
     end
 end
 --endregion
