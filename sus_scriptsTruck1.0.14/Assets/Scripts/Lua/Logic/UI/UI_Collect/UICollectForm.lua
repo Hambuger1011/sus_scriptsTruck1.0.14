@@ -133,18 +133,35 @@ end
 
 function UICollectForm:CsRewardedAd_Chapter()
     local chapterSwitch = logic.UIMgr:GetView2(logic.uiid.BookReading).chapterSwitch.ui.gameObject:GetComponent("UIChapterSwitch");
+    local bookData = logic.bookReadingMgr.bookData
     self:SetData(1,0,nil,nil,nil,
             "CLAIM",function ()
-                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
-                    chapterSwitch:LookVideoComplete();
-                end);
+                --CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
+                    logic.gameHttp:GetChapterAdsReward(
+                            bookData.BookID,
+                            bookData.ChapterID,
+                            function(result)
+                                local jsonData = core.json.Derialize(result)
+                                local code = jsonData.code
+                                if code == 200 then
+                                    if jsonData and jsonData.data then
+                                        if jsonData.data.bkey then
+                                            logic.cs.UserDataManager:ResetMoney(1, tonumber(jsonData.data.bkey))
+                                        end
+                                        if jsonData.data.diamond then
+                                            logic.cs.UserDataManager:ResetMoney(2, tonumber(jsonData.data.diamond))
+                                        end
+                                    end
+                                end
+                            end);
+                --end);
             end,
             "CLAIM",function ()
                 local linkUrl = "https://play.google.com/store/apps/details?id=" .. CS.SdkMgr.packageName
                 if core.config.os == OS.iOS then
                     linkUrl = "https://www.facebook.com/Scripts-Untold-Secrets-107729237761206/"
                 end
-                local picUrl = logic.cs.GameHttpNet:GetResourcesUrl() .. "image/book_banner/" .. logic.bookReadingMgr.bookData.BookID .. ".jpg";
+                local picUrl = logic.cs.GameHttpNet:GetResourcesUrl() .. "image/book_banner/" .. bookData.BookID .. ".jpg";
                 chapterSwitch:FBShareLink(linkUrl, "Scripts: Untold Secrets", "Welcome to Scripts", picUrl)
             end)
 end
