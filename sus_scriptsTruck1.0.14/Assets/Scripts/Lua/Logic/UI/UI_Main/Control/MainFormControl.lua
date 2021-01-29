@@ -150,6 +150,7 @@ end
 
 
 --region 【获取我的书本列表响应】
+local isFirst=true;
 --请求我的书本
 function MainFormControl:GetSelfBookInfo(result)
 
@@ -184,9 +185,12 @@ function MainFormControl:GetSelfBookInfo(result)
         end
 
         --endregion
-        
-        self:GetWindowConfigRequest();
-        
+
+        if(isFirst)then
+            self:GetWindowConfigRequest();
+            isFirst=false;
+        end
+
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
             GameController.ActivityControl:UpdateActivityBanner();

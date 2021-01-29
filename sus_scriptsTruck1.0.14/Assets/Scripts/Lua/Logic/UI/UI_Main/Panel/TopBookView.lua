@@ -10,6 +10,7 @@ function TopBookView:__init(gameObject)
     self.PointBg =CS.DisplayUtil.GetChild(gameObject, "PointBg");
     self.PointContent =CS.DisplayUtil.GetChild(gameObject, "PointContent");
 
+
     --事件监听
     logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.GotoRead,function() self:OpenRead() end)
 
@@ -98,6 +99,10 @@ function TopBookView:ShowTopBook(book_ids)
     GameHelper.CurBookId=self.bookList[1];
     for k, v in pairs(self.bookList) do
         local TopBookItem = logic.cs.GameObject.Instantiate(self.TopBookBg.gameObject,self.TopBookContent.transform):GetComponent("Image");
+        local NewBg =CS.DisplayUtil.GetChild(TopBookItem.gameObject, "NewBg");
+        --【显示New标签】
+        GameHelper.ShowNewBg(v,NewBg);
+
         TopBookItem.sprite = CS.ResourceManager.Instance:GetUISprite("BookDisplayForm/bg_picture");
         logic.cs.UIEventListener.AddOnClickListener(TopBookItem.gameObject,function(data)
             self:OnPlayClick()
@@ -115,6 +120,7 @@ function TopBookView:ShowTopBook(book_ids)
             TopBookItem:DOFade(0, 0):SetEase(core.tween.Ease.Flash):Play();
             TopBookItem.sprite = refCount:GetObject();
             TopBookItem:DOFade(1, 0.2):SetEase(core.tween.Ease.Flash):Play();
+
         end)
         TopBookItem.gameObject:SetActiveEx(true)
 
@@ -133,6 +139,8 @@ function TopBookView:ShowTopBook(book_ids)
             self:ShowNext()
         end)
     end
+
+
 end
 
 function TopBookView:__delete()

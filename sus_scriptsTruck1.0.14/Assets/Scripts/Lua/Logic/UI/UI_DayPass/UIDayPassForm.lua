@@ -22,9 +22,13 @@ function UIDayPassForm:OnInitView()
     self.Bookbg = CS.DisplayUtil.GetChild(this.gameObject, "Bookbg"):GetComponent("Image");
     self.DayPassBg = CS.DisplayUtil.GetChild(this.gameObject, "DayPassBg");
     self.DayPassBgRect = self.DayPassBg:GetComponent("RectTransform");
+    self.TimeBg = CS.DisplayUtil.GetChild(this.gameObject, "TimeBg");
+    self.TimeText = CS.DisplayUtil.GetChild(self.TimeBg, "TimeText"):GetComponent("Text");
+    self.NewBg = CS.DisplayUtil.GetChild(self.Bookbg.gameObject, "NewBg");
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.ReadBtn,function(data) self:ReadBtnClick(data) end);
+    logic.cs.UIEventListener.AddOnClickListener(self.Bookbg.gameObject,function(data) self:ReadBtnClick() end);
     logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data)  self:NextShow(data) end);
 
     self.BookInfo=nil;
@@ -49,6 +53,7 @@ function UIDayPassForm:OnClose()
     UIView.OnClose(self)
     logic.cs.UIEventListener.RemoveOnClickListener(self.ReadBtn,function(data) self:ReadBtnClick(data) end);
     logic.cs.UIEventListener.RemoveOnClickListener(self.CloseBtn,function(data) self:NextShow() end);
+    logic.cs.UIEventListener.RemoveOnClickListener(self.Bookbg.gameObject,function(data) self:ReadBtnClick() end);
 
 end
 
@@ -60,13 +65,43 @@ function UIDayPassForm:SetInfo(daypassInfo)
         GameHelper.ShowChapterBG(daypassInfo.book_id,self.Bookbg);
         self.BookInfo=daypassInfo;
         daypassInfo.isOpened=true;
+        Cache.PopWindowCache:AddDayPass2(daypassInfo.book_id);
     else
         self:OnExitClick()
     end
     --显示书本背景
+
+
+    --【倒计时 显示】
+    local _time= daypassInfo.countdown;
+    local str="";
+    if(_time and _time>0)then
+        local hour =  math.modf( _time / 3600 );
+        local minute = math.fmod( math.modf(_time / 60), 60 );
+        --local second = math.fmod(_time, 60 );
+        --str = string.format("%02d:%02d", hour, minute);
+         str = hour.."h:"..minute.."m";
+        if(str)then
+            self.TimeText.text=str;
+        end
+        self.TimeBg:SetActive(true);
+    else
+        self.TimeBg:SetActive(false);
+    end
+
+    if(daypassInfo.show_type==1)then
+      GameController.DayPassController:PopUpDayPassBookRequest()
+    end
+
+    --【显示New标签】
+    GameHelper.ShowNewBg(daypassInfo.book_id,self.NewBg);
 end
 
-
+function UIDayPassForm:ShowTime(book_id,str)
+    if(self.BookInfo==book_id)then
+        self.TimeText.text=str;
+    end
+end
 
 function UIDayPassForm:ReadBtnClick()
     if(self.BookInfo==nil)then

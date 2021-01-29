@@ -6,8 +6,11 @@ function PopWindowCache:__init()
      --弹窗列表，数组顺序为弹窗顺序
     self.window_list= {};
 
-    --[临时缓存]【key  bookid】 【value  isShow】
+    --[临时缓存]
     self.daypassList={};
+
+    --[临时缓存]
+    self.daypassList2={};
 end
 
 --更新 列表
@@ -52,8 +55,51 @@ function PopWindowCache:IsDayPassShow(bookId)
 end
 
 
+function PopWindowCache:AddDayPass(bookId)
+    if(GameHelper.islistHave(self.daypassList)==false)then
+        table.insert(self.daypassList,bookId);
+        return;
+    end
+    if(GameHelper.islistHave(self.daypassList)==true)then
+        local len=table.length(self.daypassList)
+        for i = 1, len do
+            if(self.daypassList[i]==bookId)then
+                return;
+            end
+        end
+        table.insert(self.daypassList,bookId);
+        return;
+    end
+end
 
+function PopWindowCache:AddDayPass2(bookId)
+    if(GameHelper.islistHave(self.daypassList2)==false)then
+        table.insert(self.daypassList2,bookId);
+        return;
+    end
+    if(GameHelper.islistHave(self.daypassList2)==true)then
+        local len=table.length(self.daypassList2)
+        for i = 1, len do
+            if(self.daypassList2[i]==bookId)then
+                return;
+            end
+        end
+        table.insert(self.daypassList2,bookId);
+        return;
+    end
+end
 
+function PopWindowCache:IsHaveDayPass2(bookId)
+    if(GameHelper.islistHave(self.daypassList2)==true)then
+        local len=table.length(self.daypassList2)
+        for i = 1, len do
+            if(self.daypassList2[i]==bookId)then
+                return true;
+            end
+        end
+    end
+    return false;
+end
 
 function PopWindowCache:__delete()
     self.window_list=nil;

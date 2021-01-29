@@ -9,17 +9,25 @@ function PopBookInfo:__init()
     self.bookicon=nil;
     --该书本免费倒计时
     self.countdown=nil;
-    --是否已经打开过
-    self.isOpened=false;
+    --新书弹出标签
+    self.tag="";
+    --day pass 弹窗类型：1.每天弹一次  2.每次登录都弹
+    self.show_type="";
     --跳转类型 1.打开书本预览  2.进入书本剧情内
-    self.jump_type=0;
+    self.jump_type="";
+
+
+    ---day pass 是否已经打开过
+    self.isOpened=false;
 end
 
 function PopBookInfo:UpdateData(data)
-    self.book_id=data.book_id;
+    self.book_id=tonumber(data.book_id);
     self.bookname=data.bookname;
     self.bookicon=data.bookicon;
     self.countdown=data.countdown;
+    self.tag=data.tag;
+    self.show_type=data.show_type;
     self.jump_type=data.jump_type;
 end
 
@@ -29,6 +37,8 @@ function PopBookInfo:__delete()
     self.bookname=nil;
     self.bookicon=nil;
     self.countdown=nil;
+    self.tag=nil;
+    self.show_type=nil;
     self.jump_type=nil;
 end
 

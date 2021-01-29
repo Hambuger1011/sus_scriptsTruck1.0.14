@@ -406,6 +406,12 @@ public class BookDisplayGridChild : MonoBehaviour {
         });
         //if (bookChapterBGSprite != null) BookChapterBG.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/banner/bg_book", mBookId, ".png"));
 
+
+        //【DayPass】
+        this.DayPass2(vBookID);
+        //【DayPass】【刷新时间】
+        this.UpdateCountdown2();
+
         if (mChapterIsOpen)
         {
             if(isComplete)
@@ -417,8 +423,6 @@ public class BookDisplayGridChild : MonoBehaviour {
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
                 PlayKeyShowImage.SetActive(false);
-                this.DayPassBg.SetActive(false);
-                this.PlayButton2.SetActive(false);
             }
             else
             {
@@ -432,11 +436,6 @@ public class BookDisplayGridChild : MonoBehaviour {
                     btnKeyProp.gameObject.SetActive(true);
                 }
                 propObj.gameObject.SetActive(true);
-
-                //【DayPass】
-                this.DayPass(vBookID);
-                //【DayPass】【刷新时间】
-                this.UpdateCountdown2();
             }
         }
         else
@@ -458,8 +457,8 @@ public class BookDisplayGridChild : MonoBehaviour {
                 btnKeyProp.gameObject.SetActive(false);
                 propObj.gameObject.SetActive(false);
             }
-            this.DayPassBg.SetActive(false);
-            this.PlayButton2.SetActive(false);
+            // this.DayPassBg.SetActive(false);
+            // this.PlayButton2.SetActive(false);
 
             JDT_Chapter chapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(mBookId, ChapterId);
             if (chapterInfo != null)
@@ -650,6 +649,8 @@ return function()
             RefreshKeyPropBtnState();
             //【限时活动免费读书 显示标签】
             this.Limit_time_Free();
+            //【DayPass】
+            this.DayPass2(mBookId);
         }
         else
         {
@@ -695,8 +696,24 @@ return function()
     /// </summary>
     public void DayPass(int bookId)
     {
+        if (bookId == mBookId)
+        {
+            this.DayPassBg.SetActive(true);
+            this.PlayButton2.SetActive(true);
+            //不显示钥匙
+            this.NeedKey.SetActive(false);
+        }
+        else
+        {
+            this.DayPassBg.SetActive(false);
+            this.PlayButton2.SetActive(false);
+        }
+    }
+
+    public void DayPass2(int bookId)
+    {
         bool boo = false;
-        if (XLuaHelper.DayPassDic.Count <= 0){return;}
+        if (XLuaHelper.DayPassDic.Count <= 0) { return; }
 
         foreach (var item in XLuaHelper.DayPassDic)
         {
@@ -705,14 +722,16 @@ return function()
                 boo = true;
                 break;
             }
-            
+
         }
 
-        if (boo==true)
+        if (boo == true)
         {
             if (this.DayPassBg != null)
             {
                 this.DayPassBg.SetActive(true);
+                //不显示钥匙
+                this.NeedKey.SetActive(false);
             }
             if (this.PlayButton2 != null)
             {
@@ -730,6 +749,23 @@ return function()
                 this.PlayButton2.SetActive(false);
             }
         }
+
+        if (mChapterIsOpen)
+        {
+            if (mIsComplete)
+            {
+                PlayButton2.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("Reward/act_btn_dis");
+            }
+            else
+            {
+                PlayButton2.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("Reward/act_btn_default");
+            }
+        }
+        else
+        {
+            PlayButton2.GetComponent<Image>().sprite = ResourceManager.Instance.GetUISprite("Reward/act_btn_dis");
+        }
+
     }
 
 

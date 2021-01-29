@@ -1473,5 +1473,14 @@ function GameHttp:ReadPrivateLetterTeam(_ids,callback)
     end, nil, nil, true)
 end
 
+--【设置用户day pass某本书今天已弹出缓存】
+function GameHttp:PopUpDayPassBook(callback)
+    local param = {
+    }
+    self:Post(self, "api_popUpDayPassBook", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
 
 return GameHttp.New()

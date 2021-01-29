@@ -315,6 +315,7 @@ function EmailControl:DelMail(_msgid,result)
     logic.debug.Log("----DelMail---->" .. result);
     local json = core.json.Derialize(result);
     local code = tonumber(json.code)
+
     if(code == 200)then
         if(UIEmailForm)then
             UIEmailForm:UpdateEmail(1);
@@ -376,7 +377,8 @@ function EmailControl:BatchReadReceiveMail(_msgid,result)
     if(code == 200)then
         logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey));
         logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond));
-
+        --刷新红点
+        GameController.MainFormControl:RedPointRequest();
 
         if(UIEmailForm)then
             UIEmailForm:UpdateEmail(1);

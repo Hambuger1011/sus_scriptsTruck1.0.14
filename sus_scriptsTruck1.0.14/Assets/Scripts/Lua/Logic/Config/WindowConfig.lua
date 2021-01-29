@@ -50,12 +50,16 @@ function WindowConfig:ShowDayPass()
         local daypassInfo= info2:GetDayPassShow()
         if(daypassInfo)then
             local uiform = logic.UIMgr:GetView2(logic.uiid.UIDayPassForm);
-            if(uiform==nil)then
-                uiform = logic.UIMgr:Open(logic.uiid.UIDayPassForm);
-                uiform:SetInfo(daypassInfo)
+            if(Cache.PopWindowCache:IsHaveDayPass2(daypassInfo.book_id)==false)then
+                if(uiform==nil)then
+                    uiform = logic.UIMgr:Open(logic.uiid.UIDayPassForm);
+                    uiform:SetInfo(daypassInfo)
+                else
+                    uiform.uiform:Appear();
+                    uiform:SetInfo(daypassInfo)
+                end
             else
-                uiform.uiform:Appear();
-                uiform:SetInfo(daypassInfo)
+                this:ShowNextWindow()
             end
             CS.AppsFlyerManager.Instance:GetFirstActionLog();
         else

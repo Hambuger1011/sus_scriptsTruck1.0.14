@@ -31,18 +31,22 @@ function UIEditorMenu_Selection:__init(gameObject)
     end)
     self.btnInsert.onClick:AddListener(function()
         ---@type t_StoryNode
-        local storyNode = self.refSubItem.refDialog
-        storyNode:InsertSelection(self.refSubItem.index)
-        self.refItem.itemData.isDirty = true --重新计算ui大小
-        logic.EventDispatcher:Broadcast(logic.EventName.on_story_editor_dialog_list_refresh)
+        if table.count(self.refSubItem.refDialog.children)< 3 then
+            local storyNode = self.refSubItem.refDialog
+            storyNode:InsertSelection(self.refSubItem.index)
+            self.refItem.itemData.isDirty = true --重新计算ui大小
+            logic.EventDispatcher:Broadcast(logic.EventName.on_story_editor_dialog_list_refresh)
+        end
         self:Hide()
     end)
     self.btnAdd.onClick:AddListener(function()
         ---@type t_StoryNode
-        local storyNode = self.refSubItem.refDialog
-        storyNode:InsertSelection(self.refSubItem.index + 1)
-        self.refItem.itemData.isDirty = true --重新计算ui大小
-        logic.EventDispatcher:Broadcast(logic.EventName.on_story_editor_dialog_list_refresh)
+        if table.count(self.refSubItem.refDialog.children)< 3 then
+            local storyNode = self.refSubItem.refDialog
+            storyNode:InsertSelection(self.refSubItem.index + 1)
+            self.refItem.itemData.isDirty = true --重新计算ui大小
+            logic.EventDispatcher:Broadcast(logic.EventName.on_story_editor_dialog_list_refresh)
+        end
         self:Hide()
     end)
     self.btnDelete.onClick:AddListener(function()

@@ -547,6 +547,39 @@ function GameHelper.ShowNewUpdate(book_id,finish_max_chapter,Tips)
     end
 end
 
+
+
+function GameHelper.ShowNewBg(book_id,Tips)
+
+    local MainbookInfo=Cache.MainCache:GetMyBookByIndex(book_id);
+    local _finish_max_chapter=0;
+    if(MainbookInfo)then
+        _finish_max_chapter=MainbookInfo.finish_max_chapter;
+    end
+    local bookinfo = logic.cs.UserDataManager:GetBookItemInfo(book_id);
+    if(bookinfo and Tips and CS.XLuaHelper.is_Null(Tips)==false)then
+        if(bookinfo.tag=="")then
+            Tips:SetActive(false);
+        else
+            if(bookinfo.chapteropen)then
+                if(_finish_max_chapter>=bookinfo.chapteropen)then
+                    Tips:SetActive(false);
+                else
+                    if(bookinfo.tag=="New")then
+                        Tips:SetActive(true);
+                    else
+                        Tips:SetActive(false);
+                    end
+                end
+            else
+                Tips:SetActive(false);
+            end
+        end
+    else
+        Tips:SetActive(false);
+    end
+end
+
 --endregion
 
 

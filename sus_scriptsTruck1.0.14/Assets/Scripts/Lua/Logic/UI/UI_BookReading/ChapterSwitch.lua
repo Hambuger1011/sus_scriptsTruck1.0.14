@@ -5,6 +5,7 @@ function ChapterSwitch:__init(root)
     self.ui = root:GetComponent(typeof(CS.UIChapterSwitch))
 
     self.DayPassBg = CS.DisplayUtil.GetChild(self.ui.btnContinue.gameObject, "DayPassBg");
+    self.DayPassBg2 = CS.DisplayUtil.GetChild(self.ui.btnRestart.gameObject, "DayPassBg");
 
     --【请求获取限时活动状态】
     GameController.ActivityControl:GetActivityInfoRequest(EnumActivity.FreeKey);
@@ -45,8 +46,12 @@ function ChapterSwitch:DayPass(bookId);
     if(bookData)then
         if(bookData.BookID==bookId)then
             self.DayPassBg:SetActive(true);
+            self.DayPassBg2:SetActive(true);
+            self.ui.restartKeyIcon:SetActive(false);
+            self.ui.continueKeyIcon:SetActive(false);
         else
             self.DayPassBg:SetActive(false);
+            self.DayPassBg2:SetActive(false);
         end
     end
 end

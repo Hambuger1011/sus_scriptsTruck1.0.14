@@ -1,13 +1,16 @@
 local DayPassController = core.Class("DayPassController", core.Singleton)
 
-
+local UIDayPassForm=nil;
 --region【构造函数】
 function DayPassController:__init()
+
+    self.daypassDic={};
 end
 --endregion
 
 --region【设置界面】
-function DayPassController:SetData()
+function DayPassController:SetData(dayPassForm)
+    UIDayPassForm=dayPassForm;
 end
 --endregion
 
@@ -19,27 +22,27 @@ function DayPassController:DayPassUpdate()
         if(daypasslist)then
             if(GameHelper.islistHave(daypasslist)==true)then
                 CS.XLuaHelper.DayPassRemoveAll();
+                self.daypassDic={};
                 for i = 1, #daypasslist do
                     if(daypasslist[i])then
-                        table.insert(Cache.PopWindowCache.daypassList,daypasslist[i].book_id);
+                        Cache.PopWindowCache:AddDayPass(daypasslist[i].book_id);
                         self:DayPassShow2(daypasslist[i].book_id);
 
-
-                        --【倒计时 显示】
                         local _time= daypasslist[i].countdown;
                         local str="";
-                        if(_time and _time>0)then
-                            local hour =  math.modf( _time / 3600 );
-                            local minute = math.fmod( math.modf(_time / 60), 60 );
-                            --local second = math.fmod(_time, 60 );
-                            str = string.format("%02d:%02d", hour, minute);
-                        end
+                        --【倒计时 显示】
+                        local hour =  math.modf( _time / 3600 );
+                        local minute = math.fmod( math.modf(_time / 60), 60 );
+                        --local second = math.fmod(_time, 60 );
+                        --str = string.format("%02d:%02d", hour, minute);
+                        str = hour.."h:"..minute.."m";
                         --【倒计时 显示】
                         --【给C#缓存】
                         CS.XLuaHelper.DayPassAdd(daypasslist[i].book_id,str);
+                        self.daypassDic[daypasslist[i].book_id]=str;
                     end
                 end
-                self:DayPassShow(true);
+                self:DayPassShow();
             end
         end
     end
@@ -51,7 +54,7 @@ end
 
 --region***【DayPass】【开启和关闭】
 function DayPassController:DayPassShow()
-    GameController.MainFormControl:DayPass(Cache.PopWindowCache.daypassList);
+    GameController.MainFormControl:DayPass();
 end
 
 function DayPassController:DayPassShow2(bookId)
@@ -104,25 +107,31 @@ function DayPassController:UpdateCountdown()
                                 daypasslist[i].countdown=0;
                             end
 
+                            local _time= daypasslist[i].countdown;
+                            local str="";
+                            if(_time and _time>0)then
+                                --【倒计时 显示】
+                                local hour =  math.modf( _time / 3600 );
+                                local minute = math.fmod( math.modf(_time / 60), 60 );
+                                --local second = math.fmod(_time, 60 );
+                                --str = string.format("%02d:%02d", hour, minute);
+                                 str = hour.."h:"..minute.."m";
+                            end
+
                             --【书本详情页面刷新】
                             local BookDisplayFormobj = logic.cs.CUIManager:GetForm(logic.cs.UIFormName.BookDisplayForm)
                             if(BookDisplayFormobj and CS.XLuaHelper.is_Null(BookDisplayFormobj)==false)then
                                 local BookDisplayForm=BookDisplayFormobj:GetComponent(typeof(CS.BookDisplayForm));
                                 if(BookDisplayForm)then
-
-                                    local _time= daypasslist[i].countdown;
-                                    local str="";
-                                    if(_time and _time>0)then
-                                        local day =  math.modf( _time / 86400 )
-                                        _time=math.fmod(_time, 86400);
-                                        local hour =  math.modf( _time / 3600 )
-                                        local minute = math.fmod( math.modf(_time / 60), 60 )
-                                        str =day.."d:"..hour.."h:"..minute.."m";
-                                    end
                                     --【刷新时间显示】
                                     BookDisplayForm:UpdateCountdown(daypasslist[i].book_id,str);
                                 end
                             end
+
+                            if(UIDayPassForm)then
+                                UIDayPassForm:ShowTime(daypasslist[i].book_id,str);
+                            end
+
                         end
                     end
                 end
@@ -201,6 +210,22 @@ function DayPassController:ClearTimer()
         self.TimerList={};
     end
 end
+--endregion
+
+
+--region 【设置用户day pass某本书今天已弹出缓存  请求请求】
+function DayPassController:PopUpDayPassBookRequest()
+    logic.gameHttp:PopUpDayPassBook(function(result) self:PopUpDayPassBook(result); end)
+end
+
+--endregion
+
+
+--region 【设置用户day pass某本书今天已弹出缓存  响应响应】
+function DayPassController:PopUpDayPassBook(result)
+    logic.debug.Log("----PopUpDayPassBook---->" .. result);
+end
+
 --endregion
 
 

@@ -72,11 +72,14 @@ function UINewBookTipsForm:SetData()
                 Image.sprite = sprite
             end
         end)
-        if tostring(v.tag) == "New" then
-            Icon:SetActive(true)
-        else
-            Icon:SetActive(false)
-        end
+        --if tostring(v.tag) == "New" then
+        --    Icon:SetActive(true)
+        --else
+        --    Icon:SetActive(false)
+        --end
+        --【显示New标签】
+        GameHelper.ShowNewBg(v.book_id,Icon);
+
         if k == Index then
             item.transform.anchoredPosition = MiddlePos
         else
