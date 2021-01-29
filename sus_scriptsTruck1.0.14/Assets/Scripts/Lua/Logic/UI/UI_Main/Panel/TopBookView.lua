@@ -89,10 +89,10 @@ function TopBookView:OnPlayClick()
 
 end
 
-function TopBookView:ShowTopBook(book_ids)
+function TopBookView:ShowTopBook(book_ids,time)
     --book_ids = "72,100,8,82"
     self.bookList = string.split(book_ids, ",")
-    self.waitTime = 5
+    self.waitTime = time or 5
     for i = 1, #self.bookList do
         self.bookList[i] = tonumber(self.bookList[i])
     end
