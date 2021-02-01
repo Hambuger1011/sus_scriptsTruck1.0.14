@@ -69,7 +69,7 @@
                 LOG.Error("json GZ 压缩包 路径错误");
             }
             var filename = string.Concat(AbUtility.abWritablePath, "/ab_cache/"+jsonZipName);
-            var task = DownloadMgr.Instance.Download(zipPath, filename, strVer, 0, false);
+            var task = DownloadMgr.Instance.Download(zipPath, filename, jsonZipName, 0, false);
 
             while (!task.isDone)
             {

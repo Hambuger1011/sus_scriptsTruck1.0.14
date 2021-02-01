@@ -279,7 +279,7 @@ function ChoiceWholeClothes:DoChoicesCloth()
 	logic.bookReadingMgr:SaveProgress(function(result)
 		self:SetProgressHandler(result)
 	end)
-	logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, self.selectIdx);
+	logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, self.selectIdx);
 end
 
 function ChoiceWholeClothes:SetProgressHandler(result)
@@ -292,7 +292,7 @@ function ChoiceWholeClothes:SetProgressHandler(result)
 	if code == 200 then
 		if self.cfg.trigger == ChoiceType.Clothes then
 			logic.bookReadingMgr.bookData.PlayerClothes = clothesID;
-			logic.cs.TalkingDataManager:SelectCloths(bookData.BookID, self.cfg.dialogID,clothesID,self.needPay,self.cost)
+			logic.cs.TalkingDataManager:SelectCloths(bookData.BookID, self.cfg.dialogid,clothesID,self.needPay,self.cost)
 		else
 			if self.cfg.trigger == ChoiceType.Player then
 				bookData.PlayerDetailsID = self.selectIdx

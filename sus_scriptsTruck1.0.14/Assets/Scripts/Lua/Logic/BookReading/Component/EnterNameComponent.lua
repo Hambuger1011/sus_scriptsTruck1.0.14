@@ -146,14 +146,14 @@ function EnterNameComponent:OnSetPlayerName()
 	local npcId = 0
 	local npcName = ''
 	if self.isNpc then
-		logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSetName,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogID))
+		logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSetName,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogid))
 		npcId = self.cfg.role_id
 		npcName = name
 		logic.bookReadingMgr.bookData.NpcName = name
 		logic.debug.Log('npc name:'..name)
 		logic.bookReadingMgr:SaveNpcName(npcId,npcName)
 	else
-		logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSetName,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogID))
+		logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSetName,"","",tostring(logic.bookReadingMgr.bookData.BookID),tostring(self.cfg.dialogid))
 		logic.debug.Log('player name:'..name)
 		logic.bookReadingMgr.bookData.PlayerName = name
 		logic.bookReadingMgr:SavePlayerName(name)

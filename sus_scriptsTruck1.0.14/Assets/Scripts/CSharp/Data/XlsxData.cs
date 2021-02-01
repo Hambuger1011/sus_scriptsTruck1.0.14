@@ -86,36 +86,36 @@ public class XlsxData
     #endregion
     
     #region t_Skin
-    Dictionary<int, t_Skin> m_skinMap = null;
-    public t_Skin GetSkinById(int vBookId,int vId)
-    {
-        InitSkinDataMap();
-        t_Skin cfg;
-        //if (m_skinMap.TryGetValue(vId, out cfg))
-        //{
-        //    return cfg;
-        //}
-        foreach(var item in m_skinMap)
-        {
-            if (item.Value != null && item.Value.icon_id == vId && item.Value.book_id == vBookId)
-                return item.Value;
-        }
-        return null;
-    }
-
-    void InitSkinDataMap()
-    {
-        if (m_skinMap != null)
-        {
-            return;
-        }
-        m_skinMap = new Dictionary<int, t_Skin>();
-        var list = Deserialize<List<t_Skin>>(CONF_DIR + "t_Skin.bytes");
-        foreach (var item in list)
-        {
-            m_skinMap.Add(item.skin_id, item);
-        }
-    }
+    // Dictionary<int, t_Skin> m_skinMap = null;
+    // public t_Skin GetSkinById(int vBookId,int vId)
+    // {
+    //     InitSkinDataMap();
+    //     t_Skin cfg;
+    //     //if (m_skinMap.TryGetValue(vId, out cfg))
+    //     //{
+    //     //    return cfg;
+    //     //}
+    //     foreach(var item in m_skinMap)
+    //     {
+    //         if (item.Value != null && item.Value.icon_id == vId && item.Value.book_id == vBookId)
+    //             return item.Value;
+    //     }
+    //     return null;
+    // }
+    //
+    // void InitSkinDataMap()
+    // {
+    //     if (m_skinMap != null)
+    //     {
+    //         return;
+    //     }
+    //     m_skinMap = new Dictionary<int, t_Skin>();
+    //     var list = Deserialize<List<t_Skin>>(CONF_DIR + "t_Skin.bytes");
+    //     foreach (var item in list)
+    //     {
+    //         m_skinMap.Add(item.skin_id, item);
+    //     }
+    // }
     #endregion
 
 

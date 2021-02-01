@@ -18,7 +18,7 @@ function ChapterSwitch:Show()
     logic.bookReadingMgr.isReading = false
     local component = logic.bookReadingMgr.playingComponent
     local bookData = logic.bookReadingMgr.bookData
-    self.ui:SetData(bookData.BookID,bookData.ChapterID,component.cfg.dialogID,component.cfg.next)
+    self.ui:SetData(bookData.BookID,bookData.ChapterID,component.cfg.dialogid,component.cfg.next)
     self.ui:Show()
     logic.cs.UINetLoadingMgr:Close()
     if logic.config.channel == Channel.Spain then

@@ -790,6 +790,14 @@ return function()
     }
 
 
+    public void UpdateSprite(Sprite sprite)
+    {
+        BookChapterBG.DOFade(0, 0).SetEase(Ease.Flash).Play();
+        BookChapterBG.sprite = sprite;
+        BookChapterBG.DOFade(1, 0.2f).SetEase(Ease.Flash).Play();
+    }
+
+
 
 
     /// <summary>

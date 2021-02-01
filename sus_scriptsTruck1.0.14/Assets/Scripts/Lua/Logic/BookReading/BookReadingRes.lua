@@ -16,6 +16,7 @@ BookResType = {
 	BookRes = 1,	--书本资源
 	UIRes = 2,		--通用资源
 	WebImage = 3,		--web下载
+	DialogJson = 4,		--书本json对话
 }
 
 function BookReadingRes:TEMP()
@@ -32,11 +33,11 @@ function BookReadingRes:__delete()
 	
 end
 
-function BookReadingRes:SetData(bookID,chapterID)
+function BookReadingRes:SetData(bookID,chapterid)
 	self.AbBookSystem = CS.AB.AbBookSystem.Create(bookID)
 	self.lastBookID = self.bookID or 0
 	self.bookID = bookID
-	self.chapterID = chapterID
+	self.chapterid = chapterid
 	self.bookFolderPath = string.format("Assets/Bundle/Book/%d/",self.bookID)
 	self.bookCommonPath = string.format("Assets/Bundle/Book/%d/%s/",self.bookID,self:GetChapterFolderId(true))
 end
@@ -49,7 +50,7 @@ function BookReadingRes:GetChapterFolderId(isCommon)
 	if isCommon then
 		return 'common'
 	else
-		return "Chapter_"..self.chapterID
+		return "Chapter_"..self.chapterid
 	end
 end
 
@@ -273,33 +274,35 @@ function BookReadingRes:LoadBookConfig(url,callback)
 		logic.debug.Log("bookUrl:"..url)
 		
 		
-		local doInitBook = function(bytes)
-			logic.cs.BookReadingWrapper:LoadBookConfig(bytes)
-			local cfg = core.Protobuf.pb.decode('pb.t_BookDialog_List',bytes)
-			for _,item in pairs(cfg.items) do
-				if not item.SceneParticalsArray then
-					local json = item.SceneParticals
-					item.SceneParticalsArray = core.json.Derialize(json)
-					if not item.SceneParticalsArray then
-						logic.debug.LogError(string.format('json解析错误:%s',json))
-					end
-				end
-			end
-			self.dialogItems = cfg.items
+		local doInitBook = function()
+			--logic.cs.BookReadingWrapper:LoadBookConfig(bytes)
+			--local cfg = core.Protobuf.pb.decode('pb.t_BookDialog_List',bytes)
+			--for _,item in pairs(cfg.items) do
+			--	if not item.sceneparticalsArray then
+			--		local json = item.sceneparticals
+			--		item.sceneparticalsArray = core.json.Derialize(json)
+			--		if not item.sceneparticalsArray then
+			--			logic.debug.LogError(string.format('json解析错误:%s',json))
+			--		end
+			--	end
+			--end
+			self.dialogItems = logic.cs.JsonDTManager:GetBookChapterDialogList(self.bookID,self.chapterid)
 			--logic.debug.LogError("count:"..tostring(#cfg.items))
 			self.bookDetailCfg = logic.cs.JsonDTManager:GetJDTBookDetailInfo(self.bookID)
-			callback(cfg.items)
+			callback(self.dialogItems)
 		end
 		
 		if string.IsNullOrEmpty(url) or not logic.config.isAbMode then --url为空或debug模式，直接加载本地
-			local filename = string.format("%s%d/t_BookDialog_%d_%d.bytes",CS.XlsxData.BOOK_DIR, self.bookID, self.bookID, self.chapterID);
-			logic.ResMgr.LoadAsync(logic.ResMgr.tag.DialogDisplay,logic.ResMgr.type.Text,filename,function(asset)
-					if asset then
-						doInitBook(asset.resTextAsset.bytes)
-						asset:Release()
-					else
-						logic.debug.LogError("加载配置错误:" .. filename)
-					end
+			local filename = string.format("%s%d/t_BookDialog_%d_%d.bytes",CS.XlsxData.BOOK_DIR, self.bookID, self.bookID, self.chapterid);
+			--logic.ResMgr.LoadAsync(logic.ResMgr.tag.DialogDisplay,logic.ResMgr.type.Text,filename,
+			logic.cs.ABSystem.ui:DownloadBookDialogZip(self.bookID,self.chapterid, function()
+				doInitBook()
+					--if asset then
+					--	
+					--	asset:Release()
+					--else
+					--	logic.debug.LogError("加载配置错误:" .. filename)
+					--end
 				end)
 			return
 		end
@@ -403,7 +406,7 @@ function BookReadingRes:GetSceneBG(sceneID)
 	local item = self.cacheWebImage[sceneID]
 	local spt = item and item:GetObject()
 	if IsNull(spt) then
-		logic.debug.LogError(string.format('没有背景图bookID:%d,chapterID:%d,sceneID:%s',self.bookID,self.chapterID,sceneID))
+		logic.debug.LogError(string.format('没有背景图bookID:%d,chapterID:%d,sceneID:%s',self.bookID,self.chapterid,sceneID))
 		return nil
 	end
 	return spt

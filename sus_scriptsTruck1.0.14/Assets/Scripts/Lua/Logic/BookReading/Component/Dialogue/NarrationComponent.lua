@@ -65,7 +65,7 @@ function NarrationComponent:ShowDetails(
         self:ResetDialogPos(Dialogue)
     end
     --移动背景
-    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),function()
+    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),function()
         Dialogue:SetActiveEx(true)
         self.IsPlayTween = false
         --播放显示动画
@@ -74,7 +74,7 @@ function NarrationComponent:ShowDetails(
                 logic.bookReadingMgr.view.choiceGroup:choicesDialogInit(self,2)
                 logic.bookReadingMgr.view.choiceGroup:show()
             else
-                if logic.cs.GameDataMgr.InAutoPlay and self.cfg.dialogID ~= logic.cs.BookReadingWrapper.EndDialogID then
+                if logic.cs.GameDataMgr.InAutoPlay and self.cfg.dialogid ~= logic.cs.BookReadingWrapper.EndDialogID then
                     local autoPlayTimer
                     autoPlayTimer = core.Timer.New(function()
                         if logic.bookReadingMgr.playingComponent == self then

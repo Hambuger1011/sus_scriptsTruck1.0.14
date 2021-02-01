@@ -102,8 +102,8 @@ public class BubbleForm : MonoBehaviour
                     EventDispatcher.Dispatch(EventEnum.ChangeBookReadingBgEnable, 1);
 
                     var bookData = BookReadingWrapper.Instance.CurrentBookData;
-                    
-                    var cfg = BookReadingWrapper.Instance.GetDialogById(DialogDisplaySystem.Instance.CurrentBookData.DialogueID);
+
+                    var cfg = JsonDTManager.Instance.GetDialogItem(DialogDisplaySystem.Instance.CurrentBookData.BookID,DialogDisplaySystem.Instance.CurrentBookData.ChapterID,DialogDisplaySystem.Instance.CurrentBookData.DialogueID);//BookReadingWrapper.Instance.GetDialogById(DialogDisplaySystem.Instance.CurrentBookData.DialogueID);
                     var data = new BaseDialogData(cfg);
                     if (data.selection_num == 0)
                     {
@@ -121,7 +121,7 @@ public class BubbleForm : MonoBehaviour
 
     public void DialogNextStepByDialogID(int id)
     {
-        var cfg = BookReadingWrapper.Instance.GetDialogById(id);
+        var cfg = JsonDTManager.Instance.GetDialogItem(DialogDisplaySystem.Instance.CurrentBookData.BookID,DialogDisplaySystem.Instance.CurrentBookData.ChapterID,id);//BookReadingWrapper.Instance.GetDialogById(DialogDisplaySystem.Instance.CurrentBookData.DialogueID);
         var data = new BaseDialogData(cfg);
         DialogNextStep(data);
     }

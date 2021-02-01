@@ -54,7 +54,7 @@ function UIChoiceButtonItem:init(index,callback)
     self.button.onClick:AddListener(callback)
 end
 
-function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID,items)
+function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogid,items)
     if not selection then
         selection = ''
     end
@@ -73,8 +73,8 @@ function UIChoiceButtonItem:initData(index,selection,cost,hiddenEgg,dialogID,ite
     self.isHadBuy = false
     self.items = items
 
-    local GetHadBuySelectId=logic.cs.UserDataManager:GetHadBuySelectId(dialogID);
-    print("lua====dialogID:"..dialogID)  
+    local GetHadBuySelectId=logic.cs.UserDataManager:GetHadBuySelectId(dialogid);
+    print("lua====dialogID:"..dialogid)  
 
     if GetHadBuySelectId~=nil then
 

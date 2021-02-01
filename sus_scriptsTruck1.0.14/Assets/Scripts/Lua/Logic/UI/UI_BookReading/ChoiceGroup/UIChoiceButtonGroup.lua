@@ -68,7 +68,7 @@ function UIChoiceButtonGroup:initItems(selections,cost,hiddenEgg)
         ---@type UIChoiceButtonItem
         local item = self.items[i]
         item:SetActive(true)
-        item:initData(i,selections[i],cost[i],hiddenEgg[i], self.component.cfg.dialogID,self.items)
+        item:initData(i,selections[i],cost[i],hiddenEgg[i], self.component.cfg.dialogid,self.items)
     end
     for i=self.maxNum + 1,#self.items do
         ---@type UIChoiceButtonItem
@@ -115,7 +115,7 @@ function UIChoiceButtonGroup:CheckNeedPay(cost)
     self.mNeedPay = false
     for i = 1,self.component.cfg.selection_num do
         if cost[i] ~= 0 then
-            if logic.cs.UserDataManager:CheckDialogOptionHadCost(bookData.BookID,self.component.cfg.dialogID,i) then
+            if logic.cs.UserDataManager:CheckDialogOptionHadCost(bookData.BookID,self.component.cfg.dialogid,i) then
                 cost[i] = 0
             end
             if logic.cs.UserDataManager:CheckBookHasBuy(bookData.BookID) then
@@ -136,7 +136,7 @@ function UIChoiceButtonGroup:onItemClick(item)
     local bookData = logic.bookReadingMgr.bookData
     logic.bookReadingMgr.view:ResetOperationTips()
     self.selectIdx = item.index
-    logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectOption,"","",tostring(bookData.BookID),tostring(self.component.cfg.dialogID),tostring(self.selectIdx))
+    logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.SelectOption,"","",tostring(bookData.BookID),tostring(self.component.cfg.dialogid),tostring(self.selectIdx))
     if logic.config.channel == Channel.Spain then
         ---@type UIValueChoice
         local uiValueChoice = logic.UIMgr:Open(logic.uiid.ValueChoice)
@@ -145,7 +145,7 @@ function UIChoiceButtonGroup:onItemClick(item)
             logic.gameHttp:BookDialogOptionCost(
                 bookData.BookID,
                 bookData.ChapterID,
-                self.component.cfg.dialogID,
+                self.component.cfg.dialogid,
                 item.index,
                 buyType,
                 function(result)
@@ -198,7 +198,7 @@ function UIChoiceButtonGroup:BookDialogOptionCallBack(result)
     -- elseif code == 203 then --钥匙不够
     --     --self:TurnToOption(code,msg)
     elseif code == 202 or code == 203 then
-        logic.debug.LogError("--BookDialogOptionCallBack--扣费失败,BookId:" .. bookData.BookID .. " DialogId:" .. self.component.cfg.dialogID);
+        logic.debug.LogError("--BookDialogOptionCallBack--扣费失败,BookId:" .. bookData.BookID .. " DialogId:" .. self.component.cfg.dialogid);
         
         local item = self.items[self.selectIdx]
         logic.bookReadingMgr.view:ShowChargeTips(item.cost)
@@ -219,9 +219,9 @@ function UIChoiceButtonGroup:TurnToOption(code,msg)
         self.component:ShowNextDialog()
         local item = self.items[self.selectIdx]
         if item.cost > 0 then
-            logic.cs.UserDataManager:AddDialogOptionHadCost(bookData.BookID,self.component.cfg.dialogID,self.selectIdx)
+            logic.cs.UserDataManager:AddDialogOptionHadCost(bookData.BookID,self.component.cfg.dialogid,self.selectIdx)
         end
-        logic.cs.UserDataManager:RecordBookOptionSelect(bookData.BookID,self.component.cfg.dialogID,self.selectIdx)
+        logic.cs.UserDataManager:RecordBookOptionSelect(bookData.BookID,self.component.cfg.dialogid,self.selectIdx)
 
         self:HandleHiddentEgg(item)
         if self.mNeedPay then
@@ -245,7 +245,7 @@ function UIChoiceButtonGroup:HandleHiddentEgg(item)
     
 --[[
      if item.hiddenEgg > 0 then
-        logic.cs.GameHttpNet:BookGetHiddenEgg(bookData.BookID,bookData.ChapterID,self.component.cfg.dialogID,self.selectIdx, function(arg)
+        logic.cs.GameHttpNet:BookGetHiddenEgg(bookData.BookID,bookData.ChapterID,self.component.cfg.dialogid,self.selectIdx, function(arg)
             local result = tostring(arg)
             logic.debug.Log("----BookDialogOptionCallBack---->" .. result)
             coroutine.start(function()
@@ -257,7 +257,7 @@ function UIChoiceButtonGroup:HandleHiddentEgg(item)
                         self:DoGetHiddenEgg(logic.cs.UserDataManager.hiddenEggInfo.data.bkey, logic.cs.UserDataManager.hiddenEggInfo.data.diamond)
                     end
                 elseif code == 203 then
-                    logic.debug.LogError("--GetHiddenEggCallBack--此对话没有彩蛋 DialogId" .. self.component.cfg.dialogID)
+                    logic.debug.LogError("--GetHiddenEggCallBack--此对话没有彩蛋 DialogId" .. self.component.cfg.dialogid)
                 end
             end)
         end)

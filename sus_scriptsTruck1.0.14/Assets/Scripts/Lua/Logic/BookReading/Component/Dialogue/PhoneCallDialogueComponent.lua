@@ -26,7 +26,7 @@ end
 
 --- @param component BaseComponent @将要播放的component
 function PhoneCallDialogueComponent:OnPlayEnd(nextComponent)
-    if nextComponent.cfg.dialogID < self.cfg.dialogID then
+    if nextComponent.cfg.dialogid < self.cfg.dialogid then
         self:setPhoneCallMessage(true)
     end
 end
@@ -46,7 +46,7 @@ function PhoneCallDialogueComponent:Play()
 
     local nextComponent = logic.bookReadingMgr.components[self:GetNextDialogID()]
     if nextComponent ~= nil then
-        self.isPhoneCallMode = (nextComponent.cfg.PhoneCall == 1)
+        self.isPhoneCallMode = (nextComponent.cfg.phonecall == 1)
     end
 
     self:setPhoneCallMessage(self.isPhoneCallMode)

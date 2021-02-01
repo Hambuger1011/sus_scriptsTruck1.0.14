@@ -245,7 +245,7 @@ function ChoiceCharacter:OnComfirmClick()
 
 	logic.bookReadingMgr:SaveOption(self.selectIdx)
     logic.bookReadingMgr:SaveProgress()
-    logic.cs.UserDataManager:RecordBookOptionSelect(bookData.BookID, self.cfg.dialogID, self.selectIdx);
+    logic.cs.UserDataManager:RecordBookOptionSelect(bookData.BookID, self.cfg.dialogid, self.selectIdx);
 
 
 

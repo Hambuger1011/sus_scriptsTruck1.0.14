@@ -25,7 +25,7 @@ end
 
 function SceneTapComponent:Play()
     local data = CS.BaseDialogData()
-    data.dialogID = self.cfg.dialogID
+    data.dialogid = self.cfg.dialogid
     data.selection_num = self.cfg.selection_num
 
     data.selection_1 = self.cfg.selection_1

@@ -88,7 +88,7 @@ function ChoiceWholeClothes:CollectRes(resTable)
 		--	for i=1,self.cfg.selection_num do
 		--		local clothesID = tonumber(self.cfg['selection_'..i])
 		--		if clothesID == nil then
-		--			logic.debug.LogError(string.format('bookID=%d,chapter=%d,dialogID=%d,selection_%d填0做什么？',bookData.BookID,bookData.ChapterID,self.cfg.dialogID,i))
+		--			logic.debug.LogError(string.format('bookID=%d,chapter=%d,dialogID=%d,selection_%d填0做什么？',bookData.BookID,bookData.ChapterID,self.cfg.dialogid,i))
 		--			goto continue
 		--		end
 		--		IDs[id][clothesID] = 1
@@ -725,15 +725,15 @@ function ChoiceWholeClothes:OnComfirmClick()
 				logic.bookReadingMgr:SaveOption(self.selectIdx)
 				if self.cfg.trigger == ChoiceType.NPC then
 					if self.cfg.trigger == ChoiceType.Clothes then
-						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid),tostring(self.selectIdx))
 					else
-						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid),tostring(self.selectIdx))
 					end
 				else
 					if self.cfg.trigger == ChoiceType.Clothes then
-						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid),tostring(self.selectIdx))
 					else
-						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID),tostring(self.selectIdx))
+						logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid),tostring(self.selectIdx))
 					end
 				end					logic.bookReadingMgr:SaveProgress(function(result)
 				logic.cs.UserDataManager:SaveClothHadBuy(tostring(clothesID))
@@ -800,15 +800,15 @@ function ChoiceWholeClothes:DoChoicesCloth()
 	if self.needPay==0 then
 if self.cfg.trigger == ChoiceType.NPC then
 			if self.cfg.trigger == ChoiceType.Clothes then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid))
 			else
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NpcSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid))
 			end
 		else
 			if self.cfg.trigger == ChoiceType.Clothes then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid))
 			else
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogID))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(bookData.BookID),tostring(self.cfg.dialogid))
 			end
 		end		logic.bookReadingMgr:SaveProgress(function(result)
 			self:SetProgressHandler(result)
@@ -817,7 +817,7 @@ if self.cfg.trigger == ChoiceType.NPC then
 		self:SetProgressHandler(SaveProResult)
 	end
 	
-	logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, self.selectIdx);
+	logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, self.selectIdx);
 end
 
 function ChoiceWholeClothes:SetProgressHandler(result)
@@ -836,7 +836,7 @@ function ChoiceWholeClothes:SetProgressHandler(result)
 			uiView.fxSelectClothes:SetActiveEx(false)
 			if self.cfg.trigger == ChoiceType.Clothes then
 				logic.bookReadingMgr.bookData.PlayerClothes = clothesID;
-				logic.cs.TalkingDataManager:SelectCloths(bookData.BookID, self.cfg.dialogID,clothesID,self.needPay,self.cost)
+				logic.cs.TalkingDataManager:SelectCloths(bookData.BookID, self.cfg.dialogid,clothesID,self.needPay,self.cost)
 			else
 				if self.cfg.trigger == ChoiceType.Player then
 					bookData.PlayerDetailsID = self.selectIdx

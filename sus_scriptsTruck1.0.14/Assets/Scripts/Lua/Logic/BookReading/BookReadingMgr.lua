@@ -78,7 +78,7 @@ function BookReadingMgr:Reset()
         core.coroutine.stop(self.debugUpdate)
     end
 
-    logic.cs.BookReadingWrapper:Reset()
+    --logic.cs.BookReadingWrapper:Reset()
 end
 
 
@@ -92,10 +92,10 @@ function BookReadingMgr:StartReading(strBookurl)
     logic.bookReadingMgr.Res:StopBGMQuick()
     logic.cs.MyBooksDisINSTANCE:SetIsPlaying(false)
     self.bookID = logic.cs.BookReadingWrapper.BookID
-    self.chapterID = logic.cs.BookReadingWrapper.ChapterID
+    self.chapterid = logic.cs.BookReadingWrapper.ChapterID
     self.bookData = logic.cs.BookReadingWrapper.CurrentBookData
     logic.debug.LogError(self.bookData:ToString())
-    self.Res:SetData(self.bookID,self.chapterID)
+    self.Res:SetData(self.bookID,self.chapterid)
 
     logic.cs.CUIManager:CloseForm(logic.cs.UIFormName.BookDisplayForm);
     logic.cs.CUIManager:CloseForm(logic.cs.UIFormName.MainFormTop);
@@ -117,11 +117,11 @@ function BookReadingMgr:StartReading(strBookurl)
             --logic.cs.UserDataManager:AddCoverImage(coverAsset)
         end)
         
-        if self.laskBookID == self.bookID and self.lastChapterID == self.chapterID then
+        if self.laskBookID == self.bookID and self.lastChapterID == self.chapterid then
             self:StartLoadResources(self.dialogItems)
         else
             self.lastBookID = self.bookID
-            self.lastChapterID = self.chapterID
+            self.lastChapterID = self.chapterid
             
             self.Res:LoadBookConfig('',function(cfgItems)
                 self:StartLoadResources(cfgItems)
@@ -159,17 +159,17 @@ function BookReadingMgr:InitComponets()
     for idx,cfg in pairs(self.dialogItems) do
         for k1, v1 in pairs(eggDialogArr) do
             for k2, v2 in pairs(v1) do
-                if tonumber(cfg.dialogID) == tonumber(v2) then
+                if tonumber(cfg.dialogid) == tonumber(v2) then
                     cfg.eggId = k1
                 end
             end
         end
-        self.dialogMap[cfg.dialogID] = cfg
+        self.dialogMap[cfg.dialogid] = cfg
         local component = componentFactory.Create(idx,cfg)
         --table.insert(self.components,component)
-        self.components[cfg.dialogID] = component
-        maxID = math.max(maxID, cfg.dialogID)
-        minID = math.min(minID, cfg.dialogID)
+        self.components[cfg.dialogid] = component
+        maxID = math.max(maxID, cfg.dialogid)
+        minID = math.min(minID, cfg.dialogid)
 
         if cfg.dialog_type == logic.DialogType.ChoiceModel then
             self.isChoiceModel = true
@@ -281,12 +281,12 @@ function BookReadingMgr:PlayByIndex(index)
         return
     end
 	local cfg = self.dialogItems[index]
-	self:PlayById(cfg.dialogID)
+	self:PlayById(cfg.dialogid)
 end
 
 
-function BookReadingMgr:CheckChapterComplete(dialogID)
-    if logic.cs.BookReadingWrapper.EndDialogID == dialogID then
+function BookReadingMgr:CheckChapterComplete(dialogid)
+    if logic.cs.BookReadingWrapper.EndDialogID == dialogid then
         self.isReading = false
         self.view.chapterSwitch:Show()
         return true
@@ -311,7 +311,7 @@ function BookReadingMgr:PlayById(id)
     id = core.Mathf.Clamp(id,logic.cs.BookReadingWrapper.BeginDialogID,logic.cs.BookReadingWrapper.EndDialogID)
     self.lastComponent = self.playingComponent
     if self.lastComponent then
-        if self:CheckChapterComplete(self.lastComponent.cfg.dialogID) then
+        if self:CheckChapterComplete(self.lastComponent.cfg.dialogid) then
             return
         end
     end
@@ -332,7 +332,7 @@ function BookReadingMgr:PlayById(id)
 
     if self.playingComponent:IsDanmakuTrigger() then
         self.view:StopOperationTips();
-        logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.DanmakuFlagTrigger,self.playingComponent.cfg.dialogID)
+        logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.DanmakuFlagTrigger,self.playingComponent.cfg.dialogid)
     else
         logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.DanmakuFlagTrigger,-1)
     end
@@ -352,13 +352,13 @@ end
 -- end
 
 function BookReadingMgr:ChangeBGM(component)
-    if not component.cfg.BGMID then
-        component.cfg.BGMID = 0
+    if not component.cfg.bgmid then
+        component.cfg.bgmid = 0
     end
-    if self.currentBGMID == component.cfg.BGMID then
+    if self.currentBGMID == component.cfg.bgmid then
         return
     end
-    self.currentBGMID = component.cfg.BGMID
+    self.currentBGMID = component.cfg.bgmid
     self.Res:PlayBGM(self.bookID, tostring(self.currentBGMID));
 end
 
@@ -435,16 +435,16 @@ end
 
 
 function BookReadingMgr:BackToMainClick()
-    local dialogID = 1
-    if self and self.playingComponent and self.playingComponent.cfg and self.playingComponent.cfg.dialogID then
-        dialogID = self.playingComponent.cfg.dialogID
+    local dialogid = 1
+    if self and self.playingComponent and self.playingComponent.cfg and self.playingComponent.cfg.dialogid then
+        dialogid = self.playingComponent.cfg.dialogid
     end
 
     if logic.cs.UserDataManager.isReadNewerBook then
-        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NewerLeaveBook,"","",tostring(self.bookID),tostring(dialogID))
+        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NewerLeaveBook,"","",tostring(self.bookID),tostring(dialogid))
         logic.cs.UserDataManager.isReadNewerBook = false
     else
-        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.LeaveBook,"","",tostring(self.bookID),tostring(dialogID))
+        logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.LeaveBook,"","",tostring(self.bookID),tostring(dialogid))
     end
 
     --region 【在线阅读计时操作】
@@ -480,7 +480,7 @@ function  BookReadingMgr:markStep()
     if self.playingComponent == nil then
         return
     end
-    logic.gameHttp:markStep(self.bookID, self.chapterID, self.playingComponent.cfg.dialogID,   
+    logic.gameHttp:markStep(self.bookID, self.chapterid, self.playingComponent.cfg.dialogid,   
     function(result)
         logic.debug.Log("----markStep---->" .. result)
         local json = core.json.Derialize(result)
@@ -499,7 +499,7 @@ function BookReadingMgr:SaveProgress(callback)
     logic.bookReadingMgr.view:ResetOperationTips()
     
     if self.playingComponent then
-        logic.debug.Log(string.format( "[+]保存进度:%d",self.playingComponent.cfg.dialogID))
+        logic.debug.Log(string.format( "[+]保存进度:%d",self.playingComponent.cfg.dialogid))
         local is_use_prop = logic.cs.UserDataManager.is_use_prop
         local discount = "0"
         if is_use_prop then
@@ -510,8 +510,8 @@ function BookReadingMgr:SaveProgress(callback)
         end
         logic.gameHttp:SendPlayerProgress(
             self.bookID,
-            self.chapterID,
-            self.playingComponent.cfg.dialogID,
+            self.chapterid,
+            self.playingComponent.cfg.dialogid,
             params.option, --选项index
             params.PlayerName, --角色名
             params.NpcId, --npcId
@@ -564,7 +564,7 @@ function BookReadingMgr:ClearBookResources()
     self:Reset()
     
     self.bookID = 0
-    self.chapterID = 0
+    self.chapterid = 0
     self.bookData = nil
     self.Res:Release()
 end
@@ -698,25 +698,25 @@ function BookReadingMgr:GotoDialogID(id)
     local bookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookID)
     local chapterDivisionArray = bookDetails.ChapterDivisionArray
     local chapterID = 0
-    local dialogID = id
+    local dialogid = id
     for idx = 1,bookDetails.chaptercount do
         local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,idx);
         if chapterInfo ~= nil  then
             local value = chapterInfo.chapterfinish;
-            if value > dialogID then
+            if value > dialogid then
                 chapterID = idx
                 break
             end
         end
     end
     if chapterID == 0 then
-        logic.debug.LogError("未找到章节,dialogID="..dialogID)
+        logic.debug.LogError("未找到章节,dialogID="..dialogid)
         return
     end
 
 
     local doGoto = function()
-        logic.gameHttp:GoBackStep(bookID,chapterID,dialogID, function(result)
+        logic.gameHttp:GoBackStep(bookID,chapterID,dialogid, function(result)
 			--logic.cs.UINetLoadingMgr:Close()
             local json = core.json.Derialize(result)
             local code = tonumber(json.code)
@@ -769,10 +769,10 @@ function BookReadingMgr:GotoDialogID(id)
 end
 
 
-function BookReadingMgr:DoGoBackStep(dialogID)
+function BookReadingMgr:DoGoBackStep(dialogid)
     local bookData = logic.bookReadingMgr.bookData
     local doGoto = function()
-        logic.gameHttp:GoBackStep(bookData.BookID,bookData.ChapterID,dialogID, function(result)
+        logic.gameHttp:GoBackStep(bookData.BookID,bookData.ChapterID,dialogid, function(result)
 			--logic.cs.UINetLoadingMgr:Close()
             local json = core.json.Derialize(result)
             local code = tonumber(json.code)

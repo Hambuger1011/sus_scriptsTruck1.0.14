@@ -119,7 +119,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 _abUri = "http://dev.sus.com/resources/";
                 break;
             case 2: //tecent开发
-                _abUri = "http://193.112.66.252:8082/resources/";
+                _abUri = "http://193.112.66.252:8083/resources/";
                 break;
 #endif
             case 3: //测试
@@ -158,7 +158,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                     mGameUrlHead = "http://dev.sus.com";
                     break;
                 case 2: //tencent开发
-                    mGameUrlHead = "http://193.112.66.252:8082";
+                    mGameUrlHead = "http://193.112.66.252:8083";
                     break;
                 case 3: //测试
                     mGameUrlHead = "http://193.112.66.252:8080";
@@ -177,7 +177,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             if (AuditStatus == 1)
                 mGameUrlHead = "https://sus-game.igg.com/";
             else
-                mGameUrlHead = "http://193.112.66.252:8082";
+                mGameUrlHead = "http://193.112.66.252:8083";
             //UnityEngine.Debug.LogError(AuditStatus + "  " + mGameUrlHead);
 #endif
             if (!string.IsNullOrEmpty(ServerAddress))
@@ -3489,9 +3489,9 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     /// 获取书本涉及到的相关的版本信息
     /// </summary>
     /// <param name="vCallBackHandler"></param>
-    public void GetBookVersionInfo(int vBookId, EventHandler vCallBackHandler, int vBookVersion = 0, int vChapterVersion = 0,int vRoleModelVersion = 0, int vModelPrice = 0, int vClothesPrice = 0, int vSkinVersion =0)
+    public void GetBookVersionInfo(int vBookId,int vChapterId, EventHandler vCallBackHandler, int vBookVersion = 0, int vChapterVersion = 0,int vRoleModelVersion = 0, int vModelPrice = 0, int vClothesPrice = 0, int vSkinVersion =0)
     {
-        string url = "api_getBookVersion?book_id=" + vBookId;
+        string url = "api_getBookVersion?book_id=" + vBookId+ "&chapter_id=" + vChapterId;
         if (vBookVersion > 0)
             url += "&book_version=" + vBookVersion;
         if (vChapterVersion > 0)

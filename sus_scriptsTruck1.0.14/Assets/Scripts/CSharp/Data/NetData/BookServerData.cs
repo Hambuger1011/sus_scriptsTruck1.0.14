@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -1212,7 +1213,7 @@ public class BookJDTFormSever
     public JDT_Version info;// 当前书本的各部分，版本信息
     public JDT_Book book_version;// 书本版本信息
     public List<JDT_Chapter> chapter_version;    //当前书本的每个章节的起始和结束ID，章节介绍等信息
-    public List<JDT_Dialog> dialog_version;      //书本对话
+    public JDT_DialogVersioin dialog_version;      //书本对话的版本
     public List<JDT_Skin> skin_version;    //皮肤描述表
     public List<JDT_ClothesPrice> clothes_price_version; //服装价格表
     public List<JDT_ModelPrice> model_price_version; //模型：头发、衣服定价表
@@ -1296,11 +1297,25 @@ public class JDT_Chapter
     public int rewardamount = 0;
 }
 
+public class JDT_DialogVersioin
+{
+    public string key;
+    public int version;
+    public string zip;
+    public string path;
+}
+
+public class JDT_ChapterDialogList
+{
+    public int bookId;
+    public int chapterId;
+    public List<JDT_Dialog> dialogList;
+}
 
 public class JDT_Dialog
 {
     public int bookid = 0;
-    public int chapter = 0;
+    public int chapterid = 0;
     public int dialogid = 0;
     public int role_id = 0;
     public int dialog_type = 0;
@@ -1320,6 +1335,46 @@ public class JDT_Dialog
     public string selection_2 ="";
     public string selection_3 ="";
     public string selection_4 ="";
+    public string sceneid ="";
+    public int scenealpha = 0;
+    public int icon =0;
+    public int phiz_id =0;
+    public int icon_bg =0;
+    public int is_tingle =0;
+    public int orientation =0;
+    public int phonecall =0;
+    public string tips ="";
+    public int bgmid =0;
+    public string sfx ="";
+    public string sceneparticals ="";
+    public int scenes_x = 0;
+    public int barrage = 0;
+    public string dialog ="";
+    public int consequenceid = 0;
+
+    private List<string> _sceneparticalsArray = new List<string>();
+    public List<string> sceneparticalsArray
+    {
+        get
+        {
+            return _sceneparticalsArray;
+        }
+    }
+    
+
+    public void Init()
+    {
+        _sceneparticalsArray.Clear();
+        if(!string.IsNullOrEmpty(sceneparticals))
+        {
+            string[] tempStr = sceneparticals.Split(',');
+            int len = tempStr.Length;
+            for (int i = 0; i < len; i++)
+            {
+                _sceneparticalsArray.Add(tempStr[i]);
+            }
+        }
+    }
 }
 
 public class JDT_Skin

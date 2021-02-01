@@ -610,11 +610,10 @@ end
 
 --region 【获取章节介绍】
 function GameHelper.GetChapterDiscription(book_id)
-    local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
-    if(m_bookDetailCfg and (CS.XLuaHelper.is_Null(m_bookDetailCfg)==false))then
-        if(m_bookDetailCfg.ChapterDiscriptionArray and CS.XLuaHelper.is_Null(m_bookDetailCfg.ChapterDiscriptionArray)==false and m_bookDetailCfg.ChapterDiscriptionArray.Length>0)then
-            return m_bookDetailCfg.ChapterDiscriptionArray[0];
-        end
+    --local m_bookDetailCfg= logic.cs.JsonDTManager:GetJDTBookDetailInfo(book_id);
+    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(book_id,1)
+    if(chapterInfo ~= nil )then
+        return chapterInfo.dsc;
     else
         if(book_id)then
             logic.debug.LogError("m_bookDetailCfg is Null + book_id:"..book_id);

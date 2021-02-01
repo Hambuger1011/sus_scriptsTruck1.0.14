@@ -662,6 +662,25 @@ public class DownloadMgr : CMonoSingleton<DownloadMgr>
         return task;
     }
     
+    public Task DownloadBookDialog(int bookId,int vChapterId)
+    {
+        if (UserDataManager.Instance.bookJDTFormSever != null && UserDataManager.Instance.bookJDTFormSever.data != null &&
+            UserDataManager.Instance.bookJDTFormSever.data.dialog_version != null)
+        {
+            var url = UserDataManager.Instance.bookJDTFormSever.data.dialog_version.path + string.Format("/{0}/{1}.json.gz", bookId,vChapterId);;
+            var filename = string.Format("{0}cache/book/dialog/{1}/{2}.json.gz", GameUtility.WritablePath, bookId,vChapterId);
+            var version = SdkMgr.Instance.GameVersion()+"_"+UserDataManager.Instance.bookJDTFormSever.data.dialog_version.version;
+            #if ENABLE_DEBUG
+                version += GameDataMgr.Instance.GetCurrentUTCTime();
+            #endif
+            url += "?" + version;
+            var task = this.Download(url, filename, version, 1048576, true);
+            return task;
+        }
+
+        return null;
+    }
+    
     public Task DownloadLoadImg(string version,Action<int, UnityObjectRefCount, string> callback)
     {
         //此时还未请求getversion  待调整

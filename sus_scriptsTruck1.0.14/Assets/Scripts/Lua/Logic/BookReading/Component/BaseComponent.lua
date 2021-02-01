@@ -11,48 +11,48 @@ function BaseComponent:__init(index, cfg)
     self.index = index
     self.cfg = cfg
     --logic.debug.LogError(tostring(index)..' '..tostring(cfg))
-    self.cfg.dialogID = self.cfg.dialogID or 0
-    self.cfg.chapterID = self.cfg.chapterID or 0
-    self.cfg.sceneID = self.cfg.sceneID or ''
+    self.cfg.dialogid = self.cfg.dialogid or 0
+    self.cfg.chapterid = self.cfg.chapterid or 0
+    self.cfg.sceneid = self.cfg.sceneid or ''
     self.cfg.role_id = self.cfg.role_id or 0
     self.cfg.icon = self.cfg.icon or 0
     self.cfg.phiz_id = self.cfg.phiz_id or 0
     self.cfg.icon_bg = self.cfg.icon_bg or 0
     self.cfg.dialog_type = self.cfg.dialog_type or 0
     self.cfg.tips = self.cfg.tips or ''
-    self.cfg.BGMID = self.cfg.BGMID or 0
-    self.cfg.Scenes_X = self.cfg.Scenes_X or 0
+    self.cfg.bgmid = self.cfg.bgmid or 0
+    self.cfg.scenes_x = self.cfg.scenes_x or 0
     self.cfg.dialog = self.cfg.dialog or ''
     self.cfg.trigger = self.cfg.trigger or 0
     self.cfg.next = self.cfg.next or 0
     self.cfg.selection_num = self.cfg.selection_num or 0
-    self.cfg.Orientation = self.cfg.Orientation or 0
-    self.cfg.SceneParticalsArray = self.cfg.SceneParticalsArray or {}
+    self.cfg.orientation = self.cfg.orientation or 0
+    --self.cfg.sceneparticalsArray = self.cfg.sceneparticalsArray
 
-    self.isPhoneCallMode = (self.cfg.PhoneCall == 1)
+    self.isPhoneCallMode = (self.cfg.phonecall == 1)
 end
 
 --收集所用到的资源
 function BaseComponent:CollectRes(resTable)
     --bgm
-    if self.cfg.BGMID and self.cfg.BGMID ~= 0 then
-        resTable[logic.bookReadingMgr.Res.bookFolderPath .. "Music/BGM/" .. self.cfg.BGMID .. ".mp3"] = BookResType.BookRes
+    if self.cfg.bgmid and self.cfg.bgmid ~= 0 then
+        resTable[logic.bookReadingMgr.Res.bookFolderPath .. "Music/BGM/" .. self.cfg.bgmid .. ".mp3"] = BookResType.BookRes
     end
     --背景
-    if self.cfg.sceneID then
-        resTable[self.cfg.sceneID] = BookResType.WebImage
+    if self.cfg.sceneid ~= "" then
+        resTable[self.cfg.sceneid] = BookResType.WebImage
     end
 
     --背景特效
-    if self.cfg.SceneParticalsArray ~= nil then
-        local sceneParticalArray = self.cfg.SceneParticalsArray
+    if self.cfg.sceneparticalsArray ~= nil then
+        local sceneParticalArray = self.cfg.sceneparticalsArray
         --logic.debug.Log(type(sceneParticalArray))
-        if type(sceneParticalArray) == 'table' then
-            for i = 1, #sceneParticalArray do
+        if sceneParticalArray.Count > 0 then
+            for i = 0, sceneParticalArray.Count-1 do
                 resTable[logic.bookReadingMgr.Res.bookFolderPath .. "UIParticle/" .. sceneParticalArray[i] .. ".prefab"] = BookResType.BookRes
             end
-        else
-            logic.debug.LogError(string.format('填的什么鬼:dialogID=%d,sceneParticalArray=%s', self.cfg.dialogID, sceneParticalArray))
+        --else
+        --    logic.debug.LogError(string.format('填的什么鬼:dialogid=%d,sceneParticalArray=%s', self.cfg.dialogid, sceneParticalArray))
         end
     end
 
@@ -74,11 +74,11 @@ end
 function BaseComponent:Play()
     for k, v in pairs(logic.DialogType) do
         if (v + 1) == self.cfg.dialog_type then
-            logic.debug.LogError(string.format('DialogID=%d,未实现DialogType = %d(%s),class=%s', self.cfg.dialogID, self.cfg.dialog_type, k, self.__cname))
+            logic.debug.LogError(string.format('DialogID=%d,未实现DialogType = %d(%s),class=%s', self.cfg.dialogid, self.cfg.dialog_type, k, self.__cname))
             return
         end
     end
-    logic.debug.LogError(string.format('DialogID=%d, 未实现DialogType = %d,class=%s', self.cfg.dialogID, self.cfg.dialog_type, self.__cname))
+    logic.debug.LogError(string.format('DialogID=%d, 未实现DialogType = %d,class=%s', self.cfg.dialogid, self.cfg.dialog_type, self.__cname))
 end
 
 --- @param component BaseComponent @将要播放的component
@@ -89,16 +89,16 @@ end
 --region 播放下一段对话
 
 function BaseComponent:ShowNextDialog()
-    if logic.bookReadingMgr:CheckChapterComplete(self.cfg.dialogID) then
+    if logic.bookReadingMgr:CheckChapterComplete(self.cfg.dialogid) then
         return
     end
     local nextID = self:GetNextDialogID()
-    if nextID == nil then
-        nextID = self.cfg.dialogID + 1
+    if nextID == nil or nextID == 0 then
+        nextID = self.cfg.dialogid + 1
         local bookData = logic.bookReadingMgr.bookData
         CS.UnityEngine.Debug.LogError(string.format('BookID=%d, DialogID=%d, trigger = %d,class=%s,下一个ID为空',
                 bookData.BookID,
-                self.cfg.dialogID,
+                self.cfg.dialogid,
                 self.cfg.trigger,
                 self.__cname)
         )
@@ -113,13 +113,13 @@ end
 function BaseComponent:GetNextDialogID()
     local bookData = logic.bookReadingMgr.bookData
     local id = self.cfg.next
-    if self.cfg.ConsequenceID and self.cfg.ConsequenceID > 0 then
-        local recordSelIndex = logic.cs.UserDataManager:GetBookOptionSelectIndex(bookData.BookID, self.cfg.ConsequenceID)
+    if self.cfg.consequenceid and self.cfg.consequenceid > 0 then
+        local recordSelIndex = logic.cs.UserDataManager:GetBookOptionSelectIndex(bookData.BookID, self.cfg.consequenceid)
         if recordSelIndex > 0 then
             id = self:GetNextDialogIDBySelection(recordSelIndex - 1);
         end
 
-        local cfg = logic.cs.BookReadingWrapper:GetDialogById(self.cfg.ConsequenceID);
+        local cfg = logic.cs.JsonDTManager:GetDialogItem(self.cfg.consequenceid);
         if cfg and cfg.modelid ~= 0 then
             local outfitId = logic.bookReadingMgr.bookData.outfit_id
             local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(bookData.BookID,cfg.modelid)
@@ -184,7 +184,7 @@ function BaseComponent:GetNextDialogIDBySelection(idx)
 end
 
 function BaseComponent:IsDanmakuTrigger()
-    return self.cfg.Barrage == 1
+    return self.cfg.barrage == 1
 end
 
 --endregion

@@ -74,7 +74,7 @@ function BubbleChatComponent:Play()
             return
         end
         if notification == nil then
-            --logic.debug.LogError(self.cfg.dialogID)
+            --logic.debug.LogError(self.cfg.dialogid)
         else
             self.selectIdx = tonumber(notification.Data) + 1
             logic.debug.LogError('选项index:'..self.selectIdx)
@@ -87,7 +87,7 @@ function BubbleChatComponent:Play()
     if self.cfg.dialog_type == logic.DialogType.BubbleChat then
 
         local nextComponent = logic.bookReadingMgr.components[self:GetNextDialogID()]
-        if nextComponent ~= nil and nextComponent.cfg.PhoneCall ~= 2 then
+        if nextComponent ~= nil and nextComponent.cfg.phonecall ~= 2 then
             self.isPhoneCallMode = false
         else
             self.isPhoneCallMode = true
@@ -102,7 +102,7 @@ function BubbleChatComponent:Play()
         end
     else
         self:OpenUI()
-        uiBubble:DialogNextStepByDialogID(self.cfg.dialogID)
+        uiBubble:DialogNextStepByDialogID(self.cfg.dialogid)
     end
 end
 

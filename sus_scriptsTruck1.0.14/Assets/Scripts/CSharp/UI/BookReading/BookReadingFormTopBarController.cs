@@ -114,7 +114,7 @@ public class BookReadingFormTopBarController : CUIComponent
 
 
         //【屏幕适配】
-        offectY = XLuaHelper.UnSafeAreaNotFit(this.myForm, null, 750, 81);
+        offectY = XLuaHelper.UnSafeAreaNotFit(this.myForm, null, 750, 44);
         this.onRangeValueChange();
 
     }

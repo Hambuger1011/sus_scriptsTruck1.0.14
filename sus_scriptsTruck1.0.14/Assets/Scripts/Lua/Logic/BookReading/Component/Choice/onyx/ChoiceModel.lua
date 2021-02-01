@@ -716,7 +716,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectCharacter,"","",tostring(curBookId),tostring(self.cfg.dialogid),tostring(self.selectIdx[self.modelType]))
 				self:OnChoicesModelNotify(result,skinID,nil,nil)
 				self:ChocieAnim()
 				skinIsSelected = true
@@ -737,7 +737,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectHair,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectHair,"","",tostring(curBookId),tostring(self.cfg.dialogid),tostring(self.selectIdx[self.modelType]))
 				self:OnChoicesModelNotify(result,nil,nil,hairID)
 				self:ChocieAnim()
 				self:OnSelectModeType(ChoiceType.Clothes)
@@ -773,7 +773,7 @@ function ChoiceModel:OnComfirmClick()
 			local json = core.json.Derialize(result)
 			local code = tonumber(json.code)
 			if code == 200 then
-				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(curBookId),tostring(self.cfg.dialogID),tostring(self.selectIdx[self.modelType]))
+				logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.McSelectOutfit,"","",tostring(curBookId),tostring(self.cfg.dialogid),tostring(self.selectIdx[self.modelType]))
 				logic.bookReadingMgr.bookData.PlayerClothes = clothesID
 				self:ChocieAnim()
 				

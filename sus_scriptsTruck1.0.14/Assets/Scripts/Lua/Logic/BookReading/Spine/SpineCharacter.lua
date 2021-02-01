@@ -6,6 +6,8 @@ function SpineCharacter:__init(gameObject)
     self.gameObject = gameObject
     self.uiBinding = self.gameObject:GetComponent(typeof(logic.cs.UIBinding))
 
+
+
     self.follow_back = self.uiBinding:Get('follow_back',typeof(logic.cs.BoneFollowerGraphic))
     if(self.follow_back==nil or CS.XLuaHelper.is_Null(self.follow_back)==true)then
         self.follow_back=self.uiBinding:Get('follow_back'):AddComponent(typeof(logic.cs.BoneFollowerGraphic))
@@ -19,23 +21,27 @@ function SpineCharacter:__init(gameObject)
     self.RoleSkeGraphic = self.uiBinding:Get('body',typeof(logic.cs.SkeletonGraphic))
     if(self.RoleSkeGraphic==nil or CS.XLuaHelper.is_Null(self.RoleSkeGraphic)==true)then
         self.RoleSkeGraphic=self.uiBinding:Get('body'):AddComponent(typeof(logic.cs.SkeletonGraphic))
+        self.RoleSkeGraphic.material=CS.XLuaHelper.SpineMaterial;
     end
 
 
     self.ExpressionSkeGraphic = self.uiBinding:Get('expression',typeof(logic.cs.SkeletonGraphic))
     if(self.ExpressionSkeGraphic==nil or CS.XLuaHelper.is_Null(self.ExpressionSkeGraphic)==true)then
         self.ExpressionSkeGraphic=self.uiBinding:Get('expression'):AddComponent(typeof(logic.cs.SkeletonGraphic))
+        self.ExpressionSkeGraphic.material=CS.XLuaHelper.SpineMaterial;
     end
 
 
     self.hair_front = self.uiBinding:Get('hair_front',typeof(logic.cs.SkeletonGraphic))
     if(self.hair_front==nil or CS.XLuaHelper.is_Null(self.hair_front)==true)then
         self.hair_front=self.uiBinding:Get('hair_front'):AddComponent(typeof(logic.cs.SkeletonGraphic))
+        self.hair_front.material=CS.XLuaHelper.SpineMaterial;
     end
 
     self.hair_back = self.uiBinding:Get('hair_back',typeof(logic.cs.SkeletonGraphic))
     if(self.hair_back==nil or CS.XLuaHelper.is_Null(self.hair_back)==true)then
         self.hair_back=self.uiBinding:Get('hair_back'):AddComponent(typeof(logic.cs.SkeletonGraphic))
+        self.hair_back.material=CS.XLuaHelper.SpineMaterial;
     end
 
 end

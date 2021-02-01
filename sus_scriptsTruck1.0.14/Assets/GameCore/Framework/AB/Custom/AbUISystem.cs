@@ -511,5 +511,17 @@
             });
             return task;
         }
+        
+        public DownloadMgr.Task DownloadBookDialogZip(int vBookId, int vChapterId, Action callback)
+        {
+            var task = DownloadMgr.Instance.DownloadBookDialog(vBookId,vChapterId);
+            task.AddComplete(() =>
+            {
+                string jsonStr = GZipUtils.DecompressFromFile(task.filename);
+                JsonDTManager.Instance.SetDialogByJson(vBookId,vChapterId,jsonStr);
+                callback();
+            });
+            return task;
+        }
     }
 }

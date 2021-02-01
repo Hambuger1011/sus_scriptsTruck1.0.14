@@ -86,8 +86,8 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param chapterData StoryEditor_ChapterDetial
-function UIStoryEditorMgr:GetDialogList(bookID,chapterID,callback)
-    logic.gameHttp:StoryEditor_GetDialogList(bookID,chapterID,function(result)
+function UIStoryEditorMgr:GetDialogList(bookID,chapterid,callback)
+    logic.gameHttp:StoryEditor_GetDialogList(bookID,chapterid,function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
         if code == 200 then
@@ -113,8 +113,8 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param chapterData StoryEditor_ChapterDetial
-function UIStoryEditorMgr:GetMyDialogList(bookID,chapterID,callback)
-    logic.gameHttp:StoryEditor_GetMyDialogList(bookID,chapterID,function(result)
+function UIStoryEditorMgr:GetMyDialogList(bookID,chapterid,callback)
+    logic.gameHttp:StoryEditor_GetMyDialogList(bookID,chapterid,function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
         if code == 200 then
@@ -138,9 +138,9 @@ function UIStoryEditorMgr:GetMyDialogList(bookID,chapterID,callback)
 end
 
 ---@param storyDetial StoryEditor_BookDetials
----@param chapterID 章节id
+---@param chapterid 章节id
 ---@param onlyUseLocal 是否只读取本地数据
-function UIStoryEditorMgr:LoadStoryEditorData(storyDetial,chapterID, update_version, callback, onlyUseLocal)
+function UIStoryEditorMgr:LoadStoryEditorData(storyDetial,chapterid, update_version, callback, onlyUseLocal)
     local File = logic.cs.CFileManager
     
     local rolePath = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'.json'
@@ -152,7 +152,7 @@ function UIStoryEditorMgr:LoadStoryEditorData(storyDetial,chapterID, update_vers
         storyDetial.roleTable = roleTable
     end
 
-    local path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'_'..chapterID..'.json'
+    local path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'_'..chapterid..'.json'
     if File.IsFileExist(path) then
         local strJson = File.ReadFileString(path)
         local storyData = core.json.Derialize(strJson) or {}
@@ -186,7 +186,7 @@ function UIStoryEditorMgr:LoadStoryEditorData(storyDetial,chapterID, update_vers
         local storyTable = logic.StoryEditorMgr.DataDefine.t_StoryTable.New()
         callback(storyTable)
     else    --从服务端获取
-        logic.StoryEditorMgr:GetMyDialogList(storyDetial.id, chapterID,function(storyTable)
+        logic.StoryEditorMgr:GetMyDialogList(storyDetial.id, chapterid,function(storyTable)
             callback(storyTable)
         end)
     end
@@ -195,7 +195,7 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param storyTable t_StoryTable
-function UIStoryEditorMgr:SaveStoryEditorData(storyDetial,chapterID,storyTable,update_version)
+function UIStoryEditorMgr:SaveStoryEditorData(storyDetial,chapterid,storyTable,update_version)
     local roleData = storyDetial.roleTable:ToTable()
     local storyData = {
         data = storyTable:ToTable(),
@@ -205,7 +205,7 @@ function UIStoryEditorMgr:SaveStoryEditorData(storyDetial,chapterID,storyTable,u
 
     logic.StoryEditorMgr:SaveStoryEditorRoleData(storyDetial)
 
-    path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'_'..chapterID..'.json'
+    path = logic.cs.GameUtility.WritablePath..'/cache/story_cache/data_'..storyDetial.id..'_'..chapterid..'.json'
     json = core.json.Serialize(storyData)
     File.WriteFileString(path,json)
 end
@@ -223,9 +223,9 @@ end
 
 
 ---@param storyDetial StoryEditor_BookDetials
-function UIStoryEditorMgr:SumbitChapter(storyDetial,chapterID,callback)
+function UIStoryEditorMgr:SumbitChapter(storyDetial,chapterid,callback)
     local bookID = storyDetial.id
-    logic.gameHttp:SubmitChapter(bookID,chapterID, function(result)
+    logic.gameHttp:SubmitChapter(bookID,chapterid, function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
         if code == 200 then
@@ -240,7 +240,7 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param storyTable t_StoryTable
-function UIStoryEditorMgr:UploadChapter(storyDetial, chapterID, storyTable, callback)
+function UIStoryEditorMgr:UploadChapter(storyDetial, chapterid, storyTable, callback)
     local bookID = storyDetial.id
     local roleTable = storyDetial.roleTable
     local roleJson = roleTable:ToJson()
@@ -267,7 +267,7 @@ function UIStoryEditorMgr:UploadChapter(storyDetial, chapterID, storyTable, call
     
     if isBookDirty then
         logic.debug.LogError(tostring(storyTable.md5) ..' <=> '.. bookMd5)
-        logic.StoryEditorMgr:SaveStoryTable(bookID, chapterID, bookJson,function(isOK,jsonData)
+        logic.StoryEditorMgr:SaveStoryTable(bookID, chapterid, bookJson,function(isOK,jsonData)
             
             if isOK then
                 
@@ -298,17 +298,17 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param chapterData StoryEditor_ChapterDetial
-function UIStoryEditorMgr:StartStoryReading(bookID,chapterID)
+function UIStoryEditorMgr:StartStoryReading(bookID,chapterid)
 
     logic.StoryEditorMgr:EnterBookDetials(bookID,function(storyDetial)
 
-        self:GetDialogList(bookID,chapterID,function(storyTable)
+        self:GetDialogList(bookID,chapterid,function(storyTable)
             local timestamp = socket.gettime()
             self:EnterStoryEditorMode()
             local uiView = logic.UIMgr:Open(logic.uiid.Story_Preview)
             local storyNodeRoot = DataDefine.t_StoryNode.Create(storyTable)
             storyNodeRoot.name = storyDetial.title
-            uiView:SetData(storyDetial, chapterID,storyNodeRoot)
+            uiView:SetData(storyDetial, chapterid,storyNodeRoot)
             uiView.onClose = function()
                 self:BackToMainClick()
             end
@@ -363,9 +363,9 @@ function UIStoryEditorMgr:EnterBookDetials(bookID, callback)
     end)
 end
 
-function UIStoryEditorMgr:SaveStoryTable(bookId,chapterId, json, callback)
+function UIStoryEditorMgr:SaveStoryTable(bookId,chapterid, json, callback)
     logic.debug.LogError(json)
-    logic.gameHttp:StoryEditor_SaveDialogList(bookId, chapterId,json, function(result)
+    logic.gameHttp:StoryEditor_SaveDialogList(bookId, chapterid,json, function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
         if code == 200 or code == 201 then
@@ -377,9 +377,9 @@ function UIStoryEditorMgr:SaveStoryTable(bookId,chapterId, json, callback)
     end)
 end
 
-function UIStoryEditorMgr:UploadImage(bookId,chapterId,filename,callback)
+function UIStoryEditorMgr:UploadImage(bookId,chapterid,filename,callback)
     --logic.cs.UINetLoadingMgr:Show(-1)
-    logic.gameHttp:StoryEditor_GetBookUploadToken(bookId,chapterId,function(result)
+    logic.gameHttp:StoryEditor_GetBookUploadToken(bookId,chapterid,function(result)
         --logic.cs.UINetLoadingMgr:Close()
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
@@ -464,7 +464,7 @@ end
 
 ---@param storyDetial StoryEditor_BookDetials
 ---@param chapterData StoryEditor_ChapterDetial
-function UIStoryEditorMgr:ReadingOtherChapter(bookID, chapterID,onPreviewClose)
+function UIStoryEditorMgr:ReadingOtherChapter(bookID, chapterid,onPreviewClose)
     
     --logic.cs.UINetLoadingMgr:Show()
     logic.gameHttp:StoryEditor_GetBookDetail(bookID,function(result)
@@ -490,7 +490,7 @@ function UIStoryEditorMgr:ReadingOtherChapter(bookID, chapterID,onPreviewClose)
             end
             storyDetial:UpdateTags()
             
-            logic.StoryEditorMgr:GetDialogList(storyDetial.id, chapterID,function(storyTable)
+            logic.StoryEditorMgr:GetDialogList(storyDetial.id, chapterid,function(storyTable)
                 --logic.cs.UINetLoadingMgr:Close()
                 local timestamp = socket.gettime()
                 logic.StoryEditorMgr:EnterStoryEditorMode()
@@ -501,7 +501,7 @@ function UIStoryEditorMgr:ReadingOtherChapter(bookID, chapterID,onPreviewClose)
                 logic.debug.Log(string.format('json解析耗时%.3fs',timestamp))
 
                 timestamp = socket.gettime()
-                uiView:SetData(storyDetial, chapterID, storyNodeRoot, true)
+                uiView:SetData(storyDetial, chapterid, storyNodeRoot, true)
                 uiView.onClose = onPreviewClose
                 timestamp = socket.gettime() - timestamp
                 logic.debug.Log(string.format('打开界面耗时%.3fs',timestamp))
@@ -590,8 +590,8 @@ function UIStoryEditorMgr:ModifyChapter(book_id,chapter_number,title,description
     end)
 end
 
-function UIStoryEditorMgr:FinishReadingChapter(bookID, chapterID,callback)
-    logic.gameHttp:StoryEditor_FinishReadingChapter(bookID, chapterID, function(result)
+function UIStoryEditorMgr:FinishReadingChapter(bookID, chapterid,callback)
+    logic.gameHttp:StoryEditor_FinishReadingChapter(bookID, chapterid, function(result)
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)
         if code == 200 then
@@ -604,8 +604,8 @@ function UIStoryEditorMgr:FinishReadingChapter(bookID, chapterID,callback)
 end
 
 ---@param pay_type 支付类型: 0只是保存进度 1钥匙支付 2观看广告 3倒计时
-function UIStoryEditorMgr:SaveReadingRecord(bookID, chapterID, pay_type,callback)
-    logic.gameHttp:StoryEditor_SaveReadingRecord(bookID, chapterID, pay_type, function(result)
+function UIStoryEditorMgr:SaveReadingRecord(bookID, chapterid, pay_type,callback)
+    logic.gameHttp:StoryEditor_SaveReadingRecord(bookID, chapterid, pay_type, function(result)
         local jsonData = core.json.Derialize(result)
         local code = tonumber(jsonData.code)
         if code == 200 then

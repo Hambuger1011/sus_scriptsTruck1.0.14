@@ -75,7 +75,7 @@ function UIBookReadingView:OnInitView()
     self.BookTitle =CS.DisplayUtil.GetChild(self.BookTitleBg.gameObject, "BookTitle"):GetComponent("Text");
 
     --【屏幕适配】
-     local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, self.BookTitleBg, 750, 81);
+     local offect = CS.XLuaHelper.UnSafeAreaNotFit(self.uiform, self.BookTitleBg, 750, 44);
 
 
     local bookDetailCfg = logic.bookReadingMgr.Res.bookDetailCfg
@@ -166,16 +166,16 @@ function UIBookReadingView:SetSceneBG(component,curSceneBG)
         return
     end
     local img = curSceneBG.image
-    if not component.cfg.sceneID then
-        component.cfg.sceneID = ''
+    if not component.cfg.sceneid then
+        component.cfg.sceneid = ''
     end
-    img.sprite = logic.bookReadingMgr.Res:GetSceneBG(component.cfg.sceneID)
+    img.sprite = logic.bookReadingMgr.Res:GetSceneBG(component.cfg.sceneid)
     img.color = logic.cs.StringUtils.HexToColor(component.cfg.sceneColor)
     curSceneBG.transform:ClearAllChild()
 
-    local sceneParticalArray = component.cfg.SceneParticalsArray
-    if sceneParticalArray then
-        for i = 1,#sceneParticalArray do
+    local sceneParticalArray = component.cfg.sceneparticalsArray
+    if sceneParticalArray.Count > 0 then
+        for i = 0,sceneParticalArray.Count-1 do
             local prefab = logic.bookReadingMgr.Res:GetPrefab(logic.bookReadingMgr.Res.bookFolderPath.."UIParticle/" .. sceneParticalArray[i]..".prefab")
             if prefab then
                 local go = logic.cs.GameObject.Instantiate(prefab, curSceneBG.transform)
@@ -352,19 +352,19 @@ end
 function UIBookReadingView:updateReadingProgress(component)
     local bookDetailCfg = logic.bookReadingMgr.Res.bookDetailCfg
     local progress = 0
-    if component.cfg.chapterID <= 1 then
+    if component.cfg.chapterid <= 1 then
         local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookDetailCfg.id,1)
         if chapterInfo ~= nil then
-            progress = component.cfg.dialogID / chapterInfo.chapterfinish
+            progress = component.cfg.dialogid / chapterInfo.chapterfinish
         end
         
     else
         
-        local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookDetailCfg.id,component.cfg.chapterID)
+        local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookDetailCfg.id,component.cfg.chapterid)
         if chapterInfo ~= nil then
             local beginID = chapterInfo.chapterstart
             local endID = chapterInfo.chapterfinish
-            local num = component.cfg.dialogID - beginID
+            local num = component.cfg.dialogid - beginID
             local sum = endID - beginID
             progress = num / sum
         end

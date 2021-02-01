@@ -470,7 +470,92 @@ public void SaveLocalVersionRoleModel(int vBookId, List<JDT_RoleModel> vInfo)
 }
 
 
+public Dictionary<int,JDT_ChapterDialogList>  CurBookChapterDialogDic = new Dictionary<int, JDT_ChapterDialogList>();
+public void SetDialogByJson(int vBookId,int vChapterId,string vInfo)
+{
+    if (string.IsNullOrEmpty(vInfo)) return;
+    if (CurBookChapterDialogDic.Count > 0)
+    {
+        foreach (var item in CurBookChapterDialogDic)
+        {
+            if (item.Value != null && item.Value.bookId != vBookId)
+            {
+                CurBookChapterDialogDic.Clear();
+                break;
+            }
+        }
+    }
     
+    JDT_ChapterDialogList chapterDialogListItem = new JDT_ChapterDialogList();
+    chapterDialogListItem.bookId = vBookId;
+    chapterDialogListItem.chapterId = vChapterId;
+    chapterDialogListItem.dialogList = JsonHelper.JsonToObject<List<JDT_Dialog>>(vInfo);
+    if (chapterDialogListItem.dialogList != null)
+    {
+        int len = chapterDialogListItem.dialogList.Count;
+        for (int i = 0; i < len; i++)
+        {
+            JDT_Dialog dialogItem = chapterDialogListItem.dialogList[i];
+            if(dialogItem != null)
+                dialogItem.Init();
+        }
+    }
 
-    #endregion
+    if (CurBookChapterDialogDic.ContainsKey(chapterDialogListItem.chapterId))
+        CurBookChapterDialogDic[chapterDialogListItem.chapterId] = chapterDialogListItem;
+    else
+        CurBookChapterDialogDic.Add(chapterDialogListItem.chapterId,chapterDialogListItem);
+}
+
+/// <summary>
+/// 获取对话列表内容
+/// </summary>
+/// <param name="vBookId"></param>
+/// <param name="vChapterId"></param>
+/// <param name="vDialogId"></param>
+/// <returns></returns>
+public List<JDT_Dialog> GetBookChapterDialogList(int vBookId, int vChapterId)
+{
+    if (CurBookChapterDialogDic.ContainsKey(vChapterId))
+    {
+        JDT_ChapterDialogList chapterDialogListItem = CurBookChapterDialogDic[vChapterId];
+        if (chapterDialogListItem.bookId == vBookId && chapterDialogListItem.dialogList != null)
+        {
+            return chapterDialogListItem.dialogList;
+        }
+    }
+    return null;
+}
+
+/// <summary>
+/// 获取对话列表内容
+/// </summary>
+/// <param name="vBookId"></param>
+/// <param name="vChapterId"></param>
+/// <param name="vDialogId"></param>
+/// <returns></returns>
+public JDT_Dialog GetDialogItem(int vBookId, int vChapterId,int vDialogId)
+{
+    if (CurBookChapterDialogDic.ContainsKey(vChapterId))
+    {
+        JDT_ChapterDialogList chapterDialogListItem = CurBookChapterDialogDic[vChapterId];
+        if (chapterDialogListItem.bookId == vBookId && chapterDialogListItem.dialogList != null)
+        {
+            int len = chapterDialogListItem.dialogList.Count;
+            for (int i = 0; i < len; i++)
+            {
+                JDT_Dialog item = chapterDialogListItem.dialogList[i];
+                if (item != null && item.dialogid == vDialogId)
+                {
+                    item.Init();
+                    return item;
+                }
+            }
+        }
+    }
+    return null;
+}
+
+
+#endregion
 }

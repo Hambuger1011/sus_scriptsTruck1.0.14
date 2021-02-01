@@ -285,8 +285,80 @@ UIBookReadingElement
 
         UserDataManager.Instance.is_use_prop = true;
         RefreshKeyPropBtnState();
+        
+        JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(vBookId);
+        if (verInfo != null)
+        {
+            GameHttpNet.Instance.GetBookVersionInfo(vBookId,m_curChapterID+1 ,GetModelAndClothesPriceCallBack,0,0,verInfo.role_model_version,
+                verInfo.model_price_version,verInfo.clothes_price_version,verInfo.skin_version);
+        }
     }
 
+    private void GetModelAndClothesPriceCallBack(object arg)
+    {
+        string result = arg.ToString();
+        LOG.Info("----GetModelAndClothesPriceCallBack---->" + result);
+        JsonObject jo = JsonHelper.JsonToJObject(result);
+        if (jo.code == 200)
+        {
+            UserDataManager.Instance.bookJDTFormSever = JsonHelper.JsonToObject<HttpInfoReturn<BookJDTFormSever>>(result);
+            if (UserDataManager.Instance.bookJDTFormSever != null &&
+                UserDataManager.Instance.bookJDTFormSever.data != null)
+            {
+                SaveJDTInfo();
+            }
+        }
+    }
+
+    #region saveJDTInfo
+
+     private void SaveJDTInfo()
+    {
+        BookJDTFormSever serverInfo = UserDataManager.Instance.bookJDTFormSever.data;
+        JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(m_curBookID);
+        if (serverInfo == null || verInfo == null) return;
+        if (serverInfo.book_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionBookDetail(m_curBookID,serverInfo.book_version);
+            if(serverInfo.info != null)
+                verInfo.book_version = serverInfo.info.book_version;
+        }
+        if (serverInfo.chapter_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionChapter(m_curBookID,serverInfo.chapter_version);
+            if(serverInfo.info != null)
+                verInfo.chapter_version = serverInfo.info.chapter_version;
+        }
+        if (serverInfo.clothes_price_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionClothesPrice(m_curBookID,serverInfo.clothes_price_version);
+            if(serverInfo.info != null)
+                verInfo.clothes_price_version = serverInfo.info.clothes_price_version;
+        }
+        if (serverInfo.model_price_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionModelPrice(m_curBookID,serverInfo.model_price_version);
+            if(serverInfo.info != null)
+                verInfo.model_price_version = serverInfo.info.model_price_version;
+        }
+        if (serverInfo.role_model_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionRoleModel(m_curBookID,serverInfo.role_model_version);
+            if(serverInfo.info != null)
+                verInfo.role_model_version = serverInfo.info.role_model_version;
+        }
+        if (serverInfo.skin_version != null)
+        {
+            JsonDTManager.Instance.SaveLocalVersionSkin(m_curBookID,serverInfo.skin_version);
+            if(serverInfo.info != null)
+                verInfo.skin_version = serverInfo.info.skin_version;
+        }
+        
+        JsonDTManager.Instance.SaveLocalJDTVersionInfo(m_curBookID,verInfo);
+    }
+
+    #endregion
+   
 
     public void Show()
     {

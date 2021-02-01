@@ -52,7 +52,7 @@ function AutoSelectClothesModel:SetProgressHandler(result)
 	local json = core.json.Derialize(result)
 	local code = tonumber(json.code) --坑，返回来的code是字符串
 	if code == 200 then
-		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, 1);
+		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, 1);
 		self:ShowNextDialog()
 	else
 		if not string.IsNullOrEmpty(json.msg) then

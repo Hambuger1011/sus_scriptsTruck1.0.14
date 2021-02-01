@@ -82,7 +82,7 @@ function UIGetADiamondsView:OnWatchAdsClick()
                 logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
             elseif code == 208 then --扣费失败
                 logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.LoseFail)
-                logic.debug.LogError("--BookDialogOptionCallBack--扣费失败,BookId:" .. bookData.BookID .. " DialogId:" .. self.component.cfg.dialogID);
+                logic.debug.LogError("--BookDialogOptionCallBack--扣费失败,BookId:" .. bookData.BookID .. " DialogId:" .. self.component.cfg.dialogid);
             end
             if code ~= 200 then
                 logic.cs.UIAlertMgr:Show('TIPS', json.msg)

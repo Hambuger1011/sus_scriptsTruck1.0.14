@@ -76,7 +76,7 @@ function Eggs:EggClick()
             canReceived = false
             coroutine.wait(2.1)
             logic.cs.GameObject.Destroy(eggObjs.gameObject)
-            logic.gameHttp:ReceiveEggActivityAward(cfg.eggId, logic.bookReadingMgr.bookData.BookID, cfg.dialogID, function(result)
+            logic.gameHttp:ReceiveEggActivityAward(cfg.eggId, logic.bookReadingMgr.bookData.BookID, cfg.dialogid, function(result)
                 local json = core.json.Derialize(result)
                 local code = tonumber(json.code)
                 if code == 200 then

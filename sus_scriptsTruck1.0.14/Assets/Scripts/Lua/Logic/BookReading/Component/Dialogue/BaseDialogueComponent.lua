@@ -21,7 +21,7 @@ function BaseDialogueComponent:CollectRes(resTable)
         local appearanceID = nil
         local facialExpressionID = nil
 
-        -- if self.cfg.dialogID == 166 then
+        -- if self.cfg.dialogid == 166 then
         --     logic.debug.LogError('--------------')
         -- end
 
@@ -214,7 +214,7 @@ function BaseDialogueComponent:ShowDetails(Dialogue, typertext, faceExpr, Player
     end
     --移动背景
     logic.cs.BookReadingWrapper.IsTextTween = true
-    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),function()
+    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),function()
         
         logic.bookReadingMgr.view.tipsImage:ShowTips(self.cfg.tips)
 
@@ -231,7 +231,7 @@ function BaseDialogueComponent:ShowDetails(Dialogue, typertext, faceExpr, Player
                 self.cfg.phiz_id, 
                 self.cfg.icon_bg, 
                 vSideType,
-                self.cfg.Orientation,
+                self.cfg.orientation,
                 faceExpr
                 )
         else
@@ -260,7 +260,7 @@ function BaseDialogueComponent:ShowDetails(Dialogue, typertext, faceExpr, Player
                     logic.bookReadingMgr.view.choiceGroup:choicesDialogInit(self,vSideType)
                     logic.bookReadingMgr.view.choiceGroup:show()
                 else
-                    if logic.cs.GameDataMgr.InAutoPlay and self.cfg.dialogID ~= logic.cs.BookReadingWrapper.EndDialogID then
+                    if logic.cs.GameDataMgr.InAutoPlay and self.cfg.dialogid ~= logic.cs.BookReadingWrapper.EndDialogID then
                         local autoPlayTimer
                         autoPlayTimer = core.Timer.New(function()
                             if logic.bookReadingMgr.playingComponent == self then
@@ -303,8 +303,8 @@ function BaseDialogueComponent:ShowDetails(Dialogue, typertext, faceExpr, Player
     end)
 
     -- local saveProgressTick = logic.bookReadingMgr.saveProgressTick or 0
-    -- if self.cfg.dialogID - saveProgressTick > 30 then
-    --     self.saveProgressTick = self.cfg.dialogID
+    -- if self.cfg.dialogid - saveProgressTick > 30 then
+    --     self.saveProgressTick = self.cfg.dialogid
     --     if self.cfg.trigger == 0 then   --没有选项，自动保存进度
     --         logic.bookReadingMgr:SaveProgress()
     --     end
@@ -340,7 +340,7 @@ function BaseDialogueComponent:characterShowTween(role_id, clothesID, phiz_id, i
         
         if logic.config.isDebugMode then
             if logic.bookReadingMgr.Res:GetSkeDataAsset("Role/" .. appearanceID) == nil then
-                logic.debug.LogError(string.format( "找不到role资源:dialogID=%d,clothGroupId=%d,appearanceID=%d",self.cfg.dialogID,clothGroupId,appearanceID))
+                logic.debug.LogError(string.format( "找不到role资源:dialogID=%d,clothGroupId=%d,appearanceID=%d",self.cfg.dialogid,clothGroupId,appearanceID))
             end
         end
 
@@ -361,7 +361,7 @@ function BaseDialogueComponent:characterShowTween(role_id, clothesID, phiz_id, i
         if logic.config.isDebugMode then
             if logic.bookReadingMgr.Res:GetSkeDataAsset("Role/" .. appearanceID) == nil then
                 logic.debug.LogError(string.format( "找不到npc资源:dialogID=%d,sex=%d,role_id=%d,clothGroupId=%d,npcDetailId=%d,appearanceID=%d",
-                    self.cfg.dialogID,
+                    self.cfg.dialogid,
                     sex,
                     role_id,
                     clothGroupId,

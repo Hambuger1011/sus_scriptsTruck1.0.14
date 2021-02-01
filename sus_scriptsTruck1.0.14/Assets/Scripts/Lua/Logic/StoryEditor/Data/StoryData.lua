@@ -178,7 +178,7 @@ end
 ---@param data t_ReadingRecord
 function StoryData:LoadBookReadRecord(bookID, chapterID, data)
     local userID = logic.cs.GameHttpNet.UUID
-    local str = logic.cs.PlayerPrefs.GetString(userID..'_storyeditor_readrecord_pos_'..bookID..'_'..chapterID, nil)
+    local str = logic.cs.PlayerPrefs.GetString(userID..'_storyeditor_readrecord_pos_'..bookID..'_'..chapterid, nil)
     local json = core.json.Derialize(str)
     local data = DataDefine.t_ReadingRecord.New()
     data:FromTable(json)
@@ -188,7 +188,7 @@ end
 function StoryData:SaveBookReadRecord(bookID, chapterID, data)
     local userID = logic.cs.GameHttpNet.UUID
     local str = core.json.Serialize(data)
-    logic.cs.PlayerPrefs.SetString(userID..'_storyeditor_readrecord_pos_'..bookID..'_'..chapterID, str)
+    logic.cs.PlayerPrefs.SetString(userID..'_storyeditor_readrecord_pos_'..bookID..'_'..chapterid, str)
 end
 
 return StoryData

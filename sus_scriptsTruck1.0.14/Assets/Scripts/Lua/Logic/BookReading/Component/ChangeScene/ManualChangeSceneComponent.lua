@@ -54,7 +54,7 @@ function ManualChangeSceneComponent:Play()
     lastSceneBG.canvasGroup.alpha = 1
 
     local img = view.curSceneBG.image
-    local spt = logic.bookReadingMgr.Res:GetSceneBG(self.cfg.sceneID)
+    local spt = logic.bookReadingMgr.Res:GetSceneBG(self.cfg.sceneid)
     img.sprite = spt
     img.color = logic.cs.StringUtils.HexToColor(self.cfg.sceneColor)
     --img:SetNativeSize()
@@ -68,11 +68,11 @@ function ManualChangeSceneComponent:Play()
     if self.cfg.trigger == 1 then
         view.curSceneBG.transform.anchoredPosition = core.Vector2.New(LRPos,0)
     elseif self.cfg.trigger == 2 then
-        view.curSceneBG.transform.anchoredPosition = core.Vector2.New(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),-UDPos)
+        view.curSceneBG.transform.anchoredPosition = core.Vector2.New(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),-UDPos)
     elseif self.cfg.trigger == 3 then
         view.curSceneBG.transform.anchoredPosition = core.Vector2.New(-LRPos,0)
     elseif self.cfg.trigger == 4 then
-        view.curSceneBG.transform.anchoredPosition = core.Vector2.New(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),UDPos)
+        view.curSceneBG.transform.anchoredPosition = core.Vector2.New(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),UDPos)
     end
     
     self.fingerTouchState = 0
@@ -132,7 +132,7 @@ function ManualChangeSceneComponent:ManualChangeSceneMove(type)
     unuseSceneBG.transform:ClearAllChild()
 
     local sceneBG = view.curSceneBG
-    local toPos = core.Vector2(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),0)
+    local toPos = core.Vector2(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),0)
     sceneBG.transform:DOAnchorPos(toPos,1):OnComplete(function()
         view:SetSceneBG(self,sceneBG)
         sceneBG.transform.anchoredPosition = toPos

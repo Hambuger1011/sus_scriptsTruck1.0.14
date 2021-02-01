@@ -395,35 +395,35 @@ end");
 
 
     //List<t_BookDialog> m_bookDialogList = null;
-    Dictionary<int, t_BookDialog> m_bookDialogMap = new Dictionary<int, t_BookDialog>();
-    public t_BookDialog GetDialogById(int vId)
-    {
-        //InitDialogData();
-        t_BookDialog cfg;
-        if (m_bookDialogMap.TryGetValue(vId, out cfg))
-        {
-            return cfg;
-        }
-        return null;
-    }
+    // Dictionary<int, t_BookDialog> m_bookDialogMap = new Dictionary<int, t_BookDialog>();
+    // public t_BookDialog GetDialogById(int vId)
+    // {
+    //     //InitDialogData();
+    //     t_BookDialog cfg;
+    //     if (m_bookDialogMap.TryGetValue(vId, out cfg))
+    //     {
+    //         return cfg;
+    //     }
+    //     return null;
+    // }
 
-    public void LoadBookConfig(byte[] bytes)
-    {
-        var m_bookDialogList = XlsxData.Deserialize<List<t_BookDialog>>(bytes);
-        foreach (var item in m_bookDialogList)
-        {
-            if (!m_bookDialogMap.ContainsKey(item.dialogID))
-                m_bookDialogMap.Add(item.dialogID, item);
-            else
-                LOG.Error("---BookID-->" + this.CurrentBookData.BookID + "--DialogIdRepetition-->" + item.dialogID);
-        }
-       // LOG.Error("book data:" + m_bookDialogList.Count);
-    }
+    // public void LoadBookConfig(byte[] bytes)
+    // {
+    //     var m_bookDialogList = XlsxData.Deserialize<List<t_BookDialog>>(bytes);
+    //     foreach (var item in m_bookDialogList)
+    //     {
+    //         if (!m_bookDialogMap.ContainsKey(item.dialogID))
+    //             m_bookDialogMap.Add(item.dialogID, item);
+    //         else
+    //             LOG.Error("---BookID-->" + this.CurrentBookData.BookID + "--DialogIdRepetition-->" + item.dialogID);
+    //     }
+    //    // LOG.Error("book data:" + m_bookDialogList.Count);
+    // }
 
-    public void Reset()
-    {
-        m_bookDialogMap.Clear();
-    }
+    // public void Reset()
+    // {
+    //     m_bookDialogMap.Clear();
+    // }
 
     public void CloseForm()
     {

@@ -64,7 +64,7 @@ end
 function UINextChapterView:SetData(storyDetial, chapterID, finishTime)
     ---@type StoryEditor_BookDetials
     self.storyDetial = storyDetial
-    self.chapterID = chapterID
+    self.chapterid = chapterID
     if chapterID < storyDetial.update_chapter_count then
         self.nextChapterID = chapterID + 1
     else
@@ -75,7 +75,7 @@ function UINextChapterView:SetData(storyDetial, chapterID, finishTime)
 
     self.lbChapter.text = 'Chapter '..self.nextChapterID
     
-    self.lbChapterEnd.text = string.format('CH.%d END', self.chapterID)
+    self.lbChapterEnd.text = string.format('CH.%d END', self.chapterid)
     self.lbChapterDesc.text = ''--self.chapterData.description
 
     --【AF事件记录* 读完1个UGC章节】

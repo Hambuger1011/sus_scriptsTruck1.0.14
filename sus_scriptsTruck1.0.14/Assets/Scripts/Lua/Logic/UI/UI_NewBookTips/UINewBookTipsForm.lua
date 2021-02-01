@@ -176,29 +176,34 @@ function UINewBookTipsForm:ReadBook()
                             beginDialogID,
                             endDialogID
                     )
-                    logic.cs.BookReadingWrapper:PrepareReading(true)
-
-                    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
-                        local json = core.json.Derialize(result)
-                        local code = tonumber(json.code)
+                    logic.cs.GameHttpNet:GetBookVersionInfo(tonumber(bookID),chapterId,function(result)
+                        local bookVersionJson = core.json.Derialize(result)
+                        local code = tonumber(bookVersionJson.code)
                         if code == 200 then
-                            logic.cs.UserDataManager.bookDetailInfo = json
-                        elseif code == 277 then
-                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                            logic.cs.UserDataManager.bookJDTFormSever = bookVersionJson
+                            logic.cs.BookReadingWrapper:PrepareReading(true)
+                            logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(bookID),function(result)
+                                local json = core.json.Derialize(result)
+                                local code = tonumber(json.code)
+                                if code == 200 then
+                                    logic.cs.UserDataManager.bookDetailInfo = json
+                                elseif code == 277 then
+                                    logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                                end
+                            end)
+                            logic.cs.GameHttpNet:GetBookBarrageCountList(tonumber(bookID),chapterId,function(result)
+                                local json = core.json.Derialize(result)
+                                local code = tonumber(json.code)
+                                if code == 200 then
+                                    logic.cs.UserDataManager.BookBarrageCountList = json
+                                elseif code == 277 then
+                                    logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+                                end
+                            end)
+                            logic.cs.UserDataManager.isReadNewerBook = true
+                            self:__Close()
                         end
                     end)
-                    logic.cs.GameHttpNet:GetBookBarrageCountList(tonumber(bookID),chapterId,function(result)
-                        local json = core.json.Derialize(result)
-                        local code = tonumber(json.code)
-                        if code == 200 then
-                            logic.cs.UserDataManager.BookBarrageCountList = json
-                        elseif code == 277 then
-                            logic.cs.UIAlertMgr:Show("TIPS",json.msg)
-                        end
-                    end)
-
-                    logic.cs.UserDataManager.isReadNewerBook = true
-                    self:__Close()
                 elseif code == 277 then
                     logic.cs.UIAlertMgr:Show("TIPS",json.msg)
                 end

@@ -61,19 +61,19 @@ public class BaseDialogData {
 
     }
 
-    public BaseDialogData(t_BookDialog data)
+    public BaseDialogData(JDT_Dialog data)
     {
-        this.dialogID = data.dialogID;
-        this.chapterID = data.chapterID;
-        this.sceneID = data.sceneID;
+        this.dialogID = data.dialogid;
+        this.chapterID = data.chapterid;
+        this.sceneID = data.sceneid;
         this.role_id = data.role_id;
         this.icon = data.icon;
         this.phiz_id = data.phiz_id;
         this.icon_bg = data.icon_bg;
         this.dialog_type = data.dialog_type;
         this.tips = data.tips;
-        this.BGMID = data.BGMID;
-        this.Scenes_X = data.Scenes_X;
+        this.BGMID = data.bgmid;
+        this.Scenes_X = data.scenes_x;
         this.dialog = data.dialog;
         this.trigger = data.trigger;
         this.next = data.next;
@@ -91,21 +91,21 @@ public class BaseDialogData {
         this.requirement4 = data.requirement4;
         this.next_4 = data.next_4;
         this.is_tingle = data.is_tingle;
-        this.SceneParticalsArray = data.SceneParticalsArray;
-        this.hidden_egg1 = data.hidden_egg1;
-        this.hidden_egg2 = data.hidden_egg2;
-        this.hidden_egg3 = data.hidden_egg3;
-        this.hidden_egg4 = data.hidden_egg4;
-        this.sceneActionX = data.SceneActionX;
-        this.sceneActionY = data.SceneActionY;
-        this.Orientation = data.Orientation;
-        this.Personalist1 = data.Personalit_1;
-        this.Personalist2 = data.Personalit_2;
-        this.Personalist3 = data.Personalit_3;
-        this.Personalist4 = data.Personalit_4;
-        this.TutorialEgg = data.TutorialEgg;
-        this.ConsequenceID = data.ConsequenceID;
-        this.sceneAlpha = data.sceneAlpha;
+        //this.SceneParticalsArray = data.sceneparticals.Split(',');
+        // this.hidden_egg1 = data.hidden_egg1;
+        // this.hidden_egg2 = data.hidden_egg2;
+        // this.hidden_egg3 = data.hidden_egg3;
+        // this.hidden_egg4 = data.hidden_egg4;
+        // this.sceneActionX = data.SceneActionX;
+        // this.sceneActionY = data.SceneActionY;
+        this.Orientation = data.orientation;
+        // this.Personalist1 = data.Personalit_1;
+        // this.Personalist2 = data.Personalit_2;
+        // this.Personalist3 = data.Personalit_3;
+        // this.Personalist4 = data.Personalit_4;
+        // this.TutorialEgg = data.tutorialegg;
+        this.ConsequenceID = data.consequenceid;
+        this.sceneAlpha = data.scenealpha;
         //this.bubbleType = data.bubbleType;
     }
 

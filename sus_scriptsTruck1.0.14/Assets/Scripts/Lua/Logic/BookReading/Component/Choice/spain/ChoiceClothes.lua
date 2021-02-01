@@ -218,13 +218,13 @@ function ChoiceClothes:SetProgressHandler(result)
 		
 		logic.bookReadingMgr.bookData.PlayerClothes = clothesID;
 		self.uiCtrl.gameObject:SetActiveEx(false);
-		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, self.selectIdx);
+		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, self.selectIdx);
 		--_form.BgAddBlurEffect(false);
 		logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.ResidentMoneyInfo, 0);
 		--logic.cs.EventDispatcher.Dispatch(logic.cs.EventEnum.DialogDisplaySystem_PlayerMakeChoice, self.curClothesIndex);
 		--_form.setBGOnClickListenerActive(true);
 		--_form.ResetOperationTime();
-		logic.cs.TalkingDataManager:SelectCloths(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, clothesID, self.needPay, self.cost);
+		logic.cs.TalkingDataManager:SelectCloths(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, clothesID, self.needPay, self.cost);
 		self:ShowNextDialog()
 	else
 		if not string.IsNullOrEmpty(json.msg) then

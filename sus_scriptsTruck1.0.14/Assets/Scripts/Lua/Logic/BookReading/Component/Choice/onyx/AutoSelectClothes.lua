@@ -26,7 +26,7 @@ function AutoSelectClothes:CollectRes(resTable)
 			for i=1,self.cfg.selection_num do
 				local clothesID = tonumber(self.cfg['selection_'..i])
 				if clothesID == nil then
-					logic.debug.LogError(string.format('bookID=%d,chapter=%d,dialogID=%d,selection_%d填0做什么？',bookData.BookID,bookData.ChapterID,self.cfg.dialogID,i))
+					logic.debug.LogError(string.format('bookID=%d,chapter=%d,dialogID=%d,selection_%d填0做什么？',bookData.BookID,bookData.ChapterID,self.cfg.dialogid,i))
 					goto continue
 				end
 				IDs[id][clothesID] = 1
@@ -75,7 +75,7 @@ function AutoSelectClothes:SetProgressHandler(result)
 		logic.bookReadingMgr.bookData.PlayerClothes = clothesID;
 		logic.bookReadingMgr:SaveOption(1)
     	logic.bookReadingMgr:SaveProgress()
-		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogID, 1);
+		logic.cs.UserDataManager:RecordBookOptionSelect(logic.bookReadingMgr.bookData.BookID, self.cfg.dialogid, 1);
 		self:ShowNextDialog()
 	else
 		if not string.IsNullOrEmpty(json.msg) then

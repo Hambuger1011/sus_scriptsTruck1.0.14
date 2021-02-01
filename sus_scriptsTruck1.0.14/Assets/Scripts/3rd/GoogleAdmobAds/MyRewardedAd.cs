@@ -163,7 +163,7 @@ public class MyRewardedAd
         //AF事件记录*  用户播放广告
         AppsFlyerManager.Instance.ADS_PLAY();
 
-        Debug.LogError("HandleRewardedAdOpening event received");
+        Debug.Log("HandleRewardedAdOpening event received 广告位ID： adUnitId:"+ adUnitId);
     }
 
     /// <summary>

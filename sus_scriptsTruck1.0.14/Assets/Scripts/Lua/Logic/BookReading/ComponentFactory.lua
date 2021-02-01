@@ -265,7 +265,7 @@ function ComponentFactory.Create(index,cfg)
   --cfg.dialog_type = logic.DialogType.ChoiceModel
   local func = components[cfg.dialog_type]
   if not func then
-      logic.debug.LogError('未知对话类型:'..(cfg.dialog_type or 'null')..",请检查ID="..cfg.dialogID)
+      logic.debug.LogError('未知对话类型:'..(cfg.dialog_type or 'null')..",请检查ID="..cfg.dialogid)
       return logic.BookReading.BaseComponent.New(index,cfg)
   end
 	local obj = func(index,cfg)

@@ -71,7 +71,7 @@ function ChoiceSex:ShowDetails(
         self:ResetDialogPos(Dialogue)
     end
     --移动背景
-    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.Scenes_X),function()
+    logic.bookReadingMgr.view:sceneBGMove(logic.bookReadingMgr.view:GetPiexlX(self.cfg.scenes_x),function()
         Dialogue:SetActiveEx(true)
         self.IsPlayTween = false
         --播放显示动画

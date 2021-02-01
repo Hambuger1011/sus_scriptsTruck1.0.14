@@ -800,5 +800,6 @@ public static class XLuaHelper
         }
     }
 
+    public static Material SpineMaterial = new Material(Shader.Find("Spine/SkeletonGraphic"));
 }
 
