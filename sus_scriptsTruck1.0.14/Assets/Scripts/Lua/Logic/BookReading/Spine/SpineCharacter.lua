@@ -6,44 +6,33 @@ function SpineCharacter:__init(gameObject)
     self.gameObject = gameObject
     self.uiBinding = self.gameObject:GetComponent(typeof(logic.cs.UIBinding))
 
+    self.follow_backObj = CS.DisplayUtil.GetChild(gameObject, "follow_back");
+    self.follow_back=CS.XLuaHelper.AddBoneFollowerGraphic(self.follow_backObj);
+
+    self.hair_backObj = CS.DisplayUtil.GetChild(self.follow_backObj, "hair_back");
+    self.hair_back=CS.XLuaHelper.AddSkeletonGraphic(self.hair_backObj);
 
 
-    self.follow_back = self.uiBinding:Get('follow_back',typeof(logic.cs.BoneFollowerGraphic))
-    if(self.follow_back==nil or CS.XLuaHelper.is_Null(self.follow_back)==true)then
-        self.follow_back=self.uiBinding:Get('follow_back'):AddComponent(typeof(logic.cs.BoneFollowerGraphic))
-    end
-
-    self.follow_front = self.uiBinding:Get('follow_front',typeof(logic.cs.BoneFollowerGraphic))
-    if(self.follow_front==nil or CS.XLuaHelper.is_Null(self.follow_front)==true)then
-        self.follow_front=self.uiBinding:Get('follow_front'):AddComponent(typeof(logic.cs.BoneFollowerGraphic))
-    end
-
-    self.RoleSkeGraphic = self.uiBinding:Get('body',typeof(logic.cs.SkeletonGraphic))
-    if(self.RoleSkeGraphic==nil or CS.XLuaHelper.is_Null(self.RoleSkeGraphic)==true)then
-        self.RoleSkeGraphic=self.uiBinding:Get('body'):AddComponent(typeof(logic.cs.SkeletonGraphic))
-        self.RoleSkeGraphic.material=CS.XLuaHelper.SpineMaterial;
-    end
+    self.RoleSkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "RoleSkeletonGraphic");
+    self.RoleSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.RoleSkeletonGraphicObj);
 
 
-    self.ExpressionSkeGraphic = self.uiBinding:Get('expression',typeof(logic.cs.SkeletonGraphic))
-    if(self.ExpressionSkeGraphic==nil or CS.XLuaHelper.is_Null(self.ExpressionSkeGraphic)==true)then
-        self.ExpressionSkeGraphic=self.uiBinding:Get('expression'):AddComponent(typeof(logic.cs.SkeletonGraphic))
-        self.ExpressionSkeGraphic.material=CS.XLuaHelper.SpineMaterial;
-    end
+    self.follow_frontObj = CS.DisplayUtil.GetChild(self.RoleSkeletonGraphicObj, "follow_front");
+    self.follow_front=CS.XLuaHelper.AddBoneFollowerGraphic(self.follow_frontObj);
 
 
-    self.hair_front = self.uiBinding:Get('hair_front',typeof(logic.cs.SkeletonGraphic))
-    if(self.hair_front==nil or CS.XLuaHelper.is_Null(self.hair_front)==true)then
-        self.hair_front=self.uiBinding:Get('hair_front'):AddComponent(typeof(logic.cs.SkeletonGraphic))
-        self.hair_front.material=CS.XLuaHelper.SpineMaterial;
-    end
+    self.ExpressionSkeletonGraphicObj = CS.DisplayUtil.GetChild(self.follow_frontObj, "ExpressionSkeletonGraphic");
+    self.ExpressionSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.ExpressionSkeletonGraphicObj);
 
-    self.hair_back = self.uiBinding:Get('hair_back',typeof(logic.cs.SkeletonGraphic))
-    if(self.hair_back==nil or CS.XLuaHelper.is_Null(self.hair_back)==true)then
-        self.hair_back=self.uiBinding:Get('hair_back'):AddComponent(typeof(logic.cs.SkeletonGraphic))
-        self.hair_back.material=CS.XLuaHelper.SpineMaterial;
-    end
 
+    self.hair_frontObj = CS.DisplayUtil.GetChild(self.follow_frontObj, "hair_front");
+    self.hair_front=CS.XLuaHelper.AddSkeletonGraphic(self.hair_frontObj);
+
+
+    self.hair_back.material=CS.XLuaHelper.SpineMaterial;
+    self.RoleSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
+    self.ExpressionSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
+    self.hair_front.material=CS.XLuaHelper.SpineMaterial;
 end
 
 function SpineCharacter:SetScale(localScale)
@@ -58,26 +47,26 @@ function SpineCharacter:SetSpine(spineData)
     if self.spineData == spineData then
         return
     end
-	self.RoleSkeGraphic.skeletonDataAsset = spineData
-	self.ExpressionSkeGraphic.skeletonDataAsset = spineData
+	self.RoleSkeletonGraphic.skeletonDataAsset = spineData
+	self.ExpressionSkeletonGraphic.skeletonDataAsset = spineData
 	self.hair_front.skeletonDataAsset = spineData
 	self.hair_back.skeletonDataAsset = spineData
 
     --reload data
     local skinName = "skin1"
-    self.RoleSkeGraphic.initialSkinName = skinName
-    self.ExpressionSkeGraphic.initialSkinName = skinName
+    self.RoleSkeletonGraphic.initialSkinName = skinName
+    self.ExpressionSkeletonGraphic.initialSkinName = skinName
     self.hair_back.initialSkinName = skinName
     self.hair_front.initialSkinName = skinName
 
-	self.RoleSkeGraphic:Initialize(true)
-	self.ExpressionSkeGraphic:Initialize(true)
+	self.RoleSkeletonGraphic:Initialize(true)
+	self.ExpressionSkeletonGraphic:Initialize(true)
 	self.hair_front:Initialize(true)
     self.hair_back:Initialize(true)
     
     
-    self.follow_back.SkeletonGraphic = self.RoleSkeGraphic
-    self.follow_front.SkeletonGraphic = self.RoleSkeGraphic
+    self.follow_back.SkeletonGraphic = self.RoleSkeletonGraphic
+    self.follow_front.SkeletonGraphic = self.RoleSkeletonGraphic
 
     self.skinName = nil
     self.clothesName = nil
@@ -97,13 +86,13 @@ function SpineCharacter:SetData(
     if self.skinName ~= skinName then
         dirty = true
         self.skinName = skinName
-        self.RoleSkeGraphic.initialSkinName = skinName
-        self.ExpressionSkeGraphic.initialSkinName = skinName
+        self.RoleSkeletonGraphic.initialSkinName = skinName
+        self.ExpressionSkeletonGraphic.initialSkinName = skinName
         self.hair_back.initialSkinName = skinName
         self.hair_front.initialSkinName = skinName
 
-        self.RoleSkeGraphic:Initialize(true)
-        self.ExpressionSkeGraphic:Initialize(true)
+        self.RoleSkeletonGraphic:Initialize(true)
+        self.ExpressionSkeletonGraphic:Initialize(true)
         self.hair_back:Initialize(true)
         self.hair_front:Initialize(true)
     end
@@ -112,18 +101,18 @@ function SpineCharacter:SetData(
     if self.clothesName ~= clothesName then
         dirty = true
         self.clothesName = clothesName
-        self.RoleSkeGraphic.startingAnimation = clothesName
-        self.RoleSkeGraphic.startingLoop = true
-        self.RoleSkeGraphic:Initialize(true)
+        self.RoleSkeletonGraphic.startingAnimation = clothesName
+        self.RoleSkeletonGraphic.startingLoop = true
+        self.RoleSkeletonGraphic:Initialize(true)
     end
 
-    --set ExpressionSkeGraphic
+    --set ExpressionSkeletonGraphic
     if self.expressionName ~= expressionName then
         dirty = true
         self.expressionName = expressionName
-        self.ExpressionSkeGraphic.startingAnimation = expressionName
-        self.ExpressionSkeGraphic.startingLoop = false
-        self.ExpressionSkeGraphic:Initialize(true)
+        self.ExpressionSkeletonGraphic.startingAnimation = expressionName
+        self.ExpressionSkeletonGraphic.startingLoop = false
+        self.ExpressionSkeletonGraphic:Initialize(true)
     end
 
     --set Hair
@@ -146,7 +135,7 @@ function SpineCharacter:SetData(
 	core.coroutine.start(function()
         --只有一帧手机上出现无法跟随，改成3帧
         for i=1,3 do
-            self.follow_back.SkeletonGraphic = self.RoleSkeGraphic
+            self.follow_back.SkeletonGraphic = self.RoleSkeletonGraphic
             self.follow_back.boneName = "tou"
             self.follow_back.followBoneRotation = false
             self.follow_back.followZPosition = true
@@ -159,7 +148,7 @@ function SpineCharacter:SetData(
             self.hair_back.transform.anchoredPosition = targetPos
             
             
-            self.follow_front.SkeletonGraphic = self.RoleSkeGraphic
+            self.follow_front.SkeletonGraphic = self.RoleSkeletonGraphic
             self.follow_front.boneName = "tou"
             self.follow_front.followBoneRotation = false
             self.follow_front.followZPosition = true
@@ -169,7 +158,7 @@ function SpineCharacter:SetData(
             self.follow_front:Initialize()
             local pos = self.follow_front.transform.anchoredPosition
             local targetPos = core.Vector3.New(-pos.x, -pos.y)
-            self.ExpressionSkeGraphic.transform.anchoredPosition = targetPos
+            self.ExpressionSkeletonGraphic.transform.anchoredPosition = targetPos
             self.hair_front.transform.anchoredPosition = targetPos
             core.coroutine.step(1)
         end

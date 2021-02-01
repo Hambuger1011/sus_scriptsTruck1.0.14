@@ -422,11 +422,16 @@ function BookReadingMgr:GetRoleName(role_id)
     if role_id == bookData.NpcId and not string.IsNullOrEmpty(bookData.NpcName) then
         return bookData.NpcName
     end
+
+    if role_id == 1 then
+        return bookData.PlayerName;
+    end
+    
     ---@type pb.t_BookDetails
     local cfg = nil
     cfg = logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookData.BookID)
-    if not cfg or cfg.strCharacterNames.Count < role_id then
-        logic.debug.LogError("角色id错误:roleID = " .. role_id .. ",role count = " .. #cfg.strCharacterNames)
+    if not cfg or cfg.strCharacterNames.Count < role_id  or role_id <= 0 then
+        logic.debug.LogError("角色id错误:roleID = " .. role_id .. ",role count = " .. cfg.strCharacterNames.Count)
         return 'NoName'
     else
         return cfg.strCharacterNames[role_id-1]

@@ -31,7 +31,7 @@ function UIEditorMenu_Selection:__init(gameObject)
     end)
     self.btnInsert.onClick:AddListener(function()
         ---@type t_StoryNode
-        if table.count(self.refSubItem.refDialog.children)< 3 then
+        if table.count(self.refSubItem.refDialog.children)< 4 then
             local storyNode = self.refSubItem.refDialog
             storyNode:InsertSelection(self.refSubItem.index)
             self.refItem.itemData.isDirty = true --重新计算ui大小
@@ -41,7 +41,7 @@ function UIEditorMenu_Selection:__init(gameObject)
     end)
     self.btnAdd.onClick:AddListener(function()
         ---@type t_StoryNode
-        if table.count(self.refSubItem.refDialog.children)< 3 then
+        if table.count(self.refSubItem.refDialog.children)< 4 then
             local storyNode = self.refSubItem.refDialog
             storyNode:InsertSelection(self.refSubItem.index + 1)
             self.refItem.itemData.isDirty = true --重新计算ui大小

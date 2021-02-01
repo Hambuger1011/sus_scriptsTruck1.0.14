@@ -1031,7 +1031,7 @@ end
 
 --region【展示观看次数】
 function GameHelper.ShowLookNumber(read_count,LookNumberText)
-    if(LookNumberText==nil or read_count==nil or read_count<=0)then return; end
+    if(LookNumberText==nil or read_count==nil or read_count<0)then return; end
 
     --【观看次数】【观看次数】【观看次数】
     local readcount=read_count;

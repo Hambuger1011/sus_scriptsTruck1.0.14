@@ -8,12 +8,15 @@ function CharacterFaceExpressionChange:__init(trans)
     self.component = self.gameObject:GetComponent(typeof(cs_CharacterFaceExpressionChange))
     self.roleSpine = logic.SpineCharacter.New(self.uiBinding:Get('spine'))
 
-    -- self.component.loadSprite = function(name, isCommon)
-    --     return logic.bookReadingMgr.Res:GetSprite(name, isCommon)
-    -- end
-    -- self.Change = function(role_id, appearanceID, clothesID, phiz_id, iconBGId, vOrientation)
-    --     --self.component:Change(role_id, appearanceID, clothesID, phiz_id, iconBGId, vOrientation)
-    -- end
+
+    --self.follow_back = CS.DisplayUtil.GetChild(self.roleSpine.gameObject, "follow_back"):GetComponent("BoneFollowerGraphic");
+    --self.follow_front = CS.DisplayUtil.GetChild(self.roleSpine.gameObject, "follow_front"):GetComponent("BoneFollowerGraphic");
+    --self.RoleSkeletonGraphic = CS.DisplayUtil.GetChild(self.roleSpine.gameObject, "RoleSkeletonGraphic"):GetComponent("SkeletonGraphic");
+    --self.ExpressionSkeGraphic = CS.DisplayUtil.GetChild(self.RoleSkeletonGraphic.gameObject, "ExpressionSkeGraphic"):GetComponent("SkeletonGraphic");
+    --self.hair_front = CS.DisplayUtil.GetChild(self.RoleSkeletonGraphic.gameObject, "hair_front"):GetComponent("SkeletonGraphic");
+    --self.hair_back = CS.DisplayUtil.GetChild(self.follow_back.gameObject, "hair_back"):GetComponent("SkeletonGraphic");
+
+
     self.currentIndex = 0
     self.duration = 0.4
 end
@@ -198,11 +201,11 @@ function CharacterFaceExpressionChange:ResetPos()
     core.coroutine.start(function()
         core.coroutine.step(1)
         local targetPos = Vector3.New(
-            -self.component.HeadBoneFolGraphic.transform.localPosition.x, 
-            -self.component.HeadBoneFolGraphic.transform.localPosition.y
+                -self.roleSpine.follow_front.transform.localPosition.x,
+                -self.roleSpine.follow_front.transform.localPosition.y
         )
-        self.component.ExpressionSkeGraphic.transform.localPosition = targetPos
-        self.component.HairSkeGraphic.transform.localPosition = targetPos
+        self.roleSpine.ExpressionSkeletonGraphic.transform.localPosition = targetPos
+        self.roleSpine.hair_front.transform.localPosition = targetPos
     end)
 end
 

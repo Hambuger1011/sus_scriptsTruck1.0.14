@@ -120,8 +120,11 @@
                 }
                 else if(data.cfgType == 2 && data.bookCfg != null)
                 {
-                    nameText.text = DialogDisplaySystem.Instance.GetRoleName(data.bookCfg.role_id, UserDataManager.Instance.UserData.CurSelectBookID);
-                    HeadImg.sprite = DialogDisplaySystem.Instance.GetUITexture("UI/PhoneCallHeadIcon/" + data.bookCfg.role_id);
+                    if (data.bookCfg.role_id > 0)
+                    {
+                        nameText.text = DialogDisplaySystem.Instance.GetRoleName(data.bookCfg.role_id, UserDataManager.Instance.UserData.CurSelectBookID);
+                        HeadImg.sprite = DialogDisplaySystem.Instance.GetUITexture("UI/PhoneCallHeadIcon/" + data.bookCfg.role_id);
+                    }
 
                     Debug.LogError("dialog_type:" + data.bookCfg.dialog_type);
 

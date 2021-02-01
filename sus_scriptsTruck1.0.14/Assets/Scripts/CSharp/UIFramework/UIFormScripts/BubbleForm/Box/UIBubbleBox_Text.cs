@@ -47,15 +47,15 @@ namespace UI
 
         public override void RefreshUI()
         {
-            // if(this.item.data.cfgType == 1 && this.item.data.cfg != null)
-            // {
-            //     this.hypertext.text = StringUtils.ReplaceChar(this.item.data.cfg.content);
-            // }
-            // else 
-            // if(this.item.data.cfgType == 2 && this.item.data.bookCfg != null)
-            // {
-            //     this.hypertext.text = StringUtils.ReplaceChar(this.item.data.bookCfg.dialog);
-            // }
+            if(this.item.data.cfgType == 1 && this.item.data.bookCfg != null)
+            {
+                this.hypertext.text = StringUtils.ReplaceChar(this.item.data.bookCfg.dialog);
+            }
+            else 
+            if(this.item.data.cfgType == 2 && this.item.data.bookCfg != null)
+            {
+                this.hypertext.text = StringUtils.ReplaceChar(this.item.data.bookCfg.dialog);
+            }
 
             var txtPreferredSize = new Vector2(Mathf.Min(hypertext.preferredWidth, lableWidth), hypertext.GetPreferredHeight(labelSize.x));
             _size = new Vector2(txtPreferredSize.x + extents.x, txtPreferredSize.y + extents.y);

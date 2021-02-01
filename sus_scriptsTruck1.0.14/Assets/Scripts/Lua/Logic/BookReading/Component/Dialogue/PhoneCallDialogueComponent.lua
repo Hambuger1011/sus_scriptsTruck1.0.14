@@ -64,7 +64,11 @@ function PhoneCallDialogueComponent:setPhoneCallMessage(isPhoneCallMode)
     if isPhoneCallMode then
         self.ui.PhoneCallButton.gameObject:SetActiveEx(true)
         self.ui.PhoneCallState.text = 'Calling'
-        self.ui.PhoneCallRoleName.text = logic.bookReadingMgr:GetRoleName(self.cfg.role_id)
+        if self.cfg.role_id == 1 then
+            self.ui.PhoneCallRoleName.text = logic.bookReadingMgr.bookData.PlayerName
+        else
+            self.ui.PhoneCallRoleName.text = logic.bookReadingMgr:GetRoleName(self.cfg.role_id)
+        end
         
         bookData.PhoneRoleID = self.cfg.role_id
         local spt = logic.bookReadingMgr.Res:GetSprite('UI/PhoneCallHeadIcon/'..self.cfg.role_id,true)

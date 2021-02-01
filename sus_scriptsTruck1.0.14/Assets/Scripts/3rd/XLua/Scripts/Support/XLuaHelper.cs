@@ -4,9 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using IGG.SDK.Modules.AppRating;
-using pb;
-using Script.Game.Helpers;
+using Spine.Unity;
 using UGUI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -801,5 +799,26 @@ public static class XLuaHelper
     }
 
     public static Material SpineMaterial = new Material(Shader.Find("Spine/SkeletonGraphic"));
+
+
+    public static BoneFollowerGraphic AddBoneFollowerGraphic(GameObject go)
+    {
+        BoneFollowerGraphic compoent = go.GetComponent<BoneFollowerGraphic>();
+        if (compoent == null)
+        {
+            compoent = go.AddComponent<BoneFollowerGraphic>();
+        }
+        return compoent;
+    }
+
+    public static SkeletonGraphic AddSkeletonGraphic(GameObject go)
+    {
+        SkeletonGraphic compoent = go.GetComponent<SkeletonGraphic>();
+        if (compoent == null)
+        {
+            compoent = go.AddComponent<SkeletonGraphic>();
+        }
+        return compoent;
+    }
 }
 
