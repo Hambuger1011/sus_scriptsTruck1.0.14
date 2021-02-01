@@ -41,6 +41,8 @@ public class BookDisplayForm : BaseUIForm
 
     private bool getBookVersionInfoFlag = false;
 
+    private Sprite descriptionImage;
+
     protected override void Awake()
     {
         SVPage.hasPrefabChild = true;
@@ -457,18 +459,34 @@ public class BookDisplayForm : BaseUIForm
                         ResetChapterHandler);
                 }
             }
-            // bookDisplayGridChildren
-            
-            if (mDisplayItemList != null)
+            bookDisplayGridChildren.Add(displayItem);
+        }
+
+        if (null != descriptionImage)
+        {
+            foreach (var item in bookDisplayGridChildren)
             {
-                if (mDisplayItemList.Count > 0)
-                {
-                    foreach (var item in mDisplayItemList)
-                    {
-                        (item as BookDisplayGridChild).UpdateCountdown(bookId, _time);
-                    }
-                }
+                if (item != null)
+                    item.UpdateSprite(descriptionImage);
             }
+        }
+        else
+        {
+            ABSystem.ui.DownloadChapterBG(mCurBookId, (id, refCount) =>
+            {
+                if (mCurBookId != id)
+                {
+                    refCount.Release(); 
+                    return;
+                }
+
+                descriptionImage = refCount.Get<Sprite>();
+                foreach (var item in bookDisplayGridChildren)
+                {
+                    if (item != null)
+                        item.UpdateSprite(descriptionImage);
+                }
+            });
         }
     }
 

@@ -270,7 +270,7 @@ end
 
 --region 【活动礼包按钮点击】
 function UIMainForm:GiftButtonOnClick()
-    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1 then
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0 then
         logic.gameHttp:GetRewardConfig(function(result)
             if(string.IsNullOrEmpty(result))then return; end
             logic.debug.Log("----GetRewardConfig---->" .. result)
