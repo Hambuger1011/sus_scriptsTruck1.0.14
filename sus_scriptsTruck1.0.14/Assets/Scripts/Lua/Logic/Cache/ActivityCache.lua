@@ -34,6 +34,8 @@ function ActivityCache:__init()
     self.attention_media.key_count=0;
     --钻石数量
     self.attention_media.diamond_count=0;
+    --道具集合
+    self.attention_media.item_list={};
 
 
     --【用户迁移奖励】
@@ -46,6 +48,8 @@ function ActivityCache:__init()
     self.user_move.diamond_count=0;
     --头像框id
     self.user_move.user_frame_id=0;
+    --道具集合
+    self.user_move.item_list={};
 
     
     --【用户首充奖励】
@@ -59,6 +63,20 @@ function ActivityCache:__init()
     --奖品列表
     self.first_recharge.item_list={};
 
+
+    --【第三方绑定奖励】
+    self.third_party_bind={};
+    --奖励类型 1钥匙 2钻石 4组合包
+    self.third_party_bind.award_type=0;
+    --钥匙数量
+    self.third_party_bind.key_count=0;
+    --钻石数量
+    self.third_party_bind.diamond_count=0;
+    --奖品列表
+    self.third_party_bind.item_list={};
+
+    --【在线阅读奖励列表】
+    self.reading_online={};
 
 end
 
@@ -141,20 +159,34 @@ end
 
 --【关注社媒奖励】 --【用户迁移奖励】
 function ActivityCache:UpdatedRewardConfig(datas)
+    --【关注社媒奖励】
     self.attention_media.award_type=datas.attention_media.award_type;
     self.attention_media.key_count=datas.attention_media.key_count;
     self.attention_media.diamond_count=datas.attention_media.diamond_count;
-
+    self.attention_media.item_list=datas.attention_media.item_list;
+    --【用户迁移奖励】
     self.user_move.award_type=datas.user_move.award_type;
     self.user_move.key_count=datas.user_move.key_count;
     self.user_move.diamond_count=datas.user_move.diamond_count;
     self.user_move.user_frame_id=datas.user_move.user_frame_id;
-    
-    self.first_recharge=datas.first_recharge;
+    self.user_move.item_list=datas.user_move.item_list;
+
+    --【用户首充奖励】
+    self.first_recharge.award_type=datas.first_recharge.award_type;
+    self.first_recharge.key_count=datas.first_recharge.key_count;
+    self.first_recharge.diamond_count=datas.first_recharge.diamond_count;
+    self.first_recharge.item_list=datas.first_recharge.item_list;
+
+    --【第三方绑定奖励】
+    self.third_party_bind.award_type=datas.third_party_bind.award_type;
+    self.third_party_bind.key_count=datas.third_party_bind.key_count;
+    self.third_party_bind.diamond_count=datas.third_party_bind.diamond_count;
+    self.third_party_bind.item_list=datas.third_party_bind.item_list;
+
+    --【在线阅读奖励列表】
+    self.reading_online=datas.reading_online;
+
 end
-
-
-
 
 -- 析构函数
 function ActivityCache:__delete()

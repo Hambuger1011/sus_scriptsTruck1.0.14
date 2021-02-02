@@ -8,6 +8,10 @@ function FavoritesPanel:__init(gameObject)
     self.mMyWriterList =CS.DisplayUtil.GetChild(gameObject, "MyWriterList");
     self.MyWriterList = require('Logic/UI/UI_Comuniada/List/StoryList').New(self.mMyWriterList);
 
+    --【跳转链接】
+    self.mJumpURLPanel =CS.DisplayUtil.GetChild(gameObject, "JumpURLPanel");
+    self.JumpURLPanel = require('Logic/UI/UI_Comuniada/List/JumpURLPanel').New(self.mJumpURLPanel);
+
     -- 【历史看过的故事】 作品
     self.mHistoryList =CS.DisplayUtil.GetChild(gameObject, "HistoryList");
     self.HistoryList = require('Logic/UI/UI_Comuniada/List/StoryList').New(self.mHistoryList);
@@ -58,6 +62,13 @@ function FavoritesPanel:__delete()
         --关闭销毁 【历史看过的故事】
         self.HistoryList:Delete();
     end
+    if(self.JumpURLPanel)then
+        --【跳转链接】
+        self.JumpURLPanel:Delete();
+    end
+
+    self.mJumpURLPanel=nil;
+
 
 end
 

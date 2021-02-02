@@ -35,7 +35,14 @@ function UIStory_NewBook:OnInitView()
     
     self.step1_bookDesc = self.uiBinding:Get('step1_bookDesc',typeof(logic.cs.InputField))
     self.btnClose = self.uiBinding:Get('btnClose',typeof(logic.cs.UITweenButton))
-    
+
+
+    --【跳转链接】
+    self.mJumpURLPanel =CS.DisplayUtil.GetChild(self.uiform.gameObject, "JumpURLPanel");
+    self.JumpURLPanel = require('Logic/UI/UI_Comuniada/List/JumpURLPanel').New(self.mJumpURLPanel);
+
+
+
 
     self.step1_penName.onValueChanged:AddListener(function(text)
         local value = string.trim(text)
@@ -126,6 +133,8 @@ end
 
 function UIStory_NewBook:OnExitClick()
     self:Finish()
+    self.mJumpURLPanel=nil;
+    self.JumpURLPanel:Delete();
 end
 
 function UIStory_NewBook:GotoStep1()

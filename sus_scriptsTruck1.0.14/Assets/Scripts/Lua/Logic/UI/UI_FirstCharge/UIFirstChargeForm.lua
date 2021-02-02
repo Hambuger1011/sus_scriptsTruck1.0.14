@@ -121,13 +121,14 @@ end
 
 function UIFirstChargeForm:OnOpen()
     UIView.OnOpen(self)
+    GameController.MainFormControl:SetData(self);
 end
 
 function UIFirstChargeForm:OnClose()
     UIView.OnClose(self)
     self.GoBtn.onClick:RemoveAllListeners()
     self.Close.onClick:RemoveAllListeners()
-
+    GameController.MainFormControl:SetData(nil);
 end
 
 function UIFirstChargeForm:PlayAnim()

@@ -271,16 +271,8 @@ end
 --region 【活动礼包按钮点击】
 function UIMainForm:GiftButtonOnClick()
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0 then
-        logic.gameHttp:GetRewardConfig(function(result)
-            if(string.IsNullOrEmpty(result))then return; end
-            logic.debug.Log("----GetRewardConfig---->" .. result)
-            local json = core.json.Derialize(result);
-            local code = tonumber(json.code);
-            if(code == 200)then
-                Cache.ActivityCache:UpdatedRewardConfig(json.data);
-                logic.UIMgr:Open(logic.uiid.UIFirstChargeForm);
-            end
-        end)
+        --请求【获取通用奖励配置】---【通用奖励】
+        GameController.FirstChargeControl:GetRewardConfigRequest();
     else
         local uiform = logic.UIMgr:GetView2(logic.uiid.UIMainDownForm);
         if(uiform)then

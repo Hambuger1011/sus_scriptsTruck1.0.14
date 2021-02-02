@@ -27,10 +27,23 @@ function ReadTimePanel:__init(gameObject)
     self.GiftTipsRect =self.GiftTips:GetComponent("RectTransform");
     self.KeyGift =CS.DisplayUtil.GetChild(self.GiftTips, "KeyGift");
     self.DimandGift =CS.DisplayUtil.GetChild(self.GiftTips, "DimandGift");
-    self.KeyGiftText =CS.DisplayUtil.GetChild(self.GiftTips, "KeyGiftText"):GetComponent("Text");
-    self.DimandGiftText =CS.DisplayUtil.GetChild(self.GiftTips, "DimandGiftText"):GetComponent("Text");
+    self.KeyGiftText =CS.DisplayUtil.GetChild(self.KeyGift, "KeyGiftText"):GetComponent("Text");
+    self.DimandGiftText =CS.DisplayUtil.GetChild(self.DimandGift, "DimandGiftText"):GetComponent("Text");
+
     self.GiftTipCloseBtn =CS.DisplayUtil.GetChild(self.GiftTips, "GiftTipCloseBtn");
 
+
+    self.ItemGift1 =CS.DisplayUtil.GetChild(self.GiftTips, "ItemGift1");
+    self.ItemIcon1 =CS.DisplayUtil.GetChild(self.ItemGift1, "ItemIcon1"):GetComponent("Image");
+    self.ItemGiftText1 =CS.DisplayUtil.GetChild(self.ItemGift1, "ItemGiftText1"):GetComponent("Text");
+
+    self.ItemGift2 =CS.DisplayUtil.GetChild(self.GiftTips, "ItemGift2");
+    self.ItemIcon2 =CS.DisplayUtil.GetChild(self.ItemGift2, "ItemIcon2"):GetComponent("Image");
+    self.ItemGiftText2 =CS.DisplayUtil.GetChild(self.ItemGift2, "ItemGiftText2"):GetComponent("Text");
+
+    self.ItemGift3 =CS.DisplayUtil.GetChild(self.GiftTips, "ItemGift3");
+    self.ItemIcon3 =CS.DisplayUtil.GetChild(self.ItemGift3, "ItemIcon3"):GetComponent("Image");
+    self.ItemGiftText3 =CS.DisplayUtil.GetChild(self.ItemGift3, "ItemGiftText3"):GetComponent("Text");
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.GiftTipCloseBtn,function(data) self:OnGiftTipCloseBtnClick() end)
@@ -176,21 +189,48 @@ end
 
 --region【展示奖励数量】
 function ReadTimePanel:SetKeyDiamondsText(_index)
-    local award= DataConfig.Q_AwardData:GetMapData(_index);
-    if(award.key>0)then
-        self.KeyGift:SetActive(true);
-    else
-        self.KeyGift:SetActive(false);
-    end
+    if(GameHelper.islistHave(Cache.ActivityCache.reading_online)==true)then
+    local awardList=Cache.ActivityCache.reading_online;
+        local len=table.length(awardList);
+        if(_index<=len)then
+            local award=awardList[_index];
+            if(award.prize_key>0)then
+                self.KeyGift:SetActive(true);
+            else
+                self.KeyGift:SetActive(false);
+            end
 
-    if(award.diamonds>0)then
-        self.DimandGift:SetActive(true);
-    else
-        self.DimandGift:SetActive(false);
-    end
+            if(award.prize_diamond>0)then
+                self.DimandGift:SetActive(true);
+            else
+                self.DimandGift:SetActive(false);
+            end
 
-    self.KeyGiftText.text="x"..tostring(award.key);
-    self.DimandGiftText.text="x"..tostring(award.diamonds);
+            self.ItemGift1:SetActive(false);
+            self.ItemGift2:SetActive(false);
+            self.ItemGift3:SetActive(false);
+            local Itemlen=table.length(award.item_list);
+            if(Itemlen>0)then
+                self.ItemGift1:SetActive(true);
+                self.ItemIcon1.sprite = Cache.PropCache.SpriteData[award.item_list[1].id]
+                self.ItemGiftText1.text="x"..tostring(award.item_list[1].num);
+                if(Itemlen>1)then
+                    self.ItemGift2:SetActive(true);
+                    self.ItemIcon2.sprite = Cache.PropCache.SpriteData[award.item_list[2].id]
+                    self.ItemGiftText2.text="x"..tostring(award.item_list[2].num);
+                end
+
+                if(Itemlen>2)then
+                    self.ItemGift3:SetActive(true);
+                    self.ItemIcon3.sprite = Cache.PropCache.SpriteData[award.item_list[3].id]
+                    self.ItemGiftText3.text="x"..tostring(award.item_list[3].num);
+                end
+            end
+
+            self.KeyGiftText.text="x"..tostring(award.prize_key);
+            self.DimandGiftText.text="x"..tostring(award.prize_diamond);
+        end
+    end
 end
 --endregion
 

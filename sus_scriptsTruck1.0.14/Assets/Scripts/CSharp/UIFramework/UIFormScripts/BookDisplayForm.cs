@@ -192,7 +192,17 @@ public class BookDisplayForm : BaseUIForm
                     mChapterId = UserDataManager.Instance.bookDetailInfo.data.finish_max_chapter + 1;
                     if (mChapterId > UserDataManager.Instance.bookDetailInfo.data.book_info.chaptercount)
                         mChapterId = UserDataManager.Instance.bookDetailInfo.data.book_info.chaptercount;
-                    
+
+                    if (UserDataManager.Instance.bookDetailInfo.data.book_tips_status==1)
+                    {
+                        UIAlertMgr.Instance.Show(UserDataManager.Instance.bookDetailInfo.data.book_tips_title, UserDataManager.Instance.bookDetailInfo.data.book_tips_content, AlertType.Sure, (isOK) =>
+                        {
+                           
+                        });
+
+                    }
+
+
                     JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(mCurBookId);
                     if (verInfo != null)
                     {

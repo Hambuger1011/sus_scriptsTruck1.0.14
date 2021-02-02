@@ -229,6 +229,8 @@ public static class Export_Cmmon
         typeof(Func<SuperScrollView.LoopListView2,int,SuperScrollView.LoopListViewItem2>),
         typeof(Action<UIVirtualList.Row>),
         typeof(UnityEvent<string>),
+        typeof(UnityEvent<HyperText, HyperText.LinkInfo>),
+
     };
     
     

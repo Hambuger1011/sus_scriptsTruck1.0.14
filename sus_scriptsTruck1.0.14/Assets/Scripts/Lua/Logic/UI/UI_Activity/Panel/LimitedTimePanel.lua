@@ -413,14 +413,10 @@ end
 
 --region【接收绑定奖励】
 function LimitedTimePanel:ReceiveBindRewards()
-    local userData = logic.cs.UserDataManager.userInfo.data.userinfo;
-    local awardNum = 0;
-    if(userData and userData.third_party_num)then
-        awardNum = userData.third_party_num;
-    end
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                   --【请求领取第三方登录绑定的奖励】---【限时活动】【账号绑定奖励】
-        uicollect:SetData(awardNum,0,"CLAIM",function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end);
+        uicollect:SetData(Cache.ActivityCache.third_party_bind.diamond_count,Cache.ActivityCache.third_party_bind.key_count,"CLAIM",
+                function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end,Cache.ActivityCache.third_party_bind.item_list);
     end
 end
 --endregion
@@ -431,7 +427,7 @@ function LimitedTimePanel:ReceiveRewards()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                            --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
         uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end);
+                function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end,Cache.ActivityCache.attention_media.item_list);
     end
 end
 --endregion
@@ -442,7 +438,18 @@ function LimitedTimePanel:CLAIMButtonOnClick()
     local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
     if(uicollect)then                                            --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
         uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end);
+                function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end,Cache.ActivityCache.user_move.item_list);
+    end
+end
+--endregion
+
+
+--region【领取首充奖励】
+function LimitedTimePanel:ClaimFirstchargeOnClick()
+    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
+    if(uicollect)then
+        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,"CLAIM",
+                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,Cache.ActivityCache.first_recharge.item_list);
     end
 end
 --endregion
@@ -456,19 +463,6 @@ function LimitedTimePanel:ChargeButtonOnClick()
     uiform = logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainFormTop)
     tapForm = uiform:GetComponent(typeof(CS.MainTopSprite))
     tapForm:GamePlayTopOpen("UIChargeMoneyForm1");
-end
---endregion
-
-
---region【领取首充奖励】
-function LimitedTimePanel:ClaimFirstchargeOnClick()
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then
-        local firstRecharge = Cache.ActivityCache.first_recharge;
-        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,
-                Cache.ActivityCache.first_recharge.item_list);
-    end
 end
 --endregion
 

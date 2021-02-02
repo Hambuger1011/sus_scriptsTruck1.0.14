@@ -21,7 +21,7 @@ function GameController.Init()
     GameController.ChatControl=require("Logic/UI/UI_Chat/Control/ChatControl");
     GameController.WindowConfig=require("Logic/Config/WindowConfig");
     GameController.DayPassController=require("Logic/UI/UI_DayPass/Control/DayPassController");
-
+    GameController.FirstChargeControl=require("Logic/UI/UI_FirstCharge/Control/FirstChargeControl");
 
     isInit = true
 end

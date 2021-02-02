@@ -185,13 +185,14 @@ public class BookDetailInfo
     public int isfav;               //是否收藏
     public int book_comment_count;  //书本评论数量 ,有缓存,10分钟更新新一次
     public int book_barrage_status; //书本弹幕开放情况 ,0关闭,1开放中
-
+    public int book_tips_status; //弹窗开关
+    public string book_tips_title;  //弹窗标题
+    public string book_tips_content;  //弹窗内容
 
     //public List<BookBuyClothItemInfo> clothearr;
     //public BookUserLogInfo userlog;
     //public BookDetailItemInfo bookarr;
     //public string readcount;
-
 }
 
 public class bookinfo
