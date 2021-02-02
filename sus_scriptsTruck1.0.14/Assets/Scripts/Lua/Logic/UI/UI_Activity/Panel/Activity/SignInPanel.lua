@@ -11,16 +11,9 @@ function SignInPanel:__init(gameObject)
     for i=1,7 do
         self.RewardItemList[i]=CS.DisplayUtil.GetChild(gameObject, "Reward"..i);
     end
-    self.Reward7Btn = self.RewardItemList[7];
-    self.RewardTips =CS.DisplayUtil.GetChild(self.RewardItemList[7], "RewardTips")
-
-    self.RewardTipsCloseBtn =CS.DisplayUtil.GetChild(self.RewardTips, "RewardTipsCloseBtn");
     self.SignInBtn =CS.DisplayUtil.GetChild(gameObject, "SignInBtn");
     self.BtnMask = CS.DisplayUtil.GetChild(gameObject, "BtnMask");
 
-
-    logic.cs.UIEventListener.AddOnClickListener(self.Reward7Btn,function(data) self:Reward7BtnClick() end)
-    logic.cs.UIEventListener.AddOnClickListener(self.RewardTipsCloseBtn,function(data) self:RewardTipsCloseBtnClick() end)
     logic.cs.UIEventListener.AddOnClickListener(self.SignInBtn,function(data) self:SignInBtnClick() end)
 
     self.toReceivedIndex = 0;
@@ -50,17 +43,30 @@ function SignInPanel:UpdateSignInPanel()
             else
                 self.RewardItemList[i].transform:Find('ToReceive').gameObject:SetActiveEx(false)
             end
-            if i < 7 then
-                self.RewardItemList[i].transform:Find('Normal/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('IsReceived/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('ToReceive/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-            elseif i == 7 then
-                self.RewardItemList[i].transform:Find('Normal/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple)).."+"..tostring(rewardData[i].bkey_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('IsReceived/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple)).."+"..tostring(rewardData[i].bkey_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('ToReceive/Num'):GetComponent(typeof(logic.cs.Text)).text = tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple)).."+"..tostring(rewardData[i].bkey_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('RewardTips/DimandGiftText'):GetComponent(typeof(logic.cs.Text)).text = "x"..tostring(rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple))
-                self.RewardItemList[i].transform:Find('RewardTips/KeyGiftText'):GetComponent(typeof(logic.cs.Text)).text = "x"..tostring(rewardData[i].bkey_qty * tonumber(Cache.ActivityCache.login_award_multiple))
+            local numText
+            local sprite
+            if rewardData[i].diamond_qty and rewardData[i].diamond_qty > 0 then
+                numText = rewardData[i].diamond_qty * tonumber(Cache.ActivityCache.login_award_multiple)
+                sprite = Cache.PropCache.SpriteData[1]
+            elseif rewardData[i].bkey_qty and rewardData[i].bkey_qty > 0 then
+                numText = rewardData[i].bkey_qty * tonumber(Cache.ActivityCache.login_award_multiple)
+                sprite = Cache.PropCache.SpriteData[2]
+            elseif rewardData[i].item_list and #rewardData[i].item_list > 0 then
+                for k, v in pairs(rewardData[i].item_list) do
+                    numText = v.num
+                    if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                        sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                    else
+                        sprite = Cache.PropCache.SpriteData[v.id]
+                    end
+                end
             end
+            self.RewardItemList[i].transform:Find('Normal/Num'):GetComponent(typeof(logic.cs.Text)).text = numText
+            self.RewardItemList[i].transform:Find('IsReceived/Num'):GetComponent(typeof(logic.cs.Text)).text = numText
+            self.RewardItemList[i].transform:Find('ToReceive/Num'):GetComponent(typeof(logic.cs.Text)).text = numText
+            self.RewardItemList[i].transform:Find('Normal/Image'):GetComponent(typeof(logic.cs.Image)).sprite = sprite
+            self.RewardItemList[i].transform:Find('IsReceived/Image'):GetComponent(typeof(logic.cs.Image)).sprite = sprite
+            self.RewardItemList[i].transform:Find('ToReceive/Image'):GetComponent(typeof(logic.cs.Image)).sprite = sprite
         end
     end
 
@@ -108,22 +114,6 @@ end
 --endregion
 
 
---region【第七天宝箱奖励提示 点击】
-function SignInPanel:Reward7BtnClick()
-    local activity = not self.RewardTips.gameObject.activeInHierarchy;
-    self.RewardTips.gameObject:SetActiveEx(true);
-    self.RewardTipsCloseBtn.gameObject:SetActiveEx(true);
-end
---endregion
-
-
---region【奖励提示关闭点击】
-function SignInPanel:RewardTipsCloseBtnClick()
-    self.RewardTips.gameObject:SetActiveEx(false)
-    self.RewardTipsCloseBtn.gameObject:SetActiveEx(false)
-end
---endregion
-
 
 --region【签到按钮点击】
 function SignInPanel:SignInBtnClick()
@@ -137,20 +127,12 @@ end
 
 --region【销毁】
 function SignInPanel:__delete()
-    if(self.Reward7Btn)then
-        logic.cs.UIEventListener.RemoveOnClickListener(self.Reward7Btn,function(data) self:Reward7BtnClick() end)
-        logic.cs.UIEventListener.RemoveOnClickListener(self.RewardTipsCloseBtn,function(data) self:RewardTipsCloseBtnClick() end)
-        logic.cs.UIEventListener.RemoveOnClickListener(self.SignInBtn,function(data) self:SignInBtnClick() end)
-    end
+    logic.cs.UIEventListener.RemoveOnClickListener(self.SignInBtn,function(data) self:SignInBtnClick() end)
 
     for i=1,7 do
         self.RewardItemList[i]=nil;
     end
     self.RewardItemList=nil;
-    self.Reward7Btn=nil;
-    self.RewardTips =nil;
-
-    self.RewardTipsCloseBtn=nil;
     self.SignInBtn =nil;
     self.BtnMask=nil;
     self.gameObject=nil;

@@ -39,9 +39,8 @@ function InvitePanel:SetUI()
                 local Item = logic.cs.GameObject.Instantiate(self.Item, self.Content.transform)
                 local NumText =CS.DisplayUtil.GetChild(Item, "NumText"):GetComponent(typeof(logic.cs.Text));
                 local Name =CS.DisplayUtil.GetChild(Item, "Name"):GetComponent(typeof(logic.cs.Text));
-                local DiamondNum =CS.DisplayUtil.GetChild(Item, "DiamondNum"):GetComponent(typeof(logic.cs.Text));
-                local Key =CS.DisplayUtil.GetChild(Item, "Key");
-                local KeyNum =CS.DisplayUtil.GetChild(Item, "KeyNum"):GetComponent(typeof(logic.cs.Text));
+                local RewardItem =CS.DisplayUtil.GetChild(Item, "RewardItem");
+                local ItemList =CS.DisplayUtil.GetChild(Item, "ItemList");
                 local InviteButton =CS.DisplayUtil.GetChild(Item, "InviteButton"):GetComponent(typeof(logic.cs.Button));
                 local CollectedButton =CS.DisplayUtil.GetChild(Item, "CollectedButton"):GetComponent(typeof(logic.cs.Button));
                 local Collected =CS.DisplayUtil.GetChild(Item, "Collected"):GetComponent(typeof(logic.cs.Button));
@@ -93,13 +92,38 @@ function InvitePanel:SetUI()
                 end
                 NumText.text = v.number
                 Name.text = v.user_info.nickname
-                DiamondNum.text = "x"..v.diamond_count
-                KeyNum.text = "x"..v.key_count
-                if tonumber(v.key_count) > 0 then
-                    Key:SetActiveEx(true)
-                    KeyNum.gameObject:SetActiveEx(true)
+                
+                if(v.diamond_count and tonumber(v.diamond_count) > 0)then
+                    local item = logic.cs.GameObject.Instantiate(RewardItem,ItemList.transform,false)
+                    local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+                    local Icon = item:GetComponent(typeof(logic.cs.Image))
+                    Text.text = "x".. v.diamond_count;
+                    Icon.sprite = Cache.PropCache.SpriteData[1]
+                    item:SetActiveEx(true)
                 end
-                Item:SetActiveEx(true)
+                if(v.key_count and tonumber(v.key_count) > 0)then
+                    local item = logic.cs.GameObject.Instantiate(RewardItem,ItemList.transform,false)
+                    local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+                    local Icon = item:GetComponent(typeof(logic.cs.Image))
+                    Text.text = "x".. v.key_count;
+                    Icon.sprite = Cache.PropCache.SpriteData[2]
+                    item:SetActiveEx(true)
+                end
+                for k, v1 in pairs(v.item_list) do
+                    local item = logic.cs.GameObject.Instantiate(RewardItem,ItemList.transform,false)
+                    local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+                    local Icon = item:GetComponent(typeof(logic.cs.Image))
+                    Text.text = "x".. v1.item_list;
+                    if 1000<tonumber(v1.id) and tonumber(v1.id)<10000 then
+                        local sprite=DataConfig.Q_DressUpData:GetSprite(v1.id)
+                        Icon.sprite = sprite
+                    else
+                        local sprite = Cache.PropCache.SpriteData[tonumber(v1.id)]
+                        Icon.sprite = sprite
+                    end
+                    item:SetActive(true)
+                end
+                Item:SetActive(true)
             end
             coroutine.start(function()
                 coroutine.wait(0.5)

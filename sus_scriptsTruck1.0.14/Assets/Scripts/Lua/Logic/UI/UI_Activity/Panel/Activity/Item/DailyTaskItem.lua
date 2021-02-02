@@ -9,7 +9,8 @@ function DailyTaskItem:__init(gameObject)
 
     self.Title =CS.DisplayUtil.GetChild(gameObject, "Title"):GetComponent("Text");
     self.Progress =CS.DisplayUtil.GetChild(gameObject, "Progress"):GetComponent("Text");
-    self.RewardNum =CS.DisplayUtil.GetChild(gameObject, "RewardNum"):GetComponent("Text");
+    self.RewardImage =CS.DisplayUtil.GetChild(gameObject, "RewardImage");
+    self.ItemList =CS.DisplayUtil.GetChild(gameObject, "ItemList")
     self.ButtonGO =CS.DisplayUtil.GetChild(gameObject, "ButtonGO")
     self.ButtonCOMPLETED =CS.DisplayUtil.GetChild(gameObject, "ButtonCOMPLETED")
     self.ButtonRECEIVE =CS.DisplayUtil.GetChild(gameObject, "ButtonRECEIVE")
@@ -30,9 +31,34 @@ function DailyTaskItem:SetInfo(data)
     self.Title.text = data.task_name;
     self.Progress.text = data.task_finish_event.."/"..data.task_total_event
     if(data.prize_diamond and tonumber(data.prize_diamond) > 0)then
-        self.RewardNum.text = "x"..data.prize_diamond;
-    else
-        self.RewardNum.text = "x"..data.prize_key;
+        local item = logic.cs.GameObject.Instantiate(self.RewardImage,self.ItemList.transform,false)
+        local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+        local Icon = item:GetComponent(typeof(logic.cs.Image))
+        Text.text = "x".. data.prize_diamond;
+        Icon.sprite = Cache.PropCache.SpriteData[1]
+        item:SetActiveEx(true)
+    end
+    if(data.prize_key and tonumber(data.prize_key) > 0)then
+        local item = logic.cs.GameObject.Instantiate(self.RewardImage,self.ItemList.transform,false)
+        local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+        local Icon = item:GetComponent(typeof(logic.cs.Image))
+        Text.text = "x".. data.prize_key;
+        Icon.sprite = Cache.PropCache.SpriteData[2]
+        item:SetActiveEx(true)
+    end
+    for k, v in pairs(data.item_list) do
+        local item = logic.cs.GameObject.Instantiate(self.RewardImage,self.ItemList.transform,false)
+        local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+        local Icon = item:GetComponent(typeof(logic.cs.Image))
+        Text.text = "x".. data.prize_key;
+        if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+            local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+            Icon.sprite = sprite
+        else
+            local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
+            Icon.sprite = sprite
+        end
+        item:SetActive(true)
     end
 
     --【按钮状态】
@@ -100,7 +126,6 @@ function DailyTaskItem:__delete()
 
     self.Title=nil;
     self.Progress=nil;
-    self.RewardNum =nil;
     self.ButtonGO=nil;
     self.ButtonCOMPLETED =nil;
     self.ButtonRECEIVE =nil;

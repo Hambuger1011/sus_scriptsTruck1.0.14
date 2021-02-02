@@ -10,6 +10,8 @@ function DailyTaskInfo:__init()
     self.prize_key=0;
     --任务奖励钻石
     self.prize_diamond=0;
+    --道具奖励列表
+    self.item_list = {};
     --任务说明
     self.task_description="";
     --任务需要完成事件总次数
@@ -37,6 +39,7 @@ function DailyTaskInfo:__delete()
     self.task_name=nil;
     self.prize_key=nil;
     self.prize_diamond=nil;
+    self.item_list=nil;
     self.task_description=nil;
     self.task_total_event=nil;
     self.task_finish_event=nil;

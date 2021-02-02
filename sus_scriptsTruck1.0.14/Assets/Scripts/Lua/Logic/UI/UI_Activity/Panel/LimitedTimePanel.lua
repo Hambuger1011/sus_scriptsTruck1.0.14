@@ -16,7 +16,6 @@ function LimitedTimePanel:__init(gameObject)
     self.BindDetailText = CS.DisplayUtil.GetChild(self.BindBG, "BindDetailText"):GetComponent("Text");
     self.BindRedPoint = CS.DisplayUtil.GetChild(self.BindBG, "RedPoint");
 
-    self.BindDetailText.text = "Get 10 Diamonds!";
     --【设置绑定状态】
     logic.cs.IGGSDKMrg.bindCallBack = function() self:SetBindStatus(); end
     self:SetBindStatus();
@@ -202,22 +201,45 @@ function LimitedTimePanel:PaySuccessMsgListener()
 end
 --endregion
 
+function LimitedTimePanel:GetRewardText(DiamondsNum,KeysNum,ItemList)
+    local rewardText = "Get "
+    local needAnd = false
+    if DiamondsNum and tonumber(DiamondsNum) > 0 then
+        rewardText = rewardText..DiamondsNum.." Diamonds"
+        needAnd = true
+    end
+    if KeysNum and tonumber(KeysNum) > 0 then
+        if needAnd then
+            rewardText = rewardText.." and "
+        end
+        rewardText = rewardText..KeysNum.." Keys"
+        needAnd = true
+    end
+    for k, v in ipairs(ItemList) do
+        if needAnd then
+            rewardText = rewardText.." and "
+        end
+        rewardText = rewardText..v.num.." "..v.name
+        needAnd = true
+    end
+    rewardText = rewardText.."!"
+    if not needAnd then
+        rewardText = string.Empty
+    end
+    return rewardText
+end
+
 
 --region【刷新通用奖励数据】
 function LimitedTimePanel:GetRewardConfig_Response()
 
-    local rewardText=nil;
     local attentionMedia = Cache.ActivityCache.attention_media;
-    if(attentionMedia.award_type == 1)then
-        rewardText = "Get "..attentionMedia.key_count.." Keys!"
-    elseif(attentionMedia.award_type == 2)then
-        rewardText = "Get "..attentionMedia.diamond_count.." Diamonds!"
-    elseif(attentionMedia.award_type == 4)then
-        rewardText = "Get "..attentionMedia.diamond_count.." Diamonds and "..attentionMedia.key_count.." Keys!"
-    end
-    if(rewardText)then
-        self.FollowDetailText.text = rewardText;
-    end
+    self.FollowDetailText.text = self:GetRewardText(attentionMedia.diamond_count,attentionMedia.key_count,attentionMedia.item_list);
+
+    local thirdPartyBind = Cache.ActivityCache.third_party_bind;
+    self.BindDetailText.text = self:GetRewardText(thirdPartyBind.diamond_count,thirdPartyBind.key_count,thirdPartyBind.item_list);
+    
+    local rewardText=nil;
 
     local userMove = Cache.ActivityCache.user_move;
     if(userMove)then

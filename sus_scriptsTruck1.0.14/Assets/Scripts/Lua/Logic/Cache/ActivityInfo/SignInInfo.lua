@@ -10,6 +10,8 @@ function SignInInfo:__init()
     self.bkey_qty=0;
     --奖励钻石
     self.diamond_qty=0;
+    --道具奖励列表数组
+    self.item_list={};
     --是否已签到领取 1:是 0否
     self.is_receive=0;
 end
@@ -19,6 +21,7 @@ function SignInInfo:UpdateData(data)
     self.type=data.type;
     self.bkey_qty=data.bkey_qty;
     self.diamond_qty=data.diamond_qty;
+    self.item_list=data.item_list;
     self.is_receive=data.is_receive;
 end
 
@@ -28,6 +31,7 @@ function SignInInfo:__delete()
     self.type=nil;
     self.bkey_qty=nil;
     self.diamond_qty=nil;
+    self.item_list=nil;
     self.is_receive=nil;
 end
 
