@@ -45,6 +45,14 @@ function TitlePageComponent:Play()
 	self.removeListener = function()
 		logic.cs.UIEventListener.RemoveOnClickListener(ui.bgButton.gameObject, bgButtonClick)
 	end
+
+
+	logic.cs.BookReadingWrapper.IsTextTween = true
+	local showText = logic.bookReadingMgr:ReplaceChar(self.cfg.dialog)
+	--播放显示动画
+	logic.bookReadingMgr.view:textDialogTween(self,ui.Box,ui.bodyText,0,showText, function()
+		logic.cs.BookReadingWrapper.IsTextTween = false
+	end)
 end
 
 
@@ -55,7 +63,8 @@ function TitlePageComponent.InstallUI()
 		ui.gameObject = logic.cs.GameObject.Instantiate(prefab,logic.bookReadingMgr.view.transComponent,false)
 		ui.transform = ui.gameObject.transform
 		ui.bgButton = logic.cs.LuaHelper.GetComponent(ui.transform,"BgButton",typeof(logic.cs.Button))
-		ui.bodyText = logic.cs.LuaHelper.GetComponent(ui.transform,"Text",typeof(logic.cs.Text))
+		ui.Box = ui.transform:Find('Box').transform
+		ui.bodyText = logic.cs.LuaHelper.GetComponent(ui.transform,"Text",typeof(logic.cs.TextTyperAnimation))
 		ui.signatureText = logic.cs.LuaHelper.GetComponent(ui.transform,"Signature",typeof(logic.cs.Text))
 		ui.Reset = function()
 			ui.gameObject:SetActiveEx(true)
@@ -70,10 +79,16 @@ function TitlePageComponent:Clean()
 end
 
 function TitlePageComponent:AfterReading()
-	ui.gameObject:SetActiveEx(false)
-	--保存进度
-	logic.bookReadingMgr:SaveProgress()
-	self:ShowNextDialog()
+	if logic.cs.BookReadingWrapper.IsTextTween then
+		ui.bodyText:StopTyperTween()
+		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.dialog_click)
+	else
+		logic.bookReadingMgr.Res:PlayTones(logic.bookReadingMgr.Res.AudioTones.dialog_click)
+		ui.gameObject:SetActiveEx(false)
+		--保存进度
+		logic.bookReadingMgr:SaveProgress()
+		self:ShowNextDialog()
+	end
 end
 
 return TitlePageComponent

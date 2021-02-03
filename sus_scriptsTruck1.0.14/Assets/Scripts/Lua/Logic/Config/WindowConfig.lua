@@ -21,7 +21,7 @@ function WindowConfig:ResetStatus()
 end
 
 function WindowConfig:ShowFirstCharge()
-    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0
+    if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
             and not logic.cs.IGGSDKMrg.isNewUser and not FirstChargeNeedShown then
 
         --请求【获取通用奖励配置】---【通用奖励】
