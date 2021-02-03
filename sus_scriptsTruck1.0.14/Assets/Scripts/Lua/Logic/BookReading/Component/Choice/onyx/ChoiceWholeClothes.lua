@@ -524,7 +524,7 @@ function ChoiceWholeClothes:OnClcikPropItem(propItem)
 		local newCost = tonumber(self.cost)-tonumber(self.cost)*tonumber(propItem.data.discount)
 		newCost = math.floor(newCost)
 		uiView.txtConfirmCost2.text = tostring(newCost)
-		uiView.DiscountText.text = propItem.data.discount_string
+		uiView.DiscountText.text = "-" .. propItem.data.discount_string
 		uiView.PropImage.sprite = Cache.PropCache.SpriteData[4];
 	else
 		uiView.txtConfirmCost2.text = tostring(self.cost)

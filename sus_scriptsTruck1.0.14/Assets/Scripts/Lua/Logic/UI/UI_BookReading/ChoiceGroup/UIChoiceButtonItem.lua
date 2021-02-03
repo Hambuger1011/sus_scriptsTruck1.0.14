@@ -260,7 +260,7 @@ function UIChoiceButtonItem:OnClcikPropItem(propItem,noSet)
     self.cost = self.cost or 0
     if isUser then
         self.textKeyProp.text = tostring(self.cost)
-        self.DiscountText.text = itemData.discount_string
+        self.DiscountText.text = "-" .. itemData.discount_string
         local newCost = tonumber(self.cost) - tonumber(self.cost)*tonumber(itemData.discount)
         newCost = math.floor(newCost)
         self.txtCost.text = tostring(newCost)

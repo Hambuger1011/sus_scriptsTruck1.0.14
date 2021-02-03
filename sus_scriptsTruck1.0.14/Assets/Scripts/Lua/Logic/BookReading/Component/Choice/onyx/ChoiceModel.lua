@@ -920,7 +920,7 @@ function ChoiceModel:OnClcikPropItem(propItem)
 		local newCost = tonumber(self.choiceCost)-tonumber(self.choiceCost)*tonumber(propItem.data.discount)
         newCost = math.floor(newCost)
         uiView.lbCost.text = tostring(newCost)
-		uiView.DiscountText.text = propItem.data.discount_string
+		uiView.DiscountText.text = "-" .. propItem.data.discount_string
 		uiView.PropImage.sprite = Cache.PropCache.SpriteData[4];
     else
         uiView.lbCost.text = tostring(self.choiceCost)
