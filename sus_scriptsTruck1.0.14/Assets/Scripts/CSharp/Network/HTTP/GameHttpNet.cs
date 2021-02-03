@@ -115,20 +115,26 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 _abUri = "file://" + AbUtility.abReadonlyPath;
 #endif
                 break;
-            case 1: //开发
+            case 1: //本地-技术开发服--sus_dev
                 _abUri = "http://dev.sus.com/resources/";
                 break;
-            case 2: //tecent开发
+            case 2: //TX-技术开发服--tech_dev
                 _abUri = "http://193.112.66.252:8083/resources/";
                 break;
 #endif
-            case 3: //测试
-                _abUri = "http://d2zbbkt89do1w1.cloudfront.net:8080/resources/";
+            case 3: //TX-技术生产服--tech_prod
+                _abUri = "http://193.112.66.252:8084/resources/";
                 break;
-            case 4: //正式
-                _abUri = "http://d3da55fv9mg213.cloudfront.net:8080/resources/";
+            case 4: //TX-录入开发服--entry_dev
+                _abUri = "http://193.112.66.252:8082/resources/";
                 break;
-            case 5:
+            case 5: //TX-录入生产服--entry_prod
+                _abUri = "http://193.112.66.252:8080/resources/";
+                break;
+            case 6: //正式
+                _abUri = "https://static-sus.igg.com/resources/";
+                break;
+            case 7:
                 _abUri = string.Format("{0}/resources/", PlayerPrefs.GetString("mCustomRes"));
                 break;
         }
@@ -150,26 +156,29 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     {
         get
         {
-            mGameUrlHead = "http://193.112.66.252:8080";
+            mGameUrlHead = "http://193.112.66.252:8084";
 #if ENABLE_DEBUG
             switch (GameDataMgr.Instance.ServiceType)
             {
-                case 1: //开发
+                case 1: //本地-技术开发服--sus_dev
                     mGameUrlHead = "http://dev.sus.com";
                     break;
-                case 2: //tencent开发
+                case 2: //TX-技术开发服--tech_dev
                     mGameUrlHead = "http://193.112.66.252:8083";
                     break;
-                case 3: //测试
+                case 3: //TX-技术生产服--tech_prod
+                    mGameUrlHead = "http://193.112.66.252:8084";
+                    break;
+                case 4: //TX-录入开发服--entry_dev
+                    mGameUrlHead = "http://193.112.66.252:8082";
+                    break;
+                case 5: //TX-录入生产服--entry_prod
                     mGameUrlHead = "http://193.112.66.252:8080";
                     break;
-                case 4: //正式
+                case 6: //正式
                     mGameUrlHead = "https://sus-game.igg.com/";
                     break;
-                case 5:
-                    mGameUrlHead = "http://192.168.0.10";
-                    break;
-                case 6:
+                case 7:
                     mGameUrlHead = PlayerPrefs.GetString("mCustomSvr");
                     break;
             }
@@ -177,7 +186,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             if (AuditStatus == 1)
                 mGameUrlHead = "https://sus-game.igg.com/";
             else
-                mGameUrlHead = "http://193.112.66.252:8083";
+                mGameUrlHead = "http://193.112.66.252:8084";
             //UnityEngine.Debug.LogError(AuditStatus + "  " + mGameUrlHead);
 #endif
             if (!string.IsNullOrEmpty(ServerAddress))

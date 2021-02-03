@@ -27,6 +27,7 @@ function DailyTaskInfo:UpdateData(data)
     self.task_name=data.task_name;
     self.prize_key=data.prize_key;
     self.prize_diamond=data.prize_diamond;
+    self.item_list=data.item_list;
     self.task_description=data.task_description;
     self.task_total_event=data.task_total_event;
     self.task_finish_event=data.task_finish_event;

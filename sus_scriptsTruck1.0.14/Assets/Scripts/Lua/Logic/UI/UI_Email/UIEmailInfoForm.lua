@@ -124,19 +124,21 @@ function UIEmailInfoForm:SetEmailData(id)
             item:SetActiveEx(true)
         end
 
-        for k, v in pairs(Info.item_list) do
-            local item = logic.cs.GameObject.Instantiate(self.Item,gitItemBg.transform,false)
-            local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
-            local Icon = item:GetComponent(typeof(logic.cs.Image))
-            Text.text = "x".. v.num;
-            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-                local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
-                Icon.sprite = sprite
-            else
-                local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
-                Icon.sprite = sprite
+        if Info.item_list then
+            for k, v in pairs(Info.item_list) do
+                local item = logic.cs.GameObject.Instantiate(self.Item,gitItemBg.transform,false)
+                local Text = CS.DisplayUtil.GetChild(item, "Text"):GetComponent(typeof(logic.cs.Text))
+                local Icon = item:GetComponent(typeof(logic.cs.Image))
+                Text.text = "x".. v.num;
+                if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                    local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                    Icon.sprite = sprite
+                else
+                    local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
+                    Icon.sprite = sprite
+                end
+                item:SetActive(true)
             end
-            item:SetActive(true)
         end
 
         self.btnText.text = "RECEIVE";

@@ -297,20 +297,22 @@ function LimitedTimePanel:GetRewardConfig_Response()
         table.insert(RewardTrans,item)
     end
 
-    for k, v in pairs(firstRecharge.item_list) do
-        local item = logic.cs.GameObject.Instantiate(self.Item,self.FirstchargeBG.transform,false)
-        local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
-        local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
-        Num.text = "x".. v.num;
-        if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-            local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
-            Icon.sprite = sprite
-        else
-            Icon.sprite = Cache.PropCache.SpriteData[v.id]
+    if firstRecharge.item_list then
+        for k, v in pairs(firstRecharge.item_list) do
+            local item = logic.cs.GameObject.Instantiate(self.Item,self.FirstchargeBG.transform,false)
+            local Num = CS.DisplayUtil.GetChild(item, "Num"):GetComponent(typeof(logic.cs.Text))
+            local Icon = CS.DisplayUtil.GetChild(item, "Icon"):GetComponent(typeof(logic.cs.Image))
+            Num.text = "x".. v.num;
+            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                Icon.sprite = sprite
+            else
+                Icon.sprite = Cache.PropCache.SpriteData[v.id]
+            end
+            Icon:SetNativeSize()
+            Icon.transform.localScale = core.Vector3.New(0.2,0.2,1)
+            table.insert(RewardTrans,item)
         end
-        Icon:SetNativeSize()
-        Icon.transform.localScale = core.Vector3.New(0.2,0.2,1)
-        table.insert(RewardTrans,item)
     end
 
     local PosList =

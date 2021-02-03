@@ -109,19 +109,22 @@ function InvitePanel:SetUI()
                     Icon.sprite = Cache.PropCache.SpriteData[2]
                     item:SetActiveEx(true)
                 end
-                for k, v1 in pairs(v.item_list) do
-                    local item = logic.cs.GameObject.Instantiate(RewardItem,ItemList.transform,false)
-                    local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
-                    local Icon = item:GetComponent(typeof(logic.cs.Image))
-                    Text.text = "x".. v1.item_list;
-                    if 1000<tonumber(v1.id) and tonumber(v1.id)<10000 then
-                        local sprite=DataConfig.Q_DressUpData:GetSprite(v1.id)
-                        Icon.sprite = sprite
-                    else
-                        local sprite = Cache.PropCache.SpriteData[tonumber(v1.id)]
-                        Icon.sprite = sprite
+
+                if v.item_list then
+                    for k, v1 in pairs(v.item_list) do
+                        local item = logic.cs.GameObject.Instantiate(RewardItem,ItemList.transform,false)
+                        local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+                        local Icon = item:GetComponent(typeof(logic.cs.Image))
+                        Text.text = "x".. v1.num;
+                        if 1000<tonumber(v1.id) and tonumber(v1.id)<10000 then
+                            local sprite=DataConfig.Q_DressUpData:GetSprite(v1.id)
+                            Icon.sprite = sprite
+                        else
+                            local sprite = Cache.PropCache.SpriteData[tonumber(v1.id)]
+                            Icon.sprite = sprite
+                        end
+                        item:SetActive(true)
                     end
-                    item:SetActive(true)
                 end
                 Item:SetActive(true)
             end

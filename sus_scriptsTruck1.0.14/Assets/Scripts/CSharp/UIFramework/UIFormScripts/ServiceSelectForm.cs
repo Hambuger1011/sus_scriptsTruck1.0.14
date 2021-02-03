@@ -77,11 +77,11 @@ public class ServiceSelectForm : BaseUIForm
 
     private void OnServiceChange(int index)
     {
-        if(index == 5)
+        if(index == 6)
         {
             mCustomSvr.gameObject.CustomSetActive(true);
 
-            mCustomSvr.text = PlayerPrefs.GetString("mCustomSvr", "http://new.onyxgames1.com");
+            mCustomSvr.text = PlayerPrefs.GetString("mCustomSvr", "https://sus-game.igg.com/");
         }
         else
         {
@@ -90,10 +90,10 @@ public class ServiceSelectForm : BaseUIForm
     }
     private void OnResourcesChange(int index)
     {
-        if (index == 5)
+        if (index == 7)
         {
             mCustomRes.gameObject.CustomSetActive(true);
-            mCustomRes.text = PlayerPrefs.GetString("mCustomRes", "http://d3da55fv9mg213.cloudfront.net");
+            mCustomRes.text = PlayerPrefs.GetString("mCustomRes", "https://static-sus.igg.com/resources/");
 
         }
         else
@@ -118,11 +118,12 @@ public class ServiceSelectForm : BaseUIForm
         if (ServicePathList == null)
             ServicePathList = new List<string>();
 
-        ServicePathList.Add("Developing (开发服)");
-        ServicePathList.Add("TencentDeveloping (腾讯服)");
-        ServicePathList.Add("Debug (测试服)");
-        ServicePathList.Add("Release (正式服)");
-        ServicePathList.Add("Alan (Alan本机服务器)");
+        ServicePathList.Add("本地-技术开发服");
+        ServicePathList.Add("TX-技术开发服");
+        ServicePathList.Add("TX-技术生产服");
+        ServicePathList.Add("TX-录入开发服");
+        ServicePathList.Add("TX-录入生产服");
+        ServicePathList.Add("正式服");
         ServicePathList.Add("手动输入");
 
         ServicePath.AddOptions(ServicePathList);
@@ -139,10 +140,12 @@ public class ServiceSelectForm : BaseUIForm
             ResourcePathList = new List<string>();
 
         ResourcePathList.Add("LocalRes(本地资源)");
-        ResourcePathList.Add("DevelopingRes(开发服资源)");
-        ResourcePathList.Add("TecentDevelopingRes(腾讯服资源)");
-        ResourcePathList.Add("DebugRes(测试服资源)");
-        ResourcePathList.Add("ReleaseRes(正式服资源)");
+        ResourcePathList.Add("本地-技术开发服");
+        ResourcePathList.Add("TX-技术开发服");
+        ResourcePathList.Add("TX-技术生产服");
+        ResourcePathList.Add("TX-录入开发服");
+        ResourcePathList.Add("TX-录入生产服");
+        ResourcePathList.Add("正式服");
         ResourcePathList.Add("手动输入");
 
         ResourcePath.AddOptions(ResourcePathList);
@@ -173,6 +176,9 @@ public class ServiceSelectForm : BaseUIForm
                 break;
             case 5:
                 GameDataMgr.Instance.ServiceType = 6;
+                break;
+            case 6:
+                GameDataMgr.Instance.ServiceType = 7;
                 var url = mCustomSvr.text.Trim();
                 if(!url.StartsWith("http://") && !url.StartsWith("https://"))
                 {
@@ -201,6 +207,12 @@ public class ServiceSelectForm : BaseUIForm
                 break;
             case 5:
                 GameDataMgr.Instance.ResourceType = 5;
+                break;
+            case 6:
+                GameDataMgr.Instance.ResourceType = 6;
+                break;
+            case 7:
+                GameDataMgr.Instance.ResourceType = 7;
                 var url = mCustomRes.text.Trim();
                 if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 {
