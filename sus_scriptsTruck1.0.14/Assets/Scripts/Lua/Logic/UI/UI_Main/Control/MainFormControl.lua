@@ -650,6 +650,14 @@ function MainFormControl:StartTopBookMove()
 end
 --endregion
 
+--region【顶部轮播】
+function MainFormControl:TopBookValueChanged(v)
+    if(UIMainForm)then
+        UIMainForm.TopBookView:OnValueChanged(v);
+    end
+end
+--endregion
+
 
 --析构函数
 function MainFormControl:__delete()

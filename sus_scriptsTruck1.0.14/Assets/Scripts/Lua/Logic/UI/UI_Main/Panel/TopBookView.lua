@@ -5,18 +5,13 @@ function TopBookView:__init(gameObject)
     self.gameObject=gameObject;
     self.TopBookBg =CS.DisplayUtil.GetChild(gameObject, "TopBookBg"):GetComponent("Image");
     self.TopBookContent =CS.DisplayUtil.GetChild(gameObject, "TopBookContent");
-    self.Scrollbar =CS.DisplayUtil.GetChild(gameObject, "Scrollbar Horizontal"):GetComponent("Scrollbar");
     self.ScrollRect =CS.DisplayUtil.GetChild(gameObject, "Scroll View"):GetComponent(typeof(logic.cs.ScrollRect));
     self.PointBg =CS.DisplayUtil.GetChild(gameObject, "PointBg");
     self.PointContent =CS.DisplayUtil.GetChild(gameObject, "PointContent");
-
+    self.CenterOnChild = self.ScrollRect.gameObject:GetComponent("CenterOnChild")
 
     --事件监听
     logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.GotoRead,function() self:OpenRead() end)
-
-    self.Scrollbar.onValueChanged:AddListener(function(value)
-        self:OnScrollbarChanged(value)
-    end)
 
     self.bookList = {}
     self.pointList = {}
@@ -32,13 +27,13 @@ function TopBookView:ShowNext()
             coroutine.wait(self.waitTime)
             self:ShowNext()
         end)
+        local nextIndex = self.selectIndex
+        if self.selectIndex == #self.bookList then
+            self.selectIndex = 1
+            nextIndex = 0
+        end
+        self.CenterOnChild:MoveToChild(nextIndex)
     end
-    local nextIndex = self.selectIndex
-    if self.selectIndex == #self.bookList then
-        self.selectIndex = 1
-        nextIndex = 0
-    end
-    self.ScrollRect.horizontalNormalizedPosition=nextIndex / (#self.bookList - 1);
 end
 
 function TopBookView:StopMove()
@@ -61,14 +56,14 @@ function TopBookView:StartMove()
     end
 end
 
-function TopBookView:OnScrollbarChanged(value)
+function TopBookView:OnValueChanged(value)
     if #self.pointList > 0 then
-        local v = value * (#self.pointList - 1) + 1
-        v = math.floor(v + 0.5)
+        local v = value + 1
         self.selectIndex = v
         for i = 1, #self.pointList do
             self.pointList[i]:SetActiveEx(i == tonumber(v))
         end
+        self:StartMove()
     end
 end
 
@@ -132,7 +127,7 @@ function TopBookView:ShowTopBook(book_ids,time)
             PointItem.gameObject:SetActiveEx(true)
         end
     end
-    self.Scrollbar.numberOfSteps = #self.bookList
+    self.CenterOnChild:InitChild()
     if #self.bookList > 1 then
         self.co = coroutine.start(function()
             coroutine.wait(self.waitTime)

@@ -95,7 +95,7 @@ function LimitedTimePanel:__init(gameObject)
     self.Item = CS.DisplayUtil.GetChild(self.FirstchargeBG, "Item");
 
     self.FirstchargeDetailText.text = "Top up any amount to get insane rewards. Each account is only entitled to one Pack.";
-    self.FirstchargeBG:SetActiveEx(tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1)
+    self.FirstchargeBG:SetActiveEx(tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0)
 
     logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) self:ChargeButtonOnClick() end)
     logic.cs.UIEventListener.AddOnClickListener(self.ClaimFirstcharge,function(data) self:ClaimFirstchargeOnClick() end)
