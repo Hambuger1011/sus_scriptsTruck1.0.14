@@ -46,19 +46,22 @@ function DailyTaskItem:SetInfo(data)
         Icon.sprite = Cache.PropCache.SpriteData[2]
         item:SetActiveEx(true)
     end
-    for k, v in pairs(data.item_list) do
-        local item = logic.cs.GameObject.Instantiate(self.RewardImage,self.ItemList.transform,false)
-        local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
-        local Icon = item:GetComponent(typeof(logic.cs.Image))
-        Text.text = "x".. data.prize_key;
-        if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
-            local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
-            Icon.sprite = sprite
-        else
-            local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
-            Icon.sprite = sprite
+
+    if data.item_list then
+        for k, v in pairs(data.item_list) do
+            local item = logic.cs.GameObject.Instantiate(self.RewardImage,self.ItemList.transform,false)
+            local Text = CS.DisplayUtil.GetChild(item, "RewardNum"):GetComponent(typeof(logic.cs.Text))
+            local Icon = item:GetComponent(typeof(logic.cs.Image))
+            Text.text = "x".. v.num;
+            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                local sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+                Icon.sprite = sprite
+            else
+                local sprite = Cache.PropCache.SpriteData[tonumber(v.id)]
+                Icon.sprite = sprite
+            end
+            item:SetActive(true)
         end
-        item:SetActive(true)
     end
 
     --【按钮状态】

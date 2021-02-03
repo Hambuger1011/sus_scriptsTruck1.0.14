@@ -83,14 +83,6 @@ function LimitedTimePanel:__init(gameObject)
 
     logic.cs.UIEventListener.AddOnClickListener(self.InviteButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
 
-
-    --【暂时屏蔽】
-    if(CS.XLuaHelper.GetPlatFormType()<2)then
-        self.InviteBG:SetActive(true);
-    else
-        self.InviteBG:SetActive(false);
-    end
-
     --endregion
 
     --region【首充奖励】
