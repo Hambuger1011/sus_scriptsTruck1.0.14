@@ -211,11 +211,7 @@ UIBookReadingElement
                     PriceTitle.gameObject.SetActive(false);
                 }
 
-                int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
-                if (chapterOpenIndex == -1)
-                    chapterOpenIndex = cfg.chapteropen;
-
-                if (chapterId + 1 <= chapterOpenIndex)
+                if (chapterId + 1 <= cfg.chapteropen)
                 {
                     JDT_Chapter nextChapterInfo = JsonDTManager.Instance.GetJDTChapterInfo(m_curBookID, chapterId + 1);
                     if (nextChapterInfo != null)
@@ -519,16 +515,7 @@ UIBookReadingElement
     {
         JDT_Book bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(m_curBookID);
         int nextChapterId = m_curChapterID + 1;
-        bool readComplete = false;   //是否章节都阅读完成
-        int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
-        if (chapterOpenIndex == -1)
-            chapterOpenIndex = bookDetails.chapteropen;
-        if (nextChapterId > chapterOpenIndex)
-        {
-            readComplete = true;
-        }
-
-        if (readComplete)
+        if (nextChapterId > bookDetails.chapteropen)
         {
             UIAlertMgr.Instance.Show(GameDataMgr.Instance.table.GetLocalizationById(222)/*"CHAPTER COMPLETE"*/, GameDataMgr.Instance.table.GetLocalizationById(229)/*"This chapter is not available yet. Please, stay tuned!"*/);
             //【AF事件记录*  读完1本官方故事的全部章节】

@@ -5,7 +5,7 @@ function JumpURLPanel:__init(gameObject)
     self.JumpURLBg =CS.DisplayUtil.GetChild(gameObject, "JumpURLBg");
     self.JumpURLText =CS.DisplayUtil.GetChild(gameObject, "JumpURLText"):GetComponent("HyperText");
 
-    self.JumpURLText.text="The desktop version is now live. Use your desktop to open <a href=\"\">http://sus-ugc.igg.com/</a> and start creating your stories now."
+    self.JumpURLText.text="The desktop version is now live. Use your desktop to open <a href=\"\">https://sus-ugc.igg.com/</a> and start creating your stories now."
 
     --按钮监听
     logic.cs.UIEventListener.AddOnClickListener(self.JumpURLBg,function(data) self:OnJumpURLBg() end)
@@ -13,7 +13,7 @@ function JumpURLPanel:__init(gameObject)
 end
 
 function JumpURLPanel:OnJumpURLBg()
-    logic.cs.Application.OpenURL("http://sus-ugc.igg.com/");
+    logic.cs.Application.OpenURL("https://sus-ugc.igg.com/");
 end
 
 

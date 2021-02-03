@@ -141,10 +141,7 @@ function UINewBookTipsForm:ReadBook()
         local code = tonumber(json.code)
         if code == 200 then
             logic.cs.UserDataManager.bookDetailInfo = json
-            local chapterId = logic.cs.UserDataManager.bookDetailInfo.data.finish_max_chapter + 1
-            if (chapterId > logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount) then
-                chapterId = logic.cs.UserDataManager.bookDetailInfo.data.book_info.chaptercount
-            end
+            local chapterId = logic.cs.UserDataManager.bookDetailInfo.data.current_chapter
             logic.cs.GameHttpNet:BuyChapter(tonumber(bookID),chapterId,function(result)
                 if result.code == 200 then
                     logic.cs.UserDataManager:SetBuyChapterResultInfo(bookID,result)

@@ -61,6 +61,7 @@ local UIConfig = {
 	require "Logic/UI/UI_Chat/UIChatForm",
 	require "Logic/UI/UI_Pakage/UIPakageForm",
 	require "Logic/UI/UI_DayPass/UIDayPassForm",
+	require "Logic/UI/UI_Doves/UIDovesForm",
 }
 return UIConfig
 --return ConstClass("UIConfig", UIConfig)

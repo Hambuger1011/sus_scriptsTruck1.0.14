@@ -527,9 +527,9 @@ public class BookDisplayGridChild : MonoBehaviour {
         {
             readcount = UserDataManager.Instance.bookDetailInfo.data.read_count;
 
-            if(!string.IsNullOrEmpty(UserDataManager.Instance.bookDetailInfo.data.book_info.releaseday))
+            if(!string.IsNullOrEmpty(UserDataManager.Instance.bookDetailInfo.data.publish))
             {
-                 mUpdateTimeTxt.text = UserDataManager.Instance.bookDetailInfo.data.book_info.releaseday;
+                 mUpdateTimeTxt.text = UserDataManager.Instance.bookDetailInfo.data.publish;
             }
         }
 

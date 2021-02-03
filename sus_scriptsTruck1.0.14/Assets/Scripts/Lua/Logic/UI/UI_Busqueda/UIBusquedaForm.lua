@@ -116,6 +116,8 @@ function UIBusquedaForm:UpdateWriterBookList(page)
     if(self.TotalCount and self.TotalCount>0)then
         --【设置列表总数量】
         self.UIVirtualList:SetItemCount(self.TotalCount);
+    else
+        self.UIVirtualList:SetItemCount(0);
     end
 end
 

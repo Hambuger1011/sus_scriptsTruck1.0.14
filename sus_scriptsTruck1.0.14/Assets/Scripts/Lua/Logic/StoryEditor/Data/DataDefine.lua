@@ -573,12 +573,12 @@ end
 DataDefine.t_ReadingRecord = class("StoryEditor.t_ReadingRecord")
 function DataDefine.t_ReadingRecord:__init()
     self.isReadEnd = false
-    self.dialogid = 0
+    self.dialogID = 0
     self.selectionHistory = {}
 
     local CopyTo = function(src, dst)
         dst.isReadEnd = src.isReadEnd
-        dst.dialogid = src.dialogid
+        dst.dialogID = src.dialogID
         dst.selectionHistory = src.selectionHistory
     end
 

@@ -79,7 +79,7 @@ function LimitedTimePanel:__init(gameObject)
     self.InviteDetailText = CS.DisplayUtil.GetChild(self.InviteBG, "InviteDetailText"):GetComponent("Text");
     self.InviteAwardPoint = CS.DisplayUtil.GetChild(self.InviteBG, "RedPoint");
 
-    self.InviteDetailText.text = "You can get up to 70 Diamonds when you invite your friends to register for an account.";
+    self.InviteDetailText.text = "Invite new readers to join and earn rewards!";
 
     logic.cs.UIEventListener.AddOnClickListener(self.InviteButton,function(data) logic.UIMgr:Open(logic.uiid.InvitePanel); end)
 
@@ -95,6 +95,8 @@ function LimitedTimePanel:__init(gameObject)
     self.Item = CS.DisplayUtil.GetChild(self.FirstchargeBG, "Item");
 
     self.FirstchargeDetailText.text = "Top up any amount to get insane rewards. Each account is only entitled to one Pack.";
+
+    logic.debug.LogWarning("首充活动页面：first_recharge_switch="..logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch)
     self.FirstchargeBG:SetActiveEx(tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0)
 
     logic.cs.UIEventListener.AddOnClickListener(self.ChargeButton,function(data) self:ChargeButtonOnClick() end)

@@ -270,6 +270,8 @@ end
 
 --region 【活动礼包按钮点击】
 function UIMainForm:GiftButtonOnClick()
+    logic.debug.LogWarning("首充--GiftButtonOnClick：first_recharge_switch="..logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch
+            .. "\nCache.RedDotCache.FirstRechargePoint="..tostring(Cache.RedDotCache.FirstRechargePoint))
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) ~= 0 and not Cache.RedDotCache.FirstRechargePoint then
         --请求【获取通用奖励配置】---【通用奖励】
         GameController.FirstChargeControl:GetRewardConfigRequest();

@@ -110,6 +110,14 @@ public class BookDisplayForm : BaseUIForm
             {
                 SaveJDTInfo();
             }
+
+            JDT_Book tempBookInfo = JsonDTManager.Instance.GetJDTBookDetailInfo(mCurBookId);
+            if (tempBookInfo != null && tempBookInfo.book_tips_status == 1 && mChapterId==1)
+            {
+                UIAlertMgr.Instance.Show(tempBookInfo.book_tips_title, tempBookInfo.book_tips_content);
+            }
+            
+            
             initBookDisplayGridChild(mCurBookId, true); //实例化物体
             UpdateBookReadNum();
         }
@@ -189,19 +197,7 @@ public class BookDisplayForm : BaseUIForm
                 {
                     UserDataManager.Instance.bookDetailInfo = JsonHelper.JsonToObject<HttpInfoReturn<BookDetailInfo>>(result);
                     //UserDataManager.Instance.RecordBookDetailInfo();
-                    mChapterId = UserDataManager.Instance.bookDetailInfo.data.finish_max_chapter + 1;
-                    if (mChapterId > UserDataManager.Instance.bookDetailInfo.data.book_info.chaptercount)
-                        mChapterId = UserDataManager.Instance.bookDetailInfo.data.book_info.chaptercount;
-
-                    if (UserDataManager.Instance.bookDetailInfo.data.book_tips_status==1)
-                    {
-                        UIAlertMgr.Instance.Show(UserDataManager.Instance.bookDetailInfo.data.book_tips_title, UserDataManager.Instance.bookDetailInfo.data.book_tips_content, AlertType.Sure, (isOK) =>
-                        {
-                           
-                        });
-
-                    }
-
+                    mChapterId = UserDataManager.Instance.bookDetailInfo.data.current_chapter;
 
                     JDT_Version verInfo = JsonDTManager.Instance.GetJDTVersionInfo(mCurBookId);
                     if (verInfo != null)
@@ -350,11 +346,7 @@ public class BookDisplayForm : BaseUIForm
         this.mCurBookId = bookID;
         bookDetails = JsonDTManager.Instance.GetJDTBookDetailInfo(bookID);
         openChapterCount = bookDetails.chapteropen; //得到开放的章节
-        allChapterCount = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;//章节总数
-        if (allChapterCount == -1)
-            allChapterCount = openChapterCount;
         int len = openChapterCount;
-
         //Debug.LogError($"lzh ===> {openChapterCount} {allChapterCount} {len} {mChapterId}");
         // 生成cell
         for (int i = 0; i < len; i++)
@@ -451,11 +443,11 @@ public class BookDisplayForm : BaseUIForm
                         mCurBookId,
                         bookDetails.bookname,
                         chapterId,
-                        string.Format("Chapter {0} / {1}", chapterId, allChapterCount),
+                        string.Format("Chapter {0} / {1}", chapterId, openChapterCount),
                         chapterInfo.dsc,
                         i <= (mChapterId - 1),
                         i < (mChapterId - 1),
-                        (i > (mChapterId - 1) && i < allChapterCount),
+                        (i > (mChapterId - 1) && i < openChapterCount),
                         bookDetails.chapterrelease,
                         UserDataManager.Instance.bookDetailInfo.data.book_comment_count,
                         "bg_book" + mCurBookId,
@@ -921,10 +913,7 @@ public class BookDisplayForm : BaseUIForm
             {
                 int saveDialogueID = bookData.DialogueID;
                 bool readComplete = false;   //是否章节都阅读完成
-                int chapterOpenIndex = UserDataManager.Instance.bookDetailInfo.data.book_info.chapteropen;
-                if (chapterOpenIndex == -1)
-                    chapterOpenIndex = bookDetails.chapteropen;
-                if (mChapterId > chapterOpenIndex)
+                if (mChapterId > bookDetails.chapteropen)
                 {
                     readComplete = true;
                 }

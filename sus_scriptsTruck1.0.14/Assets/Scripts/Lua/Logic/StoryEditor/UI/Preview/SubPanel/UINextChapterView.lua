@@ -47,10 +47,10 @@ function UINextChapterView:Hide()
 end
 
 function UINextChapterView:StopTimer()
-	if self.timer then
-		self.timer:Stop()
-		self.timer = nil
-	end
+    if self.timer then
+        self.timer:Stop()
+        self.timer = nil
+    end
 end
 
 function UINextChapterView:Show()
@@ -64,7 +64,7 @@ end
 function UINextChapterView:SetData(storyDetial, chapterID, finishTime)
     ---@type StoryEditor_BookDetials
     self.storyDetial = storyDetial
-    self.chapterid = chapterID
+    self.chapterID = chapterID
     if chapterID < storyDetial.update_chapter_count then
         self.nextChapterID = chapterID + 1
     else
@@ -74,8 +74,8 @@ function UINextChapterView:SetData(storyDetial, chapterID, finishTime)
     self.finishTime = finishTime
 
     self.lbChapter.text = 'Chapter '..self.nextChapterID
-    
-    self.lbChapterEnd.text = string.format('CH.%d END', self.chapterid)
+
+    self.lbChapterEnd.text = string.format('CH.%d END', self.chapterID)
     self.lbChapterDesc.text = ''--self.chapterData.description
 
     --【AF事件记录* 读完1个UGC章节】
@@ -83,7 +83,7 @@ function UINextChapterView:SetData(storyDetial, chapterID, finishTime)
 
     --logic.cs.UINetLoadingMgr:Show()
     logic.gameHttp:StoryEditor_GetChapterDetail(storyDetial.id, self.nextChapterID,function(result)
-                    
+
         --logic.cs.UINetLoadingMgr:Close()
         local json = core.json.Derialize(result)
         local code = tonumber(json.code)

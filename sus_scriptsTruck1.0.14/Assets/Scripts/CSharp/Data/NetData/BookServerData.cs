@@ -178,16 +178,16 @@ public class ChoicesClothResultInfo
 
 public class BookDetailInfo
 {
-    public bookinfo book_info;
+    //public bookinfo book_info;
+    public int current_chapter;        //当前在阅读的章节数
     public int finish_max_chapter;   //最大完成章节
     public int cost_max_chapter;	 //已购买的最大章节
     public int read_count;        //书本阅读量
     public int isfav;               //是否收藏
     public int book_comment_count;  //书本评论数量 ,有缓存,10分钟更新新一次
     public int book_barrage_status; //书本弹幕开放情况 ,0关闭,1开放中
-    public int book_tips_status; //弹窗开关
-    public string book_tips_title;  //弹窗标题
-    public string book_tips_content;  //弹窗内容
+    public string publish;
+
 
     //public List<BookBuyClothItemInfo> clothearr;
     //public BookUserLogInfo userlog;
@@ -208,6 +208,10 @@ public class bookinfo
     public string chapterprice;
     public int dialogframeheight;
     public string releaseday;
+
+    public int book_tips_status; //弹窗开关
+    public string book_tips_title;  //弹窗标题
+    public string book_tips_content;  //弹窗内容
 }
 
 public class BookBuyClothItemInfo
@@ -1250,6 +1254,10 @@ public class JDT_Book
     public int rolescale = 0;
     public int isNew = 0;
     public int releaseday = 0;
+    
+    public int book_tips_status; //弹窗开关
+    public string book_tips_title;  //弹窗标题
+    public string book_tips_content;  //弹窗内容
 
     public List<string> strCharacterNames;
 

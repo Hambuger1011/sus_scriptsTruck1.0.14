@@ -48,6 +48,7 @@ function UIChatForm:OnInitView()
 
     self.SubmitBtnMask = CS.DisplayUtil.GetChild(self.Bottom, "SubmitBtnMask");
 
+    logic.cs.UIEventListener.AddOnClickListener(self.SubmitBtnMask,function(data) self:SubmitBtnMaskClick(); end)
     logic.cs.UIEventListener.AddOnClickListener(self.SubmitBtn.gameObject,function(data) self:SubmitBtnClick(); end)
     logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data) self:OnExitClick(); end)
 
@@ -109,6 +110,11 @@ function UIChatForm:OnClose()
 
     --【删除所有服务器数据】
     Cache.ChatCache:ClearMas();
+
+    if(self.SubmitBtnMask)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.SubmitBtnMask,function(data) self:SubmitBtnMaskClick(); end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.SubmitBtn.gameObject,function(data) self:SubmitBtnClick(); end)
+    end
 
     if(self.CloseBtn)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.CloseBtn,function(data) self:OnExitClick() end);
@@ -215,13 +221,20 @@ end
 --region【发送消息】
 
 function UIChatForm:SubmitBtnClick()
-
     if(self.InputField==nil or self.InputField.text==nil or self.InputField.text=="" or self.Author_Uid==nil)then
         logic.cs.UITipsMgr:PopupTips("This cannot be left empty.", false);
         return;
     end
     GameController.ChatControl:SendWriterLetterRequest(self.Author_Uid,self.InputField.text);
+end
 
+function UIChatForm:SubmitBtnClick()
+    --【发送信息 总次数】
+    local SendChatAll= Cache.ChatCache.total;
+    if(SendChatAll<=0)then
+        --打开购买信鸽界面
+        logic.UIMgr:Open(logic.uiid.UIDovesForm);
+    end
 end
 
 --endregion
@@ -287,6 +300,8 @@ function UIChatForm:UpdateSendCount()
     else
         self.SubmitBtn.gameObject:SetActive(false);
         self.SubmitBtnMask:SetActive(true);
+
+
     end
 
 

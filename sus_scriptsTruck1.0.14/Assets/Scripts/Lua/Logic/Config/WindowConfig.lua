@@ -21,8 +21,11 @@ function WindowConfig:ResetStatus()
 end
 
 function WindowConfig:ShowFirstCharge()
+    logic.debug.LogWarning("首充--ShowFirstCharge：first_recharge_switch="..logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch
+            .. "\nlogic.cs.IGGSDKMrg.isNewUser="..tostring(logic.cs.IGGSDKMrg.isNewUser)
+            .. "\nFirstChargeNeedShown="..tostring(FirstChargeNeedShown))
     if tonumber(logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch) == 1
-            and not logic.cs.IGGSDKMrg.isNewUser and not FirstChargeNeedShown then
+            and not logic.cs.IGGSDKMrg.isNewUser and FirstChargeNeedShown then
 
         --请求【获取通用奖励配置】---【通用奖励】
         GameController.FirstChargeControl:GetRewardConfigRequest();
