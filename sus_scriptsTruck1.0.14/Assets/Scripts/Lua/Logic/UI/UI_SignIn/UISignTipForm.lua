@@ -20,7 +20,8 @@ function UISignTipForm:OnInitView()
 
     self.SignInBtn = get(root,'Canvas/Bg/SignInBtn',typeof(logic.cs.Button))
     self.ItemImg= get(root,'Canvas/Bg/RewardImg/ItemImg',typeof(logic.cs.Image))
-    self.ItemText = get(root,'Canvas/Bg/ItemText',typeof(logic.cs.Text))
+    self.ItemName = get(root,'Canvas/Bg/ItemName',typeof(logic.cs.Text))
+    self.ItemNum = get(root,'Canvas/Bg/ItemNum',typeof(logic.cs.Text))
     self.Close = get(root,'Canvas/Bg/Close',typeof(logic.cs.Button))
     self.Tile = get(root,'Canvas/Bg/Tile',typeof(logic.cs.Text))
     self.SignInBtnText = get(root,'Canvas/Bg/SignInBtn/SignInBtnText',typeof(logic.cs.Text))
@@ -106,7 +107,8 @@ function UISignTipForm:UpdateShow()
         end
         size = core.Vector3.New(1,1,1)
     end
-    self.ItemText.text = nameText.." ×"..numText
+    self.ItemName.text = nameText
+    self.ItemNum.text = "×"..numText
     self.ItemImg.sprite = sprite
     self.ItemImg:SetNativeSize()
     self.ItemImg.transform.localScale = size
