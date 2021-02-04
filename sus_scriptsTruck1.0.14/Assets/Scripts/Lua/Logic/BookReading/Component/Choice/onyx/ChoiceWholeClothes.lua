@@ -515,7 +515,7 @@ function ChoiceWholeClothes:OnClcikPropItem(propItem)
 	if propItem.data==nil then
 		isUser = false
 	end
-	logic.cs.UserDataManager:SetLuckyPropItem(isUser, propItem.data)
+	logic.cs.UserDataManager:SetLuckyPropItem(isUser,1, propItem.data)
 
 	--refresh ui
 	uiView.textKeyProp.text = tostring(self.cost)

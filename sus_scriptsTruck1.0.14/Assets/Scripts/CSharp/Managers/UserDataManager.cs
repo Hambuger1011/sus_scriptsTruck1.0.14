@@ -323,15 +323,17 @@ public class UserDataManager : Singleton<UserDataManager> {
     public PropInfo userPropInfo_Outfit;//装扮类型道具信息
     public PropInfo userPropInfo_Choice;//选项类型道具信息
     public PropInfo userPropInfo_Key;   //钥匙类型道具信息
+    public int PropType = 0;
     public int SendSeq = 0;
 
 
-    public void SetLuckyPropItem(bool isUse,PropInfoItem item=null)
+    public void SetLuckyPropItem(bool isUse,int type,PropInfoItem item=null)
     {
         if (item != null)
         {
             is_use_prop = isUse;
             propInfoItem = item;
+            PropType = type;
             SendSeq = GameHttpNet.Instance.SendSeq + 1;
         }
         else
@@ -346,8 +348,44 @@ public class UserDataManager : Singleton<UserDataManager> {
     {
         if (is_use_prop)
         {
-            if (propInfoItem == null)LOG.Warn("[recv]使用道具信息异常"); 
-            else propInfoItem.prop_num--;
+            if (propInfoItem == null)LOG.Warn("[recv]使用道具信息异常");
+            else
+            {
+                propInfoItem.prop_num--;
+                if (propInfoItem.prop_num == 0)
+                {
+                    switch (PropType)
+                    {
+                        case 1:
+                            for (int i = 0; i < userPropInfo_Outfit.discount_list.Count-1; i--)
+                            {
+                                if (userPropInfo_Outfit.discount_list[i].discount == propInfoItem.discount)
+                                {
+                                    userPropInfo_Outfit.discount_list.Remove(userPropInfo_Outfit.discount_list[i]);
+                                }
+                            }
+                            break;
+                        case 2:
+                            for (int i = 0; i < userPropInfo_Key.discount_list.Count-1; i--)
+                            {
+                                if (userPropInfo_Key.discount_list[i].discount == propInfoItem.discount)
+                                {
+                                    userPropInfo_Key.discount_list.Remove(userPropInfo_Key.discount_list[i]);
+                                }
+                            }
+                            break;
+                        case 3:
+                            for (int i = 0; i < userPropInfo_Choice.discount_list.Count-1; i--)
+                            {
+                                if (userPropInfo_Choice.discount_list[i].discount == propInfoItem.discount)
+                                {
+                                    userPropInfo_Choice.discount_list.Remove(userPropInfo_Choice.discount_list[i]);
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         if (GameHttpNet.Instance.SendSeq == SendSeq)

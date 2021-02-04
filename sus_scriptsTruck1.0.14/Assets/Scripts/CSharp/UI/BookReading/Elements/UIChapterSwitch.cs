@@ -1003,14 +1003,14 @@ UIBookReadingElement
             propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
             propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/Props_icon_Key Coupon_1");
             if (needSet)
-                UserDataManager.Instance.SetLuckyPropItem(true, info.discount_list[0]);
+                UserDataManager.Instance.SetLuckyPropItem(true,2, info.discount_list[0]);
         }
         else
         {
             propImage.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
             propImage2.sprite = ResourceManager.Instance.GetUISprite("PakageForm/com_icon_kyes1");
             if (needSet)
-                UserDataManager.Instance.SetLuckyPropItem(false, null);
+                UserDataManager.Instance.SetLuckyPropItem(false,0, null);
         }
     }
 }
