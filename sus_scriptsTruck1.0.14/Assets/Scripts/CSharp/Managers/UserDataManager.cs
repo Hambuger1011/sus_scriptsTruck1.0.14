@@ -357,7 +357,7 @@ public class UserDataManager : Singleton<UserDataManager> {
                     switch (PropType)
                     {
                         case 1:
-                            for (int i = 0; i < userPropInfo_Outfit.discount_list.Count-1; i--)
+                            for (int i = userPropInfo_Outfit.discount_list.Count-1; i >= 0; i--)
                             {
                                 if (userPropInfo_Outfit.discount_list[i].discount == propInfoItem.discount)
                                 {
@@ -366,7 +366,7 @@ public class UserDataManager : Singleton<UserDataManager> {
                             }
                             break;
                         case 2:
-                            for (int i = 0; i < userPropInfo_Key.discount_list.Count-1; i--)
+                            for (int i = userPropInfo_Key.discount_list.Count-1; i >= 0; i--)
                             {
                                 if (userPropInfo_Key.discount_list[i].discount == propInfoItem.discount)
                                 {
@@ -375,7 +375,7 @@ public class UserDataManager : Singleton<UserDataManager> {
                             }
                             break;
                         case 3:
-                            for (int i = 0; i < userPropInfo_Choice.discount_list.Count-1; i--)
+                            for (int i = userPropInfo_Choice.discount_list.Count-1; i >= 0; i--)
                             {
                                 if (userPropInfo_Choice.discount_list[i].discount == propInfoItem.discount)
                                 {

@@ -205,12 +205,14 @@ function LimitedTimePanel:GetRewardText(DiamondsNum,KeysNum,ItemList)
         rewardText = rewardText..KeysNum.." Keys"
         needAnd = true
     end
-    for k, v in ipairs(ItemList) do
-        if needAnd then
-            rewardText = rewardText.." and "
+    if ItemList then
+        for k, v in ipairs(ItemList) do
+            if needAnd then
+                rewardText = rewardText.." and "
+            end
+            rewardText = rewardText..v.num.." "..v.name
+            needAnd = true
         end
-        rewardText = rewardText..v.num.." "..v.name
-        needAnd = true
     end
     rewardText = rewardText.."!"
     if not needAnd then

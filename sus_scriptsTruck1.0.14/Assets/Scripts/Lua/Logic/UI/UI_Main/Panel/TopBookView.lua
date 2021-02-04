@@ -127,7 +127,14 @@ function TopBookView:ShowTopBook(book_ids,time)
             PointItem.gameObject:SetActiveEx(true)
         end
     end
-    self.CenterOnChild:InitChild()
+    if self.PointContent.transform.childCount == #self.bookList then
+        self.CenterOnChild:InitChild()
+    else
+        coroutine.start(function()
+            coroutine.wait(1)
+            self.CenterOnChild:InitChild()
+        end)
+    end
     if #self.bookList > 1 then
         self.co = coroutine.start(function()
             coroutine.wait(self.waitTime)
