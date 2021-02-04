@@ -127,7 +127,7 @@ public class ChargeMoneyFreeItemScripte : MonoBehaviour
 #if UNITY_EDITOR
             ReceiveMallAward();
 #else
-            GoogleAdmobAds.Instance.acitityRewardedAd.ShowRewardedAd((() => { ReceiveMallAward();}));
+            GoogleAdmobAds.Instance.mallrRewardedAd.ShowRewardedAd((() => { ReceiveMallAward();}));
 #endif   
         }
     }

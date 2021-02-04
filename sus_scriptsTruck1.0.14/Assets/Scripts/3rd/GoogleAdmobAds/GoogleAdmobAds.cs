@@ -42,6 +42,8 @@ public class GoogleAdmobAds : MonoBehaviour
     public MyRewardedAd acitityRewardedAd;
     //激励视频广告  【章节通关界面广告】 广告位
     public MyRewardedAd chapterRewardedAd;
+    //激励视频广告  【商城免费钻石】 广告位
+    public MyRewardedAd mallrRewardedAd;
 
     public void Start()
     {
@@ -84,8 +86,8 @@ public class GoogleAdmobAds : MonoBehaviour
         chapterRewardedAd.Initialize();
 
         //初始化 【商城免费钻石】 广告位
-        chapterRewardedAd = new MyRewardedAd(EnumAds.Mall,"ca-app-pub-9883228183528023/7564323733", "ca-app-pub-9883228183528023/1291200058");
-        chapterRewardedAd.Initialize();
+        mallrRewardedAd = new MyRewardedAd(EnumAds.Mall,"ca-app-pub-9883228183528023/7564323733", "ca-app-pub-9883228183528023/1291200058");
+        mallrRewardedAd.Initialize();
 
     }
 

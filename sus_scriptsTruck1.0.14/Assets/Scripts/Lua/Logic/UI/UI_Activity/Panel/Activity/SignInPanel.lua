@@ -96,6 +96,7 @@ function SignInPanel:SignInReceiveReward()
     animTrans.transform.localScale = core.Vector3.New(5,5,1);
     animTrans.gameObject:SetActiveEx(true);
     self.RewardItemList[self.toReceivedIndex].transform:Find('IsReceived').gameObject.gameObject:SetActiveEx(true);
+    self.RewardItemList[self.toReceivedIndex].transform:Find('Normal').gameObject.gameObject:SetActiveEx(false);
     animTrans.transform:DOScale(core.Vector3.New(1,1,1),0.2):Play();
 
     Cache.ActivityCache.is_login_receive=1;

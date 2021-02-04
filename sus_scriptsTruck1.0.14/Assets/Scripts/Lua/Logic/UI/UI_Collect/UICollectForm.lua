@@ -136,7 +136,7 @@ function UICollectForm:CsRewardedAd_Chapter()
     local bookData = logic.bookReadingMgr.bookData
     self:SetData(1,0,nil,nil,nil,
             "CLAIM",function ()
-                CS.GoogleAdmobAds.Instance.acitityRewardedAd:ShowRewardedAd(function()
+                CS.GoogleAdmobAds.Instance.chapterRewardedAd:ShowRewardedAd(function()
                     logic.gameHttp:GetChapterAdsReward(
                             bookData.BookID,
                             bookData.ChapterID,
