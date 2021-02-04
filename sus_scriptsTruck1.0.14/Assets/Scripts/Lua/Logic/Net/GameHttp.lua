@@ -1483,5 +1483,13 @@ function GameHttp:PopUpDayPassBook(book_id,callback)
     end, nil, nil, true)
 end
 
+--【购买信鸽】
+function GameHttp:BuyPrivateLetter(callback)
+    local param = {
+    }
+    self:Post(self, "api_buyPrivateLetter", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
 
 return GameHttp.New()

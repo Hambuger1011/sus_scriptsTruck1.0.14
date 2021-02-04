@@ -11,7 +11,7 @@ function RankItem:__init(gameObject)
     self.LookNumber =CS.DisplayUtil.GetChild(gameObject, "LookNumber"):GetComponent("Image");
     self.LookNumberText =CS.DisplayUtil.GetChild(gameObject, "LookNumberText"):GetComponent("Text");
     self.BookFree =CS.DisplayUtil.GetChild(gameObject, "BookFree");
-
+    self.DayPassBg =CS.DisplayUtil.GetChild(self.BookBG.gameObject, "DayPassBg");
     logic.cs.UIEventListener.AddOnClickListener(self.BookBG.gameObject,function(data) self:OnBookClick() end)
 
     --服务器获取的书本数据
@@ -44,11 +44,28 @@ function RankItem:SetInfo(Info,_type)
     elseif(_type==RankType.Popularity)then
         self.LookNumber.sprite = CS.ResourceManager.Instance:GetUISprite("Common/com_smg_popular");
     end
+
+    --【DayPass】
+    self:DayPass();
 end
 
 --【限时活动免费读书 显示标签】
 function RankItem:Limit_time_Free()
     GameHelper.Limit_time_Free(self.BookFree);
+end
+
+--【DayPass】
+function RankItem:DayPass()
+    self.DayPassBg:SetActive(false);
+    local daypasslist=Cache.PopWindowCache.daypassList;
+    if(GameHelper.islistHave(daypasslist)==true)then
+        local len=table.length(daypasslist);
+        for i = 1, len do
+            if(daypasslist[i]==self.BookInfo.book_id)then
+                GameHelper.DayPass(self.DayPassBg);
+            end
+        end
+    end
 end
 
 --点击书本

@@ -64,7 +64,7 @@ public class ChargeMoneyItemScripte : MonoBehaviour
             }
             else
             {
-                PriceText.text = "$" + Price;
+                PriceText.text = "";
             }
         }
 

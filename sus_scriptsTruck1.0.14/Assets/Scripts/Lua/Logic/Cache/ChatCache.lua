@@ -19,6 +19,7 @@ function ChatCache:__init()
     self.backpack = 0;
     --一共次数
     self.total = 0;
+    self.price = 0;
     ---------------------【信鸽可用次数】
 
 end
@@ -28,6 +29,7 @@ function ChatCache:UpdateChatCount(datas)
     self.free=datas.free;
     self.backpack=datas.backpack;
     self.total=datas.total;
+    self.price=datas.price;
 end
 
 function ChatCache:UpdateList(datas)

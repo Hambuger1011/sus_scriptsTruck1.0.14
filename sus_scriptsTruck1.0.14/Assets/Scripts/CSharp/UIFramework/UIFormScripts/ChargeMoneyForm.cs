@@ -940,7 +940,7 @@ public class ChargeMoneyForm : BaseUIForm
                             }
                             else
                             {
-                                TopDPrice.text = "$" + itemInfo.price;
+                                TopDPrice.text = "";
                             }
 
                             mMoneyType = 2;
@@ -996,7 +996,7 @@ public class ChargeMoneyForm : BaseUIForm
                                                          }
                                                          else
                                                          {
-                                                             TopKPrice.text = "$" + itemInfo.price;
+                                                             TopKPrice.text = "";
                                                          }
         
                             mMoneyType = 1;

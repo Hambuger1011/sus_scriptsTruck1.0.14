@@ -73,8 +73,10 @@ function DressUpCache:ResetLogin()
     GameController.MainFormControl:GetSelfBookInfoRequest();
     GameController.MainFormControl:GetIndexScrollListRequest();
     --【切换账号】【重新请求登录弹窗】
+    GameController.WindowConfig:ResetIndex()
     GameController.MainFormControl:ResetWindowConfigStatus()
     GameController.MainFormControl:GetWindowConfigRequest()
+
 end
 
 

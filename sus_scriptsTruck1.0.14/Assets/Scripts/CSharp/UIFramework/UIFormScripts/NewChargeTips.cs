@@ -242,7 +242,7 @@ public class NewChargeTips : BaseUIForm {
         }
         else
         {
-            Price.text = "$"+mItemInfo.price;
+            Price.text = "";
         }
     }
 

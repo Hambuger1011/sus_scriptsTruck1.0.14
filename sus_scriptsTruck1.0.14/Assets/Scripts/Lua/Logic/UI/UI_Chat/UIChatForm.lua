@@ -228,7 +228,7 @@ function UIChatForm:SubmitBtnClick()
     GameController.ChatControl:SendWriterLetterRequest(self.Author_Uid,self.InputField.text);
 end
 
-function UIChatForm:SubmitBtnClick()
+function UIChatForm:SubmitBtnMaskClick()
     --【发送信息 总次数】
     local SendChatAll= Cache.ChatCache.total;
     if(SendChatAll<=0)then
@@ -288,6 +288,7 @@ function UIChatForm:UpdateSendCount()
     local SendChatAll= Cache.ChatCache.total;
     if(SendChatAll>0)then
         self.SubmitBtn.gameObject:SetActive(true)
+        self.SubmitBtnMask:SetActive(false);
         local FreeCount= Cache.ChatCache.free;
         if(FreeCount>0)then
             self.SubmitText.text="Free";

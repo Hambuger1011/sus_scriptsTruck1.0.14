@@ -37,13 +37,18 @@ end
 
 function UIDovesForm:OnClose()
     UIView.OnClose(self)
+    if(self.BuyBtn)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.BuyBtn,function(data) self:BuyBtnClick(); end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.CancelBtn,function(data) self:OnExitClick(); end)
+    end
 end
 
 --endregion
 
 
 function UIDovesForm:BuyBtnClick()
-
+    GameController.ChatControl:BuyPrivateLetterRequest()
+    self:OnExitClick();
 end
 
 

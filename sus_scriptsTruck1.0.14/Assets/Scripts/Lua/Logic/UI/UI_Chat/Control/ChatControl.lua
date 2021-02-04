@@ -141,6 +141,38 @@ end
 --endregion
 
 
+--region 【购买信鸽】
+function ChatControl:BuyPrivateLetterRequest()
+    logic.gameHttp:BuyPrivateLetter(function(result) self:BuyPrivateLetter(result); end)
+end
+--endregion
+
+
+--region 【购买信鸽*响应】
+function ChatControl:BuyPrivateLetter(result)
+    logic.debug.Log("----BuyPrivateLetter---->" .. result);
+    local json = core.json.Derialize(result);
+    local code = tonumber(json.code)
+    if(code == 200)then
+
+        logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
+        logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
+
+        Cache.ChatCache.backpack=Cache.ChatCache.backpack+1;
+        Cache.ChatCache.total=Cache.ChatCache.total+1;
+
+        if(UIChatForm)then
+            UIChatForm:UpdateSendCount();
+        end
+    elseif(code == 201)then
+        logic.cs.UIAlertMgr:Show("Error", json.msg)
+    end
+end
+--endregion
+
+
+
+
 
 --析构函数
 function ChatControl:__delete()

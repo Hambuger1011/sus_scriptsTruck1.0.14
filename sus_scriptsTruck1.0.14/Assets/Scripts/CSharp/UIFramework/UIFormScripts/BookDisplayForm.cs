@@ -799,7 +799,7 @@ public class BookDisplayForm : BaseUIForm
                 }
                 else if (jo.code == 201)    //你的钥匙数量不足,无法重置
                 {
-                    OpenChargeTip(1, restartCost, restartCost * 0.99f, true);
+                    //OpenChargeTip(1, restartCost, restartCost * 0.99f, true);
                 }
             }, null);
         }

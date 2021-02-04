@@ -39,7 +39,7 @@ namespace Helper.Login
         private Dictionary<int,IGGGameItem> shopListMap = new Dictionary<int,IGGGameItem>();
 
 #if ENABLE_DEBUG
-        public static string appconf_name = "test_config";
+        public static string appconf_name = "server_config_test";
 #else
         public static string appconf_name = "server_config";
 #endif

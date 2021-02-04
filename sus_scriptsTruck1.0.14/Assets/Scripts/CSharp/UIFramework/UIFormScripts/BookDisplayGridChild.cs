@@ -468,39 +468,10 @@ public class BookDisplayGridChild : MonoBehaviour {
         CheckBookOpenState();
 
         showCloseBtn();
-        this.BookTag.SetActive(false);
-        string _booktag =UserDataManager.Instance.GetBookItemInfo(mBookId).tag;
-        if (_booktag=="")
-        {
-            this.BookTag.SetActive(false);
-        }
-        else
-        {
-            if (_booktag == "New")
-            {
-                if (isComplete == false)
-                {
-                    this.BookTag.SetActive(true);
-                    this.BookTagText.text = "New";
-                }
-            }
-            else if (_booktag == "Update")
-            {
-                if (isComplete == false)
-                {
-                    int _open = UserDataManager.Instance.GetBookItemInfo(mBookId).chapteropen;
-                    int _updateNum = UserDataManager.Instance.GetBookItemInfo(mBookId).chapter_update_num;
-
-                    if (vChapterId > _open - _updateNum)
-                    {
-                        this.BookTag.SetActive(true);
-                        this.BookTagText.text = "Update";
-                    }
-                }
-            }
-        }
 
 
+        //【加载进度】
+        XLuaManager.Instance.CallFunction("GameHelper", "ShowNewBg1", mBookId, this.BookTag);
     }
 
     private void showCloseBtn()

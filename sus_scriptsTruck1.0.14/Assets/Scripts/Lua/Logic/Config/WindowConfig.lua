@@ -20,6 +20,10 @@ function WindowConfig:ResetStatus()
     BookPopupNeedShown = true
 end
 
+function WindowConfig:ResetIndex()
+    WindowIndex = 0
+end
+
 function WindowConfig:ShowFirstCharge()
     logic.debug.LogWarning("首充--ShowFirstCharge：first_recharge_switch="..logic.cs.UserDataManager.selfBookInfo.data.first_recharge_switch
             .. "\nlogic.cs.IGGSDKMrg.isNewUser="..tostring(logic.cs.IGGSDKMrg.isNewUser)

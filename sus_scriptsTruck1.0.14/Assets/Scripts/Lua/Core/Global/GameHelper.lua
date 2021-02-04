@@ -580,6 +580,46 @@ function GameHelper.ShowNewBg(book_id,Tips)
     end
 end
 
+
+
+function GameHelper.ShowNewBg1(obj)
+    local book_id=obj[0];
+    local Tips=obj[1];
+    local MainbookInfo=Cache.MainCache:GetMyBookByIndex(book_id);
+    local _finish_max_chapter=0;
+    if(MainbookInfo)then
+        _finish_max_chapter=MainbookInfo.finish_max_chapter;
+    end
+    local bookinfo = logic.cs.UserDataManager:GetBookItemInfo(book_id);
+    if(bookinfo and Tips and CS.XLuaHelper.is_Null(Tips)==false)then
+        if(bookinfo.tag=="")then
+            Tips:SetActive(false);
+        else
+            if(bookinfo.chapteropen)then
+                if(_finish_max_chapter>=bookinfo.chapteropen)then
+                    Tips:SetActive(false);
+                else
+                    local BookTagText =CS.DisplayUtil.GetChild(Tips, "BookTagText"):GetComponent("Text");
+                    if(bookinfo.tag=="New")then
+                        Tips:SetActive(true);
+                        BookTagText.text="NEW";
+                        return;
+                    end
+                    if(bookinfo.tag=="Update")then
+                        Tips:SetActive(false);
+                        BookTagText.text="Update";
+                        return;
+                    end
+                end
+            else
+                Tips:SetActive(false);
+            end
+        end
+    else
+        Tips:SetActive(false);
+    end
+end
+
 --endregion
 
 

@@ -218,15 +218,18 @@ public class MyRewardedAd
 
         Debug.LogError("HandleRewardedAdClosed  event received");
 
-        if (enumAds == EnumAds.Acitity)
-        {
-            //如果是活动页广告
-            XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
-        }
+     
 
         if (CallBack != null && isReward==true)
         {
             isReward = false;
+
+            if (enumAds == EnumAds.Acitity)
+            {
+                //如果是活动页广告
+                XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.ActivityControl:StartCD();");
+            }
+
             CallBack();
         }
     }
