@@ -19,8 +19,8 @@ function UISignTipForm:OnInitView()
     local root = self.uiform.transform
 
     self.SignInBtn = get(root,'Canvas/Bg/SignInBtn',typeof(logic.cs.Button))
-    self.ItemImg= get(root,'Canvas/Bg/ItemImg',typeof(logic.cs.Image))
-    self.ItemText = get(root,'Canvas/Bg/ItemImg/ItemText',typeof(logic.cs.Text))
+    self.ItemImg= get(root,'Canvas/Bg/RewardImg/ItemImg',typeof(logic.cs.Image))
+    self.ItemText = get(root,'Canvas/Bg/ItemText',typeof(logic.cs.Text))
     self.Close = get(root,'Canvas/Bg/Close',typeof(logic.cs.Button))
     self.Tile = get(root,'Canvas/Bg/Tile',typeof(logic.cs.Text))
     self.SignInBtnText = get(root,'Canvas/Bg/SignInBtn/SignInBtnText',typeof(logic.cs.Text))
@@ -81,25 +81,35 @@ function UISignTipForm:UpdateShow()
     --is_receive; --是否已签到领取 1:是 0否
 
     local numText
+    local nameText
     local sprite
+    local size
     if Cache.SignInCache.activity_login.diamond_qty and Cache.SignInCache.activity_login.diamond_qty > 0 then
         numText = Cache.SignInCache.activity_login.diamond_qty
         sprite = Cache.PropCache.SpriteData[1]
+        size = core.Vector3.New(1.5,1.5,1)
+        nameText = "Diamond"
     elseif Cache.SignInCache.activity_login.bkey_qty and Cache.SignInCache.activity_login.bkey_qty > 0 then
         numText = Cache.SignInCache.activity_login.bkey_qty
         sprite = Cache.PropCache.SpriteData[2]
+        size = core.Vector3.New(1.5,1.5,1)
+        nameText = "Key"
     elseif Cache.SignInCache.activity_login.item_list and #Cache.SignInCache.activity_login.item_list > 0 then
         for k, v in pairs(Cache.SignInCache.activity_login.item_list) do
             numText = v.num
+            nameText = v.name
             if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
                 sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
             else
                 sprite = Cache.PropCache.SpriteData[v.id]
             end
         end
+        size = core.Vector3.New(1,1,1)
     end
-    self.ItemText.text = "X"..numText
+    self.ItemText.text = nameText.." ×"..numText
     self.ItemImg.sprite = sprite
+    self.ItemImg:SetNativeSize()
+    self.ItemImg.transform.localScale = size
 
 end
 
