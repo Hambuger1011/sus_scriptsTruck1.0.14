@@ -18,11 +18,9 @@ function UISignTipForm:OnInitView()
     local get = logic.cs.LuaHelper.GetComponent
     local root = self.uiform.transform
 
-    self.RewardImg= get(root,'Canvas/Bg/RewardImg',typeof(logic.cs.Image))
     self.SignInBtn = get(root,'Canvas/Bg/SignInBtn',typeof(logic.cs.Button))
-    self.Type1=root:Find('Canvas/Bg/Type1').gameObject
-    self.Type2=root:Find('Canvas/Bg/Type2').gameObject
-    self.Type3=root:Find('Canvas/Bg/Type3').gameObject
+    self.ItemImg= get(root,'Canvas/Bg/ItemImg',typeof(logic.cs.Image))
+    self.ItemText = get(root,'Canvas/Bg/ItemImg/ItemText',typeof(logic.cs.Text))
     self.Close = get(root,'Canvas/Bg/Close',typeof(logic.cs.Button))
     self.Tile = get(root,'Canvas/Bg/Tile',typeof(logic.cs.Text))
     self.SignInBtnText = get(root,'Canvas/Bg/SignInBtn/SignInBtnText',typeof(logic.cs.Text))
@@ -63,10 +61,6 @@ function UISignTipForm:OnClose()
     self.SignInBtn.onClick:RemoveAllListeners()
     self.Close.onClick:RemoveAllListeners()
 
-    self.RewardImg = nil;
-    self.Type1 = nil;
-    self.Type2 = nil;
-    self.Type3 = nil;
     self.Close = nil;
     self.Tile = nil;
     self.SignInBtnText = nil;
@@ -75,7 +69,7 @@ function UISignTipForm:OnClose()
 end
 
 --刷新展示
-function UISignTipForm:UpdateShow(get,root)
+function UISignTipForm:UpdateShow()
 
     self.Tile.text=CS.CTextManager.Instance:GetText(343);  -- "自动签到标题"
     self.SignInBtnText.text=CS.CTextManager.Instance:GetText(344);  -- "签到"
@@ -86,32 +80,26 @@ function UISignTipForm:UpdateShow(get,root)
     --diamond_qty;  --奖励钻石
     --is_receive; --是否已签到领取 1:是 0否
 
-    if(Cache.SignInCache.activity_login.type==1)then    --1钥匙
-
-        self.Type1:SetActiveEx(true);
-        self.RewardImg.sprite = CS.ResourceManager.Instance:GetUISprite("ADSReward/qd-yaoshi");
-        self.KeyText = get(root,'Canvas/Bg/Type1/KeyImg/KeyText',typeof(logic.cs.Text))
-        self.KeyText.text="X"..Cache.SignInCache.activity_login.bkey_qty;
-
-    elseif(Cache.SignInCache.activity_login.type==2)then  -- 2钻石
-
-        self.Type2:SetActiveEx(true);
-        self.RewardImg.sprite = CS.ResourceManager.Instance:GetUISprite("ADSReward/qd-zuanshi3");
-        self.DiamondText = get(root,'Canvas/Bg/Type2/DiamondImg/DiamondText',typeof(logic.cs.Text))
-        self.DiamondText.text="X"..Cache.SignInCache.activity_login.diamond_qty;
-
-
-    elseif(Cache.SignInCache.activity_login.type==4)then   -- 4组合包
-
-        self.Type3:SetActiveEx(true);
-        self.RewardImg.sprite = CS.ResourceManager.Instance:GetUISprite("ADSReward/qd-zuanshi_yaoshi");
-        self.KeyText = get(root,'Canvas/Bg/Type3/KeyImg/KeyText',typeof(logic.cs.Text))
-        self.DiamondText = get(root,'Canvas/Bg/Type3/DiamondImg/DiamondText',typeof(logic.cs.Text))
-        self.KeyText.text="X"..Cache.SignInCache.activity_login.bkey_qty;
-        self.DiamondText.text="X"..Cache.SignInCache.activity_login.diamond_qty;
-
-
+    local numText
+    local sprite
+    if Cache.SignInCache.activity_login.diamond_qty and Cache.SignInCache.activity_login.diamond_qty > 0 then
+        numText = Cache.SignInCache.activity_login.diamond_qty
+        sprite = Cache.PropCache.SpriteData[1]
+    elseif Cache.SignInCache.activity_login.bkey_qty and Cache.SignInCache.activity_login.bkey_qty > 0 then
+        numText = Cache.SignInCache.activity_login.bkey_qty
+        sprite = Cache.PropCache.SpriteData[2]
+    elseif Cache.SignInCache.activity_login.item_list and #Cache.SignInCache.activity_login.item_list > 0 then
+        for k, v in pairs(Cache.SignInCache.activity_login.item_list) do
+            numText = v.num
+            if 1000<tonumber(v.id) and tonumber(v.id)<10000 then
+                sprite=DataConfig.Q_DressUpData:GetSprite(v.id)
+            else
+                sprite = Cache.PropCache.SpriteData[v.id]
+            end
+        end
     end
+    self.ItemText.text = "X"..numText
+    self.ItemImg.sprite = sprite
 
 end
 
