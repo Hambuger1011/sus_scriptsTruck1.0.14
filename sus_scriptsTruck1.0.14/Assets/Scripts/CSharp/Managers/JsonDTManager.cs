@@ -279,6 +279,21 @@ public void SaveLocalVersionBookDetail(int vBookId,JDT_Book vInfo)
 }
 
 /// <summary>
+/// 获取书本数据
+/// </summary>
+/// <param name="resultInfo"></param>
+public void SaveLocalVersionBookDetailByStr(string resultInfo)
+{
+    UserDataManager.Instance.VersionBookDetailInfo = JsonHelper.JsonToObject<HttpInfoReturn<VersionBookDetailInfo>>(resultInfo);
+    if (UserDataManager.Instance.VersionBookDetailInfo != null &&
+        UserDataManager.Instance.VersionBookDetailInfo.data != null && 
+        UserDataManager.Instance.VersionBookDetailInfo.data.info != null)
+    {
+        SaveJDTItemToLocal(LocalVerBookDetailFlag + UserDataManager.Instance.VersionBookDetailInfo.data.info.id, JsonHelper.ObjectToJson(UserDataManager.Instance.VersionBookDetailInfo.data.info));
+    }
+}
+
+/// <summary>
 /// 根据书本和章节ID，获取章节信息
 /// </summary>
 /// <param name="vBookId"></param>

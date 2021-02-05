@@ -436,7 +436,18 @@ end
 
 --region【UIActivityForm设置ScrollRect】---【常规活动】
 
-function UIActivityForm:SetVerticalNormalizedPosition()
+function UIActivityForm:InvestmentIsEnd()
+    if(self.LimitedTimePanel)then
+        self.LimitedTimePanel:InvestmentIsEnd();
+    end
+end
+
+--endregion
+
+
+--region【投资活动关闭】---【限时活动】
+
+function UIActivityForm:InvestmentIsEnd()
     if(self.ActivityPanel)then
         self.ActivityPanel:SetVerticalNormalizedPosition();
     end

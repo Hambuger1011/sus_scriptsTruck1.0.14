@@ -58,13 +58,26 @@ function LimitTimeActivityCache:IsOpen()
     if(GameHelper.islistHave(self.ActivityList)==true)then
         local len=table.length(self.ActivityList);
         for i = 1, len do
-            if(self.ActivityList[i].is_open==1)then
+            if(self.ActivityList[i].is_open==1 and self.ActivityList[i].id~=EnumActivity.Investment)then
                 return true;
             end
         end
     end
     return false;
 end
+
+--
+function LimitTimeActivityCache:InvestmentIsEnd()
+    if(GameHelper.islistHave(self.ActivityList)==true)then
+        local len=table.length(self.ActivityList);
+        for i = 1, len do
+            if(self.ActivityList[i].is_open==1 and self.ActivityList[i].id==EnumActivity.Investment)then
+                self.ActivityList[i].is_open=0;
+            end
+        end
+    end
+end
+
 
 
 

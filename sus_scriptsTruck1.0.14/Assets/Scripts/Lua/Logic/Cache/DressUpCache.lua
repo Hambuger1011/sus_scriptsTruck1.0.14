@@ -76,7 +76,8 @@ function DressUpCache:ResetLogin()
     GameController.WindowConfig:ResetIndex()
     GameController.MainFormControl:ResetWindowConfigStatus()
     GameController.MainFormControl:GetWindowConfigRequest()
-
+    --【重新获取通用活动列表】
+    GameController.ActivityControl:GetActivityListRequest();
 end
 
 

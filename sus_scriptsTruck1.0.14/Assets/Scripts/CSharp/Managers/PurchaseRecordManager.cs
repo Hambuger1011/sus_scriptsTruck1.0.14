@@ -188,7 +188,7 @@ public class PurchaseRecordManager : CSingleton<PurchaseRecordManager>
             {
 #if CHANNEL_ONYX || CHANNEL_SPAIN
                 SdkMgr.Instance.facebook.LogPurchase(float.Parse(listStr[8]));
-                SdkMgr.Instance.appsFlyer.Purchase(float.Parse(listStr[8]), listStr[3]);
+              //  SdkMgr.Instance.appsFlyer.Purchase(float.Parse(listStr[8]), listStr[3]);
 #endif
             }
         }

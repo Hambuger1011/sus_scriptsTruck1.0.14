@@ -22,6 +22,7 @@ function GameController.Init()
     GameController.WindowConfig=require("Logic/Config/WindowConfig");
     GameController.DayPassController=require("Logic/UI/UI_DayPass/Control/DayPassController");
     GameController.FirstChargeControl=require("Logic/UI/UI_FirstCharge/Control/FirstChargeControl");
+    GameController.InvestmentControl=require("Logic/UI/UI_Investment/Control/InvestmentControl");
 
     isInit = true
 end

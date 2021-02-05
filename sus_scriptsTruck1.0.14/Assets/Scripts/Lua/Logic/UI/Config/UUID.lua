@@ -57,6 +57,7 @@ local UIID = {
 
 	UIPakageForm = 'UI/Resident/UI/UIPakageForm',
 	UIDovesForm = 'UI/Resident/UI/UIDovesForm',
+	UIInvestmentForm = 'UI/Resident/UI/UIInvestmentForm',
 }
 
 return UIID

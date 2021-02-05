@@ -352,6 +352,7 @@ end
 
 --endregion
 
+
 --region【展示书本背景】
 
 function GameHelper.ShowChapterBG(book_id,BookBG)
@@ -811,6 +812,7 @@ function GameHelper.Limit_time_Free(obj)
     end
 end
 --endregion
+
 
 --region【DayPass 显示标签】
 function GameHelper.DayPass(obj)

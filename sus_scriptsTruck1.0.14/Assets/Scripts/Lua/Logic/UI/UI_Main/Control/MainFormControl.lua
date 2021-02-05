@@ -16,6 +16,7 @@ local refresh_count=0;
 function MainFormControl:SetData(mainForm)
     UIMainForm=mainForm;
    -- lastUUID = "";
+    Cache.MainCache.weekly_list={};
 end
 
 
@@ -112,12 +113,32 @@ function MainFormControl:OnGetbooksUpdatedWeekly(result)
             UIMainForm:UpdateWeeklyList(Cache.MainCache.weekly_list);
             --刷新推荐列表
             UIMainForm:UpdateRecommendList(Cache.MainCache.recommend_list);
+            --判断周更里面是否有新书
+            self:CheckGetNewBookDetailInfo(Cache.MainCache.weekly_list);
         end
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
     end
 end
 --endregion
+
+function MainFormControl:CheckGetNewBookDetailInfo(tableList)
+    local len = table.length(tableList);
+    for i = 1, len do
+        local infoItem = tableList[i]
+        if infoItem ~= nil and logic.cs.JsonDTManager:GetJDTBookDetailInfo(infoItem.book_id) == nil then
+        logic.cs.GameHttpNet:GetVersionBookDetailInfo(infoItem.book_id,function(result) self:ReceiveNewBookDetailInfoHandler(result); end)
+        end
+    end
+end
+
+function MainFormControl:ReceiveNewBookDetailInfoHandler(result)
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if(code == 200)then
+         logic.cs.JsonDTManager:SaveLocalVersionBookDetailByStr(result)
+    end
+end
 
 
 --region 【排行榜列表响应】
@@ -173,7 +194,8 @@ function MainFormControl:GetSelfBookInfo(result)
 
         --获取周更列表长度
         local weeklyList_Len=table.length(Cache.MainCache.weekly_list);
-        if(UIMainForm and weeklyList_Len>0)then
+        local passTime = logic.cs.GameDataMgr:GetCurrentUTCTime() - tonumber(logic.cs.UserDataManager.userInfo.data.userinfo.current_time)
+        if(UIMainForm and GameHelper.islistHave(Cache.MainCache.weekly_list)==true)then
             --刷新周更新列表
             UIMainForm:UpdateWeeklyList(Cache.MainCache.weekly_list);
             --刷新推荐列表
@@ -340,6 +362,12 @@ function MainFormControl:RedTimerUpdate()
 
         --刷新DayPass 倒计时
         GameController.DayPassController:UpdateCountdown();
+
+        local InvestmentInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.Investment);  --获取通用列表数据
+        if(InvestmentInfo and InvestmentInfo.is_open==1 and GameController.InvestmentControl.isEndTime==false)then --获取开关状态
+            --刷新DayPass 倒计时
+            GameController.InvestmentControl:UpdateCountdown();
+        end
     end
 
 end

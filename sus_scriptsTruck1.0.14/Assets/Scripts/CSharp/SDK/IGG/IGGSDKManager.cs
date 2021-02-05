@@ -1411,6 +1411,27 @@ return tempItem.GetPurchase().GetPlatformPriceCurrencyCode() + tempItem.GetPurch
     /// </summary>
     public void IGGAccountLogin()
     {
+#if UNITY_EDITOR
+        UserInfo.Clear();
+        Init();
+        LoginDataInfo loginInfo = new LoginDataInfo();
+        loginInfo.UserId = "899788233";
+        loginInfo.Token = "bbfaf1a6ce0001b284c5276c27a9eeb1";
+        loginInfo.Email = "";
+        loginInfo.UserName = "";
+        loginInfo.UserImageUrl = "";
+        loginInfo.OpenType = 1;
+        if (isTokenExpired)
+        {
+            isTokenExpired = false;
+            ThirdPartyLoginSuccHandler(loginInfo,EnumReLogin.SwitchAccount);
+            return;
+        }
+
+        EventDispatcher.Dispatch(EventEnum.ThirdPartyLoginSucc, loginInfo);
+        UserDataManager.Instance.SigningIn = false;
+        return;
+#endif
         // IGG通行证账号切换。
         accountHelper.SwitchLoginByIGGAccount(new OnSwitchLoginByIGGAccountListener(OnIGGIDSameAsNowByIGGAccount,
             OnSwitchLoginByIGGAccountUnbind, OnSwitchLoginByIGGAccountBindDifIGGID,

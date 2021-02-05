@@ -99,6 +99,7 @@ public class CenterOnChild : MonoBehaviour, IEndDragHandler, IDragHandler
 
     public void InitChild()
     {
+        _childrenPos.Clear();
         GridLayoutGroup grid;
         grid = _container.GetComponent<GridLayoutGroup>();
         if (grid == null)

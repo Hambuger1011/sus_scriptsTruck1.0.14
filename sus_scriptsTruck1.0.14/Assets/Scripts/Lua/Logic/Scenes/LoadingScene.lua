@@ -202,7 +202,8 @@ function LoadingScene:DoEnter()
     logic.debug.Log("6、进入游戏")
     logic.cs.talkingdata:OpenApp(logic.cs.EventEnum.EnterGame)
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.EnterGameOnyx)
-    if logic.cs.UserDataManager.userInfo.data.userinfo.firstplay == 0 then
+    --if logic.cs.UserDataManager.userInfo.data.userinfo.firstplay == 0 then
+    if false then
         logic.cs.IGGSDKMrg.isNewUser = true
         logic.cs.talkingdata:OpenApp("OpenGuideForm")
         logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NewerStart)

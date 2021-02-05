@@ -86,6 +86,9 @@ end
 
 function TopBookView:ShowTopBook(book_ids,time)
     --book_ids = "72,100,8,82"
+    self.TopBookContent.transform:ClearAllChild()
+    self.PointContent.transform:ClearAllChild()
+    self.pointList = {}
     self.bookList = string.split(book_ids, ",")
     self.waitTime = time or 5
     for i = 1, #self.bookList do

@@ -24,7 +24,7 @@ function LimitTimeActivityInfo:__init()
 end
 
 function LimitTimeActivityInfo:UpdateData(data)
-    self.id=data.id;
+    self.id=tonumber(data.id);
     self.title=data.title;
     self.start_date=data.start_date;
     self.end_date=data.end_date;

@@ -1492,4 +1492,45 @@ function GameHttp:BuyPrivateLetter(callback)
     end, nil, nil, true)
 end
 
+--【获取投资活动计划列表】
+function GameHttp:GetInvestPlanList(_activity_id,callback)
+    local param = {
+        activity_id=_activity_id;
+    }
+    self:Get(self, "api_getInvestPlanList", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【参加投资活动计划】
+function GameHttp:JoinInvestPlan(_activity_id,_number,callback)
+    local param = {
+        activity_id=_activity_id;
+        number=_number;
+    }
+    self:Post(self, "api_joinInvestPlan", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取投资活动计划状态】
+function GameHttp:GetInvestPlanStatus(_activity_id,callback)
+    local param = {
+        activity_id=_activity_id;
+    }
+    self:Get(self, "api_getInvestPlanStatus", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【领取投资活动计划奖励】
+function GameHttp:ReceiveInvestPlan(_activity_id,callback)
+    local param = {
+        activity_id=_activity_id;
+    }
+    self:Post(self, "api_receiveInvestPlan", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
 return GameHttp.New()

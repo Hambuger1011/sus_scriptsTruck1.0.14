@@ -107,6 +107,8 @@ EnumActivity.SpinDraw=2;
 EnumActivity.FreeKey=3;
 --迁移Banner
 EnumActivity.MoveCode=4;
+--投资活动
+EnumActivity.Investment=5;
 
 EActivityPanel={}
 

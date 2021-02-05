@@ -203,7 +203,9 @@ function UIActivityBannerForm:SetInfo()
         for i = 1, len do
             --如果本活动开启
             if(Cache.LimitTimeActivityCache.ActivityList[i].is_open==1)then
-                table.insert(self.showlist,Cache.LimitTimeActivityCache.ActivityList[i].id);
+                if(Cache.LimitTimeActivityCache.ActivityList[i].id~=EnumActivity.Investment)then  --如果不是 投资活动
+                    table.insert(self.showlist,Cache.LimitTimeActivityCache.ActivityList[i].id);
+                end
             end
         end
     end

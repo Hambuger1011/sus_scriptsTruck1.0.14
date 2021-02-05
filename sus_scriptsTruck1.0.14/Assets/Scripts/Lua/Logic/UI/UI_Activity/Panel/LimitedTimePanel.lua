@@ -138,6 +138,31 @@ function LimitedTimePanel:__init(gameObject)
 
     --endregion
 
+
+    --region【投资活动】
+
+
+    local InvestmentInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.Investment);  --获取通用列表数据
+    self.InvestmentBG = CS.DisplayUtil.GetChild(self.ScrollRect, "InvestmentBG");
+    if(InvestmentInfo and InvestmentInfo.is_open==1)then --获取开关状态
+        self.InvestmentText = CS.DisplayUtil.GetChild(self.InvestmentBG, "InvestmentText"):GetComponent("Text");
+        self.InvestmentDetailText = CS.DisplayUtil.GetChild(self.InvestmentBG, "InvestmentDetailText"):GetComponent("Text");
+        self.InvestmentBtn = CS.DisplayUtil.GetChild(self.InvestmentBG, "InvestmentBtn");
+        self.InvestmentBtnText = CS.DisplayUtil.GetChild(self.InvestmentBG, "InvestmentBtnText"):GetComponent("Text");
+       -- self.BindRedPoint = CS.DisplayUtil.GetChild(self.InvestmentBG, "RedPoint");
+
+        logic.cs.UIEventListener.AddOnClickListener(self.InvestmentBtn,function(data) GameController.InvestmentControl:PopUpDayPassBookRequest(EnumActivity.Investment) end)
+
+        self.InvestmentBG:SetActive(true);
+    else
+        self.InvestmentBG:SetActive(false);
+    end
+
+
+
+
+    --endregion
+
 end
 
 --endregion
@@ -182,7 +207,6 @@ end
 --endregion
 
 
-
 --region【PaySuccessMsgListener】
 function LimitedTimePanel:PaySuccessMsgListener()
     self.FirstRechargePoint:SetActiveEx(true);
@@ -191,6 +215,8 @@ function LimitedTimePanel:PaySuccessMsgListener()
 end
 --endregion
 
+
+--region【获取奖励文本】
 function LimitedTimePanel:GetRewardText(DiamondsNum,KeysNum,ItemList)
     local rewardText = "Get "
     local needAnd = false
@@ -220,6 +246,7 @@ function LimitedTimePanel:GetRewardText(DiamondsNum,KeysNum,ItemList)
     end
     return rewardText
 end
+--endregion
 
 
 --region【刷新通用奖励数据】
@@ -407,7 +434,6 @@ end
 --endregion
 
 
-
 --region【GO点击 去读书】
 function LimitedTimePanel:GoBtnClick()
     logic.cs.PlayerPrefs.SetInt("FreeRedPoint", 2);
@@ -581,10 +607,14 @@ function LimitedTimePanel:RedPointShow()
 end
 --endregion
 
-
-
-
-
+function LimitedTimePanel:InvestmentIsEnd()
+    local InvestmentInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.Investment);  --获取通用列表数据
+    if(InvestmentInfo and InvestmentInfo.is_open==1)then --获取开关状态
+        self.InvestmentBG:SetActive(true);
+    else
+        self.InvestmentBG:SetActive(false);
+    end
+end
 
 
 
@@ -611,6 +641,10 @@ function LimitedTimePanel:__delete()
 
     if(self.MoveCodeBG)then
         logic.cs.UIEventListener.RemoveOnClickListener(self.MoveCodeBG,function(data) self:MoveCodeBtnClick() end);
+    end
+
+    if(self.InvestmentBtn)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.InvestmentBtn,function(data) logic.UIMgr:Open(logic.uiid.UIInvestmentForm) end)
     end
 
 

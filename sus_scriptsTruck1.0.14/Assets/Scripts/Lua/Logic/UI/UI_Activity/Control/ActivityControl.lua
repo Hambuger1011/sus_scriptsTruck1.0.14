@@ -797,6 +797,17 @@ end
 --endregion
 
 
+--region【投资活动关闭】---【限时活动】
+
+function ActivityControl:InvestmentIsEnd()
+    if(UIActivityForm)then
+        UIActivityForm:InvestmentIsEnd();
+    end
+end
+
+--endregion
+
+
 --析构函数
 function ActivityControl:__delete()
 
