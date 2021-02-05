@@ -664,7 +664,7 @@ end
 
 --region【停止顶部轮播】
 function MainFormControl:StopTopBookMove()
-    if(UIMainForm)then
+    if(UIMainForm and UIMainForm.TopBookView)then
         UIMainForm.TopBookView:StopMove();
     end
 end
@@ -672,7 +672,7 @@ end
 
 --region【开始顶部轮播】
 function MainFormControl:StartTopBookMove()
-    if(UIMainForm)then
+    if(UIMainForm and UIMainForm.TopBookView)then
         UIMainForm.TopBookView:StartMove();
     end
 end
@@ -680,7 +680,7 @@ end
 
 --region【顶部轮播】
 function MainFormControl:TopBookValueChanged(v)
-    if(UIMainForm)then
+    if(UIMainForm and UIMainForm.TopBookView)then
         UIMainForm.TopBookView:OnValueChanged(v);
     end
 end
