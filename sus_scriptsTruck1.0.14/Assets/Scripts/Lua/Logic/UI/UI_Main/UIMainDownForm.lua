@@ -213,6 +213,7 @@ function UIMainDownForm:RwardToggleClick(data,data1)
     else
         uiform.uiform:Appear();
         uiform:SetBindStatus();
+        uiform:UpdateInvestment();
     end
 
     if(uiform and data1 and data1==3)then

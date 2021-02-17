@@ -607,7 +607,7 @@ function GameHelper.ShowNewBg1(obj)
                         return;
                     end
                     if(bookinfo.tag=="Update")then
-                        Tips:SetActive(false);
+                        Tips:SetActive(true);
                         BookTagText.text="Update";
                         return;
                     end

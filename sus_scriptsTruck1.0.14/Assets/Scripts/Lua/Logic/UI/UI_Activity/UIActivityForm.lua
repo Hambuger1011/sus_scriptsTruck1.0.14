@@ -248,7 +248,6 @@ end
 --endregion
 
 
-
 --region 【刷新常规活动 每日任务】
 
 function UIActivityForm:UpdateTasks(data)
@@ -436,9 +435,9 @@ end
 
 --region【UIActivityForm设置ScrollRect】---【常规活动】
 
-function UIActivityForm:InvestmentIsEnd()
-    if(self.LimitedTimePanel)then
-        self.LimitedTimePanel:InvestmentIsEnd();
+function UIActivityForm:SetVerticalNormalizedPosition()
+    if(self.ActivityPanel)then
+        self.ActivityPanel:SetVerticalNormalizedPosition();
     end
 end
 
@@ -448,8 +447,19 @@ end
 --region【投资活动关闭】---【限时活动】
 
 function UIActivityForm:InvestmentIsEnd()
-    if(self.ActivityPanel)then
-        self.ActivityPanel:SetVerticalNormalizedPosition();
+    if(self.LimitedTimePanel)then
+        self.LimitedTimePanel:InvestmentIsEnd();
+    end
+end
+
+--endregion
+
+
+--region【投资活动刷新】---【限时活动】
+
+function UIActivityForm:UpdateInvestment()
+    if(self.LimitedTimePanel)then
+        self.LimitedTimePanel:UpdateInvestment();
     end
 end
 

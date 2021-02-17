@@ -74,8 +74,6 @@ end
 
 function UIInvestmentForm:SetInfo()
 
-    local isBuy=false;
-
     self.DiamondBtn:SetActive(false);
     self.KeyBtn:SetActive(false);
     self.CollectBtn:SetActive(false);
@@ -99,39 +97,37 @@ function UIInvestmentForm:SetInfo()
 
     local onlyID1=self.FirstItem1.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem1,onlyID1,InvestInfo.prize1[1],1,false);
+    self:SetItem(self.FirstItem1,onlyID1,InvestInfo.prize1[1],1,false,0);
 
     local onlyID2=self.FirstItem2.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem2,onlyID2,InvestInfo.prize1[2],2,false);
+    self:SetItem(self.FirstItem2,onlyID2,InvestInfo.prize1[2],2,false,0);
 
     local onlyID3=self.FirstItem3.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem3,onlyID3,InvestInfo.prize1[3],3,false);
+    self:SetItem(self.FirstItem3,onlyID3,InvestInfo.prize1[3],3,false,0);
 
-    if(isBuy==true)then
-        local onlyID4=self.SecondItem1.gameObject:GetInstanceID();
-        if(#InvestInfo.prize2<4)then return; end
-        self:SetItem(self.SecondItem1,onlyID4,InvestInfo,4,false);
-    end
+    local onlyID4=self.SecondItem1.gameObject:GetInstanceID();
+    if(#InvestInfo.prize2<4)then return; end
+    self:SetItem(self.SecondItem1,onlyID4,InvestInfo.prize2[1],4,false,0);
 
     local onlyID5=self.SecondItem2.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[1],5,false);
+    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[2],5,false,0);
 
     local onlyID6=self.SecondItem3.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[2],6,false);
+    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[3],6,false,0);
 
     local onlyID7=self.SecondItem4.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[3],7,false);
+    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[4],7,false,0);
 
     self.DiamondText.text = tostring(Cache.InvestmentCache.Investment1.diamond_count);
     self.KeyText.text = tostring(Cache.InvestmentCache.Investment2.key_count);
 end
 
-function UIInvestmentForm:SetItem(item,onlyID,itemData,index,isBuyed);
+function UIInvestmentForm:SetItem(item,onlyID,itemData,index,isBuyed,_type);
     if(onlyID==nil)then return; end
     local investmentItem = table.trygetvalue(self.ItemList,onlyID);
     if(investmentItem==nil)then
@@ -140,7 +136,7 @@ function UIInvestmentForm:SetItem(item,onlyID,itemData,index,isBuyed);
     end
     --【赋值】
     if(investmentItem)then
-        investmentItem:SetItemData(itemData,index);
+        investmentItem:SetItemData(itemData,index,_type);
         if(isBuyed==true)then
             investmentItem:ShowBuyed();
         end
@@ -163,31 +159,31 @@ function UIInvestmentForm:SetInfo2()
 
     local onlyID1=self.FirstItem1.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem1,onlyID1,InvestInfo.prize1[1],1,true);
+    self:SetItem(self.FirstItem1,onlyID1,InvestInfo.prize1[1],1,true,1);
 
     local onlyID2=self.FirstItem2.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem2,onlyID2,InvestInfo.prize1[2],2,true);
+    self:SetItem(self.FirstItem2,onlyID2,InvestInfo.prize1[2],2,true,1);
 
     local onlyID3=self.FirstItem3.gameObject:GetInstanceID();
     if(#InvestInfo.prize1<3)then return; end
-    self:SetItem(self.FirstItem3,onlyID3,InvestInfo.prize1[3],3,true);
+    self:SetItem(self.FirstItem3,onlyID3,InvestInfo.prize1[3],3,true,1);
 
     local onlyID4=self.SecondItem1.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem1,onlyID4,InvestInfo,4,false);
+    self:SetItem(self.SecondItem1,onlyID4,InvestInfo.prize2[1],4,false,1);
 
     local onlyID5=self.SecondItem2.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[1],5,false);
+    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[2],5,false,1);
 
     local onlyID6=self.SecondItem3.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[2],6,false);
+    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[3],6,false,1);
 
     local onlyID7=self.SecondItem4.gameObject:GetInstanceID();
     if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[3],7,false);
+    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[4],7,false,1);
 
 end
 
@@ -220,26 +216,28 @@ function UIInvestmentForm:EnterCollect2(InvestInfo)
     self.TimeBg:SetActive(false);
     self.CollectBtn:SetActive(false);
 
-
-    local onlyID4=self.SecondItem1.gameObject:GetInstanceID();
-    if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem1,onlyID4,InvestInfo,4,true);
-
-    local onlyID5=self.SecondItem2.gameObject:GetInstanceID();
-    if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[1],5,true);
-
-    local onlyID6=self.SecondItem3.gameObject:GetInstanceID();
-    if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[2],6,true);
-
-    local onlyID7=self.SecondItem4.gameObject:GetInstanceID();
-    if(#InvestInfo.prize2<4)then return; end
-    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[3],7,true);
-
     --把开关关掉
     Cache.LimitTimeActivityCache:InvestmentIsEnd();
     GameController.ActivityControl:InvestmentIsEnd();
+
+
+    local onlyID4=self.SecondItem1.gameObject:GetInstanceID();
+    if(#InvestInfo.prize2<4)then return; end
+    self:SetItem(self.SecondItem1,onlyID4,InvestInfo.prize2[1],4,true,1);
+
+    local onlyID5=self.SecondItem2.gameObject:GetInstanceID();
+    if(#InvestInfo.prize2<4)then return; end
+    self:SetItem(self.SecondItem2,onlyID5,InvestInfo.prize2[2],5,true,1);
+
+    local onlyID6=self.SecondItem3.gameObject:GetInstanceID();
+    if(#InvestInfo.prize2<4)then return; end
+    self:SetItem(self.SecondItem3,onlyID6,InvestInfo.prize2[3],6,true,1);
+
+    local onlyID7=self.SecondItem4.gameObject:GetInstanceID();
+    if(#InvestInfo.prize2<4)then return; end
+    self:SetItem(self.SecondItem4,onlyID7,InvestInfo.prize2[4],7,true,1);
+
+
 end
 
 

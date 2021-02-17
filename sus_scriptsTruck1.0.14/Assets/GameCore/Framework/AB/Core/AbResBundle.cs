@@ -25,6 +25,11 @@
         {
             yield return null;
         }
+        
+        public virtual IEnumerator DoDownload(string name, string strVer, Action<bool, string,string> callback, Action<float> progressCallBack)
+        {
+            yield return null;
+        }
 
 
 

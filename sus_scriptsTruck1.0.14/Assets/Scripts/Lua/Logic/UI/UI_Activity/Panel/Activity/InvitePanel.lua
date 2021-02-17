@@ -55,9 +55,9 @@ function InvitePanel:SetUI()
                     InviteButton.onClick:RemoveAllListeners()
                     InviteButton.onClick:AddListener(function()
                         if core.config.os == OS.iOS then
-                            logic.cs.SdkMgr.shareSDK:NativeShare("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
+                            logic.cs.SdkMgr.shareSDK:NativeShare("https://sus-game.igg.com/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
                         else
-                            logic.cs.SdkMgr.shareSDK:ShareMsg("http://193.112.66.252:8082/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
+                            logic.cs.SdkMgr.shareSDK:ShareMsg("https://sus-game.igg.com/invite.html?invite_code="..logic.cs.UserDataManager.userInfo.data.userinfo.invite_code);
                         end
                     end)
                 elseif v.status == 1 then

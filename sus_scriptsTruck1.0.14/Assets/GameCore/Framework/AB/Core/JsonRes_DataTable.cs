@@ -31,21 +31,26 @@
             //     callback(true);
             //     yield break;
             // }
-            yield return DoDownload(strAssetName, UserDataManager.Instance.DataTableVersion, (bSuc, filename) =>
+            yield return DoDownload(strAssetName, UserDataManager.Instance.DataTableVersion, (bSuc, filename,jsonZipName) =>
             {
                 if (bSuc)
                 {
-                    var buff = GZipUtils.DecompressFromFile(filename);
-                    //var buff = File.ReadAllText(filename);
-                    try
+                    string zipVersion = JsonDTManager.Instance.GetJDTItemByLocal(JsonDTManager.JsonDTZipVersionFlag);
+                    if (!zipVersion.Equals(jsonZipName))
                     {
-                        JsonDTManager.Instance.SaveJDTToLocal(buff);
-                    }
-                    catch(Exception ex)
-                    {
-                        Debug.LogError(ex);
-                        LOG.Error("加载配置失败");
-                        CFileManager.WriteFileString(filename + ".txt", "");
+                        var buff = GZipUtils.DecompressFromFile(filename);
+                        //var buff = File.ReadAllText(filename);
+                        try
+                        {
+                            JsonDTManager.Instance.SaveJDTToLocal(buff);
+                            JsonDTManager.Instance.SaveJDTItemToLocal(JsonDTManager.JsonDTZipVersionFlag,jsonZipName);
+                        }
+                        catch(Exception ex)
+                        {
+                            Debug.LogError(ex);
+                            LOG.Error("加载配置失败");
+                            CFileManager.WriteFileString(filename + ".txt", "");
+                        }
                     }
                 }
                 if (callback != null)
@@ -55,7 +60,7 @@
             }, progressCallBack);
         }
 
-        public override IEnumerator DoDownload(string name, string strVer, Action<bool, string> callback, Action<float> progressCallBack)
+        public override IEnumerator DoDownload(string name, string strVer, Action<bool, string,string> callback, Action<float> progressCallBack)
         {
             //string.Concat(AbUtility.abWritablePath, "/ab_cache/datatable/config");
             string zipPath = UserDataManager.Instance.versionInfo.data.zip;
@@ -80,7 +85,7 @@
 
             if (progressCallBack != null)
                 progressCallBack(1);
-            callback(true, filename);
+            callback(true, filename,jsonZipName);
             yield break;
         }
 

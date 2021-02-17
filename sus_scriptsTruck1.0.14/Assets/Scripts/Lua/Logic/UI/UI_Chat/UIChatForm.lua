@@ -229,12 +229,12 @@ function UIChatForm:SubmitBtnClick()
 end
 
 function UIChatForm:SubmitBtnMaskClick()
-    --【发送信息 总次数】
-    local SendChatAll= Cache.ChatCache.total;
-    if(SendChatAll<=0)then
-        --打开购买信鸽界面
-        logic.UIMgr:Open(logic.uiid.UIDovesForm);
-    end
+    ----【发送信息 总次数】
+    --local SendChatAll= Cache.ChatCache.total;
+    --if(SendChatAll<=0)then
+    --    --打开购买信鸽界面
+    --    logic.UIMgr:Open(logic.uiid.UIDovesForm);
+    --end
 end
 
 --endregion

@@ -7,6 +7,7 @@ public class JsonDTManager : Singleton<JsonDTManager>
 {
     #region Book Json dataTable
 
+    public static string JsonDTZipVersionFlag = "JsonDTZipVersionFlag";
     public string LocalVerInfoFlag = "VersionInfoFlag_";
     public string LocalVerBookDetailFlag = "VersionBookDetail_";
     public string LocalVerBookChapterFlag = "VersionBookChapter_";
@@ -307,10 +308,10 @@ public void SaveLocalVersionBookDetailByStr(string resultInfo)
             List<JDT_Chapter> itemList = JsonHelper.JsonToObject<List<JDT_Chapter>>(resultStr);
             if (itemList != null)
             {
-                int len = serJsonDataTable.chapter.Count;
+                int len = itemList.Count;
                 for (int i = 0; i < len; i++)
                 {
-                    JDT_Chapter result = serJsonDataTable.chapter[i];
+                    JDT_Chapter result = itemList[i];
                     if (result != null  && result.bookid == vBookId && result.chapter == vChapterId)
                     {
                         return result;
@@ -345,10 +346,10 @@ public JDT_ClothesPrice GetJDTClothesPrice(int vBookId, int vClothesId)
         List<JDT_ClothesPrice> itemList = JsonHelper.JsonToObject<List<JDT_ClothesPrice>>(resultStr);
         if (itemList != null)
         {
-            int len = serJsonDataTable.clothes_price.Count;
+            int len = itemList.Count;
             for (int i = 0; i < len; i++)
             {
-                JDT_ClothesPrice result = serJsonDataTable.clothes_price[i];
+                JDT_ClothesPrice result = itemList[i];
                 if (result != null  && result.bookid == vBookId && result.clotheid == vClothesId)
                 {
                     return result;
@@ -383,10 +384,10 @@ public JDT_Skin GetJDTSkin(int vBookId, int vClothesId)
         List<JDT_Skin> itemList = JsonHelper.JsonToObject<List<JDT_Skin>>(resultStr);
         if (itemList != null)
         {
-            int len = serJsonDataTable.skin.Count;
+            int len = itemList.Count;
             for (int i = 0; i < len; i++)
             {
-                JDT_Skin result = serJsonDataTable.skin[i];
+                JDT_Skin result = itemList[i];
                 if (result != null  && result.book_id == vBookId && result.icon_id == vClothesId)
                 {
                     return result;
@@ -422,10 +423,10 @@ public void SaveLocalVersionSkin(int vBookId,List<JDT_Skin> vInfo)
          List<JDT_ModelPrice> itemList = JsonHelper.JsonToObject<List<JDT_ModelPrice>>(resultStr);
          if (itemList != null)
          {
-             int len = serJsonDataTable.model_price.Count;
+             int len = itemList.Count;
              for (int i = 0; i < len; i++)
              {
-                 JDT_ModelPrice result = serJsonDataTable.model_price[i];
+                 JDT_ModelPrice result = itemList[i];
                  if (result != null  && result.book_id == vBookId && result.type == vType && result.item_id == vItemId)
                  {
                      return result;
@@ -459,10 +460,10 @@ public JDT_RoleModel GetJDTRoleModel(int vBookId,int vModelId)
         List<JDT_RoleModel> itemList = JsonHelper.JsonToObject<List<JDT_RoleModel>>(resultStr);
         if (itemList != null)
         {
-            int len = serJsonDataTable.role_model.Count;
+            int len = itemList.Count;
             for (int i = 0; i < len; i++)
             {
-                JDT_RoleModel result = serJsonDataTable.role_model[i];
+                JDT_RoleModel result = itemList[i];
                 if (result != null  && result.id == vModelId)
                 {
                     result.Init();

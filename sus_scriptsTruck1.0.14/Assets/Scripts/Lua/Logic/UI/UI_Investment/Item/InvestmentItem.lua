@@ -9,15 +9,33 @@ function InvestmentItem:__init(gameObject)
 
 end
 
-function InvestmentItem:SetItemData(itemData,itemIndex)
+function InvestmentItem:SetItemData(itemData,itemIndex,_type)
     self.Icon.gameObject:SetActive(true);
     if(itemIndex==4)then
         local ItemCount1 =CS.DisplayUtil.GetChild(self.gameObject, "ItemCount1"):GetComponent("Text");
-        self.ItemCount.text="x"..Cache.InvestmentCache.Investment1.diamond_count;
-        ItemCount1.text="x"..Cache.InvestmentCache.Investment2.key_count;
-        self.Icon.gameObject:SetActive(false);
+        local Bg =CS.DisplayUtil.GetChild(self.gameObject, "Bg"):GetComponent("Image");
+        if(_type==1)then
+            Bg.sprite= CS.ResourceManager.Instance:GetUISprite("Investment/act_bg_bottomframe");
+            self.Icon.gameObject:SetActive(true);
+            if(itemData.id==1)then
+                self.ItemCount.text="x"..Cache.InvestmentCache.Investment1.diamond_count;
+                self.ItemCount.gameObject:SetActive(true);
+                ItemCount1.gameObject:SetActive(false);
+            else
+                ItemCount1.text="x"..Cache.InvestmentCache.Investment2.key_count;
+                self.ItemCount.gameObject:SetActive(false);
+                ItemCount1.gameObject:SetActive(true);
+            end
+        else
+            Bg.sprite= CS.ResourceManager.Instance:GetUISprite("Investment/act_bg_bottomframe1");
+            self.Icon.gameObject:SetActive(false);
+            self.ItemCount.text="x"..Cache.InvestmentCache.Investment1.diamond_count;
+            ItemCount1.text="x"..Cache.InvestmentCache.Investment2.key_count;
+            ItemCount1.gameObject:SetActive(true);
+        end
     else
         self.ItemCount.text = "x".. itemData.num;
+        self.ItemCount.gameObject:SetActive(true);
     end
 
     if 1000<tonumber(itemData.id) and tonumber(itemData.id)<10000 then

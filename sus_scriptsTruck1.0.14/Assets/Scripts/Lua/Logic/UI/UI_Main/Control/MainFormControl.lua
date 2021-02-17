@@ -208,9 +208,11 @@ function MainFormControl:GetSelfBookInfo(result)
         --endregion
 
         if(isFirst)then
-            self:GetWindowConfigRequest();
+
             isFirst=false;
         end
+
+        self:GetWindowConfigRequest();
 
         --【临时】【临时】
         if(Cache.MainCache.migration.migration_web_switch==1)then
@@ -365,7 +367,7 @@ function MainFormControl:RedTimerUpdate()
 
         local InvestmentInfo=Cache.LimitTimeActivityCache:GetActivityInfo(EnumActivity.Investment);  --获取通用列表数据
         if(InvestmentInfo and InvestmentInfo.is_open==1 and GameController.InvestmentControl.isEndTime==false)then --获取开关状态
-            --刷新DayPass 倒计时
+
             GameController.InvestmentControl:UpdateCountdown();
         end
     end

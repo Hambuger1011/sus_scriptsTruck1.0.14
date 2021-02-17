@@ -808,6 +808,18 @@ end
 --endregion
 
 
+--region【投资活动刷新】---【限时活动】
+
+function ActivityControl:UpdateInvestment()
+    if(UIActivityForm)then
+        UIActivityForm:UpdateInvestment();
+    end
+end
+
+--endregion
+
+
+
 --析构函数
 function ActivityControl:__delete()
 

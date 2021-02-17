@@ -393,7 +393,7 @@ public class BookDisplayGridChild : MonoBehaviour {
              BookChapterBG.sprite = ResourceManager.Instance.GetUISprite("BookDisplayForm/main_bg_picture2");
          }
         //if (bookChapterBGSprite != null) BookChapterBG.sprite = ABSystem.ui.GetUITexture(AbTag.Global, string.Concat("assets/bundle/BookPreview/banner/bg_book", mBookId, ".png"));
-
+        this.BookTag.SetActive(false);
 
         //【DayPass】
         this.DayPass2(vBookID);
@@ -424,6 +424,8 @@ public class BookDisplayGridChild : MonoBehaviour {
                     btnKeyProp.gameObject.SetActive(true);
                 }
                 propObj.gameObject.SetActive(true);
+                //【加载进度】
+                XLuaManager.Instance.CallFunction("GameHelper", "ShowNewBg1", mBookId, this.BookTag);
             }
         }
         else
@@ -460,6 +462,10 @@ public class BookDisplayGridChild : MonoBehaviour {
                     PlayKeyShowImage.SetActive(false);
                 }
             }
+
+            //【加载进度】
+            XLuaManager.Instance.CallFunction("GameHelper", "ShowNewBg1", mBookId, this.BookTag);
+
         }
         
         
@@ -469,9 +475,6 @@ public class BookDisplayGridChild : MonoBehaviour {
 
         showCloseBtn();
 
-
-        //【加载进度】
-        XLuaManager.Instance.CallFunction("GameHelper", "ShowNewBg1", mBookId, this.BookTag);
     }
 
     private void showCloseBtn()
