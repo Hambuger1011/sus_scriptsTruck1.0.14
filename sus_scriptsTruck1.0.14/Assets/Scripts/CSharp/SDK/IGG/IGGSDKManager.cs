@@ -767,6 +767,8 @@ return tempItem.GetPurchase().GetPlatformPriceCurrencyCode() + tempItem.GetPurch
                   session.GetAccesskey());
         // IGGEvent eventValue = new IGGEvent("account.login", null);
         // EventCollectionHelper.SharedInstance().Push(eventValue, IGGEventEscalation.Level1);
+        UserDataManager.Instance.IGGid = session.GetIGGId();
+        UserDataManager.Instance.Accesskey = session.GetAccesskey();
         UserInfo.Clear();
         Init();
         DispatchLoginSuccMsg(session);
