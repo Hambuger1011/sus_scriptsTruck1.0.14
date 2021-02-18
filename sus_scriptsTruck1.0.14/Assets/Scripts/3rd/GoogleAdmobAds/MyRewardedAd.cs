@@ -1,4 +1,5 @@
 ﻿using System;
+using Firebase.Crashlytics;
 using GoogleMobileAds.Api;
 using UnityEngine;
 
@@ -245,8 +246,17 @@ public class MyRewardedAd
         {
             if (this.mRewardedAd.IsLoaded() && _lock==false)
             {
-                this.mRewardedAd.Show();
-                _lock = true;
+                try
+                {
+                    this.mRewardedAd.Show();
+                    _lock = true;
+                }
+                catch (Exception e)
+                { 
+                    Crashlytics.LogException(e);
+                    Debug.LogError(e);
+                    throw;
+                }
             }
             else
             {
