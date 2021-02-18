@@ -119,17 +119,17 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                 _abUri = "http://dev.sus.com/resources/";
                 break;
             case 2: //TX-技术开发服--tech_dev
-                _abUri = "http://193.112.66.252:8083/resources/";
+                _abUri = "http://tech_dev.starfirefly.com/resources/";
                 break;
 #endif
             case 3: //TX-技术生产服--tech_prod
-                _abUri = "http://193.112.66.252:8084/resources/";
+                _abUri = "http://tech_prod.starfirefly.com/resources/";
                 break;
             case 4: //TX-录入开发服--entry_dev
-                _abUri = "http://193.112.66.252:8082/resources/";
+                _abUri = "http://entry_dev.starfirefly.com/resources/";
                 break;
             case 5: //TX-录入生产服--entry_prod
-                _abUri = "http://193.112.66.252:8080/resources/";
+                _abUri = "http://entry_prod.starfirefly.com/resources/";
                 break;
             case 6: //正式
                 _abUri = "https://static-sus.igg.com/resources/";
@@ -150,13 +150,13 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     }
 
 
-    private string mGameUrlHead = "http://193.112.66.252:8080";
+    private string mGameUrlHead = "http://entry_prod.starfirefly.com";
 
     public string GameUrlHead
     {
         get
         {
-            mGameUrlHead = "http://193.112.66.252:8084";
+            mGameUrlHead = "http://tech_prod.starfirefly.com";
 #if ENABLE_DEBUG
             switch (GameDataMgr.Instance.ServiceType)
             {
@@ -164,16 +164,16 @@ public class GameHttpNet : CSingleton<GameHttpNet>
                     mGameUrlHead = "http://dev.sus.com";
                     break;
                 case 2: //TX-技术开发服--tech_dev
-                    mGameUrlHead = "http://193.112.66.252:8083";
+                    mGameUrlHead = "http://tech_dev.starfirefly.com";
                     break;
                 case 3: //TX-技术生产服--tech_prod
-                    mGameUrlHead = "http://193.112.66.252:8084";
+                    mGameUrlHead = "http://tech_prod.starfirefly.com";
                     break;
                 case 4: //TX-录入开发服--entry_dev
-                    mGameUrlHead = "http://193.112.66.252:8082";
+                    mGameUrlHead = "http://entry_dev.starfirefly.com";
                     break;
                 case 5: //TX-录入生产服--entry_prod
-                    mGameUrlHead = "http://193.112.66.252:8080";
+                    mGameUrlHead = "http://entry_prod.starfirefly.com";
                     break;
                 case 6: //正式
                     mGameUrlHead = "https://sus-game.igg.com/";
@@ -186,7 +186,7 @@ public class GameHttpNet : CSingleton<GameHttpNet>
             if (AuditStatus == 1)
                 mGameUrlHead = "https://sus-game.igg.com/";
             else
-                mGameUrlHead = "http://193.112.66.252:8084";
+                mGameUrlHead = "http://tech_prod.starfirefly.com";
             //UnityEngine.Debug.LogError(AuditStatus + "  " + mGameUrlHead);
 #endif
             if (!string.IsNullOrEmpty(ServerAddress))
