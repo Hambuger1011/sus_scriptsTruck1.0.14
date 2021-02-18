@@ -154,13 +154,12 @@ public class CLaunchState : GameStateBase
                     if (GameDataMgr.Instance.UserLocalVersion)
                     {
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),GameDataMgr.Instance.LocalVersion,System.Environment.TickCount.ToString());
-                        //UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),GameDataMgr.Instance.LocalVersion,System.Environment.TickCount.ToString());
                     }
                     else
                     {
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),versionStr,System.Environment.TickCount.ToString());
-                        UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),dataversionStr,System.Environment.TickCount.ToString());
                     }
+                    UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}@{2}",SdkMgr.Instance.GameVersion(),dataversionStr,System.Environment.TickCount.ToString());
 #else
                         UserDataManager.Instance.ResVersion = string.Format("{0}@{1}",SdkMgr.Instance.GameVersion(), versionStr);
                         UserDataManager.Instance.DataTableVersion = string.Format("{0}@{1}",SdkMgr.Instance.GameVersion(), dataversionStr);
