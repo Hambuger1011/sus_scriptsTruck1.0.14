@@ -12,6 +12,7 @@ using Helpers;
 using IGG.SDK;
 using IGG.SDK.Core.Configuration;
 using IGG.SDK.Core.Error;
+using IGG.SDK.Framework;
 using IGG.SDK.Modules.Account;
 using IGG.SDK.Modules.Account.Delegate;
 using IGG.SDK.Modules.Account.Guideline.LoginScene;
@@ -455,7 +456,10 @@ public class IGGSDKManager : Singleton<IGGSDKManager>
     /// <returns></returns>
     public bool HasProductList()
     {
-        return PaymentHelper.GetShopListCount() > 0;
+        var shopListCount = PaymentHelper.GetShopListCount() > 0;
+        if(!shopListCount)
+            KungfuInstance.Get().ReloadProducts(initFlowHelper);
+        return shopListCount;
     }
 
     /// <summary>

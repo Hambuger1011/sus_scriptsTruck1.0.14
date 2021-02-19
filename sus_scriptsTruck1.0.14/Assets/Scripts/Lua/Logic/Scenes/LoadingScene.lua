@@ -202,6 +202,12 @@ function LoadingScene:DoEnter()
     logic.debug.Log("6、进入游戏")
     logic.cs.talkingdata:OpenApp(logic.cs.EventEnum.EnterGame)
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.EnterGameOnyx)
+    local HasProductList = logic.cs.IGGSDKMrg:HasProductList()
+    if HasProductList then
+        logic.debug.Log("已加载商品信息")
+    else
+        logic.debug.Log("暂无商品信息，尝试重新加载")
+    end
     --if logic.cs.UserDataManager.userInfo.data.userinfo.firstplay == 0 then
     if false then
         logic.cs.IGGSDKMrg.isNewUser = true
