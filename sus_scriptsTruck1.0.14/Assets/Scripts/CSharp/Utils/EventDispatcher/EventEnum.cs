@@ -277,6 +277,6 @@ public class EventEnum
     public static readonly string AgainGetAppConfIsMaintin = "AgainGetAppConfIsMaintin";
     public static readonly string MaintinWhileList = "MaintinWhileList";
 
-    
+    public static readonly string AddProp = "AddProp";
 
 }

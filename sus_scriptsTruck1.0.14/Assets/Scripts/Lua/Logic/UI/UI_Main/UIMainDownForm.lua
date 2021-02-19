@@ -29,6 +29,9 @@ function UIMainDownForm:OnInitView()
     --个人中心 Toogle
     self.ProfileToggle =CS.DisplayUtil.GetChild(self.Down, "ProfileToggle"):GetComponent("UIToggle");
 
+    self.GetProps =self.ProfileToggle.gameObject:GetComponent("GetProps");
+    self.ItemIcon =CS.DisplayUtil.GetChild(self.Down, "ItemIcon"):GetComponent("Image");
+
     self.Rward_RedImg=CS.DisplayUtil.GetChild(self.RwardToggle.gameObject, "Rward_RedImg");
     self.Profile_RedImg=CS.DisplayUtil.GetChild(self.ProfileToggle.gameObject, "Profile_RedImg");
     --默认主界面
@@ -51,6 +54,16 @@ function UIMainDownForm:OnOpen()
     self:RedPointRequest();
     --定时红点请求
     self:TimerRedPointRequest();
+    
+    self.callback = function(notification)
+        if notification == nil then
+        else
+            local a , b = math.modf(tonumber(notification.Data));
+            self.ItemIcon.sprite = Cache.PropCache.SpriteData[a];
+            self.GetProps:AddProp(math.floor(b*100));
+        end
+    end
+    logic.cs.EventDispatcher.AddMessageListener(logic.cs.EventEnum.AddProp, self.callback)
 
     --【本界面自适应】
     --获取偏移量；
@@ -79,6 +92,8 @@ function UIMainDownForm:OnClose()
     logic.cs.UIEventListener.RemoveOnClickListener(self.CommunityToggle.gameObject,function(data) self:CommunityToggleClick(data) end);
     logic.cs.UIEventListener.RemoveOnClickListener(self.RwardToggle.gameObject,function(data) self:RwardToggleClick(data) end);
     logic.cs.UIEventListener.RemoveOnClickListener(self.ProfileToggle.gameObject,function(data) self:ProfileToggleClick(data) end);
+
+    logic.cs.EventDispatcher.RemoveMessageListener(logic.cs.EventEnum.AddProp,self.callback)
 
 
     --如果本界面都关闭了   五个界面也关闭销毁；

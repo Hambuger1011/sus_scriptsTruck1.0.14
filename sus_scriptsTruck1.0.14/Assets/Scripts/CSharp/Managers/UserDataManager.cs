@@ -742,6 +742,14 @@ public class UserDataManager : Singleton<UserDataManager> {
         }
     }
 
+    
+    public void AddProp(int vId,int vNum)
+    {
+        vNum = vNum > 99 ? 99 : vNum;
+        var propInfo = vId + (float)vNum / 100;
+        EventDispatcher.Dispatch(EventEnum.AddProp, propInfo);
+    }
+
     /// <summary>
     /// 记录玩家书本阅读的进度
     /// </summary>
