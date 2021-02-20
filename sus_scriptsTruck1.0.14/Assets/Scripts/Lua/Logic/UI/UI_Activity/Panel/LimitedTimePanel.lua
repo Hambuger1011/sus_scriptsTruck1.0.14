@@ -211,6 +211,8 @@ function LimitedTimePanel:PaySuccessMsgListener()
     self.FirstRechargePoint:SetActiveEx(true);
     self.ChargeButton:SetActiveEx(false);
     self.ClaimFirstcharge:SetActiveEx(true);
+    --【置顶】
+    self.FirstchargeBG.transform:SetSiblingIndex(0);
 end
 --endregion
 
@@ -373,9 +375,11 @@ function LimitedTimePanel:SetBindStatus()
                 self.ReceiveButton.gameObject:SetActiveEx(true);
                 --刷新红点状态
                 GameController.MainFormControl:RedPointRequest();
+                --【置顶】
+                self.BindBG.transform:SetSiblingIndex(0);
             else
-                self.Received.gameObject:SetActiveEx(true);
-                --self.BindBG.gameObject:SetActiveEx(false);
+                --self.Received.gameObject:SetActiveEx(true);
+                self.BindBG.gameObject:SetActiveEx(false);
             end
         else
             self.BindButton.gameObject:SetActiveEx(true);
@@ -394,16 +398,18 @@ function LimitedTimePanel:SetFollowStatus()
         local userData = logic.cs.UserDataManager.userInfo.data.userinfo;
         if(userData)then
             if(tonumber(userData.attention_media_award) == 1)then
-                --self.FollowBG:SetActiveEx(false);
-               self.CompletedBtn.gameObject:SetActiveEx(true);
+                self.FollowBG:SetActiveEx(false);
+               --self.CompletedBtn.gameObject:SetActiveEx(true);
             elseif(tonumber(userData.attention_media_award) == 2)then
                 self.ClaimBtn.gameObject:SetActiveEx(true);
+                --【置顶】
+                self.FollowBG.transform:SetSiblingIndex(0);
             else
                 self.FollowBtn.gameObject:SetActiveEx(true);
             end
         else
-            --self.FollowBG:SetActiveEx(false);
-            self.CompletedBtn.gameObject:SetActiveEx(true);
+            self.FollowBG:SetActiveEx(false);
+            --self.CompletedBtn.gameObject:SetActiveEx(true);
         end
     end
 end
@@ -454,44 +460,37 @@ end
 
 --region【接收绑定奖励】
 function LimitedTimePanel:ReceiveBindRewards()
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then                                   --【请求领取第三方登录绑定的奖励】---【限时活动】【账号绑定奖励】
-        uicollect:SetData(Cache.ActivityCache.third_party_bind.diamond_count,Cache.ActivityCache.third_party_bind.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end,Cache.ActivityCache.third_party_bind.item_list);
-    end
+    --【请求领取第三方登录绑定的奖励】---【限时活动】【账号绑定奖励】
+    GameHelper.ShowCollectItem(Cache.ActivityCache.third_party_bind.diamond_count,Cache.ActivityCache.third_party_bind.key_count,"COLLECT",
+            function() GameController.ActivityControl:ReceiveThirdPartyAwardRequest(); end,Cache.ActivityCache.third_party_bind.item_list)
 end
 --endregion
 
 
+
 --region 【领取关注社媒奖励】
 function LimitedTimePanel:ReceiveRewards()
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then                                            --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
-        uicollect:SetData(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end,Cache.ActivityCache.attention_media.item_list);
-    end
+    --【领取关注社媒奖励】---【限时活动】【关注社媒奖励】
+    GameHelper.ShowCollectItem(Cache.ActivityCache.attention_media.diamond_count,Cache.ActivityCache.attention_media.key_count,"COLLECT",
+            function() GameController.ActivityControl:ReceiveAttentionMediaRewardRequest(); end,Cache.ActivityCache.attention_media.item_list);
 end
 --endregion
 
 
 --region【领取迁移奖励】
 function LimitedTimePanel:CLAIMButtonOnClick()
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then                                            --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
-        uicollect:SetData(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end,Cache.ActivityCache.user_move.item_list);
-    end
+    --【领取用户迁移的奖励】---【限时活动】【账号迁移奖励】
+    GameHelper.ShowCollectItem(Cache.ActivityCache.user_move.diamond_count,Cache.ActivityCache.user_move.key_count,"COLLECT",
+            function() GameController.ActivityControl:ReceiveUserMoveAwardRequest(); end,Cache.ActivityCache.user_move.item_list);
 end
 --endregion
 
 
 --region【领取首充奖励】
 function LimitedTimePanel:ClaimFirstchargeOnClick()
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then
-        uicollect:SetData(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,"CLAIM",
-                function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,Cache.ActivityCache.first_recharge.item_list);
-    end
+    --【领取首充奖励】---【限时活动】【领取首充奖励】
+    GameHelper.ShowCollectItem(Cache.ActivityCache.first_recharge.diamond_count,Cache.ActivityCache.first_recharge.key_count,"COLLECT",
+            function() GameController.ActivityControl:ReceiveFirstRechargeAwardRequest(); end,Cache.ActivityCache.first_recharge.item_list);
 end
 --endregion
 
@@ -525,8 +524,8 @@ end
 --region【领取第三方登录绑定的奖励*响应】---【限时活动】【账号绑定奖励】
 function LimitedTimePanel:ReceiveThirdPartyAward_Response()
     self.ReceiveButton.gameObject:SetActiveEx(false);
-    self.Received.gameObject:SetActiveEx(true);
-    --self.BindBG.gameObject:SetActiveEx(false);
+    --self.Received.gameObject:SetActiveEx(true);
+    self.BindBG.gameObject:SetActiveEx(false);
 end
 --endregion
 
@@ -534,8 +533,8 @@ end
 --region【领取关注社媒奖励*响应】---【限时活动】【关注社媒奖励】
 function LimitedTimePanel:ReceiveAttentionMediaReward_Response()
     self.ClaimBtn.gameObject:SetActiveEx(false);
-    --self.FollowBG:SetActiveEx(false);
-    self.CompletedBtn.gameObject:SetActiveEx(true);
+    self.FollowBG:SetActiveEx(false);
+    --self.CompletedBtn.gameObject:SetActiveEx(true);
 end
 --endregion
 
@@ -589,6 +588,8 @@ function LimitedTimePanel:RedPointShow()
         self.FirstRechargePoint:SetActiveEx(true);
         self.ChargeButton:SetActiveEx(false);
         self.ClaimFirstcharge:SetActiveEx(true);
+        --【置顶】
+        self.FirstchargeBG.transform:SetSiblingIndex(0);
     else
         self.FirstRechargePoint:SetActiveEx(false);
         self.ChargeButton:SetActiveEx(true);
@@ -599,6 +600,8 @@ function LimitedTimePanel:RedPointShow()
     ------【红点功能】【邀请】
     if(Cache.RedDotCache.InviteAwardPoint==true)then
         self.InviteAwardPoint:SetActiveEx(true);
+        --【置顶】
+        self.InviteBG.transform:SetSiblingIndex(0);
     else
         self.InviteAwardPoint:SetActiveEx(false);
     end

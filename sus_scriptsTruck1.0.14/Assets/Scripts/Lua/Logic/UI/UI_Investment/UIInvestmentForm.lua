@@ -269,28 +269,24 @@ function UIInvestmentForm:JoinInvestPlan(info,_type)
         end
     end
 
-    local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-    if(uicollect)then
-        local diamond_count=0;
-        local key_count=0;
-        local itemArr={};
+    local diamond_count=0;
+    local key_count=0;
+    local itemArr={};
 
-        local itemlist=info.prize1;
-        local len=table.length(itemlist);
-        if(itemlist and len)then
-            for i = 1, len do
-                if(itemlist[i].id==1)then
-                    diamond_count=itemlist[i].num;
-                elseif(itemlist[i].id==2)then
-                    key_count=itemlist[i].num;
-                else
-                    table.insert(itemArr,itemlist[i]);
-                end
+    local itemlist=info.prize1;
+    local len=table.length(itemlist);
+    if(itemlist and len)then
+        for i = 1, len do
+            if(itemlist[i].id==1)then
+                diamond_count=itemlist[i].num;
+            elseif(itemlist[i].id==2)then
+                key_count=itemlist[i].num;
+            else
+                table.insert(itemArr,itemlist[i]);
             end
         end
-        uicollect:SetData(diamond_count,key_count,"CLAIM",
-                function()  GameController.InvestmentControl:JoinInvestPlanRequest(info.activity_id,info.number); end,itemArr);
     end
+    GameHelper.ShowCollectItem(diamond_count,key_count,"CLAIM",function()  GameController.InvestmentControl:JoinInvestPlanRequest(info.activity_id,info.number); end,itemArr)
 end
 
 

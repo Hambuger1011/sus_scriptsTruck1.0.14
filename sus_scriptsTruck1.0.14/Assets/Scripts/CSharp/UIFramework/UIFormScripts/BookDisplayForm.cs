@@ -1305,5 +1305,6 @@ string linkUrl = "";
         //EventDispatcher.Dispatch(EventEnum.BookJoinToShelfEvent);
         //刷新我的书本
         XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.MainFormControl:ResetMyBookList()");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"GameController.WindowConfig:ShowDayPass();");
     } 
 }

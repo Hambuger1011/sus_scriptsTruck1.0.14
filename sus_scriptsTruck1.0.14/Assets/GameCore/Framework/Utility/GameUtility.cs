@@ -20,8 +20,8 @@ public static class GameUtility
     public static int buildNum = 130;
 
 #else
-    public static string version = "1.3.0";
-    public static int buildNum = 1;
+    public static string version = "1.3.1";
+    public static int buildNum = 40;
     public static int resVersion = 1;
 #endif
 

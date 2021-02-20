@@ -455,16 +455,6 @@ end
 --endregion
 
 
---region【投资活动刷新】---【限时活动】
-
-function UIActivityForm:UpdateInvestment()
-    if(self.LimitedTimePanel)then
-        self.LimitedTimePanel:UpdateInvestment();
-    end
-end
-
---endregion
-
 
 --region 【界面关闭】
 function UIActivityForm:OnExitClick()

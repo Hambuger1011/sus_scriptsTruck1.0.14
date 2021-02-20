@@ -257,7 +257,9 @@ function GameHelper.ResetStart()
 
     --logic.debug.LogError("AddTime"..AddTime);
     --请求
-    GameController.ActivityControl:ReadingTaskTimeRequest(AddTime);
+    if(AddTime>0)then
+        GameController.ActivityControl:ReadingTaskTimeRequest(AddTime);
+    end
 end
 
 --开启计时器
@@ -1117,4 +1119,103 @@ function GameHelper.ShowNetImage_Banner(_type,_url,picture)
 end
 
 
+--endregion
+
+
+--region【通用 领取奖励】
+function GameHelper.ShowCollectItem(diamond_count,key_count,Title,CallBack,ItemArr)
+    local uiform = logic.UIMgr:GetView2(logic.uiid.UICollectForm);
+    if(uiform==nil)then
+        uiform = logic.UIMgr:Open(logic.uiid.UICollectForm);
+    else
+        uiform.uiform:Appear();
+        uiform:SetData(diamond_count,key_count,Title, CallBack,ItemArr);
+    end
+
+    if(uiform)then
+        uiform:SetData(diamond_count,key_count,Title, CallBack,ItemArr);
+    end
+end
+--endregion
+
+
+--region【直接进入书本】
+function GameHelper.EnterReadBook(book_id)
+    if(book_id==nil or book_id<=0)then return; end
+
+    logic.cs.UserDataManager.UserData.CurSelectBookID = book_id;
+    logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(book_id),function(result)
+        local json = core.json.Derialize(result);
+        local code = tonumber(json.code);
+        if code == 200 then
+            logic.cs.UserDataManager.bookDetailInfo = json;
+            local chapterId = logic.cs.UserDataManager.bookDetailInfo.data.current_chapter;
+            logic.cs.GameHttpNet:BuyChapter(tonumber(book_id),chapterId,function(result)
+                if(result.code == 200)then
+                    logic.cs.UserDataManager:SetBuyChapterResultInfo(book_id,result)
+                    logic.cs.TalkingDataManager:SelectBooksInEnter(book_id)
+                    logic.cs.GameDataMgr.userData:AddMyBookId(book_id)
+
+                    logic.cs.BookReadingWrapper:ChangeBookDialogPath(book_id,chapterId)
+                    local chapterid= tonumber(result.data.step_info.chapterid)
+                    local dialogid = tonumber(result.data.step_info.dialogid)
+
+                    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(book_id,chapterid);
+                    local beginDialogID = 1
+                    local endDialogID = 0
+                    if chapterInfo ~= nil then
+                        beginDialogID = chapterInfo.chapterstart
+                        endDialogID = chapterInfo.chapterfinish
+                    end
+                    if dialogid < beginDialogID then
+                        dialogid = beginDialogID
+                    end
+                    if dialogid > endDialogID then
+                        dialogid = endDialogID
+                    end
+                    logic.bookReadingMgr.isReading = false
+                    logic.cs.BookReadingWrapper:InitByBookID(
+                            book_id,
+                            chapterId,
+                            dialogid,
+                            beginDialogID,
+                            endDialogID
+                    )
+                    logic.cs.GameHttpNet:GetBookVersionInfo(tonumber(book_id),chapterId,function(result)
+                        local bookVersionJson = core.json.Derialize(result);
+                        local code = tonumber(bookVersionJson.code);
+                        if code == 200 then
+                            logic.cs.UserDataManager.bookJDTFormSever = bookVersionJson;
+                            logic.cs.BookReadingWrapper:PrepareReading(true);
+                            logic.cs.GameHttpNet:GetBookDetailInfo(tonumber(book_id),function(result)
+                                local json = core.json.Derialize(result)
+                                local code = tonumber(json.code)
+                                if code == 200 then
+                                    logic.cs.UserDataManager.bookDetailInfo = json
+                                elseif code == 277 then
+                                    logic.cs.UIAlertMgr:Show("TIPS",json.msg);
+                                end
+                            end)
+                            logic.cs.GameHttpNet:GetBookBarrageCountList(tonumber(book_id),chapterId,function(result)
+                                local json = core.json.Derialize(result);
+                                local code = tonumber(json.code);
+                                if code == 200 then
+                                    logic.cs.UserDataManager.BookBarrageCountList = json;
+                                elseif code == 277 then
+                                    logic.cs.UIAlertMgr:Show("TIPS",json.msg);
+                                end
+                            end)
+                            logic.cs.UserDataManager.isReadNewerBook = true
+                            self:__Close()
+                        end
+                    end)
+                elseif code == 277 then
+                    logic.cs.UIAlertMgr:Show("TIPS",json.msg);
+                end
+            end)
+        elseif code == 277 then
+            logic.cs.UIAlertMgr:Show("TIPS",json.msg);
+        end
+    end)
+end
 --endregion

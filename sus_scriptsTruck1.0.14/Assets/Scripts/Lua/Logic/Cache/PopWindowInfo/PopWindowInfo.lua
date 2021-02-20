@@ -34,7 +34,7 @@ function PopWindowInfo:GetDayPassShow()
     if(GameHelper.islistHave(self.book_list)==true)then
         local len=table.length(self.book_list);
         for i = 1,len do
-            if(self.book_list[i].isOpened==false and self.book_list[i].is_show==0 and Cache.PopWindowCache:IsHaveDayPass2(self.book_list[i].book_id)==false)then
+            if(self.book_list[i].isOpened==false and self.book_list[i].is_show==0)then
                 return self.book_list[i];
             end
         end

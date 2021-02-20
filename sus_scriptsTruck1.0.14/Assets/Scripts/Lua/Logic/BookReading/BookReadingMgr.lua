@@ -458,8 +458,10 @@ function BookReadingMgr:BackToMainClick()
     if(Cache.ReadTimeCache.isEND==false)then
         --【请求服务器 存当前计时时间】
         local AddTime=GameHelper.onlinereadTime-Cache.ReadTimeCache.online_time;
-        --请求
-        GameController.ActivityControl:ReadingTaskTimeRequest2(AddTime);
+        if(AddTime>0)then
+            --请求
+            GameController.ActivityControl:ReadingTaskTimeRequest2(AddTime);
+        end
     end
     --endregion
 

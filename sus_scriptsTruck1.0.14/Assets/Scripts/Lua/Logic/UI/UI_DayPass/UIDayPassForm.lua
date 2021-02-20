@@ -101,7 +101,7 @@ function UIDayPassForm:SetInfo(daypassInfo)
 end
 
 function UIDayPassForm:ShowTime(book_id,str)
-    if(self.BookInfo==book_id)then
+    if(self.BookInfo.book_id==book_id)then
         self.TimeText.text=str;
     end
 end
@@ -110,8 +110,15 @@ function UIDayPassForm:ReadBtnClick()
     if(self.BookInfo==nil)then
         return;
     end
-    --【点击书本】
-    GameHelper.BookClick(self.BookInfo);
+
+    if(self.BookInfo.jump_type and self.BookInfo.jump_type==1)then
+        --【点击书本】
+        GameHelper.BookClick(self.BookInfo);
+    else
+        --【直接进入书本】
+        GameHelper.EnterReadBook(self.BookInfo.book_id);
+    end
+
     self:OnExitClick();
 end
 

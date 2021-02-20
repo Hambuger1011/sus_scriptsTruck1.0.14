@@ -180,28 +180,25 @@ function InvestmentControl:GetInvestPlanStatus2(result)
             end
         else
 
-            local uicollect= logic.UIMgr:Open(logic.uiid.UICollectForm);
-            if(uicollect)then
-                local diamond_count=0;
-                local key_count=0;
-                local itemArr={};
+            local diamond_count=0;
+            local key_count=0;
+            local itemArr={};
 
-                local itemlist=json.data.plan_info.prize2;
-                local len=table.length(itemlist);
-                if(itemlist and len)then
-                    for i = 1, len do
-                        if(itemlist[i].id==1)then
-                            diamond_count=itemlist[i].num;
-                        elseif(itemlist[i].id==2)then
-                            key_count=itemlist[i].num;
-                        else
-                            table.insert(itemArr,itemlist[i]);
-                        end
+            local itemlist=json.data.plan_info.prize2;
+            local len=table.length(itemlist);
+            if(itemlist and len)then
+                for i = 1, len do
+                    if(itemlist[i].id==1)then
+                        diamond_count=itemlist[i].num;
+                    elseif(itemlist[i].id==2)then
+                        key_count=itemlist[i].num;
+                    else
+                        table.insert(itemArr,itemlist[i]);
                     end
                 end
-                uicollect:SetData(diamond_count,key_count,"CLAIM",
-                        function()  self:ReceiveInvestPlanRequest(json.data.plan_info.activity_id); end,itemArr);
             end
+            GameHelper.ShowCollectItem(diamond_count,key_count,"CLAIM",
+                    function()  self:ReceiveInvestPlanRequest(json.data.plan_info.activity_id); end,itemArr);
         end
     end
 end
