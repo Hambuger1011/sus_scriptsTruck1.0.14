@@ -137,6 +137,21 @@ function MainFormControl:ReceiveNewBookDetailInfoHandler(result)
     local code = tonumber(json.code)
     if(code == 200)then
          logic.cs.JsonDTManager:SaveLocalVersionBookDetailByStr(result)
+        if json.data ~= nil and json.data.info ~= nil then
+            local tempBookId = json.data.info.id
+            local JDTVersion = {};
+            JDTVersion.book_id = tempBookId
+            JDTVersion.book_version = 0
+            JDTVersion.chapter_version = 0
+            JDTVersion.dialog_version = 0
+            JDTVersion.skin_version = 0
+            JDTVersion.clothes_price_version = 0
+            JDTVersion.model_price_version = 0
+            JDTVersion.role_model_version = 0
+            JDTVersion.create_time = 0
+            JDTVersion.update_time = 0
+            logic.cs.JsonDTManager:SaveLocalJDTVersionInfo(tempBookId,JDTVersion)
+        end
     end
 end
 

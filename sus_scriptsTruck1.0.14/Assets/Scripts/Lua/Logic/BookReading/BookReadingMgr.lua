@@ -701,7 +701,6 @@ function BookReadingMgr:GotoDialogID(id)
     local bookData = logic.bookReadingMgr.bookData
     local bookID = bookData.BookID
     local bookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(bookID)
-    local chapterDivisionArray = bookDetails.ChapterDivisionArray
     local chapterID = 0
     local dialogid = id
     for idx = 1,bookDetails.chaptercount do
@@ -728,16 +727,21 @@ function BookReadingMgr:GotoDialogID(id)
             if code == 200 then
                 local chapterid= tonumber(json.data.chapterid)
                 local dialogid = tonumber(json.data.dialogid)
-                
                 if chapterid == bookData.ChapterID then	--同一章节里
                     logic.bookReadingMgr:PlayById(dialogid)
                 else
-                    local idx = chapterid - 1
-                    local beginDialogID = (idx < 1 and 1) or chapterDivisionArray[idx - 1];
-                    local endDialogID = beginDialogID
-                    if (idx < chapterDivisionArray.Length) then
-                        endDialogID = chapterDivisionArray[idx]
+                    local chapterInfo = logic.cs.JsonDTManager:GetJDTChapterInfo(bookID,chapterid);
+                    if chapterInfo ~= nil  then
+                        if dialogid>= chapterInfo.chapterstart and dialogid <= chapterInfo.chapterfinish then
+                            beginDialogID = chapterInfo.chapterstart
+                            endDialogID = chapterInfo.chapterfinish
+                        end
                     end
+                    --local beginDialogID = (idx < 1 and 1) or chapterDivisionArray[idx - 1];
+                    --local endDialogID = beginDialogID
+                    --if (idx < chapterDivisionArray.Length) then
+                    --    endDialogID = chapterDivisionArray[idx]
+                    --end
                     if dialogid < beginDialogID then
                         dialogid = beginDialogID
                     end

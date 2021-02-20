@@ -3498,20 +3498,20 @@ public class GameHttpNet : CSingleton<GameHttpNet>
     /// 获取书本涉及到的相关的版本信息
     /// </summary>
     /// <param name="vCallBackHandler"></param>
-    public void GetBookVersionInfo(int vBookId,int vChapterId, EventHandler vCallBackHandler, int vBookVersion = 0, int vChapterVersion = 0,int vRoleModelVersion = 0, int vModelPrice = 0, int vClothesPrice = 0, int vSkinVersion =0)
+    public void GetBookVersionInfo(int vBookId,int vChapterId, EventHandler vCallBackHandler, int vBookVersion = -1, int vChapterVersion = -1,int vRoleModelVersion = -1, int vModelPrice = -1, int vClothesPrice = -1, int vSkinVersion = -1)
     {
         string url = "api_getBookVersion?book_id=" + vBookId+ "&chapter_id=" + vChapterId;
-        if (vBookVersion > 0)
+        if (vBookVersion > -1)
             url += "&book_version=" + vBookVersion;
-        if (vChapterVersion > 0)
+        if (vChapterVersion > -1)
             url += "&chapter_version=" + vChapterVersion;
-        if (vRoleModelVersion > 0)
+        if (vRoleModelVersion > -1)
             url += "&role_model_version=" + vRoleModelVersion;
-        if (vModelPrice > 0)
+        if (vModelPrice > -1)
             url += "&model_price_version=" + vModelPrice;
-        if (vClothesPrice > 0)
+        if (vClothesPrice > -1)
             url += "&clothes_price_version=" + vClothesPrice;
-        if (vSkinVersion > 0)
+        if (vSkinVersion > -1)
             url += "&skin_version=" + vSkinVersion;
             
         this.Get(url, (responseCode, result) =>

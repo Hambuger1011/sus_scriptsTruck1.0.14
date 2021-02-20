@@ -110,7 +110,11 @@ namespace Framework
             level=PhoneUtil.Instance.GetPhoneLevel();
 
             //IGGLog的开关
+#if ENABLE_DEBUG
+            IGG.SDK.Foundation.Config.ENABLE_LOG = true;
+#else  
             IGG.SDK.Foundation.Config.ENABLE_LOG = false;
+#endif
             
             TalkingDataManager.Instance.InitSdk();
 

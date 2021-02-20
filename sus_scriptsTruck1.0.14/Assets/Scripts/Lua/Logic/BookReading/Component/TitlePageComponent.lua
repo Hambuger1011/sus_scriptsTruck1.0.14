@@ -27,11 +27,12 @@ function TitlePageComponent:Play()
 	ui.Reset()
 	local startIndex , endIndex = string.find(self.cfg.dialog, "@Signature:", 1)
 	if startIndex and endIndex then
-		ui.bodyText.text = string.sub(self.cfg.dialog, 1, startIndex - 1)
 		ui.signatureText.text = string.sub(self.cfg.dialog, endIndex + 1, #self.cfg.dialog)
-	else
+		self.cfg.dialog = string.sub(self.cfg.dialog, 1, startIndex - 1)
 		ui.bodyText.text = self.cfg.dialog
+	else
 		ui.signatureText.text = ""
+		ui.bodyText.text = self.cfg.dialog
 	end
 	
 	--local TitlePageData = core.json.Derialize(self.cfg.dialog)
