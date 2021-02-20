@@ -461,7 +461,7 @@ public class ChargeMoneyForm : BaseUIForm
                 if (script == null)
                 {
                     var script2 = ChargeMoneyItemScripteList[i].GetComponent<ChargeMoneyFreeItemScripte>();
-                    script2.Disposal();
+                    if (script2) script2.Disposal();
                 }
                 else
                 {
@@ -951,13 +951,16 @@ public class ChargeMoneyForm : BaseUIForm
                     }
                 }
                 
-                GameObject itemObj1 = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyFreeItem);
-                ChargeMoneyFreeItemScripte itemFree = itemObj1.GetComponent<ChargeMoneyFreeItemScripte>();
-                itemFree.transform.SetParent(DiamanList.transform, false);
-                itemFree.rectTransform().localPosition = Vector3.zero;
-                itemFree.rectTransform().localScale = Vector3.one;
-                itemFree.SetGameInit(len+1);
-                ChargeMoneyItemScripteList.Add(itemObj1);
+                if (UserDataManager.Instance.switchStatus != null && UserDataManager.Instance.switchStatus.data.ad_mall_status == 1)
+                {
+                    GameObject itemObj1 = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.ChargeMoneyFreeItem);
+                    ChargeMoneyFreeItemScripte itemFree = itemObj1.GetComponent<ChargeMoneyFreeItemScripte>();
+                    itemFree.transform.SetParent(DiamanList.transform, false);
+                    itemFree.rectTransform().localPosition = Vector3.zero;
+                    itemFree.rectTransform().localScale = Vector3.one;
+                    itemFree.SetGameInit(len+1);
+                    ChargeMoneyItemScripteList.Add(itemObj1);
+                }
             }
         }
 

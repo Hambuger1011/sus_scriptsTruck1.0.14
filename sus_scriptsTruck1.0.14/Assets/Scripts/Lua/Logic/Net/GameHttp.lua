@@ -339,6 +339,12 @@ function GameHttp:GetSelfBookInfo(callback)
     self:Get(self, "api_getIndexData", param, callback, nil, nil, true)
 end
 
+function GameHttp:GetSwitchStatus(callback)
+    local param = {
+    }
+    self:Get(self, "api_getSwitchStatus", param, callback, nil, nil, true)
+end
+
 function GameHttp:GetActivityRewardContent(callback)
     local param = {
     }

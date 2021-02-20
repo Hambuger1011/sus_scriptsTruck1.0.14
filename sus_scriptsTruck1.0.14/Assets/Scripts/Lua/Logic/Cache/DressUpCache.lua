@@ -79,6 +79,7 @@ function DressUpCache:ResetLogin()
     GameController.MainFormControl:GetIndexScrollListRequest();
     --【重新获取通用活动列表】
     GameController.ActivityControl:GetActivityListRequest();
+    GameController.MainFormControl:GetSwitchStatusRequest();
 end
 
 

@@ -85,6 +85,8 @@ function UIMainForm:OnOpen()
 
    --重新请求服务器 所有书本列表
     GameController.MainFormControl:RefreshBooks(true);
+    
+    GameController.MainFormControl:GetSwitchStatusRequest();
 
     --顶部推荐栏
     self:UpdateTopBookView();

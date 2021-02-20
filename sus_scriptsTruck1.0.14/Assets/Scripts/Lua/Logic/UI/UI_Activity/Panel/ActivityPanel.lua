@@ -25,6 +25,7 @@ function ActivityPanel:__init(gameObject)
     --【看广告】
     self.mFreeRewardPanel =CS.DisplayUtil.GetChild(self.gameObject, "FreeRewardPanel");
     self.FreeRewardPanel = require('Logic/UI/UI_Activity/Panel/Activity/FreeRewardPanel').New(self.mFreeRewardPanel);
+    self.mFreeRewardPanel:SetActive(logic.cs.UserDataManager.switchStatus and logic.cs.UserDataManager.switchStatus.data.ad_activity_status == 1)
 
     --第一排序 数组
     self.sort1={};

@@ -64,6 +64,13 @@ public class SelfBookInfo
     public int first_recharge_switch; //首冲礼包的开关 1：开，0：关
 }
 
+public class SwitchStatus
+{
+    public int ad_activity_status;//活动广告  1开 ,0关
+    public int ad_finish_chapter_status;//完成章节广告 1开 0关
+    public int ad_mall_status;//商城广告 1开 0关
+}
+
 public class FinalBookInfo
 {
     public int book_id;

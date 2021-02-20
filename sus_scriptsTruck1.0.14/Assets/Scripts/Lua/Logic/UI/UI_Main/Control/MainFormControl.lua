@@ -74,6 +74,12 @@ function MainFormControl:GetSelfBookInfoRequest()
 end
 --endregion
 
+--region 【获取开关配置状态】
+function MainFormControl:GetSwitchStatusRequest()
+    logic.gameHttp:GetSwitchStatus(function(result) self:GetGetSwitchStatus(result); end)
+end
+--endregion
+
 
 --region 【获取首页顶部滚动栏书本】
 function MainFormControl:GetIndexScrollListRequest()
@@ -81,6 +87,18 @@ function MainFormControl:GetIndexScrollListRequest()
 end
 --endregion
 
+--region 【获取开关配置状态响应】
+function MainFormControl:GetGetSwitchStatus(result)
+    logic.debug.Log("----GetGetSwitchStatus---->" .. result);
+    local json = core.json.Derialize(result)
+    local code = tonumber(json.code)
+    if(code == 200)then
+        logic.cs.UserDataManager:SetSwitchStatus(result)
+    else
+        logic.cs.UIAlertMgr:Show("TIPS",json.msg)
+    end
+end
+--endregion
 
 --region 【获取首页顶部滚动栏书本响应】
 --请求我的书本

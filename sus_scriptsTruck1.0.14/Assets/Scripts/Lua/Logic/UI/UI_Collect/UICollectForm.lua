@@ -134,8 +134,12 @@ end
 function UICollectForm:CsRewardedAd_Chapter()
     local chapterSwitch = logic.UIMgr:GetView2(logic.uiid.BookReading).chapterSwitch.ui.gameObject:GetComponent("UIChapterSwitch");
     local bookData = logic.bookReadingMgr.bookData
+    local adBtnText
+    if logic.cs.UserDataManager.switchStatus and logic.cs.UserDataManager.switchStatus.data.ad_finish_chapter_status == 1 then
+        adBtnText = "CLAIM"
+    end
     self:SetData(1,0,nil,nil,nil,
-            "CLAIM",function ()
+            adBtnText,function ()
                 CS.GoogleAdmobAds.Instance.chapterRewardedAd:ShowRewardedAd(function()
                     logic.gameHttp:GetChapterAdsReward(
                             bookData.BookID,

@@ -205,6 +205,7 @@ public class UserDataManager : Singleton<UserDataManager> {
     public HttpInfoReturn<UserInfoCont> userInfo;
     public HttpInfoReturn<MoveCodeInfoCont> moveCodeInfo;
     public HttpInfoReturn<SelfBookInfo> selfBookInfo;    //我阅读的书本
+    public HttpInfoReturn<SwitchStatus> switchStatus;    //开关配置状态
     public HttpInfoReturn<BookItemsInfo> bookItemsInfo;   //书架上的书本
     public HttpInfoReturn<DayLoginInfo> dayLoginInfo;   // 领取7天登陆奖励，返回的结果
     public HttpInfoReturn<FreeKeyInfo> freeKeyInfo;   // 领取2小时免费钥匙，返回的结果
@@ -2293,6 +2294,11 @@ public string GetBookTypeName(int vIndex)
     public void SetSelfBookInfo(string json)
     {
         selfBookInfo = JsonHelper.JsonToObject<HttpInfoReturn<SelfBookInfo>>(json);
+    }
+    
+    public void SetSwitchStatus(string json)
+    {
+        switchStatus = JsonHelper.JsonToObject<HttpInfoReturn<SwitchStatus>>(json);
     }
 
     public void SetShopList(string json)
