@@ -119,14 +119,14 @@ function BaseComponent:GetNextDialogID()
             id = self:GetNextDialogIDBySelection(recordSelIndex - 1);
         end
 
-        local cfg = logic.cs.JsonDTManager:GetDialogItem(self.cfg.consequenceid);
+        local cfg = logic.cs.JsonDTManager:GetDialogItem(bookData.BookID, bookData.ChapterID, self.cfg.consequenceid);
         if cfg and cfg.modelid ~= 0 then
             local outfitId = logic.bookReadingMgr.bookData.outfit_id
             local roleModel = logic.cs.JsonDTManager:GetJDTRoleModel(bookData.BookID,cfg.modelid)
             local clothesIDs = roleModel.outfit_type3
             for k, v in pairs(clothesIDs) do
                 if tonumber(v) == outfitId then
-                    id = self:GetNextDialogIDBySelection(k - 1);
+                    id = self:GetNextDialogIDBySelection(k);
                     break
                 end
             end
