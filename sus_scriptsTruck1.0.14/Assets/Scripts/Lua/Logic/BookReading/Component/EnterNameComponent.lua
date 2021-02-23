@@ -30,9 +30,14 @@ function EnterNameComponent:Play()
 	self.InstallUI()
 	ui.Reset()
 	local detailCfg = logic.bookReadingMgr.Res.bookDetailCfg
-	local leadingSex = detailCfg.Gender or 0
-
-
+	--local leadingSex = detailCfg.gender
+	local tempTable = {4,5,8,9,10,11,12,22,31,32,34,35,36,38,39,40,62,72,73,74,75,80,90,91,92,93,94,95,96,97,98,100,102,106,112,113,116,118,122,128,144}
+	local leadingSex = 0
+	for k,v in pairs(tempTable) do
+		if v == logic.bookReadingMgr.bookData.BookID then
+			leadingSex = 1
+		end
+	end
 
 	ui.inName.onValueChanged:RemoveAllListeners()
 	ui.inName.onValueChanged:AddListener(function(value)

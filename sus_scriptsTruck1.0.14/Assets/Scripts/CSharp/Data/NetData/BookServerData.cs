@@ -1261,6 +1261,7 @@ public class JDT_Book
     public int rolescale = 0;
     public int isNew = 0;
     public int releaseday = 0;
+    public int gender = 0;
     
     public int book_tips_status; //弹窗开关
     public string book_tips_title;  //弹窗标题
