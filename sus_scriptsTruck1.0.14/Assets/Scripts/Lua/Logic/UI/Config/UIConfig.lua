@@ -53,6 +53,7 @@ local UIConfig = {
 	require "Logic/UI/UI_Main/UIMainDownForm",
 	require "Logic/UI/UI_Search/UISearchForm",
 	require "Logic/UI/UI_Activity/UIActivityForm",
+	require "Logic/UI/UI_PersonalCenterForm/UIPersonalCenterForm",
 	require "Logic/UI/UI_ActivityBanner/UIActivityBannerForm",
 	require "Logic/UI/UI_Comuniada/UIComuniadaForm",
 	require "Logic/UI/UI_Community/UICommunityForm",

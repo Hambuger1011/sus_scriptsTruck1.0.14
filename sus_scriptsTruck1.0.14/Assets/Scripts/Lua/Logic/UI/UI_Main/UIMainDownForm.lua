@@ -255,6 +255,12 @@ function UIMainDownForm:ProfileToggleClick(data)
         --展示界面
         uiform:Appear();
     end
+    --local uiform = logic.UIMgr:GetView2(logic.uiid.UIPersonalCenterForm);
+    --if(uiform==nil)then
+    --    uiform = logic.UIMgr:Open(logic.uiid.UIPersonalCenterForm);
+    --else
+    --    uiform.uiform:Appear();
+    --end
 end
 
 --endregion

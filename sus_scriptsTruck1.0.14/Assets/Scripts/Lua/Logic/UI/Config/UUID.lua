@@ -43,6 +43,7 @@ local UIID = {
 	UIMainDownForm = 'UIMainDownForm',
 	UISearchForm = 'UISearchForm',
 	UIActivityForm = 'UIActivityForm',
+	UIPersonalCenterForm = 'UIPersonalCenterForm',
 	UIActivityBannerForm = 'UIActivityBannerForm',
 	UIRankForm = 'UI/Resident/UI/UIRankForm',
 	UIDressUpForm = 'UI/Resident/UI/UIDressUpForm',
