@@ -23,7 +23,9 @@ public class GameDataMgr : CSingleton<GameDataMgr>
     public int ResourceType = 1;        //加载资源的路径 (1:开发服,2:测试服,3:正式服,0:本地（即资源跟游戏打在一起）)
     public bool UserLocalAddress = false;  //是否使用本地选择路径
     public bool UserLocalVersion = false;  //是否使用本地选择资源版本号
+    public bool UserLocalDataVersion = false;  //是否使用本地选择DataTable资源版本号
     public string LocalVersion = "1";  //本地选择资源版本号
+    public string LocalDataVersion = "1";  //本地选择DataTable资源版本号
     
     public LuaFunction AutoPlayOpen;
     public LuaFunction AutoPlayClose;

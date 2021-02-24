@@ -17,7 +17,6 @@ namespace ADTracking
         /// <param name="customerInfo"></param>
         public void Init(string customerInfo)
         {
-            trackers.Add(new AppsFlyerTracker());  
             trackers.Add(new FirebaseTracker());
             trackers.Add(new FacebookTracker());
 

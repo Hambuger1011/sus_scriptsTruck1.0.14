@@ -27,8 +27,8 @@ public class ServiceSelectForm : BaseUIForm
 
     public InputField mCustomSvr, mCustomRes;
 
-    public Toggle UserLocalAddress,UserLocalVersion;
-    public InputField VersionInputField;
+    public Toggle UserLocalAddress,UserLocalVersion,UserLocalDataVersion;
+    public InputField VersionInputField,DataVersionInputField;
 
 
     public override void OnOpen()
@@ -46,6 +46,7 @@ public class ServiceSelectForm : BaseUIForm
         IdInput.text = PlayerPrefs.GetString(GameHttpNet.UUID_LOCAL_FLAG, "");
         TokenInput.text = GameHttpNet.Instance.TOKEN;
         VersionInputField.text = GameDataMgr.Instance.LocalVersion;
+        DataVersionInputField.text = GameDataMgr.Instance.LocalDataVersion;
 
         ServicePath.onValueChanged.AddListener(OnServiceChange);
         ResourcePath.onValueChanged.AddListener(OnResourcesChange);
@@ -59,6 +60,9 @@ public class ServiceSelectForm : BaseUIForm
         GameDataMgr.Instance.UserLocalVersion = false;
         UserLocalVersion.isOn = false;
         UserLocalVersion.onValueChanged.AddListener(UserLocalVersionChanged);
+        GameDataMgr.Instance.UserLocalDataVersion = false;
+        UserLocalDataVersion.isOn = false;
+        UserLocalDataVersion.onValueChanged.AddListener(UserLocalDataVersionChanged);
 
         ServicePathDropdownAdd();
         ResourcePathDropdownAdd();
@@ -73,6 +77,11 @@ public class ServiceSelectForm : BaseUIForm
     private void UserLocalVersionChanged(bool isOn)
     {
         GameDataMgr.Instance.UserLocalVersion = isOn;
+    }
+    
+    private void UserLocalDataVersionChanged(bool isOn)
+    {
+        GameDataMgr.Instance.UserLocalDataVersion = isOn;
     }
 
     private void OnServiceChange(int index)
@@ -108,6 +117,7 @@ public class ServiceSelectForm : BaseUIForm
         this.BtnOK.onClick.RemoveListener(OnOkClick);
         UserLocalAddress.onValueChanged.RemoveListener(UserLocalAddressChanged);
         UserLocalVersion.onValueChanged.RemoveListener(UserLocalVersionChanged);
+        UserLocalDataVersion.onValueChanged.RemoveListener(UserLocalDataVersionChanged);
     }
 
     /// <summary>
@@ -242,6 +252,11 @@ public class ServiceSelectForm : BaseUIForm
         if (VersionInputField != null && !string.IsNullOrEmpty(VersionInputField.text))
         {
             GameDataMgr.Instance.LocalVersion = ReplaceSpaceTxt(VersionInputField.text);
+        }
+
+        if (DataVersionInputField != null && !string.IsNullOrEmpty(DataVersionInputField.text))
+        {
+            GameDataMgr.Instance.LocalDataVersion = ReplaceSpaceTxt(DataVersionInputField.text);
         }
 #endif
         DoResult(true);

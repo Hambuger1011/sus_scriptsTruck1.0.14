@@ -24,7 +24,7 @@ public class AppsFlyerManager
         }
     }
 
-    private static AppsFlyerTracker AFtracker;
+    private static AppsFlyerObjectScript AFtracker;
     public string _IGGid = "";
 
     // 目的：统计的符合 iOS 系统要求的用户。
@@ -576,7 +576,11 @@ public class AppsFlyerManager
     {
         if (AFtracker == null)
         {
-            AFtracker = new AppsFlyerTracker();
+           UnityEngine.Object _prefab = Resources.Load("IGGSDK/AppsFlyerObject");
+           GameObject AppsFlyerObject = GameObject.Instantiate(_prefab) as GameObject;
+           AppsFlyerObject.transform.localPosition = Vector3.zero;
+           AppsFlyerObject.transform.localScale = Vector3.one;
+           AFtracker = AppsFlyerObject.GetComponent<AppsFlyerObjectScript>();
         }
 
         if (AFtracker != null)
