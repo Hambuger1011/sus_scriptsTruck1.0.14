@@ -1,20 +1,11 @@
-local UIView = core.UIView
-local UIPersonalCenterForm = core.Class("UIPersonalCenterForm", UIView)
-local this=UIPersonalCenterForm;
+local BaseClass = core.Class
+local ImageWall = BaseClass("ImageWall")
 
-local uiid = logic.uiid
-UIPersonalCenterForm.config = {
-    ID = uiid.UIPersonalCenterForm,
-    AssetName = 'UI/Resident/UI/UIPersonalCenterForm'
-}
-
---region【Awake】
-
-function UIPersonalCenterForm:OnInitView()
-    UIView.OnInitView(self)
+function ImageWall:__init(gameObject)
+    self.gameObject=gameObject;
     
-    local gameObject = self.uiform.gameObject
-
+    self.HideBtn = CS.DisplayUtil.GetChild(gameObject, "HideBtn"):GetComponent(typeof(logic.cs.Button));
+    
     self.spine = CS.DisplayUtil.GetChild(gameObject, "spine");
 
     self.follow_backObj = CS.DisplayUtil.GetChild(gameObject, "follow_back");
@@ -22,7 +13,7 @@ function UIPersonalCenterForm:OnInitView()
 
     self.hair_backObj = CS.DisplayUtil.GetChild(self.follow_backObj, "hair_back");
     self.hair_back=CS.XLuaHelper.AddSkeletonGraphic(self.hair_backObj);
-    
+
     self.RoleSkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "RoleSkeletonGraphic");
     self.RoleSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.RoleSkeletonGraphicObj);
 
@@ -51,11 +42,10 @@ function UIPersonalCenterForm:OnInitView()
     local hair2Name	= "hair1_1"
     self:SetData(skinName,clothesName,expressionName,hair1Name,hair2Name)
 end
---endregion
 
 
 --region【获取spine文件】
-function UIPersonalCenterForm:GetSkeDataAsset(bookId,key)
+function ImageWall:GetSkeDataAsset(bookId,key)
     local AbBookSystem = CS.AB.AbBookSystem.Create(bookId)
     local asset = AbBookSystem:LoadImme(logic.ResMgr.tag.DialogDisplay,logic.ResMgr.type.ScriptableObject,"Assets/Bundle/Book/"..bookId.."/Role/"..key.."_SkeletonData.asset")
     if not asset or not asset.resObject then
@@ -67,19 +57,19 @@ end
 --endregion
 
 --region【设置spine大小】
-function UIPersonalCenterForm:SetScale(localScale)
+function ImageWall:SetScale(localScale)
     self.spine.localScale = localScale
 end
 --endregion
 
 --region【设置spine位置】
-function UIPersonalCenterForm:SetPosition(anchoredPosition)
+function ImageWall:SetPosition(anchoredPosition)
     self.spine.anchoredPosition = anchoredPosition
 end
 --endregion
 
 --region【设置spine文件】
-function UIPersonalCenterForm:SetSpine(spineData)
+function ImageWall:SetSpine(spineData)
     if self.spineData == spineData then
         return
     end
@@ -113,9 +103,7 @@ end
 --endregion
 
 --region【设置spine人物】
-function UIPersonalCenterForm:SetData(
-        skinName,clothesName,expressionName,hair1Name,hair2Name
-)
+function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Name)
 
     --logic.debug.Log("-SetData -skinName-->"..skinName.."-clothesName-->"..
     --clothesName.."-expressionName-->"..expressionName.."-hair1Name-->"..hair1Name.."-hair2Name-->"..hair2Name)
@@ -204,47 +192,36 @@ function UIPersonalCenterForm:SetData(
 end
 --endregion
 
+--region【设置Hide点击事件】
+function ImageWall:SetHideOnClick(HideOnClick)
+    self.HideBtn.onClick:RemoveAllListeners()
+    self.HideBtn.onClick:AddListener(HideOnClick)
+end
+--endregion
 
---region【OnOpen】
 
-function UIPersonalCenterForm:OnOpen()
-    UIView.OnOpen(self)
-    
+--销毁
+function ImageWall:__delete()
     --按钮监听
-    --logic.cs.UIEventListener.AddOnClickListener(self.RomanceTab.gameObject,function(data) self:RomanceTabClick(data) end);
-
-end
-
---endregion
-
-
---region 【OnClose】
-
-function UIPersonalCenterForm:OnClose()
-    UIView.OnClose(self)
-
-    --logic.cs.UIEventListener.RemoveOnClickListener(self.RomanceTab.gameObject,function(data) self:RomanceTabClick(data) end);
-
-end
-
---endregion
-
---region 【点击Others】
-function UIPersonalCenterForm:RomanceTabClick(data)
-    
-end
---endregion
-
-
---region 【界面关闭】
-function UIPersonalCenterForm:OnExitClick()
-    UIView.__Close(self)
-    if self.onClose then
-        self.onClose()
+    if(self.MessageBtn)then
+        logic.cs.UIEventListener.RemoveOnClickListener(self.MessageBtn,function(data) self:MessageBtnClick() end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.LikeToogle.gameObject,function(data) self:LikeToogleClick() end)
+        logic.cs.UIEventListener.RemoveOnClickListener(self.ThumbUpToogle.gameObject,function(data) self:ThumbUpToogleClick() end)
     end
+    self.HeadIcon = nil;
+    self.HeadFrame = nil;
+    self.AuthorName = nil;
+    self.PersonalStatus = nil;
+    self.BookNumsText = nil;
+    self.FansNumsText = nil;
+    self.LikeToogle = nil;
+    self.ThumbUpToogle = nil;
+    self.ThumbUpText = nil;
+    self.DynamicTitleTxt = nil;
+    self.MessageBtn = nil;
+    self.DynamicTitleTxt = nil;
+
+    self.gameObject = nil;
 end
---endregion
 
-
-
-return UIPersonalCenterForm
+return ImageWall

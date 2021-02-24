@@ -27,6 +27,8 @@ local ViewMoreBtn=nil;
 
 local AuthorInfoPanel=nil;
 
+local ImageWallIsShow = nil;
+
 --是否展示更多动态按钮
 local isBestDynam=false;
 function UICommunityForm:OnInitView()
@@ -42,6 +44,9 @@ function UICommunityForm:OnInitView()
 
     --logic.cs.UIEventListener.AddOnClickListener(self.CloseBtn,function(data) self:OnExitClick() end);
     self.m_page = 0;
+
+    self.ImageWallParent = CS.DisplayUtil.GetChild(this.gameObject, "ImageWallParent");
+    self.BG = CS.DisplayUtil.GetChild(this.gameObject, "BG");
 end
 --endregion
 
@@ -54,15 +59,43 @@ function UICommunityForm:OnOpen()
 
     --在MainTop里标记  是在排行榜界面里打开  主界面顶框的
     CS.XLuaHelper.SetMainTopClose("UICommunityForm");
+
+    self.ImageWallObj = CS.ResourceManager.Instance:LoadAssetBundleUI(logic.cs.UIFormName.ImageWall);
+    self.ImageWallObj.transform:SetParent(self.ImageWallParent.transform, false);
+    self.ImageWallBtn = self.ImageWallObj:GetComponent(typeof(logic.cs.Button));
+    self.ImageWallBtn.onClick:AddListener(function()
+        self:ImageWallShow()
+    end);
+    self.ImageWall= require('Logic/UI/UI_ImageWall/ImageWall').New(self.ImageWallObj.gameObject);
+    self.ImageWall:SetHideOnClick(function()
+        self:ImageWallHide()
+    end);
 end
 
 --endregion
 
+--region 【展示背景墙】
+function UICommunityForm:ImageWallShow()
+    if ImageWallIsShow then
+        return
+    end
+    self.BG.transform:DOLocalMoveY(-1334, 0.5):OnComplete(function() ImageWallIsShow = true end)   :Play()
+end
+--endregion
+
+--region 【隐藏背景墙】
+function UICommunityForm:ImageWallHide()
+    if ImageWallIsShow then
+        self.BG.transform:DOLocalMoveY(0, 0.5):OnComplete(function() ImageWallIsShow = false end)   :Play()
+    end
+end
+--endregion
 
 --region 【OnClose】
 
 function UICommunityForm:OnClose()
     UIView.OnClose(self)
+    self.ImageWallBtn.onClick:RemoveAllListeners()
     GameController.CommunityControl:SetData(nil);
 
     Cache.ComuniadaCache.DynamicList={};
@@ -99,6 +132,7 @@ function UICommunityForm:OnClose()
         AuthorInfoPanel=nil;
     end
 
+    ImageWallIsShow = nil
 
 end
 

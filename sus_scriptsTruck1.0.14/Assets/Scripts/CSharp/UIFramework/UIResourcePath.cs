@@ -61,6 +61,8 @@ public class UIFormName
     
     public readonly static string Announcement = "UI/Announcement/Canvas_Announcement";
     public readonly static string StoryItems = "UI/Resident/UI/Canvas_StoryItems";//4
+    
+    public static readonly string ImageWall = "UI/Resident/UI/ImageWall";
 }
 
 public enum UIEventMethodName
