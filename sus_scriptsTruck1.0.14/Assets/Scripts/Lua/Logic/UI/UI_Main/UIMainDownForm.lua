@@ -246,21 +246,21 @@ function UIMainDownForm:ProfileToggleClick(data)
     --埋点*打开个人中心界面
     logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.UcenterPage);
 
-     --个人中心
-    local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.ProfileForm)
-    if(uiform==nil or CS.XLuaHelper.is_Null(uiform)==true)then
-        logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.ProfileForm);
-    end
-    if(uiform and CS.XLuaHelper.is_Null(uiform)==false)then
-        --展示界面
-        uiform:Appear();
-    end
-    --local uiform = logic.UIMgr:GetView2(logic.uiid.UIPersonalCenterForm);
-    --if(uiform==nil)then
-    --    uiform = logic.UIMgr:Open(logic.uiid.UIPersonalCenterForm);
-    --else
-    --    uiform.uiform:Appear();
+    -- --个人中心
+    --local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.ProfileForm)
+    --if(uiform==nil or CS.XLuaHelper.is_Null(uiform)==true)then
+    --    logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.ProfileForm);
     --end
+    --if(uiform and CS.XLuaHelper.is_Null(uiform)==false)then
+    --    --展示界面
+    --    uiform:Appear();
+    --end
+    local uiform = logic.UIMgr:GetView2(logic.uiid.UIPersonalCenterForm);
+    if(uiform==nil)then
+        uiform = logic.UIMgr:Open(logic.uiid.UIPersonalCenterForm);
+    else
+        uiform.uiform:Appear();
+    end
 end
 
 --endregion
