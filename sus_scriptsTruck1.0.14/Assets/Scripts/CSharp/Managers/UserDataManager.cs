@@ -390,11 +390,12 @@ public class UserDataManager : Singleton<UserDataManager> {
         }
 
         // if (GameHttpNet.Instance.SendSeq == SendSeq)
-        // {
-        is_use_prop = false;
-        propInfoItem = null;
-        // }
-        EventDispatcher.Dispatch(EventEnum.SetPropItem, propInfoItem);
+        if (PropType != 2)
+        {
+            is_use_prop = false;
+            propInfoItem = null;
+            EventDispatcher.Dispatch(EventEnum.SetPropItem, propInfoItem);
+        }
     }
 
 

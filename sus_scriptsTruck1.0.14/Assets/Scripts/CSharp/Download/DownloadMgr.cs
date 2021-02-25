@@ -377,26 +377,33 @@ public class DownloadMgr : CMonoSingleton<DownloadMgr>
                     Debug.LogError("offset:" + offset + "/" + TotalBytes);
                     offset = 0;
                 }
-                if (ex.Status == WebExceptionStatus.CacheEntryNotFound || msg.Contains("(404) Not Found"))
+                ++tryCount;
+                if (tryCount >= 3)
                 {
-                    ++tryCount;
-                    if (tryCount >= 3)
-                    {
-                        isDone = true;
-
+                    isDone = true;
 #if ENABLE_DEBUG
-                        LoomUtil.QueueOnMainThread((param) =>
-                        {
-                            UIAlertMgr.Instance.Show("TIPS", "File Not Found:"+url);
-                        }, null);
+                    LoomUtil.QueueOnMainThread((param) =>
+                    {
+                        UIAlertMgr.Instance.Show("TIPS", "File Not Found:"+url);
+                    }, null);
 #endif
-                    }
                 }
             }
             catch (Exception ex)
             {
                 var msg = ex.ToString();
                 strError = url + "\n" + msg;
+                ++tryCount;
+                if (tryCount >= 3)
+                {
+                    isDone = true;
+#if ENABLE_DEBUG
+                    LoomUtil.QueueOnMainThread((param) =>
+                    {
+                        UIAlertMgr.Instance.Show("TIPS", "File Not Found:"+url);
+                    }, null);
+#endif
+                }
             }
             finally
             {
