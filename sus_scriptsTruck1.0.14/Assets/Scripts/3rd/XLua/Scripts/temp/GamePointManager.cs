@@ -35,8 +35,8 @@ public class GamePointManager : Singleton<GamePointManager>
         //parameters.Add("token", TOKEN);
         //parameters.Add("phoneimei", UUID);
 
-        string userid = GameHttpNet.Instance.UUID;
-        ; //设备ID，即PhoneImei
+        string userid = AppsFlyerManager.Instance._IGGid;
+        //设备ID，即PhoneImei
 
         string version = SdkMgr.Instance.GameVersion(); //app 版本号    
 
