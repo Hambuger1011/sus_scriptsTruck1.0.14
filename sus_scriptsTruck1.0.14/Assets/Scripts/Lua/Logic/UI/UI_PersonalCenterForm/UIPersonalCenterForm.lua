@@ -18,6 +18,14 @@ function UIPersonalCenterForm:OnInitView()
 
     self.ImageWallParent = CS.DisplayUtil.GetChild(gameObject, "ImageWallParent");
     self.BG = CS.DisplayUtil.GetChild(gameObject, "BG");
+    self.ImageWallObj = CS.ResourceManager.Instance:LoadAssetBundleUI(logic.cs.UIFormName.ImageWall);
+    self.ImageWallBtn = self.ImageWallObj:GetComponent(typeof(logic.cs.Button));
+    
+    self.UserInfoObj = CS.DisplayUtil.GetChild(gameObject, "UserInfo");
+    self.UserInfo= require('Logic/UI/UI_PersonalCenterForm/UserInfoPanel').New(self.UserInfoObj);
+    
+    self.BookListObj = CS.DisplayUtil.GetChild(gameObject, "BookList");
+    self.BookList= require('Logic/UI/UI_PersonalCenterForm/BookList').New(self.BookListObj);
 end
 --endregion
 
@@ -29,16 +37,13 @@ function UIPersonalCenterForm:OnOpen()
     --按钮监听
     --logic.cs.UIEventListener.AddOnClickListener(self.RomanceTab.gameObject,function(data) self:RomanceTabClick(data) end);
 
-    self.ImageWallObj = CS.ResourceManager.Instance:LoadAssetBundleUI(logic.cs.UIFormName.ImageWall);
     self.ImageWallObj.transform:SetParent(self.ImageWallParent.transform, false);
-    self.ImageWallBtn = self.ImageWallObj:GetComponent(typeof(logic.cs.Button));
-    self.ImageWallBtn.onClick:AddListener(function()
-        self:ImageWallShow()
-    end);
+    self.ImageWallBtn.onClick:AddListener(function() self:ImageWallShow() end);
     self.ImageWall= require('Logic/UI/UI_ImageWall/ImageWall').New(self.ImageWallObj.gameObject);
-    self.ImageWall:SetHideOnClick(function()
-        self:ImageWallHide()
-    end);
+    self.ImageWall:SetHideOnClick(function() self:ImageWallHide() end);
+    
+    self.UserInfo:UpdateInfo();
+    self.BookList:UpdateList(Cache.ComuniadaCache.WriterhistoryList,EStoryList.WriterList);
 end
 
 --endregion
