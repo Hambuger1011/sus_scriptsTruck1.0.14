@@ -150,20 +150,13 @@ function BookReadingMgr:InitComponets()
     self.dialogMap = {}
     
     local eggDialogList = logic.cs.UserDataManager.buyChapterResultInfo.data.egg_dialog_list
-    local eggDialogArr ={}
+    self.eggDialogArr ={}
     for k, v in pairs(eggDialogList) do
         local eggDialog = stringSplit(v.dialog_id,",")
-        eggDialogArr[v.id] = eggDialog
+        self.eggDialogArr[v.id] = eggDialog
     end
     logic.Eggs:CleanReceivedEggs()
     for idx,cfg in pairs(self.dialogItems) do
-        for k1, v1 in pairs(eggDialogArr) do
-            for k2, v2 in pairs(v1) do
-                if tonumber(cfg.dialogid) == tonumber(v2) then
-                    cfg.eggId = k1
-                end
-            end
-        end
         self.dialogMap[cfg.dialogid] = cfg
         local component = componentFactory.Create(idx,cfg)
         --table.insert(self.components,component)
@@ -342,7 +335,20 @@ function BookReadingMgr:PlayById(id)
     self.view:updateReadingProgress(self.playingComponent)
     
     --彩蛋
-        logic.Eggs:Show(self.playingComponent.cfg)
+
+    local cfgEggId = nil
+    local flag = false
+    for k1, v1 in pairs(self.eggDialogArr) do
+        for k2, v2 in pairs(v1) do
+            if tonumber(self.playingComponent.cfg.dialogid) == tonumber(v2) then
+                cfgEggId = k1
+                flag = true
+                break
+            end
+        end
+        if flag then break end
+    end
+    logic.Eggs:Show(self.playingComponent.cfg,cfgEggId)
 end
 
 

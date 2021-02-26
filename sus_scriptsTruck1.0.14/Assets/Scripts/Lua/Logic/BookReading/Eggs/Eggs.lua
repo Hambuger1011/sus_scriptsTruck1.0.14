@@ -15,16 +15,18 @@ local receivedNum = 0
 local AutoPlayPause = false
 local canReceived = false
 local maskBtn = nil
+local eggId = nil
 
-function Eggs:Show(_cfg)
+function Eggs:Show(_cfg,_eggId)
     this:Clean()
     cfg = _cfg
-    if cfg == nil or cfg.eggId == nil then
+    eggId = _eggId
+    if cfg == nil or eggId == nil then
         return
     end
     for k, v in pairs(receivedEggs) do
-        if tonumber(cfg.eggId) == v then
-            logic.debug.Log("彩蛋已领取或者已过期Id==" .. tostring(cfg.eggId))
+        if tonumber(eggId) == v then
+            logic.debug.Log("彩蛋已领取或者已过期Id==" .. tostring(eggId))
             return
         end
     end
@@ -32,7 +34,7 @@ function Eggs:Show(_cfg)
         AutoPlayPause = true
         logic.cs.GameDataMgr.InAutoPlay = false
     end
-    logic.debug.Log("创建彩蛋Id==" .. tostring(cfg.eggId))
+    logic.debug.Log("创建彩蛋Id==" .. tostring(eggId))
     logic.bookReadingMgr.view.eggTransComponent.gameObject:SetActiveEx(true)
     if maskBtn == nil then
         maskBtn = logic.bookReadingMgr.view.eggTransComponent.gameObject:GetComponent(typeof(logic.cs.Button))
@@ -44,7 +46,7 @@ function Eggs:Show(_cfg)
     local prefab = logic.bookReadingMgr.Res:GetPrefab("Assets/Bundle/UI/BookReading/Eggs.prefab")
 
     eggObjs.gameObject = logic.cs.GameObject.Instantiate(prefab, logic.bookReadingMgr.view.eggTransComponent, false)
-    eggObjs.gameObject.name = "egg" .. tostring(cfg.eggId)
+    eggObjs.gameObject.name = "egg" .. tostring(eggId)
     eggObjs.Egg = CS.DisplayUtil.GetChild(eggObjs.gameObject, "Egg"):GetComponent(typeof(logic.cs.UITweenButton))
     eggObjs.eggSpine = logic.SpineEgg.New(eggObjs.gameObject)
     eggObjs.Egg.onClick:RemoveAllListeners()
@@ -76,11 +78,11 @@ function Eggs:EggClick()
             canReceived = false
             coroutine.wait(2.1)
             logic.cs.GameObject.Destroy(eggObjs.gameObject)
-            logic.gameHttp:ReceiveEggActivityAward(cfg.eggId, logic.bookReadingMgr.bookData.BookID, cfg.dialogid, function(result)
+            logic.gameHttp:ReceiveEggActivityAward(eggId, logic.bookReadingMgr.bookData.BookID, cfg.dialogid, function(result)
                 local json = core.json.Derialize(result)
                 local code = tonumber(json.code)
                 if code == 200 then
-                    table.insert(receivedEggs, cfg.eggId)
+                    table.insert(receivedEggs, eggId)
                     logic.cs.UserDataManager:ResetMoney(1, tonumber(json.data.bkey))
                     logic.cs.UserDataManager:ResetMoney(2, tonumber(json.data.diamond))
                     local cc = coroutine.create(function()
@@ -89,7 +91,7 @@ function Eggs:EggClick()
                     end)
                     coroutine.resume(cc)
                 else
-                    table.insert(receivedEggs, cfg.eggId)
+                    table.insert(receivedEggs, eggId)
                     logic.bookReadingMgr.view.eggTransComponent.gameObject:SetActiveEx(false)
                 end
             end)
