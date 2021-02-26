@@ -303,9 +303,13 @@ function UIMainDownForm:HideOld(name)
             uiactivity:LimitedTimeTabClick(nil);
         end
     elseif(name=="ProfileToggle")then
-        local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.ProfileForm)
-        if(uiform or CS.XLuaHelper.is_Null(uiform)==false)then
-            uiform:Hide();
+        --local uiform=logic.cs.CUIManager:GetForm(logic.cs.UIFormName.ProfileForm)
+        --if(uiform or CS.XLuaHelper.is_Null(uiform)==false)then
+        --    uiform:Hide();
+        --end
+        local UIPersonalCenter = logic.UIMgr:GetView2(logic.uiid.UIPersonalCenterForm);
+        if(UIPersonalCenter)then
+            UIPersonalCenter.uiform:Hide();
         end
         if(GameController.DressUpControl.isShow==true)then
             local uidressup = logic.UIMgr:GetView2(logic.uiid.UIDressUpForm);
@@ -313,7 +317,7 @@ function UIMainDownForm:HideOld(name)
                 uidressup:OnExitClick();
             end
         end
-
+        
     end
 end
 
