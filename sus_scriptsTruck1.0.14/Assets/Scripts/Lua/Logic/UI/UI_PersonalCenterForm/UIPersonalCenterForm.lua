@@ -43,7 +43,23 @@ function UIPersonalCenterForm:OnOpen()
     self.ImageWall:SetHideOnClick(function() self:ImageWallHide() end);
     
     self.UserInfo:UpdateInfo();
-    self.BookList:UpdateList(Cache.ComuniadaCache.WriterhistoryList,EStoryList.WriterList);
+    local myBookIDs =  logic.cs.GameDataMgr.userData:GetMyBookIds();
+    local len=myBookIDs.Count;
+    local mybooks={};
+    for i = 1, len do
+        local _index=i-1;
+        local t_BookDetails = logic.cs.JsonDTManager:GetJDTBookDetailInfo(myBookIDs[_index]);
+        if(t_BookDetails and (CS.XLuaHelper.is_Null(t_BookDetails)==false))then
+            local info={};
+            info.book_id=t_BookDetails.id;
+            info.bookname=t_BookDetails.bookname;
+            info.update_time=0;
+            table.insert(mybooks,info);
+        else
+            logic.debug.LogError("t_BookDetails is Null");
+        end
+    end
+    self.BookList:UpdateList(mybooks);
 end
 
 --endregion
