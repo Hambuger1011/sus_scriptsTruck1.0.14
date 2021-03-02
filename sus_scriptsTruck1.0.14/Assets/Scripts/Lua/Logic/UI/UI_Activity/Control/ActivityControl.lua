@@ -478,6 +478,9 @@ function ActivityControl:GetRewardConfig(result)
         if(UIActivityForm)then
             UIActivityForm:GetRewardConfig_Response();
         end
+
+        --刷新抽奖
+        GameController.LotteryControl:UpdateItemList()
     end
 end
 --endregion

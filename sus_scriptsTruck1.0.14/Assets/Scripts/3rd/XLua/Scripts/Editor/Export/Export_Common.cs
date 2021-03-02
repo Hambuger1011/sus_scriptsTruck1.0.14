@@ -57,6 +57,8 @@ public static class Export_Cmmon
         typeof(SuperScrollView.LoopListViewItem2),
         typeof(UIVirtualList),
         typeof(ContentImmediate),
+        typeof(KeylineBox),
+        typeof(MoneyChange),
 
     };
 

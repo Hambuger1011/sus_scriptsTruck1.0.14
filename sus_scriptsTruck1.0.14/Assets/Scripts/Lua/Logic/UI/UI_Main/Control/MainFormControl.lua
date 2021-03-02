@@ -107,7 +107,9 @@ function MainFormControl:GetIndexScrollListCallBack(result)
     local json = core.json.Derialize(result)
     local code = tonumber(json.code)
     if(code == 200)then
-        UIMainForm.TopBookView:ShowTopBook(json.data.book_ids,json.data.time);
+        if(UIMainForm)then
+            UIMainForm.TopBookView:ShowTopBook(json.data.book_ids,json.data.time);
+        end
     else
         logic.cs.UIAlertMgr:Show("TIPS",json.msg)
     end

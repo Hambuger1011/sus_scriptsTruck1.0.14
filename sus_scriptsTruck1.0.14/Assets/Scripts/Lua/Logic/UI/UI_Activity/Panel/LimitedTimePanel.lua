@@ -156,10 +156,17 @@ function LimitedTimePanel:__init(gameObject)
     else
         self.InvestmentBG:SetActive(false);
     end
+    --endregion
 
 
-
-
+    --region【投资活动】
+    self.LotteryBG = CS.DisplayUtil.GetChild(self.ScrollRect, "LotteryBG");
+    self.LotteryText = CS.DisplayUtil.GetChild(self.LotteryBG, "LotteryText"):GetComponent("Text");
+    self.LotteryDetailText = CS.DisplayUtil.GetChild(self.LotteryBG, "LotteryDetailText"):GetComponent("Text");
+    self.LotteryBtn = CS.DisplayUtil.GetChild(self.LotteryBG, "LotteryBtn");
+    self.LotteryBtnText = CS.DisplayUtil.GetChild(self.LotteryBtn, "LotteryBtnText"):GetComponent("Text");
+    -- self.BindRedPoint = CS.DisplayUtil.GetChild(self.InvestmentBG, "RedPoint");
+    logic.cs.UIEventListener.AddOnClickListener(self.LotteryBtn,function(data) logic.UIMgr:Open(logic.uiid.UILotteryForm) end)
     --endregion
 
 end

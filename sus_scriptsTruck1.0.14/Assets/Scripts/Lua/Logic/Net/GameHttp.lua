@@ -1539,4 +1539,29 @@ function GameHttp:ReceiveInvestPlan(_activity_id,callback)
     end, nil, nil, true)
 end
 
+--【开始幸运转盘抽奖】
+function GameHttp:StartLuckDraw(callback)
+    local param = {
+    }
+    self:Post(self, "api_startLuckDraw", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取转盘活动信息】
+function GameHttp:GetLuckyTurntableInfo(callback)
+    local param = {}
+    self:Get(self, "api_getLuckyTurntableInfo", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
+--【获取我的获奖纪录】
+function GameHttp:GetMyTurntableRecord(callback)
+    local param = {}
+    self:Get(self, "api_getMyTurntableRecord", param, function(result)
+        callback(result)
+    end, nil, nil, true)
+end
+
 return GameHttp.New()

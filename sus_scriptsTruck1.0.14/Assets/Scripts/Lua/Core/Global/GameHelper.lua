@@ -491,6 +491,7 @@ function GameHelper.ShowProgress(book_id,ProgressBar,Tips)
     end
 end
 
+
 function GameHelper.ShowProgress1(obj)
     local bookid=obj[0];
     local ProgressBar=obj[1];

@@ -15,7 +15,6 @@ function ChatItem:__init(gameObject)
 
     self.FitWidth=480;
     self.FitString=24;
-
 end
 
 function ChatItem:SetItemData(itemData,itemIndex)

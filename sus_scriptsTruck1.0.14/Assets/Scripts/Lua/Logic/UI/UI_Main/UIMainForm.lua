@@ -48,6 +48,9 @@ function UIMainForm:OnInitView()
     self.BookRanksList = require('Logic/UI/UI_Main/Panel/BookRanksList').New(self.mBookRanksList);
 
 
+    self.mRecommendList.transform:SetSiblingIndex(1);
+
+
     ---- LGBT列表
     --self.mLGBTList =CS.DisplayUtil.GetChild(self.MainScrollView.gameObject, "LGBTList");
     --self.LGBTList = require('Logic/UI/UI_Main/Panel/MainBookList').New(self.mLGBTList);
@@ -101,6 +104,7 @@ function UIMainForm:OnOpen()
     end
 
     --加载顶端栏
+    --logic.UIMgr:Open(logic.uiid.UIMainTopForm)
     logic.cs.CUIManager:OpenForm(logic.cs.UIFormName.MainFormTop);
 
     ----打开主界面底部的按钮栏

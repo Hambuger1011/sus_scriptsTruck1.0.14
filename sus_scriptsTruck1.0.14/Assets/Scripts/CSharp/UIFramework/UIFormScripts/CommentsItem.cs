@@ -262,7 +262,7 @@ public class CommentsItem : MonoBehaviour {
     private void MoreReplyOnButton(PointerEventData data)
     {
         LOG.Info("点击了查看更多评论");
-        CUIManager.Instance.GetForm<MainTopSprite>(UIFormName.MainFormTop).UIOpent(8);
+        //CUIManager.Instance.GetForm<MainTopSprite>(UIFormName.MainFormTop).UIOpent(8);
 
     }
     #endregion

@@ -1,19 +1,14 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UGUI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
-using System;
-using Spine.Unity;
-using DG.Tweening;
+
 
 public class MainTopSprite : BaseUIForm
 {
     public GameObject AddkeyLight, AddDiamondLight;
-    public Image TopBg;
-    public GameObject MoneyGroup;
     public GameObject KeyAddButton;
     public Text KeyNumText;
     public GameObject DiamondAddButton;
@@ -31,18 +26,7 @@ public class MainTopSprite : BaseUIForm
     public GameObject RedImg;
     public GameObject CloseIcon, Log;
 
-
-    private int startTime = 0, endTime = 1, hour, minute, second;
     private int TimeSequence = 0;
-    private bool BookIconOpen = false;
-    private bool LuckRollerOpen = false;
-    private int endtimes;
-    private bool gameOpenDim = false;
-    private ArrayList NowOpenUI;
-    private int types = 0, uiNumber=0, uiNumberS=0;
-    private SkeletonAnimation SkeletonAnimation;
-    private bool AniPlayEnd = false;
-    private bool KeyAddButtonAddOn = false, DiamondAddButtonOn = false;
     private RectTransform TopBar;
     public override void OnOpen()
     {
@@ -65,23 +49,16 @@ public class MainTopSprite : BaseUIForm
         addMessageListener(EventEnum.OnDiamondNumChange, OnDiamondNumChange);
         addMessageListener(EventEnum.GetRewardShow, GetRewardHandler);
      
-        addMessageListener(EventEnum.ShowMoneyTicketForm, ShowMoneyTicketForm);
-        addMessageListener(EventEnum.EmailAwartShowClose, EmailAwartShowClose);
-        addMessageListener(EventEnum.AddOpenFormType, AddOpenFormTypeHandler);
-
 
         KeyNumText.text = UserDataManager.Instance.UserData.KeyNum.ToString();
         DiamondNumText.text = UserDataManager.Instance.UserData.DiamondNum.ToString();
 
         RewardEffect.gameObject.SetActive(false);
      
-        //这个集合是存储当前打开的所有界面集合
-        NowOpenUI = new ArrayList();
 
         TopBar = transform.Find("Canvas/TopBar").GetComponent<RectTransform>();
 
-        //红点协议
-        //GameHttpNet.Instance.Getimpinfo(GetimpinfoCallBacke);
+       
 
         TimeButton.SetActive(false);
 
@@ -129,8 +106,6 @@ public class MainTopSprite : BaseUIForm
     {
         CtrlIconShow(true);
         CurUI = _CurUI;
-        gameOpenDim = true;
-        //AddNowOpenUIList(1);
     }
     public void SetRedImage(bool show)
     {
@@ -166,6 +141,11 @@ public class MainTopSprite : BaseUIForm
             CtrlIconShow(false);
             XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRankForm);");
         }
+        else if (CurUI == "UILotteryForm")
+        {
+            CtrlIconShow(false);
+            XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UILotteryForm);");
+        }
         else if (CurUI == "UIDressUpForm")
         {
             CtrlIconShow(false);
@@ -200,6 +180,7 @@ public class MainTopSprite : BaseUIForm
         XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIRankForm);");
         XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UIDressUpForm);");
         XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UICommunityForm);");
+        XLuaManager.Instance.GetLuaEnv().DoString(@"logic.UIMgr:Close(logic.uiid.UILotteryForm);");
     }
 
     /// <summary>
@@ -540,67 +521,6 @@ public class MainTopSprite : BaseUIForm
         this.CloseAllUI();
     }
 
-    private void FXkeyAndDiondFalse()
-    {
-        CancelInvoke("FXkeyAndDiondFalse");
-        AddkeyLight.SetActive(false);
-        AddDiamondLight.SetActive(false);
-
-    }
-
-    /// <summary>
-    /// 这个是抽奖的时候Tick不够的时候打开的，购买tich界面
-    /// </summary>
-    /// <param name="notification"></param>
-    private void ShowMoneyTicketForm(Notification notification)
-    {
-        bool b = NowOpenUI.Contains(1);
-        if (b)
-        {
-            //LOG.Info("这个界面是在游戏中打开的");
-        }
-        else
-        {
-            AddNowOpenUIList(2);
-        }
-        OpenMoneyForm(3);
-    }
-
-    private void OpenMoneyForm(int vType)
-    {         
-        CUIManager.Instance.OpenForm(UIFormName.ChargeMoneyForm);
-        CUIManager.Instance.GetForm<ChargeMoneyForm>(UIFormName.ChargeMoneyForm).SetFormStyle(vType);
-    }
-
-    /// <summary>
-    /// 这个是统一把打开的界面，添加进界面列表中
-    /// </summary>
-    /// <param name="uiNumber"></param>
-    public void UIOpent(int uiNumber)
-    {
-      
-      
-        AddNowOpenUIList(uiNumber);
-        this.uiNumber = uiNumber;
-
-        if (uiNumber==8)
-        {
-            //这个是打开新闻所有评论详细信息界面
-         
-          
-        }
-    }
-
-    public bool AniPlayEndReturn()
-    {
-        return AniPlayEnd;
-    }
-
-    private void InviteHandler(string vMsg)
-    {
-        //LOG.Info("===facebook invite====>" + vMsg);
-    }
-
   
     private void OnKeyNumChange(Notification notification)
     {
@@ -621,17 +541,13 @@ public class MainTopSprite : BaseUIForm
             {
                 //KeyNumText.text = (newNum).ToString();
 
-                DOTween.To(() => oldNum, (value) => { KeyNumText.text = value.ToString(); }, newNum, 2).OnComplete(() => {
-
-                });
+                DOTween.To(() => oldNum, (value) => { KeyNumText.text = value.ToString(); }, newNum, 2).OnComplete(() => { });
             }
         }else
         {
             //KeyNumText.text = (newNum).ToString();
 
-            DOTween.To(() => oldNum, (value) => { KeyNumText.text = value.ToString(); }, newNum, 2).OnComplete(() => {
-
-            });
+            DOTween.To(() => oldNum, (value) => { KeyNumText.text = value.ToString(); }, newNum, 2).OnComplete(() => { });
         }
     }
 
@@ -678,84 +594,22 @@ public class MainTopSprite : BaseUIForm
         //Debug.Log("钻石刷新执行了2");
     }
 
-    /// <summary>
-    /// 猫的回馈界面领取钻石的时候，主界面的钻石数量更改
-    /// </summary>
-    /// <param name="newNum"></param>
-    public void CatDiamondNumChange(int newNum)
-    {
-        Debug.Log("钻石："+newNum);
-        DiamondNumText.text = newNum.ToString();
-    }
+  
 
-    private int rewardType; //获取奖励的类型 1钥匙 2钻石
-    private int AwarNumber;
-    private AwardGameItem item;
-    //这个是登录奖励领取后，发放奖励
-    public void AwardEvent(int vRewardType, int number)
-    {
-        rewardType = vRewardType;
-        AwarNumber = number;
-        item = ResourceManager.Instance.LoadAssetBundleUI(UIFormName.AwardGame).GetComponent<AwardGameItem>();
-        item.transform.SetParent(AwardPos.transform, false);
-        item.transform.localPosition = Vector3.zero;
-        item.transform.localScale = Vector3.one;
-        item.IniteGame(rewardType, number);
-
-        //Debug.Log("得到奖励");
-        Invoke("AwardGameMoveTo", 1);
-    }
-
-    private void AwardGameMoveTo()
-    {
-        if (rewardType == 2)
-        {
-            item.transform.DOMove(DiamondPos.transform.position, 0.5f);
-            item.transform.DOScale(new Vector3(0.2f, 0.2f, 0.2f), 0.5f).OnComplete(DestroyAwardGame);
-        }
-        else
-        {
-            item.transform.DOMove(keyMovePos.transform.position, 0.5f);
-            item.transform.DOScale(new Vector3(0.2f, 0.2f, 0.2f), 0.5f).OnComplete(DestroyAwardGame);
-        }
-
-    }
-
-    private void DestroyAwardGame()
-    {
-
-        if (rewardType == 2)
-        {
-            UserDataManager.Instance.CalculateDiamondNum(AwarNumber);
-        }
-        else
-        {
-            UserDataManager.Instance.CalculateKeyNum(AwarNumber);
-        }
-        Destroy(item.gameObject);
-    }
 
     //private int OpenTheGameType = 0;
     //这个是在游戏中打开了充值界面的时候，对Top条框进行设置
     public void GamePlayOnpenDiamond(int OpenType)
     {
-    
-        AddNowOpenUIList(1);
-   
-   
         GameOpenDiamondInit();
     }
 
     //这个是在游戏中打开了充值Key界面的时候，对top条框进行设置
     public void GamePlayOnpenKey(int OpenType)
     {
-    
-        AddNowOpenUIList(1);
-    
         GameOpenKeyInit();
     }
 
- 
 
     //这个是游戏打开Key充值界面，对Top条框的初始化
     private void GameOpenKeyInit()
@@ -815,41 +669,5 @@ public class MainTopSprite : BaseUIForm
     }
 
    
-    /// <summary>
-    /// 这个是邮箱奖励界面打开后，设置top的close按钮当前关闭界面是关闭邮箱奖励界面
-    /// </summary>
-    /// <param name="notification"></param>
-    private void EmailAwartShowClose(Notification notification)
-    {
-        //OpenTheGameType = 4;
-        AddNowOpenUIList(4);
-    }
-   
-    private void AddOpenFormTypeHandler(Notification notification)
-    {
-        int typeIndex = (int)notification.Data;
-        AddNowOpenUIList(typeIndex);
-    }
- 
-    /// <summary>
-    /// 添加top栏当前打开的所有界面的顺序集合
-    /// 其中 1.是游戏进行中的商店界面，2.是主界面时打开的商店界面，3.是邮箱界面，4.是邮箱奖励信息界面
-    /// 5.是打开了转盘界面 
-    /// </summary>
-    /// <param name="UInumber"></param>
-    private void AddNowOpenUIList(int UInumber)
-    {
-
-        bool b = NowOpenUI.Contains(UInumber);
-        if (b)
-        {
-            //LOG.Info("这个界面已经在数组中");
-            return;
-        }
-        else
-        {
-            //LOG.Info("这个界面不在数组中，需要添加");
-            NowOpenUI.Add(UInumber);
-        }
-    }
+  
 }

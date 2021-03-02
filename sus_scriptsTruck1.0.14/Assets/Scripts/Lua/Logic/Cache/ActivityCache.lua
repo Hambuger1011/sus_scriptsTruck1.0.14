@@ -78,6 +78,9 @@ function ActivityCache:__init()
     --【在线阅读奖励列表】
     self.reading_online={};
 
+    --【幸运转盘奖励列表】
+    self.lucky_turntable={};
+
 end
 
 --更新【签到】数据
@@ -185,6 +188,9 @@ function ActivityCache:UpdatedRewardConfig(datas)
 
     --【在线阅读奖励列表】
     self.reading_online=datas.reading_online;
+
+    --【幸运转盘奖励列表】
+    self.lucky_turntable=datas.lucky_turntable;
 
 end
 

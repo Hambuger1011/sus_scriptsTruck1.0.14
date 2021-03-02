@@ -20,9 +20,10 @@ function PropCache:__init()
     local sprite12 = CS.ResourceManager.Instance:GetUISprite("PakageForm/Props_icon_Key Coupon_1")
     local sprite13 = CS.ResourceManager.Instance:GetUISprite("PakageForm/props_icon_outfit_coupon_1")
     local sprite14 = CS.ResourceManager.Instance:GetUISprite("PakageForm/props_icon_choice_coupon_1")
+    local sprite15 = CS.ResourceManager.Instance:GetUISprite("PakageForm/com_icon_fourleafclover")
     self.SpriteData[1] = sprite10
     self.SpriteData[2] = sprite11
-    --self.SpriteData[3] = sprite9
+    self.SpriteData[3] = sprite15
     self.SpriteData[4] = sprite13
     self.SpriteData[5] = sprite12
     self.SpriteData[6] = sprite14

@@ -22,6 +22,7 @@ function Cache.Init()
     Cache.ChatCache=require("Logic/Cache/ChatCache");
     Cache.PopWindowCache=require("Logic/Cache/PopWindowCache");
     Cache.InvestmentCache=require("Logic/Cache/InvestmentCache");
+    Cache.LotteryCache=require("Logic/Cache/LotteryCache");
 
     isInit = true
 end
