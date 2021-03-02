@@ -1,0 +1,62 @@
+
+hair2.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hair5_hou
+  rotate: false
+  xy: 348, 93
+  size: 156, 156
+  orig: 1113, 1300
+  offset: 472, 963
+  index: -1
+hair5_qian
+  rotate: false
+  xy: 2, 52
+  size: 190, 197
+  orig: 1113, 1300
+  offset: 464, 956
+  index: -1
+hair6_hou
+  rotate: false
+  xy: 655, 2
+  size: 127, 101
+  orig: 1113, 1300
+  offset: 478, 1009
+  index: -1
+hair6_qian
+  rotate: true
+  xy: 194, 61
+  size: 188, 152
+  orig: 1113, 1300
+  offset: 465, 997
+  index: -1
+hair7_hou
+  rotate: true
+  xy: 655, 105
+  size: 144, 134
+  orig: 1113, 1300
+  offset: 481, 988
+  index: -1
+hair7_qian
+  rotate: true
+  xy: 506, 85
+  size: 164, 147
+  orig: 1113, 1300
+  offset: 468, 998
+  index: -1
+hair8_hou
+  rotate: false
+  xy: 791, 7
+  size: 132, 110
+  orig: 1113, 1300
+  offset: 483, 1015
+  index: -1
+hair8_qian
+  rotate: false
+  xy: 791, 119
+  size: 137, 130
+  orig: 1113, 1300
+  offset: 480, 1005
+  index: -1

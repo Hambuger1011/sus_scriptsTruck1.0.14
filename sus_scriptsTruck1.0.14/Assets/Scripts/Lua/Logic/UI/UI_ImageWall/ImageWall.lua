@@ -15,36 +15,44 @@ function ImageWall:__init(gameObject)
     self.follow_backObj = CS.DisplayUtil.GetChild(gameObject, "follow_back");
     self.follow_back=CS.XLuaHelper.AddBoneFollowerGraphic(self.follow_backObj);
 
-    self.hair_backObj = CS.DisplayUtil.GetChild(self.follow_backObj, "hair_back");
+    self.hair_backObj = CS.DisplayUtil.GetChild(gameObject, "hair_back");
     self.hair_back=CS.XLuaHelper.AddSkeletonGraphic(self.hair_backObj);
 
-    self.RoleSkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "RoleSkeletonGraphic");
-    self.RoleSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.RoleSkeletonGraphicObj);
+    self.BodySkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "BodySkeletonGraphic");
+    self.BodySkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.BodySkeletonGraphicObj);
 
-    self.follow_frontObj = CS.DisplayUtil.GetChild(self.RoleSkeletonGraphicObj, "follow_front");
+    self.ClothesSkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "ClothesSkeletonGraphic");
+    self.ClothesSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.ClothesSkeletonGraphicObj);
+
+    self.follow_frontObj = CS.DisplayUtil.GetChild(gameObject, "follow_front");
     self.follow_front=CS.XLuaHelper.AddBoneFollowerGraphic(self.follow_frontObj);
 
-    self.ExpressionSkeletonGraphicObj = CS.DisplayUtil.GetChild(self.follow_frontObj, "ExpressionSkeletonGraphic");
+    self.ExpressionSkeletonGraphicObj = CS.DisplayUtil.GetChild(gameObject, "ExpressionSkeletonGraphic");
     self.ExpressionSkeletonGraphic=CS.XLuaHelper.AddSkeletonGraphic(self.ExpressionSkeletonGraphicObj);
 
-    self.hair_frontObj = CS.DisplayUtil.GetChild(self.follow_frontObj, "hair_front");
+    self.hair_frontObj = CS.DisplayUtil.GetChild(gameObject, "hair_front");
     self.hair_front=CS.XLuaHelper.AddSkeletonGraphic(self.hair_frontObj);
 
     self.hair_back.material=CS.XLuaHelper.SpineMaterial;
-    self.RoleSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
+    self.BodySkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
+    self.ClothesSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
     self.ExpressionSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
     self.hair_front.material=CS.XLuaHelper.SpineMaterial;
 
-    local spine = self:GetSkeDataAsset(80,1100010000)
+    local bodySpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/body/body_SkeletonData.asset")
+    local clothesSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/clothes/clothes1_SkeletonData.asset")
+    local expressionSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/head/b/head1_SkeletonData.asset")
+    local hairSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/hair/hair1_SkeletonData.asset")
 
-    self:SetSpine(spine)
+    self:SetSpine(bodySpineData,clothesSpineData,expressionSpineData,hairSpineData)
 
     local skinName = "skin1"
+    local bodyName = "h_body"
     local clothesName = "clothes1"
-    local expressionName = "expression0"
+    local expressionName = "expression1_6"
     local hair1Name	= "hair1"
     local hair2Name	= "hair1_1"
-    self:SetData(skinName,clothesName,expressionName,hair1Name,hair2Name)
+    self:SetData(skinName,bodyName,clothesName,expressionName,hair1Name,hair2Name)
 
     self.ChoiceBG = CS.DisplayUtil.GetChild(gameObject, "ChoiceBG")
     self.ShowChoiceBtn = CS.DisplayUtil.GetChild(gameObject, "ShowChoiceBtn"):GetComponent(typeof(logic.cs.Button))
@@ -165,11 +173,10 @@ end
 
 --region【spine】
 --region【获取spine文件】
-function ImageWall:GetSkeDataAsset(bookId,key)
-    local AbBookSystem = CS.AB.AbBookSystem.Create(bookId)
-    local asset = AbBookSystem:LoadImme(logic.ResMgr.tag.DialogDisplay,logic.ResMgr.type.ScriptableObject,"Assets/Bundle/Book/"..bookId.."/Role/"..key.."_SkeletonData.asset")
+function ImageWall:GetSkeDataAsset(url)
+    local asset = logic.ResMgr.LoadImme(logic.ResMgr.tag.Null,logic.ResMgr.type.ScriptableObject,url)
     if not asset or not asset.resObject then
-        logic.debug.LogError("资源未预加载:"..key)
+        logic.debug.LogError("资源未预加载:"..url)
         return nil
     end
     return asset.resObject
@@ -189,41 +196,49 @@ end
 --endregion
 
 --region【设置spine文件】
-function ImageWall:SetSpine(spineData)
-    if self.spineData == spineData then
-        return
-    end
-    self.RoleSkeletonGraphic.skeletonDataAsset = spineData
-    self.ExpressionSkeletonGraphic.skeletonDataAsset = spineData
-    self.hair_front.skeletonDataAsset = spineData
-    self.hair_back.skeletonDataAsset = spineData
-
+function ImageWall:SetSpine(bodySpineData,clothesSpineData,expressionSpineData,hairSpineData)
     local skinName = "skin1"
-    self.RoleSkeletonGraphic.initialSkinName = skinName
-    self.ExpressionSkeletonGraphic.initialSkinName = skinName
-    self.hair_back.initialSkinName = skinName
-    self.hair_front.initialSkinName = skinName
 
-    self.RoleSkeletonGraphic:Initialize(true)
-    self.ExpressionSkeletonGraphic:Initialize(true)
-    self.hair_front:Initialize(true)
-    self.hair_back:Initialize(true)
+    if self.bodySpineData ~= bodySpineData then
+        self.BodySkeletonGraphic.skeletonDataAsset = bodySpineData
+        self.BodySkeletonGraphic.initialSkinName = skinName
+        self.BodySkeletonGraphic:Initialize(true)
+        self.bodyName = nil
+        self.follow_back.SkeletonGraphic = self.BodySkeletonGraphic
+        self.follow_front.SkeletonGraphic = self.BodySkeletonGraphic
+        self.skinName = nil
+    end
 
+    if self.clothesSpineData ~= clothesSpineData then
+        self.ClothesSkeletonGraphic.skeletonDataAsset = clothesSpineData
+        self.ClothesSkeletonGraphic.initialSkinName = skinName
+        self.ClothesSkeletonGraphic:Initialize(true)
+        self.clothesName = nil
+    end
 
-    self.follow_back.SkeletonGraphic = self.RoleSkeletonGraphic
-    self.follow_front.SkeletonGraphic = self.RoleSkeletonGraphic
-
-    self.spineData = spineData
-    self.skinName = nil
-    self.clothesName = nil
-    self.expressionName = nil
-    self.hair1Name = nil
-    self.hair2Name = nil
+    if self.expressionSpineData ~= expressionSpineData then
+        self.ExpressionSkeletonGraphic.skeletonDataAsset = expressionSpineData
+        self.ExpressionSkeletonGraphic.initialSkinName = skinName
+        self.ExpressionSkeletonGraphic:Initialize(true)
+        self.expressionName = nil
+    end
+    
+    if self.hairSpineData ~= hairSpineData then
+        self.hairSpineData = hairSpineData
+        self.hair_front.skeletonDataAsset = hairSpineData
+        self.hair_back.skeletonDataAsset = hairSpineData
+        self.hair_back.initialSkinName = skinName
+        self.hair_front.initialSkinName = skinName
+        self.hair_front:Initialize(true)
+        self.hair_back:Initialize(true)
+        self.hair1Name = nil
+        self.hair2Name = nil
+    end
 end
 --endregion
 
 --region【设置spine人物】
-function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Name)
+function ImageWall:SetData(skinName,bodyName,clothesName,expressionName,hair1Name,hair2Name)
 
     --logic.debug.Log("-SetData -skinName-->"..skinName.."-clothesName-->"..
     --clothesName.."-expressionName-->"..expressionName.."-hair1Name-->"..hair1Name.."-hair2Name-->"..hair2Name)
@@ -232,12 +247,14 @@ function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Na
     if self.skinName ~= skinName then
         dirty = true
         self.skinName = skinName
-        self.RoleSkeletonGraphic.initialSkinName = skinName
+        self.BodySkeletonGraphic.initialSkinName = skinName
+        self.ClothesSkeletonGraphic.initialSkinName = skinName
         self.ExpressionSkeletonGraphic.initialSkinName = skinName
         self.hair_back.initialSkinName = skinName
         self.hair_front.initialSkinName = skinName
 
-        self.RoleSkeletonGraphic:Initialize(true)
+        self.BodySkeletonGraphic:Initialize(true)
+        self.ClothesSkeletonGraphic:Initialize(true)
         self.ExpressionSkeletonGraphic:Initialize(true)
         self.hair_back:Initialize(true)
         self.hair_front:Initialize(true)
@@ -247,9 +264,18 @@ function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Na
     if self.clothesName ~= clothesName then
         dirty = true
         self.clothesName = clothesName
-        self.RoleSkeletonGraphic.startingAnimation = clothesName
-        self.RoleSkeletonGraphic.startingLoop = true
-        self.RoleSkeletonGraphic:Initialize(true)
+        self.ClothesSkeletonGraphic.startingAnimation = clothesName
+        self.ClothesSkeletonGraphic.startingLoop = true
+        self.ClothesSkeletonGraphic:Initialize(true)
+    end
+
+    --set clothes
+    if self.bodyName ~= bodyName then
+        dirty = true
+        self.bodyName = bodyName
+        self.BodySkeletonGraphic.startingAnimation = bodyName
+        self.BodySkeletonGraphic.startingLoop = true
+        self.BodySkeletonGraphic:Initialize(true)
     end
 
     --set ExpressionSkeletonGraphic
@@ -281,8 +307,8 @@ function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Na
     core.coroutine.start(function()
         --只有一帧手机上出现无法跟随，改成3帧
         for i=1,3 do
-            self.follow_back.SkeletonGraphic = self.RoleSkeletonGraphic
-            self.follow_back.boneName = "tou"
+            self.follow_back.SkeletonGraphic = self.BodySkeletonGraphic
+            self.follow_back.boneName = "bone"
             self.follow_back.followBoneRotation = false
             self.follow_back.followZPosition = true
             self.follow_back.followLocalScale = true
@@ -294,8 +320,8 @@ function ImageWall:SetData(skinName,clothesName,expressionName,hair1Name,hair2Na
             self.hair_back.transform.anchoredPosition = targetPos
 
 
-            self.follow_front.SkeletonGraphic = self.RoleSkeletonGraphic
-            self.follow_front.boneName = "tou"
+            self.follow_front.SkeletonGraphic = self.BodySkeletonGraphic
+            self.follow_front.boneName = "bone"
             self.follow_front.followBoneRotation = false
             self.follow_front.followZPosition = true
             self.follow_front.followLocalScale = true

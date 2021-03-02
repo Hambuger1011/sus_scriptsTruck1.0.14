@@ -1,0 +1,90 @@
+
+hair1.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hair2_hou
+  rotate: true
+  xy: 290, 39
+  size: 157, 125
+  orig: 1113, 1300
+  offset: 471, 972
+  index: -1
+hair2_qian
+  rotate: true
+  xy: 631, 785
+  size: 220, 334
+  orig: 1113, 1300
+  offset: 457, 825
+  index: -1
+hair4_hou
+  rotate: true
+  xy: 265, 555
+  size: 143, 170
+  orig: 1113, 1300
+  offset: 470, 919
+  index: -1
+hair4_qian
+  rotate: true
+  xy: 265, 700
+  size: 305, 364
+  orig: 1113, 1300
+  offset: 379, 802
+  index: -1
+hair5_hou
+  rotate: true
+  xy: 724, 374
+  size: 176, 286
+  orig: 1113, 1300
+  offset: 446, 833
+  index: -1
+hair5_qian
+  rotate: true
+  xy: 2, 198
+  size: 324, 461
+  orig: 1113, 1300
+  offset: 397, 708
+  index: -1
+hair6_hou
+  rotate: true
+  xy: 2, 2
+  size: 194, 286
+  orig: 1113, 1300
+  offset: 455, 813
+  index: -1
+hair6_qian
+  rotate: false
+  xy: 2, 524
+  size: 261, 481
+  orig: 1113, 1300
+  offset: 402, 692
+  index: -1
+hair8_hou
+  rotate: true
+  xy: 783, 168
+  size: 204, 191
+  orig: 1113, 1300
+  offset: 466, 875
+  index: -1
+hair8_qian
+  rotate: false
+  xy: 465, 276
+  size: 257, 422
+  orig: 1113, 1300
+  offset: 398, 710
+  index: -1
+hair9_hou
+  rotate: false
+  xy: 724, 552
+  size: 218, 231
+  orig: 1113, 1300
+  offset: 431, 886
+  index: -1
+hair9_qian
+  rotate: true
+  xy: 465, 36
+  size: 238, 316
+  orig: 1113, 1300
+  offset: 434, 819
+  index: -1

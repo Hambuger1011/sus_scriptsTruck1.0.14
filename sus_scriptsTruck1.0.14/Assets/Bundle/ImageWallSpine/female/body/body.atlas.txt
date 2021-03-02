@@ -1,0 +1,40 @@
+
+body.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+b_shenti
+  rotate: true
+  xy: 2, 2
+  size: 477, 998
+  orig: 1113, 1300
+  offset: 311, 0
+  index: -1
+z_shenti
+  rotate: true
+  xy: 2, 481
+  size: 476, 998
+  orig: 1113, 1300
+  offset: 312, 0
+  index: -1
+
+body2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+h_shenti
+  rotate: false
+  xy: 2, 2
+  size: 479, 998
+  orig: 1113, 1300
+  offset: 310, 0
+  index: -1
+hh_shenti
+  rotate: false
+  xy: 483, 2
+  size: 477, 998
+  orig: 1113, 1300
+  offset: 311, 0
+  index: -1

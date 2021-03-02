@@ -1,0 +1,20 @@
+
+clothes1.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+clothes1
+  rotate: false
+  xy: 483, 88
+  size: 413, 927
+  orig: 1113, 1300
+  offset: 360, 0
+  index: -1
+clothes2
+  rotate: false
+  xy: 2, 2
+  size: 479, 1013
+  orig: 1113, 1300
+  offset: 312, 0
+  index: -1
