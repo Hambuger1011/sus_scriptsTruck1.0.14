@@ -209,13 +209,12 @@ function LoadingScene:DoEnter()
         logic.debug.Log("暂无商品信息，尝试重新加载")
     end
     --if logic.cs.UserDataManager.userInfo.data.userinfo.firstplay == 0 then
+    logic.cs.IGGSDKMrg.isNewUser = tonumber(logic.cs.UserDataManager.userInfo.data.userinfo.firstplay) == 0
     if false then
-        logic.cs.IGGSDKMrg.isNewUser = true
         logic.cs.talkingdata:OpenApp("OpenGuideForm")
         logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NewerStart)
         logic.UIMgr:Open(logic.uiid.Guide)
     else
-        logic.cs.IGGSDKMrg.isNewUser = false
         logic.cs.talkingdata:OpenApp("OpenMainForm")
         logic.UIMgr:Open(logic.uiid.UIMainForm);
         if(CS.XLuaHelper.isHotUpdate)then

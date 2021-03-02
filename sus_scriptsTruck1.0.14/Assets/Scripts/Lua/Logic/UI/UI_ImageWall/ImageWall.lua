@@ -1,5 +1,9 @@
 local BaseClass = core.Class
 local ImageWall = BaseClass("ImageWall")
+local ChoiceEnum = {
+    Sex = {Male = 1, Female = 0},
+    Top = {Character = 1, Hairstyle = 2, Outfit = 3, Hairstyle = 4}
+}
 
 function ImageWall:__init(gameObject)
     self.gameObject=gameObject;
@@ -41,9 +45,52 @@ function ImageWall:__init(gameObject)
     local hair1Name	= "hair1"
     local hair2Name	= "hair1_1"
     self:SetData(skinName,clothesName,expressionName,hair1Name,hair2Name)
+
+    self.ChoiceBG = CS.DisplayUtil.GetChild(gameObject, "ChoiceBG")
+    self.ShowChoiceBtn = CS.DisplayUtil.GetChild(gameObject, "ShowChoiceBtn"):GetComponent(typeof(logic.cs.Button))
+    self.HideChoiceBtn = CS.DisplayUtil.GetChild(gameObject, "HideChoiceBtn"):GetComponent(typeof(logic.cs.Button))
+
+    self.ShowChoiceBtn.onClick:RemoveAllListeners()
+    self.ShowChoiceBtn.onClick:AddListener(function() self:SetChoiceBGShow(true) end)
+    self.HideChoiceBtn.onClick:RemoveAllListeners()
+    self.HideChoiceBtn.onClick:AddListener(function() self:SetChoiceBGShow(false) end)
+    
+    self.SexChoice = CS.DisplayUtil.GetChild(gameObject, "SexChoice")
+    self.MaleChoice = CS.DisplayUtil.GetChild(gameObject, "MaleChoice")
+    self.MaleChoiceMake = CS.DisplayUtil.GetChild(gameObject, "MaleChoiceMake")
+    self.FemaleChoice = CS.DisplayUtil.GetChild(gameObject, "FemaleChoice")
+    self.FemaleChoiceMake = CS.DisplayUtil.GetChild(gameObject, "FemaleChoiceMake")
+    
+    self:SetSex(nil)
+    self:SetChoiceBGShow(nil)
 end
 
+--region【展示or隐藏选项】
+function ImageWall:SetChoiceBGShow(_show)
+    local posY = self.ChoiceBG.transform.localPosition.y
+    if _show then
+        self.ShowChoiceBtn.gameObject:SetActive(false)
+        self.ChoiceBG.transform:DOLocalMoveY(posY + 700, 0.5):OnComplete(function()  end):Play()
+    else
+        self.ChoiceBG.transform:DOLocalMoveY(posY - 700, 0.5):OnComplete(function() self.ShowChoiceBtn.gameObject:SetActive(true) end):Play()
+    end
+end
+--endregion
 
+--region【性别选择】
+function ImageWall:SetSex(sex)
+    self.SexChoice:SetActive(sex)
+    if sex then
+        self.Sex = sex
+        local isMale = self.Sex == ChoiceEnum.Sex.Male
+        self.MaleChoiceMake:SetActive(isMale)
+        self.FemaleChoiceMake:SetActive(not isMale)
+    else
+    end
+end
+--endregion
+
+--region【spine】
 --region【获取spine文件】
 function ImageWall:GetSkeDataAsset(bookId,key)
     local AbBookSystem = CS.AB.AbBookSystem.Create(bookId)
@@ -198,30 +245,11 @@ function ImageWall:SetHideOnClick(HideOnClick)
     self.HideBtn.onClick:AddListener(HideOnClick)
 end
 --endregion
+--endregion
 
 
 --销毁
 function ImageWall:__delete()
-    --按钮监听
-    if(self.MessageBtn)then
-        logic.cs.UIEventListener.RemoveOnClickListener(self.MessageBtn,function(data) self:MessageBtnClick() end)
-        logic.cs.UIEventListener.RemoveOnClickListener(self.LikeToogle.gameObject,function(data) self:LikeToogleClick() end)
-        logic.cs.UIEventListener.RemoveOnClickListener(self.ThumbUpToogle.gameObject,function(data) self:ThumbUpToogleClick() end)
-    end
-    self.HeadIcon = nil;
-    self.HeadFrame = nil;
-    self.AuthorName = nil;
-    self.PersonalStatus = nil;
-    self.BookNumsText = nil;
-    self.FansNumsText = nil;
-    self.LikeToogle = nil;
-    self.ThumbUpToogle = nil;
-    self.ThumbUpText = nil;
-    self.DynamicTitleTxt = nil;
-    self.MessageBtn = nil;
-    self.DynamicTitleTxt = nil;
-
-    self.gameObject = nil;
 end
 
 return ImageWall
