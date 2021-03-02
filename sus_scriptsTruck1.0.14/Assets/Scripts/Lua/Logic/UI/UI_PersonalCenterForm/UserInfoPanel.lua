@@ -15,18 +15,26 @@ function UserInfoPanel:__init(gameObject)
     self.ThumbUpToogle =CS.DisplayUtil.GetChild(gameObject, "ThumbUpToogle"):GetComponent(typeof(logic.cs.UIToggle));
     self.ThumbUpText =CS.DisplayUtil.GetChild(self.ThumbUpToogle.gameObject, "ThumbUpText"):GetComponent(typeof(logic.cs.Text));
     self.IGGIDText =CS.DisplayUtil.GetChild(gameObject, "IGGIDText"):GetComponent(typeof(logic.cs.Text));
-    self.EditBtn =CS.DisplayUtil.GetChild(gameObject, "EditBtn");
-    self.MessageBtn =CS.DisplayUtil.GetChild(gameObject, "MessageBtn");
-    self.PackageBtn =CS.DisplayUtil.GetChild(gameObject, "PackageBtn");
-    self.SettingBtn =CS.DisplayUtil.GetChild(gameObject, "SettingBtn");
-    self.BottleBtn =CS.DisplayUtil.GetChild(gameObject, "BottleBtn");
+    self.AccountButton =CS.DisplayUtil.GetChild(gameObject, "AccountButton"):GetComponent(typeof(logic.cs.Button));
+    self.EditBtn =CS.DisplayUtil.GetChild(gameObject, "EditBtn"):GetComponent(typeof(logic.cs.Button));
+    self.MessageBtn =CS.DisplayUtil.GetChild(gameObject, "MessageBtn"):GetComponent(typeof(logic.cs.Button));
+    self.PackageBtn =CS.DisplayUtil.GetChild(gameObject, "PackageBtn"):GetComponent(typeof(logic.cs.Button));
+    self.SettingBtn =CS.DisplayUtil.GetChild(gameObject, "SettingBtn"):GetComponent(typeof(logic.cs.Button));
+    self.BottleBtn =CS.DisplayUtil.GetChild(gameObject, "BottleBtn"):GetComponent(typeof(logic.cs.Button));
 
     --按钮监听
-    logic.cs.UIEventListener.AddOnClickListener(self.MessageBtn,self.MessageBtnClick)
-    logic.cs.UIEventListener.AddOnClickListener(self.PackageBtn,self.PackageBtnClick)
-    logic.cs.UIEventListener.AddOnClickListener(self.SettingBtn,self.SettingBtnClick)
-    logic.cs.UIEventListener.AddOnClickListener(self.BottleBtn,self.BottleBtnClick)
-    logic.cs.UIEventListener.AddOnClickListener(self.EditBtn,self.EditBtnClick)
+    self.AccountButton.onClick:RemoveAllListeners()
+    self.AccountButton.onClick:AddListener(self.AccountButtonClick)
+    self.PackageBtn.onClick:RemoveAllListeners()
+    self.PackageBtn.onClick:AddListener(self.PackageBtnClick)
+    self.SettingBtn.onClick:RemoveAllListeners()
+    self.SettingBtn.onClick:AddListener(self.SettingBtnClick)
+    self.BottleBtn.onClick:RemoveAllListeners()
+    self.BottleBtn.onClick:AddListener(self.BottleBtnClick)
+    self.EditBtn.onClick:RemoveAllListeners()
+    self.EditBtn.onClick:AddListener(self.EditBtnClick)
+    self.MessageBtn.onClick:RemoveAllListeners()
+    self.MessageBtn.onClick:AddListener(self.MessageBtnClick)
     logic.cs.UIEventListener.AddOnClickListener(self.ThumbUpToogle.gameObject,self.ThumbUpToogleClick)
 
     this.UserNameInputField.onValueChanged:AddListener(self.OnValueChanged)
@@ -70,6 +78,12 @@ function UserInfoPanel:UpdateWriterAgree()
 
 end
 
+--endregion
+
+--region【按钮点击】【账号按钮】
+function UserInfoPanel:AccountButtonClick(data)
+    logic.UIMgr:Open(logic.uiid.AccountInfo)
+end
 --endregion
 
 --region【按钮点击】【信鸽按钮】
@@ -145,11 +159,6 @@ end
 --销毁
 function UserInfoPanel:__delete()
     --按钮监听
-    logic.cs.UIEventListener.RemoveOnClickListener(self.MessageBtn,self.MessageBtnClick)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.PackageBtn,self.PackageBtnClick)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.SettingBtn,self.SettingBtnClick)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.BottleBtn,self.BottleBtnClick)
-    logic.cs.UIEventListener.RemoveOnClickListener(self.EditBtn,self.EditBtnClick)
     logic.cs.UIEventListener.RemoveOnClickListener(self.ThumbUpToogle.gameObject,self.ThumbUpToogleClick)
     this.UserNameInputField.onEndEdit:RemoveListener(self.OnEndEditUserName);
     this.UserNameInputField.onValueChanged:RemoveListener(self.OnValueChanged);

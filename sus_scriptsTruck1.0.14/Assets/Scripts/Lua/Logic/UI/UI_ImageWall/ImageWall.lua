@@ -2,7 +2,7 @@ local BaseClass = core.Class
 local ImageWall = BaseClass("ImageWall")
 local ChoiceEnum = {
     Sex = {Male = 1, Female = 0},
-    Top = {Character = 1, Hairstyle = 2, Outfit = 3, Hairstyle = 4}
+    Top = {Character = 1, Hairstyle = 2, Outfit = 3, Background = 4}
 }
 
 function ImageWall:__init(gameObject)
@@ -56,37 +56,110 @@ function ImageWall:__init(gameObject)
     self.HideChoiceBtn.onClick:AddListener(function() self:SetChoiceBGShow(false) end)
     
     self.SexChoice = CS.DisplayUtil.GetChild(gameObject, "SexChoice")
-    self.MaleChoice = CS.DisplayUtil.GetChild(gameObject, "MaleChoice")
+    self.MaleChoice = CS.DisplayUtil.GetChild(gameObject, "MaleChoice"):GetComponent(typeof(logic.cs.Button))
     self.MaleChoiceMake = CS.DisplayUtil.GetChild(gameObject, "MaleChoiceMake")
-    self.FemaleChoice = CS.DisplayUtil.GetChild(gameObject, "FemaleChoice")
+    self.FemaleChoice = CS.DisplayUtil.GetChild(gameObject, "FemaleChoice"):GetComponent(typeof(logic.cs.Button))
     self.FemaleChoiceMake = CS.DisplayUtil.GetChild(gameObject, "FemaleChoiceMake")
+
+    self.MaleChoice.onClick:RemoveAllListeners()
+    self.MaleChoice.onClick:AddListener(function() self:SetSex(ChoiceEnum.Sex.Male) end)
+    self.FemaleChoice.onClick:RemoveAllListeners()
+    self.FemaleChoice.onClick:AddListener(function() self:SetSex(ChoiceEnum.Sex.Female) end)
+
+    self.CharacterSwitch = CS.DisplayUtil.GetChild(gameObject, "CharacterSwitch"):GetComponent(typeof(logic.cs.Button))
+    self.CharacterSwitchMake = CS.DisplayUtil.GetChild(gameObject, "CharacterSwitchMake")
+    self.CharacterSwitchLine = CS.DisplayUtil.GetChild(gameObject, "CharacterSwitchLine")
+    self.HairstyleSwitch = CS.DisplayUtil.GetChild(gameObject, "HairstyleSwitch"):GetComponent(typeof(logic.cs.Button))
+    self.HairstyleSwitchMake = CS.DisplayUtil.GetChild(gameObject, "HairstyleSwitchMake")
+    self.HairstyleSwitchLine = CS.DisplayUtil.GetChild(gameObject, "HairstyleSwitchLine")
+    self.OutfitSwitch = CS.DisplayUtil.GetChild(gameObject, "OutfitSwitch"):GetComponent(typeof(logic.cs.Button))
+    self.OutfitSwitchMake = CS.DisplayUtil.GetChild(gameObject, "OutfitSwitchMake")
+    self.OutfitSwitchLine = CS.DisplayUtil.GetChild(gameObject, "OutfitSwitchLine")
+    self.BackgroundSwitch = CS.DisplayUtil.GetChild(gameObject, "BackgroundSwitch"):GetComponent(typeof(logic.cs.Button))
+    self.BackgroundSwitchMake = CS.DisplayUtil.GetChild(gameObject, "BackgroundSwitchMake")
+    self.BackgroundSwitchLine = CS.DisplayUtil.GetChild(gameObject, "BackgroundSwitchLine")
     
-    self:SetSex(nil)
+    self.CharacterSwitch.onClick:RemoveAllListeners()
+    self.CharacterSwitch.onClick:AddListener(function() self:SetTopSwitch(ChoiceEnum.Top.Character) end)
+    self.HairstyleSwitch.onClick:RemoveAllListeners()
+    self.HairstyleSwitch.onClick:AddListener(function() self:SetTopSwitch(ChoiceEnum.Top.Hairstyle) end)
+    self.OutfitSwitch.onClick:RemoveAllListeners()
+    self.OutfitSwitch.onClick:AddListener(function() self:SetTopSwitch(ChoiceEnum.Top.Outfit) end)
+    self.BackgroundSwitch.onClick:RemoveAllListeners()
+    self.BackgroundSwitch.onClick:AddListener(function() self:SetTopSwitch(ChoiceEnum.Top.Background) end)
+    
+    self.SkinColourMakeList = {}
+    local SkinColourSwitch
+    local skinNum = 4
+    for i = 1, skinNum do
+        SkinColourSwitch = CS.DisplayUtil.GetChild(gameObject, "SkinColourSwitch"..i):GetComponent(typeof(logic.cs.Button))
+        SkinColourSwitch.onClick:RemoveAllListeners()
+        SkinColourSwitch.onClick:AddListener(function() self:SetSkinSwitch(i) end)
+        self.SkinColourMakeList[i] = CS.DisplayUtil.GetChild(SkinColourSwitch.gameObject, "SkinColourMake")
+    end
+
+    self.ModelSwitchText = CS.DisplayUtil.GetChild(gameObject, "ModelSwitchText"):GetComponent(typeof(logic.cs.Text))
     self:SetChoiceBGShow(nil)
 end
 
 --region【展示or隐藏选项】
 function ImageWall:SetChoiceBGShow(_show)
-    local posY = self.ChoiceBG.transform.localPosition.y
+    if self.ChoiceBGIsShow ~= nil and self.ChoiceBGIsShow == _show then
+        return
+    end
+    self.ChoiceBGIsShow = _show
+    self.SexChoice:SetActive(_show)
+    if self.ChoiceBGPosY == nil then
+        self.ChoiceBGPosY = self.ChoiceBG.transform.localPosition.y
+    end
+    self.ChoiceBGPosY = _show and (self.ChoiceBGPosY + 700) or (self.ChoiceBGPosY - 700)
     if _show then
         self.ShowChoiceBtn.gameObject:SetActive(false)
-        self.ChoiceBG.transform:DOLocalMoveY(posY + 700, 0.5):OnComplete(function()  end):Play()
+        self.ChoiceBG.transform:DOLocalMoveY(self.ChoiceBGPosY, 0.5):OnComplete(function()  end):Play()
     else
-        self.ChoiceBG.transform:DOLocalMoveY(posY - 700, 0.5):OnComplete(function() self.ShowChoiceBtn.gameObject:SetActive(true) end):Play()
+        self.ChoiceBG.transform:DOLocalMoveY(self.ChoiceBGPosY, 0.5):OnComplete(function() self.ShowChoiceBtn.gameObject:SetActive(true) end):Play()
     end
 end
 --endregion
 
 --region【性别选择】
 function ImageWall:SetSex(sex)
-    self.SexChoice:SetActive(sex)
-    if sex then
-        self.Sex = sex
-        local isMale = self.Sex == ChoiceEnum.Sex.Male
-        self.MaleChoiceMake:SetActive(isMale)
-        self.FemaleChoiceMake:SetActive(not isMale)
-    else
+    self.SexSwitchIndex = sex
+    local isMale = self.SexSwitchIndex == ChoiceEnum.Sex.Male
+    self.MaleChoiceMake:SetActive(isMale)
+    self.FemaleChoiceMake:SetActive(not isMale)
+    self:UpdateChoiceList()
+end
+--endregion
+
+--region【Top类型选择】
+function ImageWall:SetTopSwitch(_index)
+    self.TopSwitchIndex = _index
+    self.CharacterSwitchMake:SetActive(_index == ChoiceEnum.Top.Character)
+    self.CharacterSwitchLine:SetActive(_index == ChoiceEnum.Top.Character)
+    self.HairstyleSwitchMake:SetActive(_index == ChoiceEnum.Top.Hairstyle)
+    self.HairstyleSwitchLine:SetActive(_index == ChoiceEnum.Top.Hairstyle)
+    self.OutfitSwitchMake:SetActive(_index == ChoiceEnum.Top.Outfit)
+    self.OutfitSwitchLine:SetActive(_index == ChoiceEnum.Top.Outfit)
+    self.BackgroundSwitchMake:SetActive(_index == ChoiceEnum.Top.Background)
+    self.BackgroundSwitchLine:SetActive(_index == ChoiceEnum.Top.Background)
+    self:UpdateChoiceList()
+end
+--endregion
+
+--region【肤色选择】
+function ImageWall:SetSkinSwitch(_index)
+    self.SkinSwitchIndex = _index
+    for k, v in pairs(self.SkinColourMakeList) do
+        v:SetActive(_index == k)
     end
+    self:UpdateChoiceList()
+end
+--endregion
+
+--region【更新选项列表】
+function ImageWall:UpdateChoiceList()
+    self.ModelSwitchText.text = "Sex:"..tostring(self.SexSwitchIndex).."\nTop:"..tostring(self.TopSwitchIndex).."\nSkin:"..tostring(self.SkinSwitchIndex)
 end
 --endregion
 
@@ -246,7 +319,6 @@ function ImageWall:SetHideOnClick(HideOnClick)
 end
 --endregion
 --endregion
-
 
 --销毁
 function ImageWall:__delete()

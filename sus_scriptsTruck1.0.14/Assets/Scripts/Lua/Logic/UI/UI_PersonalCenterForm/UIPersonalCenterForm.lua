@@ -38,9 +38,15 @@ function UIPersonalCenterForm:OnOpen()
     --logic.cs.UIEventListener.AddOnClickListener(self.RomanceTab.gameObject,function(data) self:RomanceTabClick(data) end);
 
     self.ImageWallObj.transform:SetParent(self.ImageWallParent.transform, false);
-    self.ImageWallBtn.onClick:AddListener(function() self:ImageWallShow() end);
     self.ImageWall= require('Logic/UI/UI_ImageWall/ImageWall').New(self.ImageWallObj.gameObject);
-    self.ImageWall:SetHideOnClick(function() self:ImageWallHide() end);
+    self.ImageWallBtn.onClick:AddListener(function()
+        self:ImageWallShow()
+        self.ImageWall:SetChoiceBGShow(true)
+    end);
+    self.ImageWall:SetHideOnClick(function()
+        self.ImageWall:SetChoiceBGShow(false)
+        self:ImageWallHide()
+    end);
     
     self.UserInfo:UpdateInfo();
     local myBookIDs =  logic.cs.GameDataMgr.userData:GetMyBookIds();
