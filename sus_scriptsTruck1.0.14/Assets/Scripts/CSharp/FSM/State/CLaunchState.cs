@@ -104,6 +104,7 @@ public class CLaunchState : GameStateBase
         Dispatcher.addEventListener<string>(EventEnum.MaintinWhileList, OnMaintinWhileList);
 
         TalkingDataManager.Instance.OpenApp(EventEnum.GetVersionStart);
+        GamePointManager.Instance.BuriedPoint(EventEnum.GetVersion);
 #if UNITY_ANDROID
         GameHttpNet.Instance.SYSTEMTYPE = 1;
 #elif UNITY_IOS
@@ -134,6 +135,7 @@ public class CLaunchState : GameStateBase
 
                 //报告 获取版本信息成功
                 TalkingDataManager.Instance.OpenApp(EventEnum.GetVersionResultSucc);
+                GamePointManager.Instance.BuriedPoint(EventEnum.GetVersionOk);
 
                 UserDataManager.Instance.versionInfo = JsonHelper.JsonToObject<HttpInfoReturn<VersionInfo>>(result);
                 if (UserDataManager.Instance.versionInfo != null && UserDataManager.Instance.versionInfo.data != null)

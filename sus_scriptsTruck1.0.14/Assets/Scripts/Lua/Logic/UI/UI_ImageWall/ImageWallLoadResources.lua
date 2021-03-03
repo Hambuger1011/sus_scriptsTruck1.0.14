@@ -92,7 +92,7 @@ function ImageWallLoadResources:DownloadByList(resTable)
     for url,resType in pairs(resTable) do
         local asset = self:Download(logic.ResMgr.type.Object,url,resType,function()
             loadedNum = loadedNum + 1
-            if loadedNum == #resTable then
+            if loadedNum == table.count(resTable) then
                 logic.cs.UITipsMgr:ShowTips("形象墙资源预加载完毕");
             end
         end)
