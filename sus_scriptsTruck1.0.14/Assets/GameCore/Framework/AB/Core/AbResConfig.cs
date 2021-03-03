@@ -152,10 +152,6 @@
                 {
                     var assetName = item.assetNames[j];
                     //Debug.Log("---assetNames-->>" + assetName);
-                    if (assetName.Contains("/imagewall"))
-                    {
-                        LOG.Warn("//////////////"+assetName);
-                    }
                     assetsMap.Add(assetName, item);
                 }
 #if UNITY_EDITOR

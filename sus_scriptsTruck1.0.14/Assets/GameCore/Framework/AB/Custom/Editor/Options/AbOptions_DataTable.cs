@@ -46,10 +46,9 @@ namespace AB
 
             analyzer.AddAsset("assets/bundle/data/pb_define.txt");
             analyzer.ScanToSingle<TextAsset>("Assets/Bundle/Data/Common");//打包配置表
-            analyzer.Scan<Object>("Assets/Bundle/ImageWall");// UGUI
+            analyzer.Scan<Object>("Assets/Bundle/ImageWall");
             //analyzer.Scan<TextAsset>("Assets/Bundle/Data/BookDialog");//打包书本配置表
             ScanBookIcon();
-            // ScanImageWallSpine();
 
             Debug.Log("asset bundle ouput:" + AbUtility.AbBuildPath);
         }
