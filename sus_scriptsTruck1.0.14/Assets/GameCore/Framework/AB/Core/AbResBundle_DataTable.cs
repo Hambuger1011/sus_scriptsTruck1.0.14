@@ -14,7 +14,7 @@
         //                                        "assets/bundle/data/common.ab");
         static readonly string assetname_prefix = "assets/bundle/data";
         static readonly string preview_prefix = "assets/bundle/bookpreview";
-        static readonly string spine_prefix = "assets/bundle/ImageWallSpine";
+        static readonly string spine_prefix = "assets/bundle/imagewall";
         public static bool IsDataTableAsset(string assetName)
         {
             bool isDataTableAsset = false;

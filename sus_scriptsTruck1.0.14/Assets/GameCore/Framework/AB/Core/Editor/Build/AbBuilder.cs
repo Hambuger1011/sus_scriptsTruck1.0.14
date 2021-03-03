@@ -557,7 +557,7 @@ namespace AB
         string GetCopyPath()
         {
             string outPath = String.Empty;
-            if (SystemName.Equals(ABBuildWindow.SystemName_Common) || SystemName.Equals(ABBuildWindow.SystemName_DataTable))
+            if (SystemName.Equals(ABBuildWindow.SystemName_Common) || SystemName.Equals(ABBuildWindow.SystemName_DataTable) || SystemName.Equals(ABBuildWindow.SystemName_ImageWall))
             {
                 outPath = $"{GameUtility.WritablePath}ab/{SystemName.ToLower()}/{GameUtility.Platform}/{GameUtility.version}/{GameUtility.resVersion}/";
             }

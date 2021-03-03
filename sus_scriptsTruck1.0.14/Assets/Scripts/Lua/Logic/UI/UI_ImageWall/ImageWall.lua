@@ -39,10 +39,10 @@ function ImageWall:__init(gameObject)
     self.ExpressionSkeletonGraphic.material=CS.XLuaHelper.SpineMaterial;
     self.hair_front.material=CS.XLuaHelper.SpineMaterial;
 
-    local bodySpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/body/body_SkeletonData.asset")
-    local clothesSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/clothes/clothes1_SkeletonData.asset")
-    local expressionSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/head/b/head1_SkeletonData.asset")
-    local hairSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWallSpine/male/hair/hair1_SkeletonData.asset")
+    local bodySpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWall/male/body/body_SkeletonData.asset")
+    local clothesSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWall/male/clothes/clothes1_SkeletonData.asset")
+    local expressionSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWall/male/head/b/head1_SkeletonData.asset")
+    local hairSpineData = self:GetSkeDataAsset("Assets/Bundle/ImageWall/male/hair/hair1_SkeletonData.asset")
 
     self:SetSpine(bodySpineData,clothesSpineData,expressionSpineData,hairSpineData)
 
@@ -174,7 +174,8 @@ end
 --region【spine】
 --region【获取spine文件】
 function ImageWall:GetSkeDataAsset(url)
-    local asset = logic.ResMgr.LoadImme(logic.ResMgr.tag.Null,logic.ResMgr.type.ScriptableObject,url)
+    --local asset = logic.ResMgr.LoadImme(logic.ResMgr.tag.Null,logic.ResMgr.type.ScriptableObject,url)
+    local asset = logic.ResMgr.LoadImme(logic.ResMgr.tag.Null,logic.ResMgr.type.Object,url)
     if not asset or not asset.resObject then
         logic.debug.LogError("资源未预加载:"..url)
         return nil
@@ -239,10 +240,6 @@ end
 
 --region【设置spine人物】
 function ImageWall:SetData(skinName,bodyName,clothesName,expressionName,hair1Name,hair2Name)
-
-    --logic.debug.Log("-SetData -skinName-->"..skinName.."-clothesName-->"..
-    --clothesName.."-expressionName-->"..expressionName.."-hair1Name-->"..hair1Name.."-hair2Name-->"..hair2Name)
-
     local dirty = false
     if self.skinName ~= skinName then
         dirty = true

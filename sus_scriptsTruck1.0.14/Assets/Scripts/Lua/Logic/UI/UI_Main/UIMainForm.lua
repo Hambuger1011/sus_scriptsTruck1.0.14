@@ -119,6 +119,9 @@ function UIMainForm:OnOpen()
 
 
     self:Limit_time_Free();
+    
+    local ImageWall= require('Logic/UI/UI_ImageWall/ImageWallLoadResources').New();
+    ImageWall:StartLoadResources()
 
 end
 

@@ -12,6 +12,7 @@ public class ABBuildWindow : EditorWindow
 {
     public static readonly string SystemName_Common = "COMMON";
     public static readonly string SystemName_DataTable = "DataTable";
+    public static readonly string SystemName_ImageWall = "ImageWall";
 
     static ABBuildWindow m_instance = null;
     [MenuItem("GameTools/AssetBundle/打包", false, MenuPriority.AB + 100)]
@@ -99,6 +100,7 @@ public class ABBuildWindow : EditorWindow
         {
             BuildCommon();
             BuildDataConfig();
+            BuildImageWall();
             foreach (var itr in bookMap)
             {
                 BuildBook(itr.Key, itr.Value);
@@ -108,6 +110,10 @@ public class ABBuildWindow : EditorWindow
         if (GUILayout.Button("通用资源", GUILayout.Height(35)))
         {
             BuildCommon();
+        }
+        if (GUILayout.Button("形象墙资源", GUILayout.Height(35)))
+        {
+            BuildImageWall();
         }
         if (GUILayout.Button("DataTable", GUILayout.Height(35)))
         {
@@ -178,6 +184,23 @@ public class ABBuildWindow : EditorWindow
         try
         {
             var options = new AbOptions_Book(id, path);
+            AbBuilder uiBuilder = new AbBuilder(options);
+            uiBuilder.Begin();
+            uiBuilder.Analyze();
+            uiBuilder.Build();
+            uiBuilder.End();
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+        }
+    }
+
+    void BuildImageWall()
+    {
+        try
+        {
+            var options = new AbOptions_ImageWall();
             AbBuilder uiBuilder = new AbBuilder(options);
             uiBuilder.Begin();
             uiBuilder.Analyze();

@@ -57,6 +57,7 @@ res.tag = {
     Cat = "Cat",
     DialogDisplay = "DialogDisplay",
     StoryEditor = 'StoryEditor',
+    ImageWall = "ImageWall",
 }
 
 res.res = {
