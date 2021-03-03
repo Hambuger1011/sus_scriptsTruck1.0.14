@@ -14,12 +14,13 @@
         //                                        "assets/bundle/data/common.ab");
         static readonly string assetname_prefix = "assets/bundle/data";
         static readonly string preview_prefix = "assets/bundle/bookpreview";
+        static readonly string spine_prefix = "assets/bundle/ImageWallSpine";
         public static bool IsDataTableAsset(string assetName)
         {
             bool isDataTableAsset = false;
             if (!string.IsNullOrEmpty(assetName))
             {
-                isDataTableAsset= assetName.ToLower().Contains(assetname_prefix) || assetName.ToLower().Contains(preview_prefix);
+                isDataTableAsset= assetName.ToLower().Contains(assetname_prefix) || assetName.ToLower().Contains(preview_prefix) || assetName.ToLower().Contains(spine_prefix);
             }
             else
             {

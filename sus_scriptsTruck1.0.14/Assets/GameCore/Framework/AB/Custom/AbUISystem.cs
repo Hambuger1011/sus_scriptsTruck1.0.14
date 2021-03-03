@@ -91,7 +91,7 @@
         int needDownloadNum;
         public void PreLoad()
         {
-            needDownloadNum = 1;
+            needDownloadNum = 2;
             hadLoaded = 0;
             m_preLoadData.Clear();
 
@@ -117,6 +117,7 @@
 
             PreLoadAsset(enResType.eText, "assets/bundle/data/pb_define.txt");
             PreLoadBundle("assets/bundle/data/common.ab");
+            PreLoadBundle("assets/bundle/imagewallspine.ab");
             //PreLoadBundle("assets/bundle/resident.ab");
             //PreLoadBundle("assets/bundle/CatPreview.ab");
             PreLoadAsset(enResType.eAudio, "assets/bundle/music/audiotones/book_click.mp3");
@@ -137,6 +138,30 @@
         private void PreLoadBookBanner()
         {
             var path = string.Concat("assets/bundle/BookPreview/icon.prefab");
+            var asset = ABSystem.ui.bundleDataTable.LoadAsync(AbTag.Global, enResType.ePrefab, path, (_) =>
+            {
+                var resList = _.Get<AbBookRes>();
+                if(_.abConfigItem != null)
+                {
+                    LOG.Error("res count:" + resList.objs.Length + ":" + _.abConfigItem.fileHashName + ",resVer=" + UserDataManager.Instance.DataTableVersion);
+                }
+                else
+                {
+                    LOG.Error("res count:" + resList.objs.Length + ",resVer=" + UserDataManager.Instance.DataTableVersion);
+                }
+                foreach (var res in resList.objs)
+                {
+                    //LOG.Warn("加载:" + res);
+                    PreLoadAsset(enResType.eObject, res);
+                }
+                --needDownloadNum;
+                PreLoadImageWallSpine();
+            });
+        }
+        
+        private void PreLoadImageWallSpine()
+        {
+            var path = string.Concat("assets/bundle/ImageWallSpine/imagewallspine.prefab");
             var asset = ABSystem.ui.bundleDataTable.LoadAsync(AbTag.Global, enResType.ePrefab, path, (_) =>
             {
                 var resList = _.Get<AbBookRes>();
