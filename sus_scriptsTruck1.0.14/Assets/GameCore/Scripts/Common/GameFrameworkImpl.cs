@@ -111,7 +111,7 @@ namespace Framework
 
             //IGGLog的开关
 #if ENABLE_DEBUG
-            IGG.SDK.Foundation.Config.ENABLE_LOG = true;
+            IGG.SDK.Foundation.Config.ENABLE_LOG = false;
 #else  
             IGG.SDK.Foundation.Config.ENABLE_LOG = false;
 #endif
