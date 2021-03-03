@@ -92,6 +92,7 @@ function LoadingScene:OnLoadFinish(isOK)
     end
     local curTime = os.date("%Y-%m-%d %H:%M:%S");--当前时间
     CS.XLuaHelper.DebugLog("lua LoadingScene 加载资源完成："..curTime);
+    require('Logic/UI/UI_ImageWall/ImageWallLoadResources').New():StartLoadResources()
 
     logic.debug.Log("3、加载资源完成")
     logic.cs.talkingdata:OpenApp(logic.cs.EventEnum.LoadResResultSucc)
@@ -208,9 +209,8 @@ function LoadingScene:DoEnter()
     else
         logic.debug.Log("暂无商品信息，尝试重新加载")
     end
-    --if logic.cs.UserDataManager.userInfo.data.userinfo.firstplay == 0 then
     logic.cs.IGGSDKMrg.isNewUser = tonumber(logic.cs.UserDataManager.userInfo.data.userinfo.firstplay) == 0
-    if false then
+    if logic.cs.IGGSDKMrg.isNewUser then
         logic.cs.talkingdata:OpenApp("OpenGuideForm")
         logic.cs.GamePointManager:BuriedPoint(logic.cs.EventEnum.NewerStart)
         logic.UIMgr:Open(logic.uiid.Guide)

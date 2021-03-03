@@ -100,7 +100,6 @@ public class ABBuildWindow : EditorWindow
         {
             BuildCommon();
             BuildDataConfig();
-            BuildImageWall();
             foreach (var itr in bookMap)
             {
                 BuildBook(itr.Key, itr.Value);
@@ -110,10 +109,6 @@ public class ABBuildWindow : EditorWindow
         if (GUILayout.Button("通用资源", GUILayout.Height(35)))
         {
             BuildCommon();
-        }
-        if (GUILayout.Button("形象墙资源", GUILayout.Height(35)))
-        {
-            BuildImageWall();
         }
         if (GUILayout.Button("DataTable", GUILayout.Height(35)))
         {
@@ -184,23 +179,6 @@ public class ABBuildWindow : EditorWindow
         try
         {
             var options = new AbOptions_Book(id, path);
-            AbBuilder uiBuilder = new AbBuilder(options);
-            uiBuilder.Begin();
-            uiBuilder.Analyze();
-            uiBuilder.Build();
-            uiBuilder.End();
-        }
-        finally
-        {
-            EditorUtility.ClearProgressBar();
-        }
-    }
-
-    void BuildImageWall()
-    {
-        try
-        {
-            var options = new AbOptions_ImageWall();
             AbBuilder uiBuilder = new AbBuilder(options);
             uiBuilder.Begin();
             uiBuilder.Analyze();
